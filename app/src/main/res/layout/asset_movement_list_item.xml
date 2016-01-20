@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="movement"
+            type="com.pbasolutions.android.model.MMovement" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_top">
+            <TableRow>
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/movement_label_docno"/>
+                <TextView
+                    android:id="@+id/movementDocNo"
+                    style="@style/Value"
+                    android:text="@{String.valueOf(movement.DocumentNo)}" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/movement_label_movedate" />
+                <TextView
+                    style="@style/Value"
+                    android:id="@+id/assetMovementDate"
+                    android:text="@{movement.MovementDate}" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/movement_label_status" />
+                <TextView
+                    style="@style/Value"
+                    android:id="@+id/assetMovementStat"
+                    android:layout_marginBottom="@dimen/margin_bottom"
+                    android:text="@{movement.Status}"
+                    />
+            </TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/_UUID"
+                android:text="@{movement._UUID}"
+                android:visibility="invisible"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/_ID"
+                android:text="@{String.valueOf(movement._ID)}"
+                android:visibility="invisible"/>
+            <View style="@style/Line" android:layout_width="@dimen/normal_line_width" />
+        </TableLayout>
+    </LinearLayout>
+</layout>

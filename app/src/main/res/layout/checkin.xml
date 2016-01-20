@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+       <TextView
+            style="@style/TableLabel2"
+            android:text="Testing"
+            android:id="@+id/scanSerialTextInfo"
+           android:layout_gravity="center"
+            />
+    <TextView
+        android:id="@+id/scanSerialTextID"
+        style="@style/TableLabel2"
+        android:layout_gravity="center"
+        />
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_gravity="center_horizontal"/>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow>
+            <TextView
+                style="@style/TableLabel"
+                android:text="Latitude"
+                />
+            <TextView
+                style="@style/Value"
+                android:id="@+id/serialLatitude"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
+                style="@style/TableLabel"
+                android:text="Longitude"
+                />
+            <TextView
+                style="@style/Value"
+                android:id="@+id/serialLongitude"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
+                style="@style/TableLabel"
+                android:text="Timestamp"
+                />
+            <TextView
+                style="@style/Value"
+                android:id="@+id/serialTimestamp"
+                />
+            </TableRow>
+        <TableRow>
+            <TextView style="@style/TableLabel"/>
+
+            <EditText
+                style="@style/Value"
+                android:id="@+id/serialComment"
+                android:hint="Write Your Comment"
+                />
+            </TableRow>
+    </TableLayout>
+</LinearLayout>

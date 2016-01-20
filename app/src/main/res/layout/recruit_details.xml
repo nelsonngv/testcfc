@@ -1,0 +1,52 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="employee"
+            type="com.pbasolutions.android.model.MEmployee"
+            />
+    </data>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow>
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_name" />
+            <EditText
+                android:id="@+id/editTextEmpName"
+                style="@style/Value"
+                android:text="@{employee.name}" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_idtype" />
+            <Spinner
+                android:id="@+id/idTypeSpinner"
+                android:layout_height="wrap_content"
+                android:layout_column="1" />
+
+        </TableRow>
+        <TableRow>
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_idnumber" />
+
+
+            <EditText
+                android:id="@+id/editTextEmpIDNumber"
+                style="@style/Value"
+                android:text="@{employee.idNumber}" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_phone" />
+            <EditText
+                android:id="@+id/editTextEmpPhone"
+                style="@style/Value"
+                android:inputType="phone"
+                android:text="@{employee.phone}" />
+        </TableRow>
+    </TableLayout>
+    </layout>

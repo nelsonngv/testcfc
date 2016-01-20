@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="storage"
+            type="com.pbasolutions.android.model.MStorage" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_top">
+            <TableRow>
+                <TextView
+                   style="@style/TableLabel"
+                    android:text="@string/label_productname"/>
+                <TextView
+                    android:id="@+id/assetProdName"
+                    style="@style/Value"
+                    android:editable="false"
+                    android:text="@{storage.ProductName}" />
+                </TableRow>
+            <TableRow>
+                <TextView
+                   style="@style/TableLabel"
+                    android:editable="false"
+                    android:text="@string/label_productvalue" />
+                <TextView
+                    android:id="@+id/prodValue"
+                    android:text="@{storage.ProductValue}"
+                    android:editable="false"
+                    style="@style/Value"
+                    />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    style="@style/TableLabel"
+                    android:editable="false"
+                    android:text="@string/label_qty"
+                />
+                <TextView
+                    android:id="@+id/asset_qty"
+                    style="@style/Value"
+                    android:editable="false"
+                    android:text="@{String.valueOf(storage.QtyOnHand.doubleValue())}"
+                    android:textSize="@dimen/abc_text_size_body_1_material" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:editable="false"
+                    style="@style/TableLabel"
+                    android:text="@string/label_asi"
+                />
+                <TextView
+                    android:id="@+id/asiDesc"
+                   style="@style/Value"
+                    android:layout_marginBottom="@dimen/margin_bottom"
+                    android:editable="false"
+                    android:text="@{storage.Description}" />
+
+            </TableRow>
+            <View style="@style/Line" android:layout_width="@dimen/normal_line_width"/>
+        </TableLayout>
+    </LinearLayout>
+</layout>

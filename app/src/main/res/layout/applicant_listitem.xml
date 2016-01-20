@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="applicant"
+            type="com.pbasolutions.android.model.MApplicant" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_top">
+
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/label_name" />
+
+                <TextView
+                    android:id="@+id/applicantName"
+                    style="@style/Value"
+                    android:editable="false"
+                    android:text="@{applicant.name}" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/label_idnumber" />
+
+                <TextView
+                    android:id="@+id/applicantIDNumber"
+                    style="@style/Value"
+                    android:editable="false"
+                    android:text="@{applicant.idNumber}" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/label_phone" />
+
+                <TextView
+                    android:id="@+id/applicantPhone"
+                    style="@style/Value"
+                    android:editable="false"
+                    android:text="@{applicant.phone}" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/app_label_status" />
+
+                <TextView
+                    android:id="@+id/applicantStatus"
+                    style="@style/Value"
+                    android:editable="false"
+                    android:text="@{applicant.status}"
+                    android:layout_marginBottom="@dimen/margin_bottom"/>
+            </TableRow>
+        </TableLayout>
+
+        <TextView
+            android:id="@+id/_UUID"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_column="1"
+            android:text="@{applicant._UUID}"
+            android:visibility="invisible"></TextView>
+
+        <View style="@style/Line" android:layout_width="@dimen/normal_line_width"/>
+    </LinearLayout>
+</layout>

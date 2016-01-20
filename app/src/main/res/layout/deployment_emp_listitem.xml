@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="deploy"
+            type="com.pbasolutions.android.model.MResourceAlloc" />
+    </data>
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TableLayout android:layout_width="match_parent" android:layout_height="match_parent">
+        <TableRow>
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_marginLeft="5dp"
+                android:text="EMPLOYEE"
+                android:editable="false"
+                android:textSize="15sp"/>
+            <Button
+                android:layout_width="50px"
+                android:layout_height="50px"
+                android:id="@+id/buttonRemove"
+                android:layout_column="1"
+                android:background="@drawable/minus"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MC"
+                android:id="@+id/buttonStatus"
+                android:layout_column="2" />
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
+    </layout>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="note"
+            type="com.pbasolutions.android.model.MNote" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+                <CheckBox
+                    android:id="@+id/deleteNote"
+                    android:layout_column="0"
+                    android:layout_marginTop="@dimen/checkbox_margin_top"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewNote"
+                    android:layout_width="210dp"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_marginLeft="@dimen/margin_left"
+                    android:layout_marginRight="@dimen/margin_right"
+                    android:layout_marginBottom="15dp"
+                    android:editable="false"
+                    android:maxLength="100"
+                    android:text="@{note.textMsgs}"
+                    android:textSize="@dimen/abc_text_size_body_1_material" />
+                <TableLayout android:layout_marginTop="@dimen/margin_top">
+                <TableRow>
+                    <TextView
+                        android:id="@+id/textViewNoteDate"
+                        android:layout_width="103dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_marginLeft="@dimen/margin_left"
+                        android:layout_marginRight="@dimen/margin_right"
+                        android:editable="false"
+                        android:text="@{note.date}"
+                        android:textSize="@dimen/abc_text_size_body_1_material" />
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:id="@+id/textViewNoteTime"
+                        android:layout_width="103dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_marginLeft="@dimen/margin_left"
+                        android:layout_marginRight="@dimen/margin_right"
+                        android:editable="false"
+                        android:text="@{note.Time}"
+                        android:textSize="@dimen/abc_text_size_body_1_material" />
+                </TableRow>
+                </TableLayout>
+                <TextView
+                    android:id="@+id/_UUID"
+                    android:text="@{note._UUID}"
+                    android:visibility="invisible" />
+            </TableRow>
+        </TableLayout>
+
+        <View style="@style/Line" android:layout_width="match_parent"/>
+    </LinearLayout>
+</layout>

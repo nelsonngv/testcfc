@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="deploy"
+            type="com.pbasolutions.android.model.MDeploy" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+        <TableLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+                <TextView
+                    android:layout_width="265dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewNoteDate"
+                    android:layout_column="0"
+                    android:layout_marginLeft="20dp"
+                    android:text="12-03-2015"
+                    android:editable="false"
+                    android:textSize="15sp"/>
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewShift"
+                    android:layout_column="1"
+                    android:text="Shift 1"
+                    android:editable="false"
+                    android:textSize="15sp"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="265dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewEmpNames"
+                    android:layout_column="0"
+                    android:layout_marginLeft="20dp"
+                    android:text="@{deploy.EmployeesName}"
+                    android:editable="false"
+                    android:textSize="15sp"/>
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textViewProjLoc"
+                    android:layout_column="1"
+                    android:text="{deploy.ProjectLocationName}"
+                    android:editable="false"
+                    android:textSize="15sp"/>
+            </TableRow>
+
+        </TableLayout>
+        <View style="@style/Line" android:layout_width="@dimen/normal_line_width"/>
+    </LinearLayout>
+</layout>

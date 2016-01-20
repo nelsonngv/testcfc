@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="deploy"
+            type="com.pbasolutions.android.model.MResourceAlloc" />
+    </data>
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent">
+   <TableLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_marginLeft="20dp">
+       <TableRow>
+           <TextView
+               android:layout_width="40dp"
+               android:layout_height="wrap_content"
+               android:layout_column="0"
+               android:text="@string/label_date"
+               android:editable="false"
+               android:textSize="15sp"/>
+           <TextView
+               android:layout_width="100dp"
+               android:layout_height="wrap_content"
+               android:layout_column="1"
+               android:text="12-03-2015"
+               android:editable="false"
+               android:textSize="15sp"/>
+           <TextView
+               android:layout_width="40dp"
+               android:layout_height="wrap_content"
+               android:layout_column="2"
+               android:text="@string/label_shift"
+               android:editable="false"
+               android:textSize="15sp"/>
+           <Spinner
+               android:layout_width="250dp"
+               android:layout_height="wrap_content"
+               android:id="@+id/filterShiftSpinner"
+               android:layout_column="1"/>
+       </TableRow>
+
+       <TableLayout>
+           <TableRow>
+               <TextView
+                   android:layout_width="200dp"
+                   android:layout_height="wrap_content"
+                   android:layout_column="0"
+                   android:editable="false"
+                   android:text="@string/label_employees"
+                   android:textSize="15sp" />
+               <Button
+                   android:layout_width="50px"
+                   android:layout_height="50px"
+                   android:id="@+id/buttonAddEmployee"
+                   android:layout_column="1"
+                   android:background="@drawable/plus"/>
+           </TableRow>
+           <TableLayout>
+               <android.support.v7.widget.RecyclerView
+                   android:id="@+id/deploy_emp_rv"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent">
+               </android.support.v7.widget.RecyclerView>
+           </TableLayout>
+       </TableLayout>
+
+   </TableLayout>
+</LinearLayout>
+    </layout>

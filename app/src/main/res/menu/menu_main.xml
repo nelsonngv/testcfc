@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.pbasolutions.android.PandoraMain">
+    <item
+        android:id="@+id/snyc_button"
+        android:title="@string/sync_button"
+        android:icon="@drawable/refresh"
+        android:orderInCategory="100"
+        android:visible="false"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/logout_button"
+        android:title="@string/logout_button"
+        android:icon="@drawable/log_out_icon"
+        android:orderInCategory="100"
+        android:visible="false"
+        app:showAsAction="never" />
+</menu>

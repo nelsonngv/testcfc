@@ -1,0 +1,53 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="employee"
+            type="com.pbasolutions.android.model.MEmployee"
+            />
+    </data>
+    <TableLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_top">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="@string/label_name"
+                style="@style/TableLabel"/>
+            <TextView
+                style="@style/Value"
+                android:id="@+id/employee_name"
+                android:text="@{employee.name}"
+               />
+        </TableRow>
+        <TableRow android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="@string/label_idnumber"
+                style="@style/TableLabel"/>
+            <TextView
+                style="@style/Value"
+                android:id="@+id/employee_idnumber"
+                android:text="@{employee.idNumber}"
+                />
+        </TableRow>
+        <TableRow android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="@string/label_phone"
+                style="@style/TableLabel"/>
+            <TextView
+                style="@style/Value"
+                android:id="@+id/employee_phone"
+                android:text="@{employee.phone}"
+                android:layout_marginBottom="@dimen/margin_bottom"
+                />
+        </TableRow>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/_UUID"
+            android:text="@{employee._UUID}"
+            android:visibility="invisible"/>
+    </TableLayout>
+</layout>

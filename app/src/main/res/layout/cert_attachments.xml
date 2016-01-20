@@ -1,0 +1,180 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="employee"
+            type="com.pbasolutions.android.model.MEmployee" />
+    </data>
+    <TableLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow android:layout_marginTop="10dp">
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_certpic1" />
+
+            <ImageView
+                android:id="@+id/imageViewcertPic1"
+                android:layout_width="@dimen/dimen_small_pic"
+                android:layout_height="@dimen/dimen_small_pic"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:layout_marginRight="@dimen/margin_right"
+                android:layout_column="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="10dp">
+
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_certpic2" />
+
+            <ImageView
+                android:id="@+id/imageViewcertPic2"
+                android:layout_width="@dimen/dimen_small_pic"
+                android:layout_height="@dimen/dimen_small_pic"
+                android:layout_column="1"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:layout_marginRight="@dimen/margin_right"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="10dp">
+
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_certpic3" />
+
+            <ImageView
+                android:id="@+id/imageViewcertPic3"
+                android:layout_width="@dimen/dimen_small_pic"
+                android:layout_height="@dimen/dimen_small_pic"
+                android:layout_column="1"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:layout_marginRight="@dimen/margin_right"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="10dp">
+
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_certpic4" />
+
+            <ImageView
+                android:id="@+id/imageViewcertPic4"
+                android:layout_width="@dimen/dimen_small_pic"
+                android:layout_height="@dimen/dimen_small_pic"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:layout_marginRight="@dimen/margin_right"
+                android:layout_column="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="10dp">
+
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_certpic5" />
+
+            <ImageView
+                android:id="@+id/imageViewcertPic5"
+                android:layout_width="@dimen/dimen_small_pic"
+                android:layout_height="@dimen/dimen_small_pic"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:layout_marginRight="@dimen/margin_right"
+                android:layout_column="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="10dp">
+
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_certpic6" />
+
+            <ImageView
+                android:id="@+id/imageViewcertPic6"
+                android:layout_width="@dimen/dimen_small_pic"
+                android:layout_height="@dimen/dimen_small_pic"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:layout_marginRight="@dimen/margin_right"
+                android:layout_column="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="10dp">
+
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_certpic7" />
+
+            <ImageView
+                android:id="@+id/imageViewcertPic7"
+                android:layout_width="@dimen/dimen_small_pic"
+                android:layout_height="@dimen/dimen_small_pic"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:layout_marginRight="@dimen/margin_right"
+                android:layout_column="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="10dp">
+
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_certpic8" />
+
+            <ImageView
+                android:id="@+id/imageViewcertPic8"
+                android:layout_width="@dimen/dimen_small_pic"
+                android:layout_height="@dimen/dimen_small_pic"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:layout_marginRight="@dimen/margin_right"
+                android:layout_column="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="10dp">
+
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_certpic9" />
+
+            <ImageView
+                android:id="@+id/imageViewcertPic9"
+                android:layout_width="@dimen/dimen_small_pic"
+                android:layout_height="@dimen/dimen_small_pic"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:layout_marginRight="@dimen/margin_right"
+                android:layout_column="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="10dp">
+            <TextView
+                style="@style/TableLabel"
+                android:text="@string/label_certpic10" />
+
+            <ImageView
+                android:id="@+id/imageViewcertPic10"
+                android:layout_width="400px"
+                android:layout_height="400px"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:layout_marginRight="@dimen/margin_right"
+                android:layout_column="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </TableRow>
+    </TableLayout>
+</layout>

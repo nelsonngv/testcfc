@@ -1,0 +1,46 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="line"
+            type="com.pbasolutions.android.model.MMovementLine" />
+    </data>
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginBottom="@dimen/margin_bottom">
+            <CheckBox
+              style="@style/LineCheckBox"
+                android:id="@+id/removeLine"
+             />
+            <TextView
+                style="@style/LineInfo"
+                android:id="@+id/prodName"
+                android:text="@{line.ProductName}"
+            />
+            <TextView
+                android:id="@+id/prlQtyRequested"
+                style="@style/LineQty"
+                android:text="@{String.valueOf(line.MovementQty.doubleValue())}"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/_UUID"
+                android:text="@{line._UUID}"
+                android:textSize="@dimen/abc_text_size_body_1_material"
+                android:visibility="invisible"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/_ID"
+                android:text="@{String.valueOf(line._ID)}"
+                android:textSize="@dimen/abc_text_size_body_1_material"
+                android:visibility="invisible"/>
+        </TableRow>
+        <View style="@style/Line" android:layout_width="200dp"/>
+    </TableLayout>
+</layout>

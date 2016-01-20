@@ -1,0 +1,101 @@
+{
+  "Success": "TRUE",
+  "ServerTime": "2015-06-09T13:59:59.0+08:00",
+  "Token": "01234567890123456789012345678912",
+  "ValidTo": "2015-10-01T00:00:01.0+08:00",
+  "SyncInterval": 60,
+  "Reset": true,
+  "Roles": [
+    {
+      "ID": 0,
+      "Name": "Supervisor",
+      "Orgs": [
+        {
+          "ID": 0,
+          "Name": "The Edge's"
+        },
+        {
+          "ID": 1,
+          "Name": "Super Clean"
+        }
+      ]
+    },
+    {
+      "ID": 1,
+      "Name": "Manager",
+      "Orgs": [
+        {
+          "ID": 1000000,
+          "Name": "Super Clean"
+        }
+      ]
+    }
+  ],
+  "Tables": [
+    {
+      "Name": "PBS_SYNCTABLE",
+      "Columns": [
+        [
+          {
+            "Name": "ID",
+            "Value": "10000001"
+          },
+          {
+            "Name": "isMasterData",
+            "Value": "true"
+          },
+          {
+            "Name": "isRetain",
+            "Value": "true"
+          }
+        ],
+        [
+          {
+            "Name": "ID",
+            "Value": "10000002"
+          },
+          {
+            "Name": "isMasterData",
+            "Value": "true"
+          },
+          {
+            "Name": "isRetain",
+            "Value": "true"
+          }
+        ],
+        [
+          {
+            "Name": "ID",
+            "Value": "10000003"
+          },
+          {
+            "Name": "isMasterData",
+            "Value": "false"
+          },
+          {
+            "Name": "isRetain",
+            "Value": "false"
+          }
+        ],
+        [
+          {
+            "Name": "ID",
+            "Value": "10000004"
+          },
+          {
+            "Name": "isMasterData",
+            "Value": "false"
+          },
+          {
+            "Name": "isRetain",
+            "Value": "true"
+          },
+          {
+            "Name": "RetentionPeriod",
+            "Value": "13"
+          }
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="requisition"
+            type="com.pbasolutions.android.model.MPurchaseRequest"
+            />
+    </data>
+    <TableLayout android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/margin_top"
+        android:layout_height="wrap_content">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="@string/label_docno"
+               style="@style/TableLabel"/>
+            <TextView
+                android:id="@+id/req_docNo"
+                android:text="@{requisition.DocumentNo}"
+                style="@style/Value"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="@string/label_requested_date"
+                style="@style/TableLabel"/>
+            <TextView
+                android:id="@+id/req_request_date"
+                style="@style/Value"
+                android:text="@{requisition.RequestDate}"
+                />
+        </TableRow>
+        <TableRow android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="@string/label_requester"
+                style="@style/TableLabel"/>
+            <TextView
+                android:id="@+id/req_request_username"
+                android:text="@{requisition.UserName}"
+                style="@style/Value"/>
+        </TableRow>
+        <TableRow android:layout_marginBottom="@dimen/margin_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="@string/req_label_status"
+                style="@style/TableLabel"/>
+            <TextView
+                android:id="@+id/req_status"
+                android:text="@{requisition.Status}"
+                style="@style/Value"/>
+        </TableRow>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/_UUID"
+            android:text="@{requisition._UUID}"
+            android:visibility="invisible"/>
+        <View style="@style/Line" android:layout_width="@dimen/normal_line_width" />
+    </TableLayout>
+</layout>

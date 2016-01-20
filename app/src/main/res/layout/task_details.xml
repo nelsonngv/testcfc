@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <data>
+        <variable
+            name="task"
+            type="com.pbasolutions.android.model.MProjectTask" />
+    </data>
+
+    <ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_marginTop="@dimen/margin_top">
+
+                    <TextView
+                        android:id="@+id/taskSeqNo"
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_marginLeft="@dimen/margin_left"
+                        android:editable="false"
+                        android:text="10"
+                        android:textSize="@dimen/abc_text_size_subhead_material" />
+
+                    <TextView
+                        android:id="@+id/taskName"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_marginLeft="@dimen/margin_left"
+                        android:editable="false"
+                        android:text="Task 20"
+                        android:textStyle="bold"
+                        android:textSize="@dimen/abc_text_size_subhead_material" />
+                </TableRow>
+            </TableLayout>
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow>
+                    <TextView
+                        style="@style/TableLabel"
+                        android:text="@string/label_projloc"
+                        android:textSize="@dimen/abc_text_size_body_1_material" />
+
+                    <TextView
+                        android:id="@+id/taskProjLoc"
+                        style="@style/Value"
+                        />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        style="@style/TableLabel"
+                        android:text="@string/label_projdesc"/>
+
+                    <TextView
+                        android:id="@+id/taskDesc"
+                        style="@style/Value"
+                        />
+                </TableRow>
+                <include layout="@layout/task_attachments" />
+                <TableRow>
+                    <TextView
+                        style="@style/TableLabel"
+                        android:text="@string/taskdetails_label_comment"
+                        />
+
+                    <EditText
+                        android:id="@+id/taskComments"
+                        style="@style/Value"
+                        android:editable="true"
+                        android:hint="Sweep floor, ..."
+                        />
+                </TableRow>
+
+                <TableRow>
+
+                    <TextView
+                        android:text="@string/taskdetails_label_status"
+                    style="@style/TableLabel"/>
+                    <TextView
+                        style="@style/Value"
+                        android:id="@+id/taskStatus"/>
+
+                </TableRow>
+            </TableLayout>
+            <View style="@style/Line"
+                android:layout_width="@dimen/normal_line_width"/>
+        </LinearLayout>
+    </ScrollView>
+</layout>

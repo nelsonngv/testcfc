@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_drawer_width">260dp</dimen>
+
+    <dimen name="fab_button_margin_bottom">16dp</dimen>
+    <dimen name="fab_button_margin_right">16dp</dimen>
+    <dimen name="label_margin_left">10dp</dimen>
+    <dimen name="margin_left">10dp</dimen>
+    <dimen name="margin_right">10dp</dimen>
+    <dimen name="text_width">300dp</dimen>
+    <dimen name="common_margin_top">5dp</dimen>
+    <dimen name="dimen_small_pic">400px</dimen>
+    <dimen name="checkbox_margin_top">5.1dp</dimen>
+    <dimen name="checkbox_text_margin_top">10dp</dimen>
+    <dimen name="margin_bottom">10dp</dimen>
+    <dimen name="wo_checkbox_list_margin_top">15dp</dimen>
+    <dimen name="list_margin_bottom">15dp</dimen>
+    <dimen name="margin_top">10dp</dimen>
+    <dimen name="normal_line_width">370dp</dimen>
+</resources>

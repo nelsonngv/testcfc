@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="employee"
+            type="com.pbasolutions.android.model.MEmployee"
+        />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TableRow>
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/label_name" />
+                <EditText
+                    android:id="@+id/editTextEmpName"
+                    style="@style/Value"
+                    android:text="@{employee.name}" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/label_idnumber" />
+                <EditText
+                    android:id="@+id/editTextEmpIDNumber"
+                    style="@style/Value"
+                    android:text="@{employee.idNumber}" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/label_phone" />
+                <EditText
+                    android:id="@+id/editTextEmpPhone"
+                    style="@style/Value"
+                    android:inputType="phone"
+                    android:text="@{employee.phone}" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/label_jobtitle" />
+                <EditText
+                    style="@style/Value"
+                    android:id="@+id/editTextJobTitle"
+                    android:text="@{employee.jobTitle}" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</layout>

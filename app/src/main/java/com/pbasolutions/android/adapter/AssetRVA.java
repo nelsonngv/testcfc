@@ -1,0 +1,62 @@
+package com.pbasolutions.android.adapter;
+
+import android.content.Context;
+import android.databinding.ObservableArrayList;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+
+import com.pbasolutions.android.databinding.AssetListItemBinding;
+import com.pbasolutions.android.model.MStorage;
+
+/**
+ * Created by pbadell on 10/12/15.
+ */
+public class AssetRVA  extends RecyclerView.Adapter<AssetRVA.AssetVH>{
+    private Context mContext;
+    private ObservableArrayList<MStorage> storageList;
+    private LayoutInflater inflater;
+
+    public AssetRVA(Context mContext, ObservableArrayList<MStorage> name, LayoutInflater inflater) {
+        this.mContext = mContext;
+        this.storageList = name;
+        this.inflater = LayoutInflater.from(mContext);
+    }
+
+    @Override
+    public AssetRVA.AssetVH onCreateViewHolder(ViewGroup parent, int viewType) {
+        AssetListItemBinding binding = AssetListItemBinding.inflate(inflater);
+        AssetVH viewHolder = new AssetVH(binding);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(AssetVH holder, int position) {
+        if (storageList != null) {
+            MStorage asset = storageList.get(position);
+            holder.vBinding.setStorage(asset);
+        }
+    }
+
+    /**
+     * Returns the total number of items in the data set hold by the adapter.
+     *
+     * @return The total number of items in this adapter.
+     */
+    @Override
+    public int getItemCount() {
+        if (storageList != null)
+            return storageList.size();
+        else return 0;
+    }
+
+    public class AssetVH extends RecyclerView.ViewHolder {
+        AssetListItemBinding vBinding;
+
+        public AssetVH(AssetListItemBinding binding) {
+            super(binding.getRoot());
+            this.vBinding = binding;
+        }
+    }
+
+}

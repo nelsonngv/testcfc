@@ -1,0 +1,241 @@
+<resources>
+    <string name="app_name">Pandora</string>
+    <string name="label">Pandora</string>
+    <string name="login_label">Log in</string>
+    <string name="action_settings">Settings</string>
+    <string name="sync_button">Sync</string>
+    <string name="logout_button">Logout</string>
+    <string name="action_search">Search</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <string name="nav_item_recruit">Recruit</string>
+    <string name="nav_item_deploy">Deploy/Track/Inspect</string>
+    <string name="nav_item_assets">Assets</string>
+    <string name="nav_item_requisition">Requisition</string>
+    <string name="nav_item_task">Task</string>
+    <string name="nav_item_guardtour_checkin">Check In</string>
+    <string name="nav_item_guardtour_projectlocation">Check Point</string>
+    <string name="nav_item_broadcast">Broadcasts</string>
+    <string name="nav_item_newcheckin">New Check In</string>
+    <string name="nav_item_settings">Settings</string>
+
+    <!-- navigation drawer item labels  -->
+    <string-array name="nav_drawer_labels">
+        <item>@string/nav_item_recruit</item>
+<!-- temporary disable module.        <item>@string/nav_item_deploy</item> !-->
+        <item>@string/nav_item_assets</item>
+        <item>@string/nav_item_requisition</item>
+        <item>@string/nav_item_task</item>
+        <item>@string/nav_item_guardtour_checkin</item>
+        <item>@string/nav_item_guardtour_projectlocation</item>
+        <item>@string/nav_item_broadcast</item>
+        <item>@string/nav_item_settings</item>
+    </string-array>
+
+    <string name="title_recruit">Recruit</string>
+    <string name="title_deploy">Deploy</string>
+    <string name="title_assets">Assets</string>
+    <string name="title_requisition">Requisition</string>
+    <string name="title_requisitionline">Requisition Line</string>
+    <string name="title_task">Task</string>
+    <string name="title_guardtour_checkin">Check In</string>
+    <string name="title_guardtour_projectlocation">Check Point</string>
+    <string name="title_broadcast">Broadcast</string>
+    <string name="title_newcheckin">New Check In</string>
+    <string name="title_details">Details</string>
+    <string name="title_account">Account</string>
+    <string name="title_employees">Employees</string>
+    <string name="title_applicants">Applicants</string>
+    <string name="title_newapplicant">New Applicant</string>
+    <string name="title_applicantdetails">Applicant Details</string>
+    <string name="title_movement">Movements</string>
+    <string name="title_employee_details">Employee Details</string>
+    <string name="title_broadcastdetails">Broadcast Details</string>
+    <string name="title_projtaskdetails">Project Task Details</string>
+    <string name="title_default"></string>
+    <!--
+    Employee layout.
+    !-->
+    <string name="label_name">Name</string>
+    <string name="label_idnumber">ID No</string>
+    <string name="label_idtype">ID Type</string>
+    <string name="label_phone">Phone</string>
+    <string name="app_label_status">Status</string>
+    <string name="label_sex">Gender</string>
+    <string name="label_profpic">Profile Picture</string>
+    <string name="label_jobtitle">Job Title</string>
+    <!--Applicants layout!-->
+
+    <string name="label_status">Status</string>
+    <string name="label_nationality">Nationality</string>
+    <string name="label_prefjobloc">Pref. Job Location</string>
+    <string name="label_age">Age</string>
+    <string name="label_maritalstat">Marital Status</string>
+    <string name="label_qualificationhigh">Qual. High</string>
+    <string name="label_qualificationother">Qual. Other</string>
+    <string name="label_applicationdate">Application Date</string>
+    <string name="label_hrsetupjob">HR Setup Job</string>
+    <string name="label_hrnationality">HR Nationality</string>
+    <string name="label_expectedsalary">Expected Salary</string>
+    <string name="label_isexp">Is Experienced</string>
+    <string name="label_yearsofexp">Years of Experience</string>
+    <string name="label_prefShift">Pref. Shift</string>
+    <string name="label_certpic1">Image [1]</string>
+    <string name="label_certpic2">Image [2]</string>
+    <string name="label_certpic3">Image [3]</string>
+    <string name="label_certpic4">Image [4]</string>
+    <string name="label_certpic5">Image [5]</string>
+    <string name="label_certpic6">Image [6]</string>
+    <string name="label_certpic7">Image [7]</string>
+    <string name="label_certpic8">Image [8]</string>
+    <string name="label_certpic9">Image [9]</string>
+    <string name="label_certpic10">Image [10]</string>
+    <string name="label_sender">Sender</string>
+    <string name="label_date">Date</string>
+    <string name="label_filterby">Filter By </string>
+    <string name="label_value">Value </string>
+    <string name="label_shift">Shift </string>
+    <string name="label_employees">Employees </string>
+    <!--
+     Asset list
+    !-->
+    <string name="label_productname">Name</string>
+    <string name="label_productvalue">Value</string>
+    <string name="label_qty">Qty</string>
+    <string name="label_asi">ASI</string>
+    <!--
+    Movement
+    !-->
+    <string name="label_fromprojloc">From
+        </string>
+    <string name="label_toprojloc">To
+        </string>
+    <string name="label_docno">Document No </string>
+    <string name="movement_label_lines">Lines
+        </string>
+
+    <!--
+    Movement line
+    !-->
+    <string name="mvl_label_productname">Name
+        </string>
+    <string name="mvl_label_productvalue">Value
+        </string>
+    <string name="mvl_label_onhandqty">On Hand Qty</string>
+    <string name="mvl_label_asi">ASI
+        </string>
+    <string name="mvl_label_uom">UOM
+        </string>
+
+    <string name="label_movementqty">Movement Qty </string>
+
+    <string name="label_onhandqty">On Hand Quantity </string>
+    <string name="label_movementdate">Movement Date </string>
+    <string name="label_uom">UOM </string>
+    <string name="text_projectloc_na">Project Location is not selected.
+        Please select the project location in defaults setting tab.</string>
+    <string name="text_icon_add">Add</string>
+    <string name="text_male">Male</string>
+    <string name="text_female">Female</string>
+    <string name="text_yes">Yes</string>
+    <string name="text_no">No</string>
+    <string name="text_married">Married</string>
+    <string name="text_single">Single</string>
+
+    <!--
+   Requisition layout.
+   !-->
+
+    <string name="label_required_date">Required Date </string>
+    <string name="label_projloc">Proj. Location </string>
+    <string name="label_requester">Requester
+        </string>
+    <string name="req_label_status">Status
+        </string>
+
+    <string name="req_label_docno">Document No </string>
+    <string name="reqdetails_label_status">Status
+        </string>
+    <string name="reqdetails_label_projloc">Proj. Location </string>
+    <string name="reqdetails_label_requested_date">Requested Date </string>
+
+
+    <string name="label_comment">Comment</string>
+    <string name="label_lines">Lines</string>
+    <string name="label_line">Line </string>
+    <string name="label_button_request">Request</string>
+    <string name="label_button_save">Save</string>
+    <!--
+    Task layout.
+    !-->
+    <string name="label_picture1">Picture [1] </string>
+    <string name="label_picture2">Picture [2] </string>
+    <string name="label_picture3">Picture [3] </string>
+    <string name="label_picture4">Picture [4] </string>
+    <string name="label_picture5">Picture [5] </string>
+    <string name="taskdetails_label_comment">Comment</string>
+    <string name="taskdetails_label_status">Status</string>
+    <!--
+    Album name for this apps. all pictures taken will be stored in this album.
+    !-->
+    <string name="album_name">Pandora Album</string>
+
+    <string name="label_requisition_settings">Requisition</string>
+    <string name="label_displayprodname">Display Product Name</string>
+    <string name="label_displayprodval">Display Product Value</string>
+    <string name="title_requisitiondetails">Requisition Details</string>
+    <string name="title_newrequisition">New Requisition</string>
+    <string name="title_newrequisitionline">New Requisition Line</string>
+    <string name="title_requisitionlinedetails">Requisition Line Details</string>
+    <string name="title_asset_details">Asset Details</string>
+    <string name="title_newmovement">New Movement</string>
+    <string name="title_newmovementline">New Movement Line</string>
+    <string name="label_button_move">Move</string>
+    <string name="movement_greater_than">Movement quantity greater than Quantity On Hand</string>
+    <string name="movement_lesser_than">Movement must be a positive number</string>
+    <string name="title_movement_details">Details</string>
+    <string name="title_deployment_details">Deployment Details</string>
+    <string name="title_movementline_details">Movement Line Details</string>
+    <string name="title_task_details">Project Task Details</string>
+    <!--
+    Error text
+    !-->
+    <string name="error_logged_out_sync">You have session has ended. Please re-login to view latest %1$s.</string>
+    <string name="error_no_projloc">You have not selected project location.
+        Please select to view latest %1$s.</string>
+    <!--
+    Broadcast messages.
+    !-->
+    <string name="broadcast_messages">Broadcast messages</string>
+    <string name="assets_and_movements">Assets and Movements</string>
+    <string name="sure_to_delete">Are you sure to delete %1$s?</string>
+    <string name="no_selected">No %1$s selected</string>
+
+    <string name="movement_label_docno">Document No </string>
+    <string name="movement_label_movedate">Movement Date </string>
+    <string name="movement_label_status">Status
+        </string>
+    <string name="label_requested_date">Requested Date </string>
+    <string name="label_serverurl">Server URL</string>
+    <string name="label_username">Username</string>
+    <string name="label_password">Password</string>
+    <string name="label_projdesc">Description</string>
+    <string name="no_value_movement_qty">Please insert value for movement quantity</string>
+    <string name="no_line_error">Please add at least one line to %1$s</string>
+    <string name="request">request</string>
+    <string name="please_fill_in_fields">Please fill in required field(s) : %1$s</string>
+    <string name="text_icon_remove">remove</string>
+    <string name="text_icon_move">move</string>
+    <string name="text_icon_save">save</string>
+    <string name="label_taskname">Name</string>
+    <string name="label_taskprojloc">Project Location</string>
+    <string name="label_taskdesc">Description</string>
+    <string name="label_assignto">Assign To</string>
+    <string name="label_taskSeqNo">Sequence No</string>
+    <string name="text_icon_assign">Assign Project</string>
+    <string name="title_newprojecttask">New Task</string>
+    <string name="text_icon_complete">Complete</string>
+
+
+</resources>

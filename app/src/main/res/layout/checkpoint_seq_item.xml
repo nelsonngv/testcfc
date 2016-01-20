@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="checkPointSeq"
+            type="com.pbasolutions.android.model.MCheckPoint"/>
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.13" />
+        <TableLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/checkpoint_seqno"
+                    android:text="@{checkPointSeq.seqNo}"
+                    android:gravity="right"
+                    android:layout_width="10dp"
+                    android:layout_column="0"
+                    android:layout_marginLeft="@dimen/margin_left"
+                    android:layout_marginRight="@dimen/margin_right"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/abc_text_size_body_1_material"/>
+                <TextView
+                    style="@style/Value"
+                    android:id="@+id/checkpoint_name"
+                    android:text="@{checkPointSeq.name}"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/abc_text_size_subhead_material"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    style="@style/Value"
+                    android:id="@+id/checkpoint_description"
+                    android:text="@{checkPointSeq.description}"
+                    />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</layout>

@@ -1,0 +1,103 @@
+package com.pbasolutions.android;
+
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.pbasolutions.android.json.PBSJson;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by pbadell on 8/21/15.
+ */
+public class PBSServer {
+    /**
+     * Class name tag.
+     */
+    private static final String TAG = "PBSServer";
+
+    /**
+     * This method for sending request to server and returning json result object.
+     * @param url url of server to send request.
+     * @param classname
+     * @return
+     */
+    protected PBSJson callServer(final String url, final String classname) {
+        try {
+
+            // HttpClient.set
+            HttpGet httpGet = new HttpGet(url);
+            // Create local HTTP context
+            HttpContext localContext = new BasicHttpContext();
+            // Bind custom cookie store to the local context
+            localContext.setAttribute(ClientContext.COOKIE_STORE, PBSServerConst.cookieStore);
+            String responseString = "";
+            Class cls = Class.forName(classname);
+            final HttpParams httpParams = new BasicHttpParams();
+            //set time out to 30 seconds. any attempt to request on server >30 sec will timed out.
+            HttpConnectionParams.setConnectionTimeout(httpParams, 30000);
+            DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
+            HttpResponse response = httpClient.execute(httpGet, localContext);
+            responseString = EntityUtils.toString(response.getEntity());
+            return (PBSJson) new Gson().fromJson(responseString, cls);
+        } catch (Exception e) {
+            Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * This method for sending request to server and returning json result object.
+     * @param url url of server to send request.
+     * @return
+     */
+    protected String postServer(final String url, final String json) {
+        try {
+            HttpPost httpPost= new HttpPost(url);
+            HttpContext localContext = new BasicHttpContext();
+            localContext.setAttribute(ClientContext.COOKIE_STORE, PBSServerConst.cookieStore);
+
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("json", json));
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            final HttpParams httpParams = new BasicHttpParams();
+            //set time out to 30 seconds. any attempt to request on server >30 sec will timed out.
+            HttpConnectionParams.setConnectionTimeout(httpParams, 30000);
+            DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
+            HttpResponse response = httpClient.execute(httpPost, localContext);
+            return EntityUtils.toString(response.getEntity());
+        }  catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Return main url path without action and variable parameters.
+     * @param url
+     * @param path
+     * @param jsp
+     * @return
+     */
+    protected String getURL(String url, String path, String jsp){
+        return url + path + jsp;
+    }
+}

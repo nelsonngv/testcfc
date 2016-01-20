@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/TableLabel2"
+        android:text="@string/label_phone" />
+
+    <TextView
+       style="@style/Value2"
+        android:id="@+id/phoneID"
+        />
+
+    <TextView
+        style="@style/TableLabel2"
+        android:text="Check In"
+         />
+
+    <CheckBox
+        android:id="@+id/displayFullCommentRB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_marginLeft="@dimen/margin_left"
+        android:text="Display full comment"
+        android:textSize="@dimen/abc_text_size_body_1_material" />
+
+    <!-- TODO allow selection on product value and name
+       <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_top"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:textStyle="bold"
+            android:textSize="@dimen/abc_text_size_subhead_material"
+            android:text="@string/label_requisition_settings"
+            />
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_displayprodname"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:textSize="@dimen/abc_text_size_body_1_material"
+            android:id="@+id/displayProdName"
+            />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_displayprodval"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:textSize="@dimen/abc_text_size_body_1_material"
+            android:id="@+id/displayProdVal"
+            />
+        </RadioGroup>
+        !-->
+    <!--<TextView
+        android:text="Export"
+        style="@style/TableLabel2"/>
+
+    <Button
+        android:id="@+id/exportDataButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Export Data"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/exportLogButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Export Log   "
+        android:visibility="visible" />
+        !-->
+
+    <TextView
+        android:id="@+id/line2"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/displayFullCommentRB"
+        android:layout_marginTop="@dimen/margin_top"
+        android:background="#000"
+        android:gravity="center_horizontal"
+        android:visibility="invisible" />
+
+</LinearLayout>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="projTask"
+            type="com.pbasolutions.android.model.MProjectTask" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TableLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_top">
+                <TextView
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/task_seqno"
+                    android:layout_column="0"
+                    android:layout_marginLeft="@dimen/margin_left"
+                    android:layout_marginRight="@dimen/margin_right"
+                    android:text="@{String.valueOf(projTask.seqNo)}"
+                    android:editable="false"
+                    android:textSize="@dimen/abc_text_size_subhead_material"/>
+                <TextView
+                    android:layout_width="270dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/task_name"
+                    android:layout_column="1"
+                    android:layout_marginLeft="@dimen/margin_left"
+                    android:layout_marginRight="@dimen/margin_right"
+                    android:text="@{projTask.name}"
+                    android:textStyle="bold"
+                    android:editable="false"
+                    android:textSize="@dimen/abc_text_size_subhead_material"/>
+            </TableRow>
+        </TableLayout>
+        <TableLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/TableLabel"
+                    android:layout_column="0"
+                    android:text="@string/label_projloc" />
+                <TextView
+                    style="@style/Value"
+                    android:id="@+id/task_project_loc"
+                    android:text="@{projTask.projLocName}"
+                    />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    style="@style/TableLabel"
+                    android:text="@string/label_status" />
+                <TextView
+                    android:id="@+id/task_status"
+                    style="@style/Value"
+                    android:text="@{projTask.Status}"
+                    android:layout_marginBottom="@dimen/margin_bottom" />
+            </TableRow>
+        </TableLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/_UUID"
+            android:text="@{projTask._UUID}"
+            android:visibility="invisible"/>
+        <View style="@style/Line" android:layout_width="@dimen/normal_line_width"/>
+    </LinearLayout>
+</layout>

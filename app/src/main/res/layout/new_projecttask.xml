@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <TextView
+        style="@style/TableLabel2"
+        android:text="@string/label_taskname" />
+
+    <EditText
+        android:id="@+id/newTaskName"
+        style="@style/Value2" />
+
+    <TextView
+        style="@style/TableLabel2"
+        android:text="@string/label_assignto" />
+
+    <Spinner
+        android:id="@+id/newTaskAssignTo"
+        style="@style/Value2" />
+
+
+    <TextView
+        style="@style/TableLabel2"
+        android:text="@string/label_taskprojloc" />
+
+    <Spinner
+        android:id="@+id/newTaskProjLoc"
+        style="@style/Value2" />
+
+    <TextView
+        style="@style/TableLabel2"
+        android:text="@string/label_taskdesc" />
+
+    <EditText
+        android:id="@+id/newTaskDescription"
+        style="@style/Value2" />
+
+    <TextView
+        style="@style/TableLabel2"
+        android:text="@string/label_taskSeqNo"
+        />
+
+    <EditText
+        android:id="@+id/newTaskSeqNo"
+        style="@style/Value2"
+        android:inputType="number"/>
+    </LinearLayout>
