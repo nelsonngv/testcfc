@@ -1,6 +1,7 @@
 package com.pbasolutions.android.fragment;
 
 import android.accounts.AccountManager;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.app.ProgressDialog;
 
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
@@ -36,7 +38,6 @@ public class LoginFragment extends Fragment {
      * Authentication controller, will handle all events in authentication activity.
      */
     private PBSAuthenticatorController authController;
-
 
     private String accountName;
     private String accountPassword;
@@ -127,10 +128,48 @@ public class LoginFragment extends Fragment {
         bundle.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
         bundle.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
 
-        Bundle resultBundle = new Bundle();
         if (isServer(serverURL)) {
+            new LoginTask().execute(bundle);
+        }
+    }
+
+    private boolean isServer(String serverURL) {
+        final Bundle bundle = new Bundle();
+        bundle.putString(PBSServerConst.VERSION, serverURL);
+        Bundle resultBundle = new Bundle();
+        resultBundle = authController.triggerEvent(
+                PBSAuthenticatorController.AUTHENTICATE_SERVER, bundle, resultBundle, null);
+        if (resultBundle.getBoolean(PBSServerConst.RESULT)) {
+            return true;
+        } else {
+            PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
+                    resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)),
+                    resultBundle.getString(PandoraConstant.TITLE), PandoraConstant.OK_BUTTON, null);
+            return false;
+        }
+    }
+
+    private class LoginTask extends AsyncTask<Bundle, Void, Bundle> {
+        private ProgressDialog  loginProgressDlg;
+        @Override
+        protected void onPreExecute() {
+            loginProgressDlg = new ProgressDialog(getActivity());
+            loginProgressDlg.setCancelable(false);
+            loginProgressDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            loginProgressDlg.setMessage("Connecting...");
+            loginProgressDlg.show();
+        }
+
+        @Override
+        protected Bundle doInBackground(Bundle... params) {
+            Bundle resultBundle = new Bundle();
             resultBundle = authController.triggerEvent(PBSAuthenticatorController.SUBMIT_LOGIN,
-                    bundle, resultBundle, null);
+                    params[0], resultBundle, null);
+            return resultBundle;
+        }
+
+        protected void onPostExecute(Bundle resultBundle) {
+            loginProgressDlg.dismiss();
             if (resultBundle.getString(PandoraConstant.ERROR) != null) {
                 PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
                         resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)),
@@ -179,25 +218,6 @@ public class LoginFragment extends Fragment {
                 }
 
             }
-
         }
     }
-
-    private boolean isServer(String serverURL) {
-        final Bundle bundle = new Bundle();
-        bundle.putString(PBSServerConst.VERSION, serverURL);
-        Bundle resultBundle = new Bundle();
-        resultBundle = authController.triggerEvent(
-                PBSAuthenticatorController.AUTHENTICATE_SERVER, bundle, resultBundle, null);
-        if (resultBundle.getBoolean(PBSServerConst.RESULT)) {
-            return true;
-        } else {
-            PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
-                    resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)),
-                    resultBundle.getString(PandoraConstant.TITLE), PandoraConstant.OK_BUTTON, null);
-            return false;
-        }
-    }
-
-
 }
