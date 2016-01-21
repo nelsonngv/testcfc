@@ -128,9 +128,7 @@ public class LoginFragment extends Fragment {
         bundle.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
         bundle.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
 
-        if (isServer(serverURL)) {
-            new LoginTask().execute(bundle);
-        }
+        new LoginAsyncTask().execute(bundle);
     }
 
     private boolean isServer(String serverURL) {
@@ -142,14 +140,15 @@ public class LoginFragment extends Fragment {
         if (resultBundle.getBoolean(PBSServerConst.RESULT)) {
             return true;
         } else {
-            PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
-                    resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)),
-                    resultBundle.getString(PandoraConstant.TITLE), PandoraConstant.OK_BUTTON, null);
+//            commened by danny 20160121. will process on out side
+//            PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
+//                    resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)),
+//                    resultBundle.getString(PandoraConstant.TITLE), PandoraConstant.OK_BUTTON, null);
             return false;
         }
     }
 
-    private class LoginTask extends AsyncTask<Bundle, Void, Bundle> {
+    private class LoginAsyncTask extends AsyncTask<Bundle, Void, Bundle> {
         private ProgressDialog  loginProgressDlg;
         @Override
         protected void onPreExecute() {
@@ -163,8 +162,14 @@ public class LoginFragment extends Fragment {
         @Override
         protected Bundle doInBackground(Bundle... params) {
             Bundle resultBundle = new Bundle();
-            resultBundle = authController.triggerEvent(PBSAuthenticatorController.SUBMIT_LOGIN,
-                    params[0], resultBundle, null);
+            if (isServer(serverURL)) {
+                resultBundle = authController.triggerEvent(PBSAuthenticatorController.SUBMIT_LOGIN,
+                        params[0], resultBundle, null);
+            } else {
+                resultBundle.putBoolean(PBSServerConst.RESULT, false);
+                resultBundle.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+                resultBundle.putString(PandoraConstant.ERROR, "The specified server is unavailable. Please try again later.");
+            }
             return resultBundle;
         }
 
