@@ -140,7 +140,7 @@ public class LoginFragment extends Fragment {
         if (resultBundle.getBoolean(PBSServerConst.RESULT)) {
             return true;
         } else {
-//            commened by danny 20160121. will process on out side
+//            commented by danny 20160121. will process on out side
 //            PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
 //                    resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)),
 //                    resultBundle.getString(PandoraConstant.TITLE), PandoraConstant.OK_BUTTON, null);
