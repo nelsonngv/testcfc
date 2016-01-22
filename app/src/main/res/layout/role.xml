@@ -124,7 +124,7 @@
             android:layout_marginRight="20dp"
             android:onClick="roleOkClicked"
             android:textColor="#ffffffff"
-            android:background="#9abb3e"
+            android:background="@color/colorButtons"
             android:text="Ok" />
 
     </LinearLayout>
