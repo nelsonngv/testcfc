@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Base64;
@@ -85,7 +87,32 @@ public class CameraUtil {
         bmOptions.inPreferredConfig = Bitmap.Config.RGB_565;
         bmOptions.inDither = true;
 		/* Decode the JPEG file into a Bitmap */
-        return BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        Bitmap scaledBmp = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(mCurrentPhotoPath);
+        } catch (IOException ioe) {
+            return scaledBmp;
+        }
+
+        String orientString = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+        int orientation = orientString == null? ExifInterface.ORIENTATION_NORMAL : Integer.parseInt(orientString);
+
+        int rotateAngle = 0;
+        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotateAngle = 90;
+        else if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotateAngle = 180;
+        else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotateAngle = 270;
+
+        if (rotateAngle > 0) {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(rotateAngle);
+
+            return Bitmap.createBitmap(scaledBmp, 0, 0, scaledBmp.getWidth(), scaledBmp.getHeight(), matrix, true);
+        }
+        else {
+            return scaledBmp;
+        }
     }
     private static void galleryAddPic(String mCurrentPhotoPath, Activity activity) {
         Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
