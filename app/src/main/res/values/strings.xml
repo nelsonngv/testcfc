@@ -54,6 +54,9 @@
     <string name="title_broadcastdetails">Broadcast Details</string>
     <string name="title_projtaskdetails">Project Task Details</string>
     <string name="title_default"></string>
+    <string name="title_camera_button">Take Picture</string>
+    <string name="title_gallery_button">Load From Gallery</string>
+
     <!--
     Employee layout.
     !-->

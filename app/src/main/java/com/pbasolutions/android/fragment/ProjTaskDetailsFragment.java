@@ -2,7 +2,10 @@ package com.pbasolutions.android.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -216,23 +219,23 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
 //                        break;
 //                    }
                     case EVENT_PIC1: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_1);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_1, object);
                         break;
                     }
                     case EVENT_PIC2: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_2);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_2, object);
                         break;
                     }
                     case EVENT_PIC3: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_3);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_3, object);
                         break;
                     }
                     case EVENT_PIC4: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_4);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_4, object);
                         break;
                     }
                     case EVENT_PIC5: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_5);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_5, object);
                         break;
                     }
                     default:
@@ -278,29 +281,44 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == context.RESULT_OK) {
+            String picturePath = null;
+            if (data != null) {
+                Uri curImage = data.getData();
+
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getActivity().getContentResolver().query(curImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                picturePath = cursor.getString(columnIndex);
+                cursor.close();
+            } else {
+                picturePath = context.getmCurrentPhotoPath();
+            }
+
             switch (requestCode) {
                 case CameraUtil.CAPTURE_ATTACH_1: {
-                    CameraUtil.handleBigCameraPhoto(taskPicture1, context.getmCurrentPhotoPath(), context);
+                    CameraUtil.handleBigCameraPhoto(taskPicture1, picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_2: {
-                    CameraUtil.handleBigCameraPhoto(taskPicture2, context.getmCurrentPhotoPath(), context);
+                    CameraUtil.handleBigCameraPhoto(taskPicture2, picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_3: {
-                    CameraUtil.handleBigCameraPhoto(taskPicture3, context.getmCurrentPhotoPath(), context);
+                    CameraUtil.handleBigCameraPhoto(taskPicture3, picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_4: {
-                    CameraUtil.handleBigCameraPhoto(taskPicture4, context.getmCurrentPhotoPath(), context);
+                    CameraUtil.handleBigCameraPhoto(taskPicture4, picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_5: {
-                    CameraUtil.handleBigCameraPhoto(taskPicture5, context.getmCurrentPhotoPath(), context);
+                    CameraUtil.handleBigCameraPhoto(taskPicture5, picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }

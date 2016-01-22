@@ -18,10 +18,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
@@ -108,6 +110,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     private AlbumStorageDirFactory mAlbumStorageDirFactory = null;
 
     /**
+     *  Store current action codes
+     */
+
+    private int    currentActionCode;
+
+    /**
      * Fragment id.
      */
     public static final int FRAGMENT_DEFAULT = -1;
@@ -176,6 +184,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         serverController = new PBSServerController(this);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mAlbumStorageDirFactory = new BaseAlbumDirFactory();
+        currentActionCode = 0;
+
         setSupportActionBar(mToolbar);
         setDrawerFragment();
         directToFragment();
@@ -653,20 +663,46 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * On picture taken.
      * @param actionCode
      */
-    public void dispatchTakePictureIntent(int actionCode) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File f;
-            try {
-                f = CameraUtil.setUpPhotoFile(mAlbumStorageDirFactory);
-                mCurrentPhotoPath = f.getAbsolutePath();
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-            } catch (IOException e) {
-                e.printStackTrace();
-                mCurrentPhotoPath = null;
+    public void dispatchTakePictureIntent(int actionCode, View view) {
+        currentActionCode = actionCode;
+
+        PopupMenu popup = new PopupMenu(this, view);
+
+        MenuItem cameraItem  = popup.getMenu().add(R.string.title_camera_button);
+        cameraItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) == null) return true;
+
+                File f;
+                try {
+                    f = CameraUtil.setUpPhotoFile(mAlbumStorageDirFactory);
+                    mCurrentPhotoPath = f.getAbsolutePath();
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    mCurrentPhotoPath = null;
+                }
+
+                startActivityForResult(takePictureIntent, currentActionCode);
+                return true;
             }
-            startActivityForResult(takePictureIntent, actionCode);
-        }
+        });
+
+
+        MenuItem loadPictureItem  = popup.getMenu().add(R.string.title_gallery_button);
+
+        loadPictureItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent loadPictureIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                if (loadPictureIntent.resolveActivity(getPackageManager()) == null) return true;
+
+                startActivityForResult(loadPictureIntent, currentActionCode);
+                return true;
+            }
+        });
+
+        popup.show();
     }
 
     /**

@@ -2,7 +2,10 @@ package com.pbasolutions.android.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -239,47 +242,47 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
                         break;
                     }
                     case EVENT_PROFPIC: {
-                        takePicture(CameraUtil.CAPTURE_PROF_PIC);
+                        takePicture(CameraUtil.CAPTURE_PROF_PIC, object);
                         break;
                     }
                     case EVENT_CERTPIC_1: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_1);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_1, object);
                         break;
                     }
                     case EVENT_CERTPIC_2: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_2);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_2, object);
                         break;
                     }
                     case EVENT_CERTPIC_3: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_3);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_3, object);
                         break;
                     }
                     case EVENT_CERTPIC_4: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_4);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_4, object);
                         break;
                     }
                     case EVENT_CERTPIC_5: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_5);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_5, object);
                         break;
                     }
                     case EVENT_CERTPIC_6: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_6);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_6, object);
                         break;
                     }
                     case EVENT_CERTPIC_7: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_7);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_7, object);
                         break;
                     }
                     case EVENT_CERTPIC_8: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_8);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_8, object);
                         break;
                     }
                     case EVENT_CERTPIC_9: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_9);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_9, object);
                         break;
                     }
                     case EVENT_CERTPIC_10: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_10);
+                        takePicture(CameraUtil.CAPTURE_ATTACH_10, object);
                         break;
                     }
                     default:
@@ -317,70 +320,85 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == context.RESULT_OK) {
+            String picturePath = null;
+            if (data != null) {
+                Uri curImage = data.getData();
+
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getActivity().getContentResolver().query(curImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                picturePath = cursor.getString(columnIndex);
+                cursor.close();
+            } else {
+                picturePath = context.getmCurrentPhotoPath();
+            }
+
             switch (requestCode) {
                 case CameraUtil.CAPTURE_PROF_PIC : {
                     CameraUtil.handleBigCameraPhoto(profileImage,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_1: {
                     CameraUtil.handleBigCameraPhoto(cert1Pic,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_2: {
                     CameraUtil.handleBigCameraPhoto(cert2Pic,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_3: {
                     CameraUtil.handleBigCameraPhoto(cert3Pic,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_4: {
                     CameraUtil.handleBigCameraPhoto(cert4Pic,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_5: {
                     CameraUtil.handleBigCameraPhoto(cert5Pic,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_6: {
                     CameraUtil.handleBigCameraPhoto(cert6Pic,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_7: {
                     CameraUtil.handleBigCameraPhoto(cert7Pic,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_8: {
                     CameraUtil.handleBigCameraPhoto(cert8Pic,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_9: {
                     CameraUtil.handleBigCameraPhoto(cert9Pic,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }
                 case CameraUtil.CAPTURE_ATTACH_10: {
                     CameraUtil.handleBigCameraPhoto(cert10Pic,
-                            context.getmCurrentPhotoPath(), context);
+                            picturePath, context);
                     context.mCurrentPhotoPath = null;
                     break;
                 }

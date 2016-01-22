@@ -43,9 +43,9 @@ public abstract class PBSDetailsFragment extends Fragment implements IDetailsFra
     /**
      *
      */
-    protected void takePicture(int code) {
+    protected void takePicture(int code, View view) {
         PandoraMain context = (PandoraMain)getActivity();
-        context.dispatchTakePictureIntent(code);
+        context.dispatchTakePictureIntent(code, view);
     }
 
     public String get_UUID() {
