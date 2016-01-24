@@ -197,7 +197,9 @@ public class LoginFragment extends Fragment {
                     context.globalVariable.setIsAuth(true);
                     context.globalVariable.setServer_url(serverURL);
                     context.globalVariable.setAuth_token(loginJSON.getToken());
-                    PandoraHelper.getProjLocAvailable(getActivity(), false);
+
+                    context.updateInitialSyncState();
+
                     Fragment accountFrag = new AccountFragment();
                     Bundle inputFragment = new Bundle();
                     inputFragment.putInt("INDEX", 1);

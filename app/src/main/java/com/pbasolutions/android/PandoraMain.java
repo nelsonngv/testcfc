@@ -11,6 +11,9 @@ import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 
+import android.os.Looper;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
@@ -59,6 +63,7 @@ import com.pbasolutions.android.fragment.RecruitFragment;
 import com.pbasolutions.android.fragment.RequisitionDetailFragment;
 import com.pbasolutions.android.fragment.RequisitionFragment;
 import com.pbasolutions.android.fragment.RequisitionLineDetailsFragment;
+import com.pbasolutions.android.json.PBSResultJSON;
 import com.pbasolutions.android.utils.AlbumStorageDirFactory;
 import com.pbasolutions.android.utils.BaseAlbumDirFactory;
 import com.pbasolutions.android.utils.CameraUtil;
@@ -123,6 +128,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     private ProgressDialog progressDialog;
     private int             progressShowCount = 0;
 
+    public static PandoraMain instance;
 
     /**
      * Fragment id.
@@ -208,6 +214,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 }
             }
         });
+
+        instance = this;
     }
 
     /**
@@ -396,6 +404,29 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         }
     }
 
+    private void resetServerData() {
+        // danny test code to reset sync data
+        (new Thread() {
+            public void run() {
+                PBSServer pbsServer = new PBSServer();
+                PBSResultJSON resultJSON = (PBSResultJSON) pbsServer.callServer("http://103.250.56.171:8000/wstore/Sync.jsp?action=Reset", PBSResultJSON.class.getName());
+
+                boolean result;
+                if (resultJSON != null){
+                    if (resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT)) {
+                        result = false;
+                    } else {
+                        result = true;
+                    }
+                } else {
+                    result = false;
+                }
+
+                Log.d("Sync Reset", " reset result : " + result);
+            }
+        }).start();
+    }
+
     /**
      * Perform sync.
      */
@@ -507,6 +538,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * @param firstInstantiate
      */
     public void displayView(int position, boolean firstInstantiate) {
+        if (position != FRAGMENT_ACCOUNT && !PandoraHelper.isInitialSyncCompleted)
+        {
+            Toast.makeText(this, "Please wait while initial syncing.",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         String title = getString(R.string.app_name);
         switch (position) {
             case FRAGMENT_CHECKPOINTS: {
@@ -733,6 +770,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             progressDialog.setCancelable(false);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         }
+
         progressDialog.setMessage(message);
         progressDialog.show();
         progressShowCount++;
@@ -744,5 +782,14 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             progressShowCount = 0;
         if (progressShowCount == 0)
             progressDialog.dismiss();
+    }
+
+    public void updateInitialSyncState() {
+        PandoraHelper.getProjLocAvailable(this, false);
+
+        if (PandoraHelper.isInitialSyncCompleted)
+            dismissProgressDialog();
+        else
+            showProgressDialog("Initial Syncing");
     }
 }

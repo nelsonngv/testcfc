@@ -87,6 +87,13 @@ public class PandoraHelper  {
     //29-12-2015 field date format
     public static final String FIELD_DATE_FORMAT = "dd-MM-yyyy";
 
+    /**
+     *  Is initial sync completed
+     */
+
+    public static boolean isInitialSyncCompleted = false;
+
+
     public static final String[] formats = {
             LOCAL_DATABASE_DATE_FORMAT,
             SERVER_DATE_FORMAT,
@@ -321,7 +328,8 @@ public class PandoraHelper  {
                     new Bundle(), null);
             PBSProjLocJSON[] projLocJSONs = (PBSProjLocJSON[]) result
                     .getSerializable(cont.ARG_PROJECT_LOCATION_JSON);
-            if (projLocJSONs != null) {
+            isInitialSyncCompleted = projLocJSONs != null;
+            if (isInitialSyncCompleted) {
                 setProjLocUserData(globalVar, projLocJSONs, activity);
             }
             if (showResult)

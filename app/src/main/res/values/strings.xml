@@ -240,5 +240,6 @@
     <string name="title_newprojecttask">New Task</string>
     <string name="text_icon_complete">Complete</string>
 
-
+    <string name="text_welcome_login">Welcome to Pandora!</string>
+    <string name="text_prompt_login">Please Login to use this app.</string>
 </resources>

@@ -14,6 +14,7 @@ import android.util.Log;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 
+import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
 import com.pbasolutions.android.controller.PBSServerController;
@@ -119,6 +120,9 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                         !syncResultBundle.getBoolean(PandoraConstant.RESULT)
                         && !authenticateResult.getBoolean(PandoraConstant.RESULT)){
                     syncResult.hasError();
+                } else { // sync successfull
+                    if (PandoraMain.instance != null)
+                        PandoraMain.instance.updateInitialSyncState();
                 }
             } else{
                 syncResult.hasError();
