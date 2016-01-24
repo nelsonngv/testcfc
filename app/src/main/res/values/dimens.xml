@@ -20,4 +20,12 @@
     <dimen name="list_margin_bottom">15dp</dimen>
     <dimen name="margin_top">10dp</dimen>
     <dimen name="normal_line_width">370dp</dimen>
+    <dimen name="horz_divider_padding">15dp</dimen>
+    <dimen name="def_tablerow_height">70dp</dimen>
+    <dimen name="table_margin_middle">10dp</dimen>
+    <dimen name="table_margin_left">10dp</dimen>
+    <dimen name="table_margin_right">10dp</dimen>
+    <dimen name="table_margin_top">5dp</dimen>
+    <dimen name="table_margin_bottom">5dp</dimen>
+    <dimen name="table_label_width">50dp</dimen>
 </resources>

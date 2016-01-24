@@ -21,14 +21,24 @@
         <item name="android:background">@color/dim_foreground_material_dark</item>
     </style>
     <style name="TableLabel">
-        <item name="android:layout_width">100dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">right</item>
-        <item name="android:layout_marginLeft">@dimen/margin_left</item>
-        <item name="android:layout_marginRight">@dimen/margin_right</item>
-        <item name="android:layout_column">0</item>
+        <item name="android:layout_width">@dimen/table_label_width</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginLeft">@dimen/table_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/table_margin_middle</item>
+        <item name="android:layout_marginTop">@dimen/table_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/table_margin_bottom</item>
+        <item name="android:layout_weight">3</item>
+        <item name="android:gravity">center_vertical|right</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
+
+    </style>
+    <style name="TableValue">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">7</item>
+        <item name="android:layout_marginRight">@dimen/table_margin_right</item>
+        <item name="android:layout_marginTop">@dimen/table_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/table_margin_bottom</item>
     </style>
     <style name="TableLabel2">
         <item name="android:layout_width">fill_parent</item>
