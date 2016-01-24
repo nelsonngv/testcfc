@@ -8,5 +8,6 @@
     <color name="colorAccent">#688026</color>
     <color name="colorButtons">#99BB3C</color>
     <color name="colorTextHint">#CCCCCC</color>
+    <color name="colorTableDivider">#CCCCCC</color>
 
 </resources>

@@ -2,126 +2,132 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:divider="@drawable/linear_divider"
+    android:showDividers="middle"
+    android:dividerPadding="15dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content">
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:layout_marginLeft="@dimen/margin_left"
-            android:layout_marginRight="@dimen/margin_right"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
             android:layout_marginTop="@dimen/margin_top"
             android:textStyle="bold"
-            android:text="Role" />
-        </LinearLayout>
+            android:text="Role"
+            android:layout_gravity="left"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_weight="0.9" />
 
         <Spinner
-            android:layout_marginTop="@dimen/margin_top"
             android:id="@+id/role"
             android:layout_marginRight="@dimen/margin_right"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_weight="0.4" />
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content">
         <TextView
             android:id="@+id/clientTextView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_left"
-            android:layout_marginRight="@dimen/margin_right"
-            android:gravity="right"
+            android:text="Client"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:layout_marginTop="@dimen/margin_top"
             android:textStyle="bold"
-            android:text="Client" />
-        </LinearLayout>
+            android:layout_gravity="left"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_weight="0.9" />
+
         <Spinner
             android:id="@+id/client"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" />
+            android:layout_marginRight="@dimen/margin_right"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:visibility="invisible"
+            android:layout_weight="0.4" />
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content">
         <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
+            android:text="Organization"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:layout_marginTop="@dimen/margin_top"
             android:textStyle="bold"
+            android:layout_gravity="left"
             android:layout_marginLeft="@dimen/margin_left"
-            android:layout_marginRight="@dimen/margin_right"
-            android:text="Organization" />
-        </LinearLayout>
-
+            android:layout_weight="0.9" />
         <Spinner
             android:id="@+id/organization"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:visibility="invisible" />
+            android:layout_marginRight="@dimen/margin_right"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:visibility="invisible"
+            android:layout_weight="0.4" />
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="120dp"
-            android:layout_height="wrap_content">
         <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_left"
-            android:layout_marginRight="@dimen/margin_right"
-            android:gravity="right"
+            android:text="Project Location"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:layout_marginTop="@dimen/margin_top"
             android:textStyle="bold"
-            android:text="Project Location" />
-        </LinearLayout>
+            android:layout_gravity="left"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_weight="0.9" />
+
         <Spinner
             android:id="@+id/project"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content" />
+            android:layout_marginRight="@dimen/margin_right"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:visibility="invisible"
+            android:layout_weight="0.4" />
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_left"
-        android:layout_marginRight="@dimen/margin_right"
-        android:layout_marginTop="@dimen/margin_top"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/roleOK"
             style="@style/ButtonLast"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
             android:onClick="roleOkClicked"
             android:textColor="#ffffffff"
             android:background="@color/colorButtons"
