@@ -1,6 +1,8 @@
 package com.pbasolutions.android;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -114,6 +116,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
 
     private int    currentActionCode;
+
+    /**
+     *  Progress Indicator
+     */
+    private ProgressDialog progressDialog;
+    private int             progressShowCount = 0;
+
 
     /**
      * Fragment id.
@@ -716,5 +725,24 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         fragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void showProgressDialog(String message) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setCancelable(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        }
+        progressDialog.setMessage(message);
+        progressDialog.show();
+        progressShowCount++;
+    }
+
+    public void dismissProgressDialog() {
+        progressShowCount--;
+        if (progressShowCount < 0)
+            progressShowCount = 0;
+        if (progressShowCount == 0)
+            progressDialog.dismiss();
     }
 }

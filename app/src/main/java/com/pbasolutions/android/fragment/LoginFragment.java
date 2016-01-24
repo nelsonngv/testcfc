@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.app.ProgressDialog;
 
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
@@ -149,14 +148,9 @@ public class LoginFragment extends Fragment {
     }
 
     private class LoginAsyncTask extends AsyncTask<Bundle, Void, Bundle> {
-        private ProgressDialog  loginProgressDlg;
         @Override
         protected void onPreExecute() {
-            loginProgressDlg = new ProgressDialog(getActivity());
-            loginProgressDlg.setCancelable(false);
-            loginProgressDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            loginProgressDlg.setMessage("Connecting...");
-            loginProgressDlg.show();
+            context.showProgressDialog("Connecting...");
         }
 
         @Override
@@ -174,7 +168,7 @@ public class LoginFragment extends Fragment {
         }
 
         protected void onPostExecute(Bundle resultBundle) {
-            loginProgressDlg.dismiss();
+            context.dismissProgressDialog();
             if (resultBundle.getString(PandoraConstant.ERROR) != null) {
                 PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
                         resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)),
