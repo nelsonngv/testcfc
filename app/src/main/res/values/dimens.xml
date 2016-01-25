@@ -22,10 +22,13 @@
     <dimen name="normal_line_width">370dp</dimen>
     <dimen name="horz_divider_padding">15dp</dimen>
     <dimen name="def_tablerow_height">70dp</dimen>
-    <dimen name="table_margin_middle">10dp</dimen>
-    <dimen name="table_margin_left">10dp</dimen>
-    <dimen name="table_margin_right">10dp</dimen>
+    <dimen name="table_margin_middle">5dp</dimen>
+    <dimen name="table_margin_left">20dp</dimen>
+    <dimen name="table_margin_right">20dp</dimen>
     <dimen name="table_margin_top">5dp</dimen>
     <dimen name="table_margin_bottom">5dp</dimen>
     <dimen name="table_label_width">100dp</dimen>
+    <dimen name="large_button_height">50dp</dimen>
+    <dimen name="large_button_margin_horz">40dp</dimen>
+    <dimen name="large_button_margin_vert">40dp</dimen>
 </resources>

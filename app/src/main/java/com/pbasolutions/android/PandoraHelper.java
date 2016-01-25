@@ -336,6 +336,8 @@ public class PandoraHelper  {
              PandoraHelper.showAlertMessage((PandoraMain) activity, result
                      .getString(result.getString(PandoraConstant.TITLE)),
                      result.getString(PandoraConstant.TITLE), "Ok", null);
+        } else {
+            isInitialSyncCompleted = true;
         }
     }
 

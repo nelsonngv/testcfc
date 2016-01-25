@@ -31,26 +31,36 @@
         <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>
     </style>
     <style name="TableInfoLabel">
-        <item name="android:layout_width">@dimen/table_label_width</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">40dp</item>
-        <item name="android:layout_marginLeft">@dimen/table_margin_left</item>
-        <item name="android:layout_marginRight">@dimen/table_margin_middle</item>
         <item name="android:layout_marginTop">@dimen/table_margin_top</item>
-        <item name="android:layout_marginBottom">@dimen/table_margin_bottom</item>
-        <item name="android:layout_weight">3</item>
-        <item name="android:gravity">center_vertical|right</item>
+        <item name="android:layout_marginBottom">@dimen/table_margin_middle</item>
+        <item name="android:gravity">center_vertical|left</item>
         <item name="android:textStyle">bold</item>
 
     </style>
     <style name="TableValue">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:minHeight">40dp</item>
-        <item name="android:layout_weight">7</item>
-        <item name="android:layout_marginRight">@dimen/table_margin_right</item>
-        <item name="android:layout_marginTop">@dimen/table_margin_top</item>
         <item name="android:layout_marginBottom">@dimen/table_margin_bottom</item>
+    </style>
+    <style name="PTableVirtRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:layout_marginLeft">@dimen/table_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/table_margin_right</item>
+    </style>
+    <style name="PLargeButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/large_button_height</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginLeft">@dimen/large_button_margin_horz</item>
+        <item name="android:layout_marginRight">@dimen/large_button_margin_horz</item>
+        <item name="android:layout_marginTop">@dimen/large_button_margin_vert</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:background">@color/colorButtons</item>
     </style>
     <style name="TableLabel2">
         <item name="android:layout_width">fill_parent</item>

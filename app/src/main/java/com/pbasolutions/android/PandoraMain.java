@@ -323,6 +323,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                                     "Please Login to use this app.",
                             PandoraConstant.LOGIN, "Ok", null);
                 } else {
+                    PandoraHelper.getProjLocAvailable(this, false);
                     defaultFragment = FRAGMENT_RECRUIT;
                 }
             } else {

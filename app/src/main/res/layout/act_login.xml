@@ -60,12 +60,8 @@
         <TableRow>
             <Button
                 android:id="@+id/submit"
+                style="@style/PLargeButton"
                 android:layout_weight="1"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:textColor="#ffffffff"
-                android:background="@color/colorButtons"
                 android:text="Sign in" />
         </TableRow>
     </TableLayout>

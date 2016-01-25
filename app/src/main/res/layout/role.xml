@@ -1,12 +1,11 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <TableLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:divider="@drawable/linear_divider"
         android:showDividers="middle"
-        android:dividerPadding="@dimen/horz_divider_padding">
+        android:orientation="vertical">
 
-        <TableRow>
+        <LinearLayout style="@style/PTableVirtRow">
             <TextView
                 android:id="@+id/textView2"
                 style="@style/TableInfoLabel"
@@ -15,9 +14,9 @@
             <Spinner
                 android:id="@+id/role"
                 style="@style/TableValue" />
-        </TableRow>
+        </LinearLayout>
 
-        <TableRow>
+        <LinearLayout style="@style/PTableVirtRow">
             <TextView
                 android:id="@+id/clientTextView"
                 android:text="Client"
@@ -28,9 +27,9 @@
                 android:visibility="invisible"
                 style="@style/TableValue" />
 
-        </TableRow>
+        </LinearLayout>
 
-        <TableRow>
+        <LinearLayout style="@style/PTableVirtRow">
             <TextView
                 android:text="Organization"
                 style="@style/TableInfoLabel" />
@@ -39,31 +38,23 @@
                 android:visibility="invisible"
                 style="@style/TableValue" />
 
-        </TableRow>
+        </LinearLayout>
 
-        <TableRow>
+        <LinearLayout style="@style/PTableVirtRow">
             <TextView
-                android:text="Project\nLocation"
+                android:text="Project Location"
                 style="@style/TableInfoLabel" />
 
             <Spinner
                 android:id="@+id/project"
                 android:visibility="invisible"
                 style="@style/TableValue" />
-        </TableRow>
-        <LinearLayout>
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
             <Button
+                style="@style/PLargeButton"
                 android:id="@+id/roleOK"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="40dp"
-                android:layout_weight="1"
                 android:onClick="roleOkClicked"
-                android:textColor="#ffffffff"
-                android:background="@color/colorButtons"
                 android:text="Ok" />
         </LinearLayout>
-    </TableLayout>
-</layout>
+</LinearLayout>
