@@ -371,6 +371,9 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * Logout from the app.
      */
     private void logout() {
+        if (true) {
+            resetServerData();
+        }
         if (PandoraHelper.isInternetOn(this)) {
             clearAllFragmentStack();
             Bundle inputBundle = new Bundle();
@@ -785,11 +788,22 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     }
 
     public void updateInitialSyncState() {
-        PandoraHelper.getProjLocAvailable(this, false);
-
-        if (PandoraHelper.isInitialSyncCompleted)
-            dismissProgressDialog();
-        else
-            showProgressDialog("Initial Syncing");
+//        if (PandoraHelper.isInitialSyncCompleted)
+//            dismissProgressDialog();
+//        else
+//            showProgressDialog("Initial Syncing");
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                boolean prevSyncState = PandoraHelper.isInitialSyncCompleted;
+                PandoraHelper.getProjLocAvailable(PandoraMain.this, false);
+                if (!PandoraHelper.isInitialSyncCompleted)
+                    Toast.makeText(PandoraMain.this, "Initial Syncing",
+                            Toast.LENGTH_SHORT).show();
+                else if (prevSyncState == false)
+                    Toast.makeText(PandoraMain.this, "Initial Sync completed",
+                            Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

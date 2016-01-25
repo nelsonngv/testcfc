@@ -1,5 +1,5 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@drawable/linear_divider"
@@ -9,7 +9,7 @@
         <TableRow>
             <TextView
                 android:id="@+id/textView2"
-                style="@style/TableLabel"
+                style="@style/TableInfoLabel"
                 android:text="Role"/>
 
             <Spinner
@@ -21,7 +21,7 @@
             <TextView
                 android:id="@+id/clientTextView"
                 android:text="Client"
-                style="@style/TableLabel" />
+                style="@style/TableInfoLabel" />
 
             <Spinner
                 android:id="@+id/client"
@@ -33,7 +33,7 @@
         <TableRow>
             <TextView
                 android:text="Organization"
-                style="@style/TableLabel" />
+                style="@style/TableInfoLabel" />
             <Spinner
                 android:id="@+id/organization"
                 android:visibility="invisible"
@@ -44,7 +44,7 @@
         <TableRow>
             <TextView
                 android:text="Project\nLocation"
-                style="@style/TableLabel" />
+                style="@style/TableInfoLabel" />
 
             <Spinner
                 android:id="@+id/project"

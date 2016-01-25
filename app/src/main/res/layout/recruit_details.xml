@@ -14,7 +14,7 @@
         android:dividerPadding="@dimen/horz_divider_padding">
         <TableRow>
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableInfoLabel"
                 android:text="@string/label_name" />
             <EditText
                 android:id="@+id/editTextEmpName"
@@ -23,7 +23,7 @@
         </TableRow>
         <TableRow >
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableInfoLabel"
                 android:text="@string/label_idtype" />
             <Spinner
                 android:id="@+id/idTypeSpinner"
@@ -32,7 +32,7 @@
         </TableRow>
         <TableRow>
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableInfoLabel"
                 android:text="@string/label_idnumber" />
             <EditText
                 android:id="@+id/editTextEmpIDNumber"
@@ -41,7 +41,7 @@
         </TableRow>
         <TableRow>
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableInfoLabel"
                 android:text="@string/label_phone" />
             <EditText
                 android:id="@+id/editTextEmpPhone"
