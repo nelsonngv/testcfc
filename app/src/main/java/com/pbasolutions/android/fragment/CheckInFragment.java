@@ -46,6 +46,10 @@ public class CheckInFragment extends Fragment {
      * Class tag name.
      */
     private static final String TAG = "CheckpointsFragment";
+
+    private static final int ACTION_SYNC = 100;
+    private static final int ACTION_ADD = 101;
+
     RecyclerView recyclerView;
     public CheckInRVA adapter;
     PBSCheckpointController checkpointController;
@@ -79,13 +83,6 @@ public class CheckInFragment extends Fragment {
         }
         recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
-        FloatingActionButton floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((PandoraMain)getActivity()).displayView(PandoraMain.FRAGMENT_NEW_CHECK_IN, false);
-            }
-        });
 
         // Inflate the layout for this fragment
         return rootView;
@@ -122,11 +119,27 @@ public class CheckInFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem sync;
-        sync = menu.add(0, 100, 0, "Sync");
+        sync = menu.add(0, ACTION_SYNC, 0, "Sync");
         sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         sync.setIcon(R.drawable.refresh);
+
+        MenuItem add;
+        sync = menu.add(0, ACTION_ADD, 0, "Add");
+        sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        sync.setIcon(R.drawable.add);
     }
-    @Override
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case ACTION_ADD:
+                ((PandoraMain)getActivity()).displayView(PandoraMain.FRAGMENT_NEW_CHECK_IN, false);
+                return true;
+        }
+
+        return false;
+    }
+            @Override
     public void onPause() {
         Log.e("DEBUG", "OnPause of loginFragment");
         super.onPause();
