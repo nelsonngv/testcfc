@@ -5,9 +5,11 @@
             type="com.pbasolutions.android.model.MEmployee"
             />
     </data>
-    <TableLayout android:layout_width="wrap_content"
+    <TableLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_top">
+        android:layout_marginTop="@dimen/table_margin_top"
+        android:layout_marginBottom="@dimen/table_margin_bottom"
+        >
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -40,7 +42,6 @@
                 style="@style/Value"
                 android:id="@+id/employee_phone"
                 android:text="@{employee.phone}"
-                android:layout_marginBottom="@dimen/margin_bottom"
                 />
         </TableRow>
         <TextView

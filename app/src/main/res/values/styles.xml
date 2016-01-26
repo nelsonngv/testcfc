@@ -14,6 +14,10 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/dim_foreground_material_dark</item>
     </style>
+    <style name="Line2">
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">@color/dim_foreground_material_dark</item>
+    </style>
     <style name="LineVertical">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">2dp</item>
@@ -43,6 +47,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">@dimen/table_margin_bottom</item>
+    </style>
+    <style name="TableValue2">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/table_margin_middle</item>
     </style>
     <style name="TableValueW" parent="TableValue">
         <item name="android:layout_weight">1</item>
@@ -114,9 +123,10 @@
         <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>
     </style>
     <style name="LineRV">
-        <item name="android:layout_width">220dp</item>
+        <item name="android:layout_width">match_parent</item>
         <item name= "android:layout_height">200dp</item>
-        <item name="android:layout_marginLeft">120dp</item>
+        <item name="android:layout_marginLeft">@dimen/table_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/table_margin_right</item>
         <item name="android:layout_marginBottom">@dimen/margin_bottom</item>
         <item name="android:layout_marginTop">@dimen/margin_top</item>
     </style>
