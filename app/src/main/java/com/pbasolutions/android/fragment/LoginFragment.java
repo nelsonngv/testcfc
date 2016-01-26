@@ -202,7 +202,12 @@ public class LoginFragment extends Fragment {
                     context.globalVariable.setServer_url(serverURL);
                     context.globalVariable.setAuth_token(loginJSON.getToken());
 
-                    context.updateInitialSyncState();
+                    context.updateInitialSyncState(true);
+
+                    PandoraHelper.setAccountData(getActivity());
+                    //set the apps to only start auto sync after successfully send the role to Server.
+                    PandoraHelper.setAutoSync(getActivity(), context.globalVariable.getAd_user_name(),
+                            PBSAccountInfo.ACCOUNT_TYPE);
 
                     Fragment accountFrag = new AccountFragment();
                     Bundle inputFragment = new Bundle();
@@ -225,4 +230,5 @@ public class LoginFragment extends Fragment {
             }
         }
     }
+
 }

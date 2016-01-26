@@ -38,6 +38,7 @@ public class RoleFragment extends Fragment {
     private Spinner projectSpinner;
     private PandoraMain context;
     private PBSAuthenticatorController authenticatorController;
+
     public RoleFragment() {
     }
 
@@ -58,22 +59,7 @@ public class RoleFragment extends Fragment {
         projectSpinner = (Spinner) rootView.findViewById(R.id.project);
         authenticatorController = new PBSAuthenticatorController(getActivity());
 
-        List<String> list = new ArrayList<String>();
-        if (context.globalVariable != null) {
-            roles = context.globalVariable.getRoleJSON();
-        }
-        if (roles!= null) {
-            for (PBSRoleJSON role : roles) {
-                if (role != null) {
-                    list.add(role.getName());
-                }
-            }
-            addItemsOnSpinner(roleSpinner, list, "roleSpinner");
-            roleSpinner.setOnItemSelectedListener
-                    (new CustomOnItemSelectedListener(this, roles, orgSpinner,
-                            clientSpinner, projectSpinner));
-        }
-
+        addSpinnerData();
         Button okButton = (Button) rootView.findViewById(R.id.roleOK);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,8 +74,24 @@ public class RoleFragment extends Fragment {
         return rootView;
     }
 
+    private void addSpinnerData() {
+        List<String> list = new ArrayList<String>();
+        if (context.globalVariable != null) {
+            roles = context.globalVariable.getRoleJSON();
+        }
+        if (roles != null) {
+            for (PBSRoleJSON role : roles) {
+                if (role != null) {
+                    list.add(role.getName());
+                }
+            }
+            addItemsOnSpinner(roleSpinner, list, "roleSpinner");
+            roleSpinner.setOnItemSelectedListener(
+                    new CustomOnItemSelectedListener(this, roles, orgSpinner, clientSpinner, projectSpinner));
+        }
+    }
+
     /**
-     *
      * @param spinner
      * @param list
      * @param spinnerName
@@ -105,16 +107,15 @@ public class RoleFragment extends Fragment {
     }
 
     /**
-     *
      * @param spinner
      * @param spinnerName
      */
     private void setSpinnerSelection(Spinner spinner, String spinnerName) {
         if (spinnerName.equals("roleSpinner")) {
             spinner.setSelection(context.globalVariable.getAd_role_spinner_index());
-        } else if (spinnerName.equals("orgSpinner")){
+        } else if (spinnerName.equals("orgSpinner")) {
             spinner.setSelection(context.globalVariable.getAd_org_spinner_index());
-        } else if (spinnerName.equals("clientSpinner")){
+        } else if (spinnerName.equals("clientSpinner")) {
             spinner.setSelection(context.globalVariable.getAd_client_spinner_index());
         } else if (spinnerName.equals("projectSpinner")) {
             spinner.setSelection(context.globalVariable.getC_ProjectLocation_Index());
@@ -125,7 +126,9 @@ public class RoleFragment extends Fragment {
      *
      */
     //TODO: check if already set role to server~
-    public void roleOkClicked(){
+    public void roleOkClicked() {
+        addSpinnerData();
+        if (true) return;
         Bundle input = new Bundle();
         input.putString(authenticatorController.ROLE_ARG,
                 context.globalVariable.getAd_role_id());
@@ -136,9 +139,9 @@ public class RoleFragment extends Fragment {
         input.putString(authenticatorController.SERVER_URL_ARG,
                 context.globalVariable.getServer_url());
         Bundle result = new Bundle();
-        result =  authenticatorController.triggerEvent(
+        result = authenticatorController.triggerEvent(
                 authenticatorController.ROLE_SUBMIT_EVENT, input, result, null);
-        if (result.getBoolean(PBSServerConst.RESULT)){
+        if (result.getBoolean(PBSServerConst.RESULT)) {
             context.globalVariable.setIsAuth(false);
             //set all the selections made by user (username, pass, server,
             // roles, projlocs, orgs, etc...)
@@ -150,8 +153,12 @@ public class RoleFragment extends Fragment {
             context.displayView(PandoraMain.FRAGMENT_RECRUIT, false);
         } else {
             PandoraHelper.showAlertMessage(context, result.getString(
-                    result.getString(PandoraConstant.TITLE)),
+                            result.getString(PandoraConstant.TITLE)),
                     result.getString(PandoraConstant.TITLE), "Ok", null);
         }
+    }
+
+    public void completedInitialSync() {
+        addSpinnerData();
     }
 }

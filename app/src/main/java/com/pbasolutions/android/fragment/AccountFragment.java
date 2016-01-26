@@ -19,6 +19,8 @@ import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.adapter.AccountTabAdapter;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
 
+import java.util.List;
+
 /**
  * Created by pbadell on 8/6/15.
  */
@@ -114,8 +116,20 @@ public class AccountFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem sync;
-        sync = menu.add(0, 200, 0, "Log Out");
+        sync = menu.add(0, PandoraMain.LOGOUT_ID, 0, "Log Out");
         sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         sync.setIcon(R.drawable.log_out_icon);
+    }
+
+    public void completedInitialSync() {
+        List<Fragment> fragments = getChildFragmentManager().getFragments();
+        if (fragments == null || fragments.size() == 0) return;
+
+        for (Fragment fragment : fragments) {
+            if (fragment instanceof RoleFragment) {
+                ((RoleFragment) fragment).completedInitialSync();
+                break;
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.os.Looper;
@@ -49,6 +50,7 @@ import com.pbasolutions.android.fragment.EmployeeDetailsFragment;
 import com.pbasolutions.android.fragment.EmployeeFragment;
 import com.pbasolutions.android.fragment.FragmentDrawer;
 import com.pbasolutions.android.controller.PBSServerController;
+import com.pbasolutions.android.fragment.LoginFragment;
 import com.pbasolutions.android.fragment.MovementLineDetails;
 import com.pbasolutions.android.fragment.MovementListFragment;
 import com.pbasolutions.android.fragment.NewApplicantFragment;
@@ -372,9 +374,11 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * Logout from the app.
      */
     private void logout() {
-        if (true) {
-            resetServerData();
-        }
+//        if (true) {
+////            resetServerData();
+//            updateInitialSyncState(false);
+//            return;
+//        }
         if (PandoraHelper.isInternetOn(this)) {
             clearAllFragmentStack();
             Bundle inputBundle = new Bundle();
@@ -788,23 +792,35 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             progressDialog.dismiss();
     }
 
-    public void updateInitialSyncState() {
+    public void updateInitialSyncState(boolean isFirst) {
 //        if (PandoraHelper.isInitialSyncCompleted)
 //            dismissProgressDialog();
 //        else
 //            showProgressDialog("Initial Syncing");
-        this.runOnUiThread(new Runnable() {
+        new AsyncTask<Boolean, Void, Boolean>() {
             @Override
-            public void run() {
-                boolean prevSyncState = PandoraHelper.isInitialSyncCompleted;
+            protected Boolean doInBackground(Boolean... isFirst) {
+                boolean prevSyncState = true;
+                if (!isFirst[0].booleanValue())
+                    prevSyncState = PandoraHelper.isInitialSyncCompleted;
                 PandoraHelper.getProjLocAvailable(PandoraMain.this, false);
+                return new Boolean(prevSyncState);
+            }
+
+            @Override
+            protected void onPostExecute(Boolean bPrevState) {
+                super.onPostExecute(bPrevState);
                 if (!PandoraHelper.isInitialSyncCompleted)
                     Toast.makeText(PandoraMain.this, "Initial Syncing",
                             Toast.LENGTH_SHORT).show();
-                else if (prevSyncState == false)
+                else if (bPrevState.booleanValue() == false) {
                     Toast.makeText(PandoraMain.this, "Initial Sync completed",
                             Toast.LENGTH_SHORT).show();
+                    if (fragment != null && fragment instanceof AccountFragment) {
+                        ((AccountFragment) fragment).completedInitialSync();
+                    }
+                }
             }
-        });
+        }.execute(Boolean.valueOf(isFirst));
     }
 }

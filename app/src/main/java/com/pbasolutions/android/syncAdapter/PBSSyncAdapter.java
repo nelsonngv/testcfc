@@ -122,7 +122,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                     syncResult.hasError();
                 } else { // sync successfull
                     if (PandoraMain.instance != null)
-                        PandoraMain.instance.updateInitialSyncState();
+                        PandoraMain.instance.updateInitialSyncState(false);
                 }
             } else{
                 syncResult.hasError();
