@@ -1,5 +1,6 @@
 package com.pbasolutions.android.fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -127,35 +128,50 @@ public class RoleFragment extends Fragment {
      */
     //TODO: check if already set role to server~
     public void roleOkClicked() {
-        addSpinnerData();
-        if (true) return;
-        Bundle input = new Bundle();
-        input.putString(authenticatorController.ROLE_ARG,
-                context.globalVariable.getAd_role_id());
-        input.putString(authenticatorController.ORG_ARG,
-                context.globalVariable.getAd_org_id());
-        input.putString(authenticatorController.CLIENT_ARG,
-                context.globalVariable.getAd_client_id());
-        input.putString(authenticatorController.SERVER_URL_ARG,
-                context.globalVariable.getServer_url());
-        Bundle result = new Bundle();
-        result = authenticatorController.triggerEvent(
-                authenticatorController.ROLE_SUBMIT_EVENT, input, result, null);
-        if (result.getBoolean(PBSServerConst.RESULT)) {
-            context.globalVariable.setIsAuth(false);
-            //set all the selections made by user (username, pass, server,
-            // roles, projlocs, orgs, etc...)
-            PandoraHelper.setAccountData(getActivity());
-            //set the apps to only start auto sync after successfully send the role to Server.
-            PandoraHelper.setAutoSync(getActivity(), context.globalVariable.getAd_user_name(),
-                    PBSAccountInfo.ACCOUNT_TYPE);
-            //todo . set flag as already sent role to server.
-            context.displayView(PandoraMain.FRAGMENT_RECRUIT, false);
-        } else {
-            PandoraHelper.showAlertMessage(context, result.getString(
-                            result.getString(PandoraConstant.TITLE)),
-                    result.getString(PandoraConstant.TITLE), "Ok", null);
-        }
+        new AsyncTask<Void, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                context.showProgressDialog("Loading...");
+            }
+            @Override
+            protected Bundle doInBackground(Void... params) {
+                Bundle input = new Bundle();
+                input.putString(authenticatorController.ROLE_ARG,
+                        context.globalVariable.getAd_role_id());
+                input.putString(authenticatorController.ORG_ARG,
+                        context.globalVariable.getAd_org_id());
+                input.putString(authenticatorController.CLIENT_ARG,
+                        context.globalVariable.getAd_client_id());
+                input.putString(authenticatorController.SERVER_URL_ARG,
+                        context.globalVariable.getServer_url());
+                Bundle result = new Bundle();
+                result = authenticatorController.triggerEvent(
+                        authenticatorController.ROLE_SUBMIT_EVENT, input, result, null);
+
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                if (result.getBoolean(PBSServerConst.RESULT)) {
+                    context.globalVariable.setIsAuth(false);
+                    //set all the selections made by user (username, pass, server,
+                    // roles, projlocs, orgs, etc...)
+                    PandoraHelper.setAccountData(getActivity());
+                    //set the apps to only start auto sync after successfully send the role to Server.
+                    PandoraHelper.setAutoSync(getActivity(), context.globalVariable.getAd_user_name(),
+                            PBSAccountInfo.ACCOUNT_TYPE);
+                    //todo . set flag as already sent role to server.
+                    context.displayView(PandoraMain.FRAGMENT_RECRUIT, false);
+                } else {
+                    PandoraHelper.showAlertMessage(context, result.getString(
+                                    result.getString(PandoraConstant.TITLE)),
+                            result.getString(PandoraConstant.TITLE), "Ok", null);
+                }
+                context.dismissProgressDialog();
+            }
+        }.execute();
     }
 
     public void completedInitialSync() {

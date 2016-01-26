@@ -5,6 +5,7 @@ import android.app.Activity;
 
 import android.content.ContentResolver;
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -69,19 +70,39 @@ public class CheckInFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.checkpoints, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        checkIns = getCheckIns();
-        ObservableArrayList<IModel> modelList = (ObservableArrayList)checkIns;
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(),
-                        new FragmentListOnItemClickListener(modelList,
-                                new CheckInDetailsFragment(), getActivity(), getString(R.string.title_guardtour_checkin))
-                ));
-        try {
-            adapter = new CheckInRVA(getActivity(), checkIns);
-        } catch (Exception e) {
-            Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
-        }
-        recyclerView.setAdapter(adapter);
+
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                checkIns = getCheckIns();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                ObservableArrayList<IModel> modelList = (ObservableArrayList)checkIns;
+                recyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(getActivity(),
+                                new FragmentListOnItemClickListener(modelList,
+                                        new CheckInDetailsFragment(), getActivity(), getString(R.string.title_guardtour_checkin))
+                        ));
+                try {
+                    adapter = new CheckInRVA(getActivity(), checkIns);
+                } catch (Exception e) {
+                    Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
+                }
+                recyclerView.setAdapter(adapter);
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute();
         setHasOptionsMenu(true);
 
         // Inflate the layout for this fragment
