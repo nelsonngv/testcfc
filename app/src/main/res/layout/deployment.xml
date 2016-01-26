@@ -5,48 +5,38 @@
             name="deploy"
             type="com.pbasolutions.android.model.MResourceAlloc" />
     </data>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <TableLayout android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_marginLeft="20dp"
-            android:text="@string/label_filterby"
-            android:editable="false"
-            android:textSize="15sp"/>
-        <Spinner
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/filterByDeploySpinner"
-            android:layout_column="1"/>
+    <TableLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle">
+        <TableRow>
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="@string/label_filterby"
+                    android:editable="false"
+                    android:textSize="15sp"/>
+                <Spinner
+                    style="@style/TableValue"
+                    android:id="@+id/filterByDeploySpinner"/>
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_value"
+                        android:editable="false"
+                        android:textSize="15sp"/>
+                <Spinner
+                    style="@style/TableValue"
+                    android:id="@+id/filterValueDeploySpinner"/>
+            </LinearLayout>
         </TableRow>
         <TableRow>
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_marginLeft="20dp"
-            android:text="@string/label_value"
-            android:editable="false"
-            android:textSize="15sp"/>
-        <Spinner
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/filterValueDeploySpinner"
-            android:layout_column="1"/>
-    </TableRow>
+            <LinearLayout style="@style/PTableVirtRowW">
+            <include layout="@layout/deployment_list"/>
+            </LinearLayout>
+        </TableRow>
     </TableLayout>
-    <TableLayout android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    <include layout="@layout/deployment_list"/>
-    </TableLayout>
-</LinearLayout>
-    </layout>
+</layout>

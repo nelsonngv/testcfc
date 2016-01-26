@@ -5,122 +5,91 @@
             name="checkpointdetails"
             type="com.pbasolutions.android.model.MCheckIn"/>
     </data>
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1">
     <TableLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle">
         <TableRow>
-            <TableLayout>
-                <TableRow>
-                    <TextView
-                        android:text="Date"
-                        android:layout_marginLeft="@dimen/margin_left"
-                        android:layout_marginRight="@dimen/margin_right"
-                        android:layout_marginTop="@dimen/margin_top"
-                        android:textStyle="bold"
-                        android:gravity="right"
-                        android:textSize="@dimen/abc_text_size_body_1_material"/>
-                    <EditText
-                        android:id="@+id/editTextDate"
-                        android:layout_width="109dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_left"
-                        android:layout_marginRight="@dimen/margin_right"
-                        android:layout_marginTop="@dimen/margin_top"
-                        android:text="@{checkpointdetails.date}"
-                        android:editable="false"
-                        android:gravity="right"/>
-                </TableRow>
-            </TableLayout>
-            <TableLayout
-                android:layout_column="0">
-                <TableRow>
-                    <TextView
-                        android:text="Time"
-                        android:textStyle="bold"
-                        android:layout_marginTop="@dimen/margin_top"
-                        android:layout_marginLeft="@dimen/margin_left"
-                        android:layout_marginRight="@dimen/margin_right"/>
-                    <EditText
-                        android:id="@+id/editTextTime"
-                        android:layout_width="109dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_top"
-                        android:layout_marginLeft="@dimen/margin_left"
-                        android:layout_marginRight="@dimen/margin_right"
-                        android:text="@{checkpointdetails.time}"
-                        android:editable="false"
-                        android:gravity="center"/>
-                </TableRow>
-            </TableLayout>
-
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="Date"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/abc_text_size_body_1_material"/>
+                <EditText
+                    android:id="@+id/editTextDate"
+                    style="@style/TableValue"
+                    android:text="@{checkpointdetails.date}"
+                    android:editable="false"
+                    android:gravity="right"/>
+            </LinearLayout>
         </TableRow>
-        </TableLayout>
+        <TableRow>
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="Time"/>
+                <EditText
+                    android:id="@+id/editTextTime"
+                    style="@style/TableValue"
+                    android:text="@{checkpointdetails.time}"
+                    android:editable="false"/>
+            </LinearLayout>
+        </TableRow>
+        <TableRow>
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    android:text="User"
+                    style="@style/TableInfoLabel"/>
 
-    <TableLayout android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+                <EditText
+                    style="@style/TableValue"
+                    android:id="@+id/editTextName"
+                    android:text="@{checkpointdetails.user}"
+                    android:layout_marginTop="@dimen/margin_top"/>
+                </LinearLayout>
+        </TableRow>
+        <TableRow>
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="Check Point" />
+                <EditText
+                    android:id="@+id/editTextBuilding"
+                    style="@style/TableValue"
+                    android:text="@{checkpointdetails.checkpoint}"
+                    android:editable="false"/>
+            </LinearLayout>
+        </TableRow>
 
         <TableRow>
-            <TextView
-                android:text="User"
-                style="@style/TableLabel"
-                android:layout_marginTop="@dimen/margin_top"/>
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="Project Location" />
 
-            <EditText
-                style="@style/Value"
-                android:id="@+id/editTextName"
-                android:text="@{checkpointdetails.user}"
-                android:layout_marginTop="@dimen/margin_top"/>
-
+                <EditText
+                    android:id="@+id/editTextLocation"
+                    style="@style/TableValue"
+                    android:text="@{checkpointdetails.projectLocation}" />
+            </LinearLayout>
         </TableRow>
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-                    <TextView
-                        style="@style/TableLabel"
-                        android:text="Check Point" />
-                    <EditText
-                        android:id="@+id/editTextBuilding"
-                        style="@style/Value"
-                        android:text="@{checkpointdetails.checkpoint}"
-                        android:editable="false"/>
-        </TableRow>
+        <TableRow>
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="Comment" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                style="@style/TableLabel"
-                android:text="Project Location" />
-
-            <EditText
-                android:id="@+id/editTextLocation"
-                style="@style/Value"
-                android:text="@{checkpointdetails.projectLocation}" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                style="@style/TableLabel"
-                android:text="Comment" />
-
-            <EditText
-                style="@style/Value"
-                android:focusable="false"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:id="@+id/editText2"
-                android:text="@{checkpointdetails.comment}"
-                />
+                <EditText
+                    style="@style/TableValue"
+                    android:focusable="false"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:id="@+id/editText2"
+                    android:text="@{checkpointdetails.comment}"
+                    />
+            </LinearLayout>
         </TableRow>
     </TableLayout>
-</LinearLayout>
 </layout>

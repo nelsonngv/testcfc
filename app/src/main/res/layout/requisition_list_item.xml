@@ -58,6 +58,6 @@
             android:id="@+id/_UUID"
             android:text="@{requisition._UUID}"
             android:visibility="invisible"/>
-        <View style="@style/Line" android:layout_width="@dimen/normal_line_width" />
+        <View style="@style/Line" android:layout_width="match_parent" />
     </TableLayout>
 </layout>

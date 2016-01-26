@@ -2,33 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:divider="?android:attr/dividerHorizontal"
+    android:showDividers="middle|end">
+    <LinearLayout style="@style/PTableVirtRow">
+        <TextView
+            style="@style/TableInfoLabel"
+            android:text="@string/label_phone"
+            android:layout_marginTop="10dp" />
 
-    <TextView
-        style="@style/TableLabel2"
-        android:text="@string/label_phone"
-        android:layout_marginTop="10dp" />
-
-    <TextView
-       style="@style/Value2"
-        android:id="@+id/phoneID"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp" />
-
-    <TextView
-        style="@style/TableLabel2"
-        android:text="Check In"
-         />
-
-    <CheckBox
-        android:id="@+id/displayFullCommentRB"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_marginLeft="@dimen/margin_left"
-        android:text="Display full comment"
-        android:textSize="@dimen/abc_text_size_body_1_material" />
-
+        <TextView
+           style="@style/TableValue"
+            android:id="@+id/phoneID"/>
+    </LinearLayout>
+    <LinearLayout style="@style/PTableVirtRow">
+        <TextView
+            style="@style/TableInfoLabel"
+            android:text="Check In"
+             />
+        <CheckBox
+            android:id="@+id/displayFullCommentRB"
+            style="@style/TableInfoLabel"
+            android:text="Display full comment"
+            android:textSize="@dimen/abc_text_size_body_1_material" />
+    </LinearLayout>
     <!-- TODO allow selection on product value and name
        <TextView
             android:layout_width="wrap_content"
@@ -77,7 +74,6 @@
         android:layout_height="wrap_content"
         android:text="Export Log   "
         android:visibility="visible" />
-        !-->
 
     <TextView
         android:id="@+id/line2"
@@ -89,5 +85,6 @@
         android:background="#000"
         android:gravity="center_horizontal"
         android:visibility="invisible" />
+        !-->
 
 </LinearLayout>

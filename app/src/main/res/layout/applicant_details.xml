@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context=".PandoraMain">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle|end"
         android:orientation="vertical">
 
         <include layout="@layout/profile_image" />
@@ -15,144 +19,163 @@
 
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle|end"
+            >
             <TableRow >
+                <LinearLayout style="@style/PTableVirtRowW">
 
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_sex"/>
 
                 <Spinner
                     android:id="@+id/genderSpinner"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1" />
-
+                    style="@style/TableValue" />
+                </LinearLayout>
             </TableRow>
 
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_age" />
 
                 <EditText
                     android:id="@+id/editTextApplAge"
-                    style="@style/Value"
+                    style="@style/TableValue"
                     android:inputType="number"/>
+                </LinearLayout>
             </TableRow>
 
             <TableRow>
 
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_maritalstat" />
 
                 <Spinner
                     android:id="@+id/maritalStatSpinner"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1" />
+                    style="@style/TableValue" />
+                </LinearLayout>
             </TableRow>
 
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
-                    android:text="@string/label_applicationdate"
-                    android:layout_height="50dp"/>
+                    style="@style/TableInfoLabel"
+                    android:text="@string/label_applicationdate"/>
                 <EditText
                     android:id="@+id/editTextApplDate"
-                    style="@style/Value"
+                    style="@style/TableValue"
                     android:inputType="date"
                     android:hint="Press to Select Date" />
+                </LinearLayout>
             </TableRow>
 
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                   style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_hrsetupjob" />
                 <Spinner
                     android:id="@+id/setupJobSpinner"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1" />
+                    style="@style/TableValue" />
+                </LinearLayout>
             </TableRow>
 
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_hrnationality" />
 
                 <Spinner
                     android:id="@+id/nationalitySpinner"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1" />
+                    style="@style/TableValue" />
+                </LinearLayout>
 
             </TableRow>
 
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
 
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_yearsofexp" />
 
                 <EditText
                     android:id="@+id/editTextNumOfExp"
                     android:inputType="number"
-                    style="@style/Value"
+                    style="@style/TableValue"
                     />
+                </LinearLayout>
             </TableRow>
 
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
-                    android:text="@string/label_expectedsalary"
-                    android:layout_height="50dp"/>
+                    style="@style/TableInfoLabel"
+                    android:text="@string/label_expectedsalary"/>
 
                 <EditText
                     android:id="@+id/editTextExpSal"
-                    style="@style/Value"
+                    style="@style/TableValue"
                     android:inputType="number"
                     />
+                </LinearLayout>
             </TableRow>
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_prefShift" />
                 <Spinner
                     android:id="@+id/prefShiftSpinner"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1" />
+                    style="@style/TableValue" />
+                </LinearLayout>
             </TableRow>
 
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_qualificationhigh" />
 
                 <EditText
                     android:id="@+id/editTextQualHi"
-                    style="@style/Value"
+                    style="@style/TableValue"
                     />
+                </LinearLayout>
             </TableRow>
 
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_qualificationother" />
 
                 <EditText
                     android:id="@+id/editTextQualOther"
-                    style="@style/Value"
+                    style="@style/TableValue"
                     />
+                </LinearLayout>
             </TableRow>
             <include layout="@layout/cert_attachments" />
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_status" />
 
                 <EditText
                     android:id="@+id/editTextStatus"
-                    style="@style/Value"
+                    style="@style/TableValue"
                     android:editable="false"
                     />
+                </LinearLayout>
             </TableRow>
         </TableLayout>
 

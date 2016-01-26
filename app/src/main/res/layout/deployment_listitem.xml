@@ -55,6 +55,6 @@
             </TableRow>
 
         </TableLayout>
-        <View style="@style/Line" android:layout_width="@dimen/normal_line_width"/>
+        <View style="@style/Line" android:layout_width="match_parent"/>
     </LinearLayout>
 </layout>

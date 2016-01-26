@@ -116,6 +116,10 @@ public class LoginFragment extends Fragment {
             return;
         }
 
+        // complement server URL
+        if (!serverURL.startsWith("http://"))
+            serverURL = "http://" + serverURL;
+
         final Bundle bundle = new Bundle();
 
         bundle.putString(PBSAuthenticatorController.ARG_ACCOUNT_NAME, accountName);

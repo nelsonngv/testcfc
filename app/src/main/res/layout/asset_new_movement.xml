@@ -11,71 +11,75 @@
         android:orientation="vertical">
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_top">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_top"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle|end"
+            >
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_docno" />
                 <TextView
                     android:id="@+id/documentNo"
-                    style="@style/Value"
+                    style="@style/TableValue"
                     android:text="@{String.valueOf(movement.DocumentNo)}"
                 />
+                </LinearLayout>>
             </TableRow>
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_fromprojloc" />
                 <TextView
-                    style="@style/Value"
+                    style="@style/TableValue"
                     android:text="@{movement.ProjectLocation}"
                     android:id="@+id/projectLocation">
                 </TextView>
+                </LinearLayout>>
             </TableRow>
             <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_toprojloc" />
                 <Spinner
-                    android:layout_height="wrap_content"
-                    android:layout_column="1"
+                    style="@style/TableValue"
                     android:id="@+id/toProjectLocation">
                 </Spinner>
+                </LinearLayout>>
             </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:text="@string/label_movementdate"
                     />
                 <EditText
                     android:id="@+id/movementDate"
-                    style="@style/Value"
+                    style="@style/TableValue"
                     android:inputType="date"
                     android:text="@{movement.MovementDate}"
-                    android:layout_marginBottom="@dimen/margin_bottom"
                     />
+                </LinearLayout>>
             </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
-                    style="@style/TableLabel"
-                    android:layout_marginTop="@dimen/margin_top"
+                    style="@style/TableInfoLabel"
                     android:text="@string/movement_label_lines"
                     android:layout_column="0"/>
-                <TableLayout android:layout_column="1"
-                    style="@style/Value">
+                <TableLayout
+                    style="@style/TableValue">
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/movementline_rv"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                     </android.support.v7.widget.RecyclerView>
                 </TableLayout>
+                </LinearLayout>>
             </TableRow>
         </TableLayout>
     </LinearLayout>

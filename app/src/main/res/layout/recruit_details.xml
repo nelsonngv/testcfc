@@ -8,46 +8,51 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@drawable/linear_divider"
-        android:showDividers="middle|end"
-        android:weightSum="10"
-        android:dividerPadding="@dimen/horz_divider_padding">
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle|end">
         <TableRow>
-            <TextView
-                style="@style/TableInfoLabel"
-                android:text="@string/label_name" />
-            <EditText
-                android:id="@+id/editTextEmpName"
-                style="@style/TableValue"
-                android:text="@{employee.name}" />
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="@string/label_name" />
+                <EditText
+                    android:id="@+id/editTextEmpName"
+                    style="@style/TableValue"
+                    android:text="@{employee.name}" />
+            </LinearLayout>>
         </TableRow>
         <TableRow >
-            <TextView
-                style="@style/TableInfoLabel"
-                android:text="@string/label_idtype" />
-            <Spinner
-                android:id="@+id/idTypeSpinner"
-                style="@style/TableValue"/>
-
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="@string/label_idtype" />
+                <Spinner
+                    android:id="@+id/idTypeSpinner"
+                    style="@style/TableValue"/>
+            </LinearLayout>>
         </TableRow>
         <TableRow>
-            <TextView
-                style="@style/TableInfoLabel"
-                android:text="@string/label_idnumber" />
-            <EditText
-                android:id="@+id/editTextEmpIDNumber"
-                style="@style/TableValue"
-                android:text="@{employee.idNumber}" />
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="@string/label_idnumber" />
+                <EditText
+                    android:id="@+id/editTextEmpIDNumber"
+                    style="@style/TableValue"
+                    android:text="@{employee.idNumber}" />
+            </LinearLayout>>
         </TableRow>
         <TableRow>
-            <TextView
-                style="@style/TableInfoLabel"
-                android:text="@string/label_phone" />
-            <EditText
-                android:id="@+id/editTextEmpPhone"
-                style="@style/TableValue"
-                android:inputType="phone"
-                android:text="@{employee.phone}" />
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="@string/label_phone" />
+                <EditText
+                    android:id="@+id/editTextEmpPhone"
+                    style="@style/TableValue"
+                    android:inputType="phone"
+                    android:text="@{employee.phone}" />
+                </LinearLayout>>
         </TableRow>
     </TableLayout>
     </layout>

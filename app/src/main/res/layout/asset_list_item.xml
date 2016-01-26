@@ -63,7 +63,6 @@
                     android:text="@{storage.Description}" />
 
             </TableRow>
-            <View style="@style/Line" android:layout_width="@dimen/normal_line_width"/>
         </TableLayout>
     </LinearLayout>
 </layout>

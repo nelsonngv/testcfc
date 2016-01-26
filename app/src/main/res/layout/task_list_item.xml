@@ -14,7 +14,7 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/margin_top">
+                android:layout_marginTop="@dimen/table_margin_middle">
                 <TextView
                     android:layout_width="10dp"
                     android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                     android:id="@+id/task_status"
                     style="@style/Value"
                     android:text="@{projTask.Status}"
-                    android:layout_marginBottom="@dimen/margin_bottom" />
+                    android:layout_marginBottom="@dimen/table_margin_middle" />
             </TableRow>
         </TableLayout>
         <TextView
@@ -72,6 +72,6 @@
             android:id="@+id/_UUID"
             android:text="@{projTask._UUID}"
             android:visibility="invisible"/>
-        <View style="@style/Line" android:layout_width="@dimen/normal_line_width"/>
+        <View style="@style/Line" android:layout_width="match_parent"/>
     </LinearLayout>
 </layout>

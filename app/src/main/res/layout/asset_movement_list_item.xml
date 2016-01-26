@@ -54,7 +54,7 @@
                 android:id="@+id/_ID"
                 android:text="@{String.valueOf(movement._ID)}"
                 android:visibility="invisible"/>
-            <View style="@style/Line" android:layout_width="@dimen/normal_line_width" />
+            <View style="@style/Line" android:layout_width="match_parent" />
         </TableLayout>
     </LinearLayout>
 </layout>

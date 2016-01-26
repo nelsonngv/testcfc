@@ -41,6 +41,6 @@
                 android:textSize="@dimen/abc_text_size_body_1_material"
                 android:visibility="invisible"/>
         </TableRow>
-        <View style="@style/Line" android:layout_width="200dp"/>
+        <View style="@style/Line" android:layout_width="match_parent"/>
     </TableLayout>
 </layout>
