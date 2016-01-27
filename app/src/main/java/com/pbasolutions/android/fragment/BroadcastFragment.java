@@ -2,6 +2,7 @@ package com.pbasolutions.android.fragment;
 
 import android.content.DialogInterface;
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -75,12 +76,6 @@ public class BroadcastFragment extends Fragment {
         context = ((PandoraMain) getActivity()).globalVariable;
         ((PandoraMain) getActivity()).fragment = this;
         setHasOptionsMenu(true);
-        if (context.getC_projectlocation_uuid() != null
-                && !context.getC_projectlocation_uuid().isEmpty()) {
-            syncNotes();
-        } else {
-            PandoraHelper.getProjLocAvailable(getActivity(), true);
-        }
     }
 
     @Override
@@ -89,9 +84,50 @@ public class BroadcastFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.note_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.broadcast_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        broadCastList = getBroadCastList();
-        viewAdapter = new BroadcastRVA(getActivity(),broadCastList, inflater);
-        recyclerView.setAdapter(viewAdapter);
+
+        new AsyncTask<Object, Void, String[]>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected String[] doInBackground(Object... params) {
+                inflater = (LayoutInflater) params[0];
+                recyclerView = (RecyclerView) params[1];
+
+                String[] message = null;
+                if (context.getC_projectlocation_uuid() != null
+                        && !context.getC_projectlocation_uuid().isEmpty()) {
+                    message = syncNotes();
+                } else {
+                    PandoraHelper.getProjLocAvailable(getActivity(), false);
+                }
+
+                broadCastList = getBroadCastList();
+
+                return message;
+            }
+
+            @Override
+            protected void onPostExecute(String[] message) {
+                super.onPostExecute(message);
+
+                if (message != null)
+                    PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
+                            message[1],
+                            message[0], PandoraConstant.OK_BUTTON, null);
+
+                viewAdapter = new BroadcastRVA(getActivity(),broadCastList, inflater);
+                recyclerView.setAdapter(viewAdapter);
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(inflater, recyclerView);
+
         return rootView;
     }
 
@@ -148,10 +184,11 @@ public class BroadcastFragment extends Fragment {
     /**
      * SnycNotes is caller to backend process to get latest broadcast list.
      */
-    private void syncNotes() {
+    private String[] syncNotes() {
         PandoraMain pContext = (PandoraMain) getActivity();
         String title;
         String text;
+
         if (PBSServerConst.cookieStore != null) {
             //get latest broadcast list
             Bundle input = new Bundle();
@@ -174,9 +211,8 @@ public class BroadcastFragment extends Fragment {
             title = PandoraConstant.RESULT;
             text = getString(R.string.error_logged_out_sync, getString(R.string.broadcast_messages));
         }
-        PandoraHelper.showAlertMessage(pContext,
-                text,
-                title, PandoraConstant.OK_BUTTON, null);
+
+        return new String[] { title, text};
     }
 
     @Override

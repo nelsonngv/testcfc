@@ -1,6 +1,7 @@
 package com.pbasolutions.android.fragment;
 
 import android.content.ContentValues;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -151,23 +152,41 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
 
         Bundle input = new Bundle();
         input.putParcelable(recCont.APPLICANT_VALUES, cv);
-        Bundle output = recCont.triggerEvent(recCont.INSERT_APPLICANT_EVENT, input, new Bundle(), null);
-        if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentManager.popBackStack();
-            fragmentManager.popBackStack();
-            Fragment frag = new RecruitFragment();
-            frag.setRetainInstance(true);
-            ((RecruitFragment)frag).setIsAddApplicant(true);
-            fragmentTransaction.replace(R.id.container_body, frag);
-            fragmentTransaction.addToBackStack(frag.getClass().getName());
-            fragmentTransaction.commit();
-        } else {
-            PandoraHelper.showAlertMessage(context, output.getString(output.getString(PandoraConstant.TITLE))
-                    , output.getString(PandoraConstant.TITLE), "Ok", null);
-        }
 
+        new AsyncTask<Bundle, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle output = recCont.triggerEvent(recCont.INSERT_APPLICANT_EVENT, params[0], new Bundle(), null);
+                return output;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle output) {
+                super.onPostExecute(output);
+                if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentManager.popBackStack();
+                    fragmentManager.popBackStack();
+                    Fragment frag = new RecruitFragment();
+                    frag.setRetainInstance(true);
+                    ((RecruitFragment)frag).setIsAddApplicant(true);
+                    fragmentTransaction.replace(R.id.container_body, frag);
+                    fragmentTransaction.addToBackStack(frag.getClass().getName());
+                    fragmentTransaction.commit();
+                } else {
+                    PandoraHelper.showAlertMessage(context, output.getString(output.getString(PandoraConstant.TITLE))
+                            , output.getString(PandoraConstant.TITLE), "Ok", null);
+                }
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
     }
 
     @Override

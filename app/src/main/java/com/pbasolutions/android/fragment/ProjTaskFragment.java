@@ -1,6 +1,7 @@
 package com.pbasolutions.android.fragment;
 
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -71,11 +72,39 @@ public class ProjTaskFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.task_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.task_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        syncProjTasks();
-        populateProjTask();
-        addRecyclerViewListener(recyclerView);
-        TaskRVA viewAdapter = new TaskRVA(getActivity(), taskList , inflater);
-        recyclerView.setAdapter(viewAdapter);
+
+        new AsyncTask<Object, Void, Bundle>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Object... params) {
+                inflater = (LayoutInflater) params[0];
+                recyclerView = (RecyclerView) params[1];
+                Bundle result = syncProjTasks();
+                populateProjTask();
+
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                if (result != null)
+                    PandoraHelper.dispayResultMessage(result, (PandoraMain) getActivity());
+
+                addRecyclerViewListener(recyclerView);
+                TaskRVA viewAdapter = new TaskRVA(getActivity(), taskList , inflater);
+                recyclerView.setAdapter(viewAdapter);
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(inflater, recyclerView);
+
         return rootView;
     }
     @Override
@@ -133,14 +162,17 @@ public class ProjTaskFragment extends Fragment {
     /**
      * Sync project task from server.
      */
-    private void syncProjTasks() {
+    private Bundle syncProjTasks() {
         if (PBSServerConst.cookieStore !=null){
             Bundle input = new Bundle();
             input.putString(taskCont.ARG_PROJLOC_UUID, globalVar.getC_projectlocation_uuid());
             input.putString(PBSServerConst.PARAM_URL, globalVar.getServer_url());
             Bundle result = taskCont.triggerEvent(taskCont.SYNC_PROJTASKS_EVENT, input, new Bundle(), null);
-            PandoraHelper.dispayResultMessage(result, (PandoraMain)getActivity());
+
+            return result;
         }
+
+        return null;
     }
 
     /**
