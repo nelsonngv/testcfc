@@ -1,6 +1,7 @@
 package com.pbasolutions.android.fragment;
 
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pbasolutions.android.PBSServerConst;
-import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
@@ -18,7 +18,6 @@ import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.AssetMovementRVA;
 import com.pbasolutions.android.controller.PBSAssetController;
 import com.pbasolutions.android.model.MMovement;
-import com.pbasolutions.android.model.MPurchaseRequest;
 
 /**
  * Created by pbadell on 10/8/15.
@@ -49,16 +48,43 @@ public class MovementListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.asset_movement_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.asset_movement_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        if (PBSServerConst.cookieStore == null){
-            movements = null;
-        } else {
-            movements = getMovements();
-        }
 
-        AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(), movements, inflater);
-        recyclerView.setAdapter(viewAdapter);
-        PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
-                new AssetMovementDetails(), getString(R.string.title_movement_details));
+        new AsyncTask<Object, Void, Void>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Void doInBackground(Object... params) {
+                inflater = (LayoutInflater) params[0];
+                recyclerView = (RecyclerView) params[1];
+
+                if (PBSServerConst.cookieStore == null){
+                    movements = null;
+                } else {
+                    movements = getMovements();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void av) {
+                super.onPostExecute(av);
+
+                AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(), movements, inflater);
+                recyclerView.setAdapter(viewAdapter);
+                PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
+                        new AssetMovementDetails(), getString(R.string.title_movement_details));
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(inflater, recyclerView);
+
         return rootView;
     }
 

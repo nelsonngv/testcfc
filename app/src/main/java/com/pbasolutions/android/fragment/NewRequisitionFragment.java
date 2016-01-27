@@ -3,6 +3,7 @@ package com.pbasolutions.android.fragment;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -228,18 +229,41 @@ public class NewRequisitionFragment extends Fragment {
         Bundle input = new Bundle();
         input.putSerializable(reqCont.ARG_PURCHASEREQUEST, pr);
         input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
-        Bundle result = reqCont.triggerEvent(reqCont.CREATE_REQUISITION_EVENT, input, new Bundle(), null);
-            if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentManager.popBackStack();
-                fragmentManager.popBackStack();
-                Fragment frag = new RequisitionFragment();
-                frag.setRetainInstance(true);
-                fragmentTransaction.replace(R.id.container_body, frag);
-                fragmentTransaction.addToBackStack(frag.getClass().getName());
-                fragmentTransaction.commit();
-        }
+
+        new AsyncTask<Bundle, Void, Bundle>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle result = reqCont.triggerEvent(reqCont.CREATE_REQUISITION_EVENT, params[0], new Bundle(), null);
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentManager.popBackStack();
+                    fragmentManager.popBackStack();
+                    Fragment frag = new RequisitionFragment();
+                    frag.setRetainInstance(true);
+                    fragmentTransaction.replace(R.id.container_body, frag);
+                    fragmentTransaction.addToBackStack(frag.getClass().getName());
+                    fragmentTransaction.commit();
+                }
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
+
     }
 
     private void savePR() {
@@ -261,17 +285,58 @@ public class NewRequisitionFragment extends Fragment {
         }
         cv.put(ModelConst.AD_USER_UUID_COL, ad_user_uuid);
         input.putParcelable(reqCont.ARG_CONTENTVALUES, cv);
-        reqCont.triggerEvent(reqCont.INSERT_REQ_EVENT, input, new Bundle(), null);
+
+        new AsyncTask<Bundle, Void, Void>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Void doInBackground(Bundle... params) {
+                reqCont.triggerEvent(reqCont.INSERT_REQ_EVENT, params[0], new Bundle(), null);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute();
     }
 
     private void removeLine() {
-        Bundle input = new Bundle();
-        input.putSerializable(reqCont.ARG_REQUISITIONLINE_LIST, viewAdapter.getLines());
-        Bundle result = reqCont.triggerEvent(reqCont.REMOVE_REQLINES_EVENT, input, new Bundle(), null);
-        if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.detach(this).attach(this).commit();
-        }
+        new AsyncTask<Void, Void, Bundle>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Void... params) {
+                Bundle input = new Bundle();
+                input.putSerializable(reqCont.ARG_REQUISITIONLINE_LIST, viewAdapter.getLines());
+                Bundle result = reqCont.triggerEvent(reqCont.REMOVE_REQLINES_EVENT, input, new Bundle(), null);
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.detach(NewRequisitionFragment.this).attach(NewRequisitionFragment.this).commit();
+                }
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute();
     }
 
     private boolean addLine() {

@@ -379,9 +379,9 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 //            updateInitialSyncState(false);
 //            return;
 //        }
+        clearAllFragmentStack();
+        Bundle inputBundle = new Bundle();
         if (PandoraHelper.isInternetOn(this)) {
-            clearAllFragmentStack();
-            Bundle inputBundle = new Bundle();
             inputBundle.putString(PBSAuthenticatorController.USER_NAME_ARG,
                     globalVariable.getAd_user_name());
             inputBundle.putString(PBSAuthenticatorController.AUTH_TOKEN_ARG,
@@ -392,24 +392,42 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     PBSAccountInfo.ACCOUNT_TYPE);
             inputBundle.putString(PBSAuthenticatorController.ARG_AUTH_TYPE,
                     PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
-            Bundle logOutResult = authenticatorController.triggerEvent(
-                    PBSAuthenticatorController.LOG_OUT, inputBundle, new Bundle(), this);
-            this.globalVariable = null;
-            PBSServerConst.cookieStore = null;
-            authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
-                    inputBundle, null, this);
-            showLogOutDialog(PBSAuthenticatorController.SUCCESSFULLY_LOGGED_OUT_TXT);
         } else {
-            clearAllFragmentStack();
-            Bundle inputBundle = new Bundle();
             inputBundle.putString(PBSAuthenticatorController.USER_NAME_ARG,
                     globalVariable.getAd_user_name());
-            this.globalVariable = null;
-            PBSServerConst.cookieStore = null;
-            authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
-                    inputBundle, null, this);
-            showLogOutDialog(PBSAuthenticatorController.SUCCESSFULLY_LOGGED_OUT_TXT);
         }
+        new AsyncTask<Bundle, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle inputBundle = params[0];
+                Bundle logOutResult = null;
+                if (PandoraHelper.isInternetOn(PandoraMain.this))
+                    logOutResult = authenticatorController.triggerEvent(
+                        PBSAuthenticatorController.LOG_OUT, inputBundle, new Bundle(), this);
+
+                globalVariable = null;
+                PBSServerConst.cookieStore = null;
+                authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
+                        inputBundle, null, this);
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+
+                showLogOutDialog(PBSAuthenticatorController.SUCCESSFULLY_LOGGED_OUT_TXT);
+
+                dismissProgressDialog();
+            }
+        }.execute(inputBundle);
     }
 
     private void resetServerData() {

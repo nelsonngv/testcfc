@@ -1,6 +1,7 @@
 package com.pbasolutions.android.fragment;
 
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,16 +44,44 @@ public class AssetListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.asset_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.asset_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        if (PBSServerConst.cookieStore == null){
-            assetList = null;
-            PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
-                    getString(R.string.error_logged_out_sync, getString(R.string.assets_and_movements)),
-                    PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
-        } else {
-            assetList = getMStorage();
-        }
-        AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
-        recyclerView.setAdapter(viewAdapter);
+
+        new AsyncTask<Object, Void, Void>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Void doInBackground(Object... params) {
+                inflater = (LayoutInflater) params[0];
+                recyclerView = (RecyclerView) params[1];
+
+                if (PBSServerConst.cookieStore == null){
+                    assetList = null;
+                } else {
+                    assetList = getMStorage();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void avoid) {
+                super.onPostExecute(avoid);
+                if (assetList == null)
+                    PandoraHelper.showAlertMessage((PandoraMain) getActivity(),
+                        getString(R.string.error_logged_out_sync, getString(R.string.assets_and_movements)),
+                        PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+                AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
+                recyclerView.setAdapter(viewAdapter);
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(inflater, recyclerView);
+
         return rootView;
     }
 

@@ -2,6 +2,7 @@ package com.pbasolutions.android.fragment;
 
 import android.content.Context;
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,9 +57,6 @@ public class RequisitionFragment extends Fragment{
         setHasOptionsMenu(true);
         requisCont = new PBSRequisitionController(getActivity());
         context =  getActivity();
-        if (PBSServerConst.cookieStore != null) {
-            syncRequsitions();
-        }
         statusItem = new SpinnerOnItemSelected(
                 statusSpinner, new SpinnerPair());
     }
@@ -71,11 +69,43 @@ public class RequisitionFragment extends Fragment{
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         setIsApprovedSpinner(rootView);
         setOnItemSelectedListener();
-        requisitionList = getRequisitionList();
-        RequisitionRVA viewAdapter = new RequisitionRVA(getActivity(),requisitionList, inflater);
-        recyclerView.setAdapter(viewAdapter);
-        PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
-                new RequisitionDetailFragment(), getString(R.string.title_requisitiondetails));
+
+        new AsyncTask<Object, Void, Void>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Void doInBackground(Object... params) {
+                inflater = (LayoutInflater) params[0];
+                recyclerView = (RecyclerView) params[1];
+
+                if (PBSServerConst.cookieStore != null) {
+                    syncRequsitions();
+                }
+
+                requisitionList = getRequisitionList();
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void avoid) {
+                super.onPostExecute(avoid);
+
+                RequisitionRVA viewAdapter = new RequisitionRVA(getActivity(),requisitionList, inflater);
+                recyclerView.setAdapter(viewAdapter);
+                PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
+                        new RequisitionDetailFragment(), getString(R.string.title_requisitiondetails));
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(inflater, recyclerView);
+
         return rootView;
     }
 
