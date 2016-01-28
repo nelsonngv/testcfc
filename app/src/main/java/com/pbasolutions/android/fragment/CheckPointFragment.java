@@ -69,7 +69,7 @@ public class CheckPointFragment extends Fragment {
 
                 Bundle result = null;
                 //check the global varialble is null or not.
-                if (globalVar.getProjLocJSON() == null) {
+                if (globalVar != null && globalVar.getProjLocJSON() == null) {
                     //find in database.
                     result = checkpointController.triggerEvent(checkpointController.GET_PROJECT_LOCATION_DATA, new Bundle(), new Bundle(), null);
                     PBSProjLocJSON[] projLocJSONs = (PBSProjLocJSON[])result.getSerializable(checkpointController.ARG_PROJECT_LOCATION_JSON);

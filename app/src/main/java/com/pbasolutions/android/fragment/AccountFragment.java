@@ -106,9 +106,9 @@ public class AccountFragment extends Fragment {
         });
 
         if(context.globalVariable != null){
-            if (context.globalVariable.isAuth()){
-                viewPager.setCurrentItem(1);
-            }
+            viewPager.setCurrentItem(1);
+//            if (context.globalVariable.isAuth()){
+//            }
         }
         return rootView;
     }
