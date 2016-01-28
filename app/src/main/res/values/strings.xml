@@ -145,6 +145,8 @@
     <string name="text_no">No</string>
     <string name="text_married">Married</string>
     <string name="text_single">Single</string>
+    <string name="text_add_line">Add line</string>
+    <string name="text_remove_line">Remove line</string>
 
     <!--
    Requisition layout.

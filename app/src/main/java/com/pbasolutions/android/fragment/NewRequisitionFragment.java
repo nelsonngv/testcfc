@@ -12,6 +12,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -64,6 +67,10 @@ public class NewRequisitionFragment extends Fragment {
     private static final String EVENT_REMOVE_LINE = "EVENT_REMOVE_LINE";
     private static final String EVENT_SAVE = "EVENT_SAVE";
     private static final String EVENT_REQUEST = "EVENT_REQUEST";
+
+    protected static final int ACTION_ADD_LINE = 300;
+    protected static final int ACTION_REMOVE_LINE = 301;
+
     ContentResolver cr;
 
     FragmentActivity activity;
@@ -80,6 +87,7 @@ public class NewRequisitionFragment extends Fragment {
         activity = getActivity();
         reqCont = new PBSRequisitionController(activity);
         cr = activity.getContentResolver();
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -126,8 +134,8 @@ public class NewRequisitionFragment extends Fragment {
         isApproved = (EditText)view.findViewById(R.id.prStatus) ;
         projLoc = (EditText) view.findViewById(R.id.prProjLoc);
         requestDate = (EditText) view.findViewById(R.id.prRequestDate);
-        addButton = (ImageButton)view.findViewById(R.id.addPrLine);
-        removeButton = (ImageButton) view.findViewById(R.id.removePrLine);
+//        addButton = (ImageButton)view.findViewById(R.id.addPrLine);
+//        removeButton = (ImageButton) view.findViewById(R.id.removePrLine);
         requestButton = (Button) view.findViewById(R.id.prRequest);
     }
 
@@ -153,8 +161,8 @@ public class NewRequisitionFragment extends Fragment {
 
     private void addListener(){
         setOnClickListener(requestDate, EVENT_DATE);
-        setOnClickListener(addButton, EVENT_ADD_LINE);
-        setOnClickListener(removeButton, EVENT_REMOVE_LINE);
+//        setOnClickListener(addButton, EVENT_ADD_LINE);
+//        setOnClickListener(removeButton, EVENT_REMOVE_LINE);
         setOnClickListener(requestButton, EVENT_REQUEST);
     }
 
@@ -306,7 +314,7 @@ public class NewRequisitionFragment extends Fragment {
                 super.onPostExecute(result);
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }
-        }.execute();
+        }.execute(input);
     }
 
     private void removeLine() {
@@ -363,4 +371,34 @@ public class NewRequisitionFragment extends Fragment {
     public void set_UUID(String _UUID) {
         this._UUID = _UUID;
     }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem add;
+        add = menu.add(0, ACTION_ADD_LINE, 1, getString(R.string.text_add_line));
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.add);
+
+        add = menu.add(0, ACTION_REMOVE_LINE, 1, getString(R.string.text_remove_line));
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.minus_white);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case ACTION_ADD_LINE: {
+                savePR();
+                addLine();
+                return true;
+            }
+            case ACTION_REMOVE_LINE: {
+                removeLine();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

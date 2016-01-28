@@ -70,8 +70,10 @@
             </TableRow>
         </TableLayout>
         <TableLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="end">
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -81,7 +83,7 @@
                     style="@style/TableInfoLabel"
                     android:text="@string/label_lines"
                 />
-                <ImageButton
+<!--                <ImageButton
                     android:layout_width="100px"
                     android:layout_height="100px"
                     android:layout_marginLeft="120dp"
@@ -93,6 +95,7 @@
                     android:layout_marginLeft="5dp"
                     android:background="@drawable/minus"
                     android:id="@+id/removePrLine"/>
+                    -->
             </TableRow>
         </TableLayout>
         <TableLayout
