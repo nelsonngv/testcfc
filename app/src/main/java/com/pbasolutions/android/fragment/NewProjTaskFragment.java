@@ -1,6 +1,7 @@
 package com.pbasolutions.android.fragment;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -192,23 +193,42 @@ public class NewProjTaskFragment extends Fragment {
         PandoraContext cont = ((PandoraMain) getActivity()).globalVariable;
         input.putSerializable(PBSServerConst.PARAM_URL, cont.getServer_url());
         input.putSerializable(taskCont.ARG_PROJTASK, pt);
-        Bundle output = new Bundle();
-        taskCont.triggerEvent(taskCont.CREATE_TASK_EVENT, input, new Bundle(), null);
-        if (output.getBoolean(PandoraConstant.RESULT)){
 
-        } else {
-            Fragment fragment = new ProjTaskFragment();
-            if (fragment != null) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragment.setRetainInstance(true);
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                fragmentTransaction.commit();
-                ((PandoraMain) getActivity()).getSupportActionBar()
-                        .setTitle(getString(R.string.title_task));
+        new AsyncTask<Bundle, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
             }
-        }
+
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle output = new Bundle();
+                taskCont.triggerEvent(taskCont.CREATE_TASK_EVENT, params[0], output, null);
+                return output;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+//                if (output.getBoolean(PandoraConstant.RESULT)){
+//
+//                } else {
+                    Fragment fragment = new ProjTaskFragment();
+                    if (fragment != null) {
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragment.setRetainInstance(true);
+                        fragmentTransaction.replace(R.id.container_body, fragment);
+                        fragmentTransaction.addToBackStack(fragment.getClass().getName());
+                        fragmentTransaction.commit();
+                        ((PandoraMain) getActivity()).getSupportActionBar()
+                                .setTitle(getString(R.string.title_task));
+                    }
+//                }
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
     }
 
     @Override

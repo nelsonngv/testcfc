@@ -28,12 +28,13 @@
 
                     <TextView
                         android:id="@+id/taskSeqNo"
-                        android:layout_width="10dp"
+                        android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:layout_column="0"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:editable="false"
                         android:text="10"
+                        android:gravity="right"
                         android:textSize="@dimen/abc_text_size_subhead_material" />
 
                     <TextView
