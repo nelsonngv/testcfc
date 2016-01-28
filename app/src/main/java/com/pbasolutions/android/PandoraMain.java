@@ -457,72 +457,110 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * Perform sync.
      */
     private void sync() {
-        Bundle updateResult = new Bundle();
-        Bundle syncResult = new Bundle();
-        Bundle authenticateResult = new Bundle();
-        try {
-            Bundle inputAuth = new Bundle();
-            inputAuth.putString(authenticatorController.USER_NAME_ARG,
-                    globalVariable.getAd_user_name());
-            inputAuth.putString(authenticatorController.AUTH_TOKEN_ARG,
-                    globalVariable.getAuth_token());
-            inputAuth.putString(authenticatorController.SERVER_URL_ARG,
-                    globalVariable.getServer_url());
-            inputAuth.putString(authenticatorController.SERIAL_ARG,
-                    globalVariable.getSerial());
+        Bundle inputAuth = new Bundle();
+        inputAuth.putString(authenticatorController.USER_NAME_ARG,
+                globalVariable.getAd_user_name());
+        inputAuth.putString(authenticatorController.AUTH_TOKEN_ARG,
+                globalVariable.getAuth_token());
+        inputAuth.putString(authenticatorController.SERVER_URL_ARG,
+                globalVariable.getServer_url());
+        inputAuth.putString(authenticatorController.SERIAL_ARG,
+                globalVariable.getSerial());
 
-            authenticateResult = authenticatorController
-                    .triggerEvent(PBSAuthenticatorController.AUTHENTICATE_TOKEN_SERVER,
-                            inputAuth, authenticateResult, null);
-
-            if (authenticateResult.getBoolean(PandoraConstant.RESULT)) {
-
-                updateResult = serverController.triggerEvent(PBSServerController.UPDATE_LOCAL_TABLES,
-                        inputAuth,
-                        updateResult,
-                        contentResolver);
-
-                syncResult = serverController.triggerEvent(PBSServerController.SYNC_LOCAL_TABLES,
-                        inputAuth,
-                        syncResult,
-                        contentResolver);
-
-                if (updateResult.getBoolean(PandoraConstant.RESULT)
-                        && syncResult.getBoolean(PandoraConstant.RESULT)){
-                    PandoraHelper.showAlertMessage(this, "Successfully sync",
-                            PandoraConstant.RESULT, PandoraConstant.OK_BUTTON, null);
-                    getSupportFragmentManager().popBackStack();
-                    Fragment fragment = new RecruitFragment();
-                    updateFragment(fragment, getString(R.string.title_recruit),
-                            false);
-                } else if (updateResult.getString(PandoraConstant.ERROR) != null) {
-                    PandoraHelper.showAlertMessage(this,
-                            updateResult.getString(PandoraConstant.ERROR),
-                            PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
-                } else {
-                    PandoraHelper.showAlertMessage(this, "Failed to sync",
-                            PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
-                }
-            } else {
-                //TODO: test ya.
-                //set the auth token to null.
-                Bundle input = new Bundle();
-                input.putString(authenticatorController.USER_NAME_ARG,
-                        globalVariable.getAd_user_name());
-                input.putString(authenticatorController.ARG_ACCOUNT_TYPE,
-                        PBSAccountInfo.ACCOUNT_TYPE);
-                input.putString(authenticatorController.ARG_AUTH_TYPE,
-                        PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
-                authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
-                        input, new Bundle(), null);
-                globalVariable = null;
-                showLogOutDialog(authenticateResult.getString(PandoraConstant.FAIL));
+        new AsyncTask<Bundle, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                showProgressDialog("Syncing...");
             }
-        } catch (Exception e) {
-            Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
-            PandoraHelper.showAlertMessage(this, e.getMessage(), PandoraConstant.ERROR,
-                    PandoraConstant.OK_BUTTON, null);
-        }
+
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle inputAuth = params[0];
+                Bundle authenticateResult = new Bundle();
+                Bundle updateResult = new Bundle();
+                Bundle syncResult = new Bundle();
+
+                Bundle result = new Bundle();
+                try {
+                    authenticateResult = authenticatorController
+                            .triggerEvent(PBSAuthenticatorController.AUTHENTICATE_TOKEN_SERVER,
+                                    inputAuth, authenticateResult, null);
+
+                    result.putBoolean(PandoraConstant.RESULT, authenticateResult.getBoolean(PandoraConstant.RESULT));
+                    if (authenticateResult.getBoolean(PandoraConstant.RESULT)) {
+                        updateResult = serverController.triggerEvent(PBSServerController.UPDATE_LOCAL_TABLES,
+                                inputAuth,
+                                updateResult,
+                                contentResolver);
+
+                        syncResult = serverController.triggerEvent(PBSServerController.SYNC_LOCAL_TABLES,
+                                inputAuth,
+                                syncResult,
+                                contentResolver);
+
+                        result.putBundle("updateResult", updateResult);
+                        result.putBundle("syncResult", syncResult);
+
+                    } else {
+                        //TODO: test ya.
+                        //set the auth token to null.
+                        Bundle input = new Bundle();
+                        input.putString(authenticatorController.USER_NAME_ARG,
+                                globalVariable.getAd_user_name());
+                        input.putString(authenticatorController.ARG_ACCOUNT_TYPE,
+                                PBSAccountInfo.ACCOUNT_TYPE);
+                        input.putString(authenticatorController.ARG_AUTH_TYPE,
+                                PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
+                        authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
+                                input, new Bundle(), null);
+                        globalVariable = null;
+                        result.putString(PandoraConstant.FAIL, authenticateResult.getString(PandoraConstant.FAIL));
+                    }
+                } catch (Exception e) {
+                    result.putBoolean(PandoraConstant.ERROR, true);
+                    result.putString("ErrorMessage", e.getMessage());
+                }
+
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                if (result.getBoolean(PandoraConstant.ERROR)) {
+                    String errorMsg = result.getString("ErrorMessage");
+                    Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + errorMsg);
+                    PandoraHelper.showAlertMessage(PandoraMain.this, errorMsg, PandoraConstant.ERROR,
+                            PandoraConstant.OK_BUTTON, null);
+                } else {
+                    if (result.getBoolean(PandoraConstant.RESULT)) {
+                        Bundle updateResult = result.getBundle("updateResult");
+                        Bundle syncResult = result.getBundle("syncResult");
+                        if (updateResult.getBoolean(PandoraConstant.RESULT)
+                                && syncResult.getBoolean(PandoraConstant.RESULT)) {
+                            PandoraHelper.showAlertMessage(PandoraMain.this, "Successfully sync",
+                                    PandoraConstant.RESULT, PandoraConstant.OK_BUTTON, null);
+                            getSupportFragmentManager().popBackStack();
+                            Fragment fragment = new RecruitFragment();
+                            updateFragment(fragment, getString(R.string.title_recruit),
+                                    false);
+                        } else if (updateResult.getString(PandoraConstant.ERROR) != null) {
+                            PandoraHelper.showAlertMessage(PandoraMain.this,
+                                    updateResult.getString(PandoraConstant.ERROR),
+                                    PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+                        } else {
+                            PandoraHelper.showAlertMessage(PandoraMain.this, "Failed to sync",
+                                    PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+                        }
+
+                    } else {
+                        showLogOutDialog(result.getString(PandoraConstant.FAIL));
+                    }
+                }
+                dismissProgressDialog();
+            }
+        }.execute(inputAuth);
     }
 
     /**
@@ -530,10 +568,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     private void clearAllFragmentStack() {
         FragmentManager fm = getSupportFragmentManager();
-        int count = fm.getBackStackEntryCount();
-        for (int i = 0; i < count; ++i) {
-            fm.popBackStackImmediate();
-        }
+        fm.popBackStackImmediate(0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     /**
