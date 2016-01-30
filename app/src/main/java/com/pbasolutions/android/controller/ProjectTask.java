@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.databinding.ObservableArrayList;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
@@ -161,25 +162,39 @@ public class ProjectTask implements Callable<Bundle> {
 
     private Bundle createTask() {
         MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
+        ContentValues cv = getContentValuesFromTask(task);
+        Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv);
+        boolean result = ModelConst.getURIResult(uri);
 
-        PBSIServerAPI serverAPI = new PBSServerAPI();
-        String result = serverAPI.createProjectTask(task,
-                input.getString(PBSServerConst.PARAM_URL));
-        if (result != null && result.isEmpty()) {
-            JsonParser p = new JsonParser();
-            JsonObject jsonObj = p.parse(result).getAsJsonObject();
-            String success = jsonObj.get(PBSServerConst.SUCCESS).getAsString();
-            if (PBSServerConst.TRUE.equalsIgnoreCase(success)){
-             output.putBoolean(PandoraConstant.RESULT, true);
-                return output;
-            }
-
-        }
-            output.putBoolean(PandoraConstant.RESULT, false);
+        if (result) {
+            output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+            output.putString(PandoraConstant.RESULT, "Successfuly insert new task.");
+        } else {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
             output.putString(PandoraConstant.ERROR, "Failed to create task");
-
+        }
         return output;
+
+//        MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
+//
+//        PBSIServerAPI serverAPI = new PBSServerAPI();
+//        String result = serverAPI.createProjectTask(task,
+//                input.getString(PBSServerConst.PARAM_URL));
+//        if (result != null && result.isEmpty()) {
+//            JsonParser p = new JsonParser();
+//            JsonObject jsonObj = p.parse(result).getAsJsonObject();
+//            String success = jsonObj.get(PBSServerConst.SUCCESS).getAsString();
+//            if (PBSServerConst.TRUE.equalsIgnoreCase(success)){
+//             output.putBoolean(PandoraConstant.RESULT, true);
+//                return output;
+//            }
+//
+//        }
+//            output.putBoolean(PandoraConstant.RESULT, false);
+//            output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+//            output.putString(PandoraConstant.ERROR, "Failed to create task");
+//
+//        return output;
     }
 
     private Bundle completeProjectTask() {
@@ -247,6 +262,25 @@ public class ProjectTask implements Callable<Bundle> {
         }
         cursor.close();
         return output;
+    }
+
+    ContentValues getContentValuesFromTask(MProjectTask projTask) {
+        ContentValues cv = new ContentValues();
+
+        cv.put(MProjectTask.C_PROJECTTASK_UUID_COL, projTask.get_UUID());
+//        cv.put(MProjectTask.C_PROJECTTASK_ID_COL, projTask.get_ID());
+        cv.put(MProjectTask.CREATED_COL, projTask.getCreated());
+        cv.put(MProjectTask.CREATEDBY_COL, projTask.getCreatedBy());
+
+        cv.put(MProjectTask.C_PROJECTLOCATION_UUID_COL, projTask.getProjLocUUID());
+        cv.put(MProjectTask.SEQNO_COL, projTask.getSeqNo());
+        cv.put(MProjectTask.NAME_COL, projTask.getName());
+        cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
+        cv.put(MProjectTask.ISDONE_COL, projTask.isDone());
+
+        cv.put(MProjectTask.COMMENTS_COL,projTask.getComments());
+
+        return cv;
     }
 
     private Bundle syncProjectTasks() {
@@ -373,7 +407,8 @@ public class ProjectTask implements Callable<Bundle> {
             if (MProjectTask.C_PROJECTTASK_UUID_COL.equalsIgnoreCase(columnName)){
                 projTask.set_UUID(rowValue);
             } else if (MProjectTask.C_PROJECTTASK_ID_COL.equalsIgnoreCase(columnName)) {
-                projTask.set_ID(Integer.parseInt(rowValue));
+                if (rowValue != null)
+                    projTask.set_ID(Integer.parseInt(rowValue));
             }
             else if (MProjectTask.C_PROJECTLOCATION_UUID_COL
                     .equalsIgnoreCase(columnName)) {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,8 +29,14 @@ import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSTaskController;
 import com.pbasolutions.android.listener.SpinnerOnItemSelected;
 import com.pbasolutions.android.model.MProjectTask;
+import com.pbasolutions.android.model.ModelConst;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
+import java.util.UUID;
 
 /**
  * Created by pbadell on 1/12/16.
@@ -188,6 +195,36 @@ public class NewProjTaskFragment extends Fragment {
         pt.setDescription(desc);
         pt.setAssignedTo(Integer.parseInt(assignedTo));
         pt.setSeqNo(Integer.parseInt(seqNo));
+        // added by danny 1/29/2016
+        pt.setIsDone("N");
+
+        PandoraMain context = (PandoraMain) getActivity();
+        String ad_user_uuid = context.globalVariable.getAd_user_uuid();
+        //as we dont know when does the initial sync completed. we try check if the uuid isEmpty.
+        // if it is .. we have to search the uuid in database
+        if (ad_user_uuid.isEmpty()) {
+            ad_user_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
+                    ModelConst.AD_USER_UUID_COL, context.globalVariable.getAd_user_id(),
+                    ModelConst.AD_USER_TABLE + ModelConst._ID, getActivity().getContentResolver());
+            //set the uuid.
+            context.globalVariable.setAd_user_uuid(ad_user_uuid);
+        }
+
+        pt.setCreatedBy(ad_user_uuid);
+
+        pt.set_UUID(UUID.randomUUID().toString());
+
+        String projLocUUID = ModelConst.mapIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE,
+                ModelConst.C_PROJECTLOCATION_UUID_COL, locID,
+                ModelConst.C_PROJECTLOCATION_ID_COL, getActivity().getContentResolver());
+
+        pt.setProjLocUUID(projLocUUID);
+
+        Date date = new Date();
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dt.setTimeZone(TimeZone.getDefault());
+        String now = dt.format(date);
+        pt.setCreated(now);
 
         Bundle input = new Bundle();
         PandoraContext cont = ((PandoraMain) getActivity()).globalVariable;
