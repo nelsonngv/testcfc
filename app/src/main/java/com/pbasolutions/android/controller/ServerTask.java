@@ -18,7 +18,7 @@ import com.pbasolutions.android.syncAdapter.PBSIServerAccessor;
 import com.pbasolutions.android.syncAdapter.PBSServerAccessor;
 import com.pbasolutions.android.utils.CameraUtil;
 
-import org.apache.commons.lang3.time.DateUtils;
+//import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -101,8 +101,10 @@ public class ServerTask extends Task {
                         Date date = PandoraHelper.stringToDate(format, updated);
                         if (date != null){
                             //get date + retention period
-                            Date addedDate = DateUtils.addDays(date,
-                                    Integer.parseInt((String)table.second));
+                            int addDays = Integer.parseInt((String)table.second);
+                            Date addedDate = new Date(date.getTime() + addDays * 1000 * 3600 * 24);
+//                            Date addedDate = DateUtils.addDays(date,
+//                                    Integer.parseInt((String)table.second));
                             Date today = new Date();
 
                             if (today.compareTo(addedDate) > 0) {

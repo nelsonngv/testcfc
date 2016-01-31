@@ -194,7 +194,7 @@ public class PandoraHelper  {
         try {
             date = input.parse(stringDate);
         } catch (java.text.ParseException e) {
-            Log.e(TAG, e.getMessage());
+//            Log.e(TAG, e.getMessage());
         }
         return date;
     }

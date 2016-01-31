@@ -7,12 +7,15 @@
     </data>
     <TableLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/table_margin_top"
-        android:layout_marginBottom="@dimen/table_margin_bottom"
+        android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="middle"
         >
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:divider="?android:attr/dividerVertical"
+            android:showDividers="middle"
+            >
             <TextView
                 android:text="@string/label_name"
                 style="@style/TableLabel"/>
@@ -23,7 +26,10 @@
                />
         </TableRow>
         <TableRow android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:divider="?android:attr/dividerVertical"
+            android:showDividers="middle"
+            >
             <TextView
                 android:text="@string/label_idnumber"
                 style="@style/TableLabel"/>
@@ -34,7 +40,10 @@
                 />
         </TableRow>
         <TableRow android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:divider="?android:attr/dividerVertical"
+            android:showDividers="middle"
+            >
             <TextView
                 android:text="@string/label_phone"
                 style="@style/TableLabel"/>

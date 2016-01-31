@@ -8,12 +8,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/margin_top">
-            <TableRow>
+            android:layout_height="wrap_content"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle"
+            >
+            <TableRow
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle">
                 <TextView
                     style="@style/TableLabel"
                     android:text="@string/movement_label_docno"/>
@@ -22,7 +27,9 @@
                     style="@style/Value"
                     android:text="@{String.valueOf(movement.DocumentNo)}" />
             </TableRow>
-            <TableRow>
+            <TableRow
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle">
                 <TextView
                     style="@style/TableLabel"
                     android:text="@string/movement_label_movedate" />
@@ -31,30 +38,33 @@
                     android:id="@+id/assetMovementDate"
                     android:text="@{movement.MovementDate}" />
             </TableRow>
-            <TableRow>
+            <TableRow
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle">
                 <TextView
                     style="@style/TableLabel"
                     android:text="@string/movement_label_status" />
                 <TextView
                     style="@style/Value"
                     android:id="@+id/assetMovementStat"
-                    android:layout_marginBottom="@dimen/margin_bottom"
                     android:text="@{movement.Status}"
                     />
             </TableRow>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:id="@+id/_UUID"
-                android:text="@{movement._UUID}"
-                android:visibility="invisible"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:id="@+id/_ID"
-                android:text="@{String.valueOf(movement._ID)}"
-                android:visibility="invisible"/>
-            <View style="@style/Line" android:layout_width="match_parent" />
+            <TableRow>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/_UUID"
+                    android:text="@{movement._UUID}"
+                    android:visibility="invisible"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/_ID"
+                    android:text="@{String.valueOf(movement._ID)}"
+                    android:visibility="invisible"/>
+            </TableRow>
         </TableLayout>
+        <View style="@style/Line" android:layout_width="match_parent" />
     </LinearLayout>
 </layout>

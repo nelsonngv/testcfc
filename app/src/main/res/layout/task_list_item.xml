@@ -38,25 +38,30 @@
                         android:editable="false"
                         android:textSize="@dimen/abc_text_size_subhead_material"/>
                 </TableRow>
-                <TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
                     <TextView
                         style="@style/TableLabel"
                         android:text="@string/label_projloc" />
                     <TextView
                         style="@style/TableValue"
+                        android:layout_marginLeft="@dimen/table_margin_middle"
                         android:id="@+id/task_project_loc"
                         android:text="@{projTask.projLocName}"
                         />
                 </TableRow>
-                <TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
                     <TextView
                         style="@style/TableLabel"
                         android:text="@string/label_status" />
                     <TextView
                         android:id="@+id/task_status"
                         style="@style/TableValue"
-                        android:text="@{projTask.Status}"
-                        android:layout_marginBottom="@dimen/table_margin_middle" />
+                        android:layout_marginLeft="@dimen/table_margin_middle"
+                        android:text="@{projTask.Status}" />
                 </TableRow>
             </TableLayout>
             <TextView

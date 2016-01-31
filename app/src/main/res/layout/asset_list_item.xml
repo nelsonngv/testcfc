@@ -12,9 +12,13 @@
         android:orientation="vertical">
         <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/margin_top">
-            <TableRow>
+            android:layout_height="wrap_content"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle"
+            >
+            <TableRow
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle">
                 <TextView
                    style="@style/TableLabel"
                     android:text="@string/label_productname"/>
@@ -24,7 +28,9 @@
                     android:editable="false"
                     android:text="@{storage.ProductName}" />
                 </TableRow>
-            <TableRow>
+            <TableRow
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle">
                 <TextView
                    style="@style/TableLabel"
                     android:editable="false"
@@ -36,7 +42,9 @@
                     style="@style/Value"
                     />
             </TableRow>
-            <TableRow>
+            <TableRow
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle">
                 <TextView
                     style="@style/TableLabel"
                     android:editable="false"
@@ -49,7 +57,9 @@
                     android:text="@{String.valueOf(storage.QtyOnHand.doubleValue())}"
                     android:textSize="@dimen/abc_text_size_body_1_material" />
             </TableRow>
-            <TableRow>
+            <TableRow
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle">
                 <TextView
                     android:editable="false"
                     style="@style/TableLabel"
@@ -58,11 +68,11 @@
                 <TextView
                     android:id="@+id/asiDesc"
                    style="@style/Value"
-                    android:layout_marginBottom="@dimen/margin_bottom"
                     android:editable="false"
                     android:text="@{storage.Description}" />
 
             </TableRow>
         </TableLayout>
+        <View style="@style/Line" android:layout_width="match_parent" />
     </LinearLayout>
 </layout>
