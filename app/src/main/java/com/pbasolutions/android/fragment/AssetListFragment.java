@@ -71,12 +71,14 @@ public class AssetListFragment extends Fragment {
             @Override
             protected void onPostExecute(Void avoid) {
                 super.onPostExecute(avoid);
-                if (assetList == null)
+                if (assetList == null) {
                     PandoraHelper.showAlertMessage((PandoraMain) getActivity(),
-                        getString(R.string.error_logged_out_sync, getString(R.string.assets_and_movements)),
-                        PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
-                AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
-                recyclerView.setAdapter(viewAdapter);
+                            getString(R.string.error_logged_out_sync, getString(R.string.assets_and_movements)),
+                            PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+                } else {
+                    AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
+                    recyclerView.setAdapter(viewAdapter);
+                }
 
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }

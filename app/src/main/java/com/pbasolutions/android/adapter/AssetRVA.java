@@ -17,10 +17,10 @@ public class AssetRVA  extends RecyclerView.Adapter<AssetRVA.AssetVH>{
     private ObservableArrayList<MStorage> storageList;
     private LayoutInflater inflater;
 
-    public AssetRVA(Context mContext, ObservableArrayList<MStorage> name, LayoutInflater inflater) {
-        this.mContext = mContext;
-        this.storageList = name;
-        this.inflater = LayoutInflater.from(mContext);
+    public AssetRVA(Context mContext_, ObservableArrayList<MStorage> name_, LayoutInflater inflater_) {
+        this.mContext = mContext_;
+        this.storageList = name_;
+        this.inflater = LayoutInflater.from(mContext_);
     }
 
     @Override
