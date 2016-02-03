@@ -31,6 +31,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -597,6 +598,19 @@ public class PandoraHelper  {
         PandoraHelper.showAlertMessage(pContext,
                 text,
                 title, PandoraConstant.OK_BUTTON, null);
+    }
+
+    public static void displayResultToast(Bundle result, Context pContext) {
+        String resultTitle = result.getString(PandoraConstant.TITLE);
+        String text;
+        if (resultTitle != null && !result.isEmpty()) {
+            text = result.getString(resultTitle);
+        } else {
+            text = "Project Task is up to date";
+        }
+
+        Toast.makeText(pContext, text,
+                Toast.LENGTH_SHORT).show();
     }
 
     /**

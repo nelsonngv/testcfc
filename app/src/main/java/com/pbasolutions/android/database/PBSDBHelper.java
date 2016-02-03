@@ -994,9 +994,11 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                         db.execSQL(insertSQL);
                         insertSQL = " insert into m_attributesetinstance(m_attributesetinstance_id, created, createdby, updated, updatedby, isactive, isupdated, issynced, isdeleted, m_attributesetinstance_uuid, ad_org_uuid, ad_client_uuid, description) values ('0','26-JAN-15','500','26-JAN-15','500','Y','Y','Y','N','600','300','400','-')";
                         db.execSQL(insertSQL);
-                        insertSQL = "insert into HR_IDENTITY(hr_identity_uuid, ad_client_uuid, ad_org_uuid,  created, createdby, updated, updatedby, isactive, isupdated, issynced, isdeleted, name, value) values ('1000','400','300','11-FEB-06','100','11-FEB-06','100','Y','Y','Y','N', 'NRIC','N')";
+                        insertSQL = "insert into HR_IDENTITY(hr_identity_uuid, ad_client_uuid, ad_org_uuid,  created, createdby, updated, updatedby, isactive, isupdated, issynced, isdeleted, name, value) values ('1000','400','300','11-FEB-06','100','11-FEB-06','100','Y','Y','Y','N', 'Pink','P')";
                         db.execSQL(insertSQL);
-                        insertSQL = "insert into HR_IDENTITY(hr_identity_uuid, ad_client_uuid, ad_org_uuid,  created, createdby, updated, updatedby, isactive, isupdated, issynced, isdeleted, name, value) values ('1001','400','300','11-FEB-06','100','11-FEB-06','100','Y','Y','Y','N', 'PASSPORT','P')";
+                        insertSQL = "insert into HR_IDENTITY(hr_identity_uuid, ad_client_uuid, ad_org_uuid,  created, createdby, updated, updatedby, isactive, isupdated, issynced, isdeleted, name, value) values ('1001','400','300','11-FEB-06','100','11-FEB-06','100','Y','Y','Y','N', 'Blue','B')";
+                        db.execSQL(insertSQL);
+                        insertSQL = "insert into HR_IDENTITY(hr_identity_uuid, ad_client_uuid, ad_org_uuid,  created, createdby, updated, updatedby, isactive, isupdated, issynced, isdeleted, name, value) values ('1002','400','300','11-FEB-06','100','11-FEB-06','100','Y','Y','Y','N', 'FIN','F')";
                         db.execSQL(insertSQL);
 
                 } catch (SQLException e) {

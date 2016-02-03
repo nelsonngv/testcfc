@@ -375,8 +375,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     private void logout() {
 //        if (true) {
-////            resetServerData();
-//            updateInitialSyncState(false);
+//            resetServerData();
+////            updateInitialSyncState(false);
 //            return;
 //        }
         clearAllFragmentStack();

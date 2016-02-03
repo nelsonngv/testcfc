@@ -96,7 +96,7 @@ public class ProjTaskFragment extends Fragment {
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
                 if (result != null)
-                    PandoraHelper.dispayResultMessage(result, (PandoraMain) getActivity());
+                    PandoraHelper.displayResultToast(result, getActivity());
 
                 addRecyclerViewListener(recyclerView);
                 TaskRVA viewAdapter = new TaskRVA(getActivity(), taskList , inflater);
