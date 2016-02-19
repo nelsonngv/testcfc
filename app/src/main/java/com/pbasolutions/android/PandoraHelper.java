@@ -143,6 +143,18 @@ public class PandoraHelper  {
         return resultBundle;
     }
 
+    public static void showMessage(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showErrorMessage(Context context, String message) {
+        Toast.makeText(context, "Error : " + message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void showWarningMessage(Context context, String message) {
+        Toast.makeText(context, "Alert : " + message, Toast.LENGTH_SHORT).show();
+    }
+
     public static boolean isInternetOn(Context context) {
         // get Connectivity Manager object to check connection
         ConnectivityManager connec =
@@ -609,8 +621,7 @@ public class PandoraHelper  {
             text = "Project Task is up to date";
         }
 
-        Toast.makeText(pContext, text,
-                Toast.LENGTH_SHORT).show();
+        showMessage(pContext, text);
     }
 
     /**

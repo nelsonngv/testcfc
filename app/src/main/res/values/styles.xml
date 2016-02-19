@@ -176,13 +176,17 @@
         <item name="android:layout_marginRight">30dp</item>
         <item name="android:gravity">left</item>
     </style>
+    <style name="LineCheckBoxD">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
     <style name="LineInfoD">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginLeft">@dimen/margin_left</item>
         <item name="android:layout_marginRight">@dimen/margin_right</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_weight">7</item>
+        <item name="android:layout_weight">8</item>
         <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>
     </style>
     <style name="LineQtyD">
@@ -190,8 +194,7 @@
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginLeft">@dimen/margin_left</item>
         <item name="android:layout_marginRight">@dimen/margin_right</item>
-        <item name="android:layout_weight">3</item>
-        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_weight">2</item>
         <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>
     </style>
 

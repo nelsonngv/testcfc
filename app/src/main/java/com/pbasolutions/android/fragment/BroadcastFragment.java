@@ -155,8 +155,7 @@ public class BroadcastFragment extends Fragment {
         //check if any message selected
         ObservableArrayList<MNote> list = viewAdapter.getNotes();
         if (!PandoraHelper.isSelected((ObservableArrayList)list)){
-            PandoraHelper.showAlertMessage(context, getString(R.string.no_selected, "message(s)")
-                    , PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+            PandoraHelper.showErrorMessage(context, getString(R.string.no_selected, "message(s)"));
             return;
         }
 //        Bundle isDelete = PandoraHelper.showAlertMessage(context, getString(R.string.sure_to_delete, "messages")
@@ -288,9 +287,8 @@ public class BroadcastFragment extends Fragment {
         Bundle result = broadCont.triggerEvent(broadCont.DELETE_NOTES_EVENT, input,
                 new Bundle(), null);
         String title = result.getString(PandoraConstant.TITLE);
-        PandoraHelper.showAlertMessage(((PandoraMain)getActivity()),
-                result.getString(title),
-                title, PandoraConstant.OK_BUTTON, null);
+        PandoraHelper.showMessage(((PandoraMain)getActivity()),
+                result.getString(title));
         if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(this).attach(this).commit();

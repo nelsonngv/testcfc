@@ -75,8 +75,7 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
                 || qtyRequested.getText().toString().isEmpty()
                 || requiredDate.getText().toString().isEmpty())
         {
-            PandoraHelper.showAlertMessage((PandoraMain)getActivity(), "Please fill up all fields", "Error",
-                    "Ok", null);
+            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please fill up all fields");
             return;
         }
         tempPRLine = new MPurchaseRequestLine();
@@ -117,8 +116,7 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
            // }
 
         } else {
-            PandoraHelper.showAlertMessage(context, output.getString(output.getString(PandoraConstant.TITLE)),
-                    output.getString(PandoraConstant.TITLE), "Ok", null);
+            PandoraHelper.showMessage(context, output.getString(output.getString(PandoraConstant.TITLE)));
         }
     }
 

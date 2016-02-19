@@ -111,8 +111,8 @@ public class LoginFragment extends Fragment {
 
 
         if (accountName.isEmpty() || accountPassword.isEmpty() || serverURL.isEmpty()) {
-            PandoraHelper.showAlertMessage((PandoraMain) getActivity(),
-                    "Please fill up all the fields", PandoraConstant.ERROR, "Ok", null);
+            PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
+                    "Please fill up all the fields");
             return;
         }
 
@@ -173,10 +173,8 @@ public class LoginFragment extends Fragment {
 
         protected void onPostExecute(Bundle resultBundle) {
             if (resultBundle.getString(PandoraConstant.ERROR) != null) {
-                PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
-                        resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)),
-                        resultBundle.getString(PandoraConstant.TITLE),
-                        PandoraConstant.OK_BUTTON, null);
+                PandoraHelper.showMessage((PandoraMain)getActivity(),
+                        resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)));
                 context.dismissProgressDialog();
                 return;
             }

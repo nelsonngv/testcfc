@@ -72,9 +72,8 @@ public class AssetListFragment extends Fragment {
             protected void onPostExecute(Void avoid) {
                 super.onPostExecute(avoid);
                 if (assetList == null) {
-                    PandoraHelper.showAlertMessage((PandoraMain) getActivity(),
-                            getString(R.string.error_logged_out_sync, getString(R.string.assets_and_movements)),
-                            PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+                    PandoraHelper.showErrorMessage((PandoraMain) getActivity(),
+                            getString(R.string.error_logged_out_sync, getString(R.string.assets_and_movements)));
                 } else {
                     AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
                     recyclerView.setAdapter(viewAdapter);

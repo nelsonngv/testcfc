@@ -96,10 +96,8 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         }
 
         if (isError) {
-            PandoraHelper.showAlertMessage((PandoraMain)getActivity(), "Please ensure " +
-                            "that Name/Job/Nationality/Shift is not empty",
-                    PandoraConstant.ERROR, "Ok",null
-            );
+            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please ensure " +
+                            "that Name/Job/Nationality/Shift is not empty");
             return;
         }
 
@@ -181,8 +179,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
                     fragmentTransaction.addToBackStack(frag.getClass().getName());
                     fragmentTransaction.commit();
                 } else {
-                    PandoraHelper.showAlertMessage(context, output.getString(output.getString(PandoraConstant.TITLE))
-                            , output.getString(PandoraConstant.TITLE), "Ok", null);
+                    PandoraHelper.showMessage(context, output.getString(output.getString(PandoraConstant.TITLE)));
                 }
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }

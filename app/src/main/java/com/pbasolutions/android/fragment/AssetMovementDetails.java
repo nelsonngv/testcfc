@@ -77,9 +77,8 @@ public class AssetMovementDetails extends AbstractMovementFragment {
                 assetCont.COMPLETE_MOVEMENT_EVENT, input, new Bundle(), null);
 
         if(PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))){
-            PandoraHelper.showAlertMessage(context,
-                    result.getString(result.getString(PandoraConstant.TITLE))
-                    , result.getString(PandoraConstant.TITLE), "Ok", null);
+            PandoraHelper.showErrorMessage(context,
+                    result.getString(result.getString(PandoraConstant.TITLE)));
         } else {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

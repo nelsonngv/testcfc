@@ -334,7 +334,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             displayView(defaultFragment, true);
         } catch (Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
-            PandoraHelper.showAlertMessage(this, e.getMessage(), "Error", "Ok", null);
+            PandoraHelper.showMessage(this, "Error: " + e.getMessage());
         }
     }
 
@@ -531,27 +531,23 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 if (result.getBoolean(PandoraConstant.ERROR)) {
                     String errorMsg = result.getString("ErrorMessage");
                     Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + errorMsg);
-                    PandoraHelper.showAlertMessage(PandoraMain.this, errorMsg, PandoraConstant.ERROR,
-                            PandoraConstant.OK_BUTTON, null);
+                    PandoraHelper.showErrorMessage(PandoraMain.this, errorMsg);
                 } else {
                     if (result.getBoolean(PandoraConstant.RESULT)) {
                         Bundle updateResult = result.getBundle("updateResult");
                         Bundle syncResult = result.getBundle("syncResult");
                         if (updateResult.getBoolean(PandoraConstant.RESULT)
                                 && syncResult.getBoolean(PandoraConstant.RESULT)) {
-                            PandoraHelper.showAlertMessage(PandoraMain.this, "Successfully sync",
-                                    PandoraConstant.RESULT, PandoraConstant.OK_BUTTON, null);
+                            PandoraHelper.showMessage(PandoraMain.this, "Successfully sync");
                             getSupportFragmentManager().popBackStack();
                             Fragment fragment = new RecruitFragment();
                             updateFragment(fragment, getString(R.string.title_recruit),
                                     false);
                         } else if (updateResult.getString(PandoraConstant.ERROR) != null) {
-                            PandoraHelper.showAlertMessage(PandoraMain.this,
-                                    updateResult.getString(PandoraConstant.ERROR),
-                                    PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+                            PandoraHelper.showErrorMessage(PandoraMain.this,
+                                    updateResult.getString(PandoraConstant.ERROR));
                         } else {
-                            PandoraHelper.showAlertMessage(PandoraMain.this, "Failed to sync",
-                                    PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+                            PandoraHelper.showErrorMessage(PandoraMain.this, "Failed to sync");
                         }
 
                     } else {

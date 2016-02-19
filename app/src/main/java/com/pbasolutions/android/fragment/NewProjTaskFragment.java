@@ -184,8 +184,7 @@ public class NewProjTaskFragment extends Fragment {
                 || assignedTo.isEmpty()
                 || seqNo.isEmpty())
         {
-            PandoraHelper.showAlertMessage((PandoraMain)getActivity(), "Please fill up all fields", "Error",
-                    "Ok", null);
+            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please fill up all fields");
             return;
         }
 

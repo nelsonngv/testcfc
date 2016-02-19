@@ -66,9 +66,8 @@ public class AssetNewMovement extends AbstractMovementFragment {
         Bundle result = assetCont.triggerEvent(assetCont.SAVE_MOVEMENT_EVENT,
                 input, new Bundle(), null);
         if (PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-            PandoraHelper.showAlertMessage(context,
-                    result.getString(result.getString(PandoraConstant.TITLE))
-                    , result.getString(PandoraConstant.TITLE), "Ok", null);
+            PandoraHelper.showErrorMessage(context,
+                    result.getString(result.getString(PandoraConstant.TITLE)));
         }
 
     }
@@ -81,8 +80,7 @@ public class AssetNewMovement extends AbstractMovementFragment {
 
         //validate movementlines at least on
         if (movement.getLines() == null){
-            PandoraHelper.showAlertMessage(context, "Please add at least one line to execute move."
-                    , PandoraConstant.ERROR, "Ok", null);
+            PandoraHelper.showWarningMessage(context, "Please add at least one line to execute move.");
             return;
         }
         Bundle input = new Bundle();
@@ -103,9 +101,8 @@ public class AssetNewMovement extends AbstractMovementFragment {
                 fragmentTransaction.addToBackStack(frag.getClass().getName());
                 fragmentTransaction.commit();
         } else {
-            PandoraHelper.showAlertMessage(context,
-                    result.getString(result.getString(PandoraConstant.TITLE))
-                    , result.getString(PandoraConstant.TITLE), "Ok", null);
+            PandoraHelper.showErrorMessage(context,
+                    result.getString(result.getString(PandoraConstant.TITLE)));
         }
     }
 

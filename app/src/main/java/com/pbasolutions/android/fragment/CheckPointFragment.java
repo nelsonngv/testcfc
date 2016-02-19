@@ -96,13 +96,13 @@ public class CheckPointFragment extends Fragment {
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
                 if (result != null) {
-                    PandoraHelper.showAlertMessage((PandoraMain) getActivity(),
-                            result.getString(result.getString(PandoraConstant.TITLE)), result.getString(PandoraConstant.TITLE), "Ok", null);
+                    PandoraHelper.showMessage((PandoraMain) getActivity(),
+                            result.getString(result.getString(PandoraConstant.TITLE)));
                 } else {
                     PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
                     if (globalVar != null && checkPoints == null)
-                        PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
-                                "Project Location is not selected. Please select the project location in defaults setting tab.", PandoraConstant.ERROR, "Ok", null);
+                        PandoraHelper.showWarningMessage((PandoraMain)getActivity(),
+                                "Project Location is not selected. Please select the project location in defaults setting tab.");
                 }
 
                 CheckPointRVA viewAdapter = new CheckPointRVA(getActivity(), checkPoints, inflater);

@@ -165,9 +165,8 @@ public class RoleFragment extends Fragment {
                     //todo . set flag as already sent role to server.
                     context.displayView(PandoraMain.FRAGMENT_RECRUIT, false);
                 } else {
-                    PandoraHelper.showAlertMessage(context, result.getString(
-                                    result.getString(PandoraConstant.TITLE)),
-                            result.getString(PandoraConstant.TITLE), "Ok", null);
+                    PandoraHelper.showMessage(context, result.getString(
+                                    result.getString(PandoraConstant.TITLE)));
                 }
                 context.dismissProgressDialog();
             }

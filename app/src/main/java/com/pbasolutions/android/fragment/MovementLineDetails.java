@@ -55,9 +55,8 @@ public class MovementLineDetails extends AbstractMovementLineFragment {
             asi.setSelection(((SpinAdapter) asiAdapter)
                     .getPosition(String.valueOf(line.getM_AttributeSetInstance_ID())));
         } else {
-            PandoraHelper.showAlertMessage((PandoraMain)getActivity(), "You have not full sync Asset" +
-                    " table, product name,value and asi wont be able to display, please sync.",
-                    "Error", "Ok", null);
+            PandoraHelper.showErrorMessage((PandoraMain)getActivity(), "You have not full sync Asset" +
+                    " table, product name,value and asi wont be able to display, please sync.");
         }
         uom.setText(line.getUOMName());
         movementQty.setText(String.valueOf(line.getMovementQty()));

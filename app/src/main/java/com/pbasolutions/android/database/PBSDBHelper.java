@@ -1002,7 +1002,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                         db.execSQL(insertSQL);
 
                 } catch (SQLException e) {
-                        PandoraHelper.showAlertMessage((PandoraMain)context,"Error in initializing database", "Error", "Ok", null);
+                        PandoraHelper.showErrorMessage((PandoraMain)context,"Error in initializing database");
                         Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
                 }
         }

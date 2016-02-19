@@ -248,9 +248,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
     private void completeProj() {
 
         if (taskComments.getText() == null || taskComments.getText().toString().isEmpty()){
-            PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
-                    getString(R.string.please_fill_in_fields, getString(R.string.label_comment)),
-                    PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+            PandoraHelper.showWarningMessage((PandoraMain)getActivity(),
+                    getString(R.string.please_fill_in_fields, getString(R.string.label_comment)));
             return;
         }
 
@@ -271,10 +270,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
         if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
             PandoraHelper.redirectToFragment(new ProjTaskFragment(), getActivity());
         } else {
-            PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
-                    result.getString(result.getString(PandoraConstant.TITLE)),
-                    result.getString(PandoraConstant.TITLE),
-                    "Ok", null);
+            PandoraHelper.showMessage((PandoraMain)getActivity(),
+                    result.getString(result.getString(PandoraConstant.TITLE)));
         }
     }
 

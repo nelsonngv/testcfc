@@ -206,9 +206,8 @@ public class NewRequisitionFragment extends Fragment {
         }
 
         if (pr == null) {
-            PandoraHelper.showAlertMessage((PandoraMain) getActivity(), getString(
-                            R.string.no_line_error, getString(R.string.request)),
-                    PandoraConstant.ERROR, "Ok", null);
+            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+                    R.string.no_line_error, getString(R.string.request)));
             return;
         }
 
@@ -222,9 +221,8 @@ public class NewRequisitionFragment extends Fragment {
         MPurchaseRequestLine[] lines = pr.getLines();
 
         if (lines == null) {
-            PandoraHelper.showAlertMessage((PandoraMain)getActivity(), getString(
-                    R.string.no_line_error,getString(R.string.request)),
-                    PandoraConstant.ERROR, "Ok", null);
+            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), getString(
+                    R.string.no_line_error,getString(R.string.request)));
             return;
         }
 

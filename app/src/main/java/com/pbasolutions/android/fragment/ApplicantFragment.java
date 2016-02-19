@@ -91,7 +91,7 @@ public class ApplicantFragment extends Fragment {
                 Bundle result = recCont.triggerEvent(recCont.GET_APPLICANTS_EVENT, input, new Bundle(), null);
                 return (ObservableArrayList<MApplicant>) result.getSerializable(recCont.APPLICANT_LIST);
             } else {
-                PandoraHelper.showAlertMessage((PandoraMain) getActivity(), getString(R.string.text_projectloc_na), PandoraConstant.ERROR, "Ok", null);
+                PandoraHelper.showErrorMessage((PandoraMain) getActivity(), getString(R.string.text_projectloc_na));
             }
         }
         return null;

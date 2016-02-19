@@ -130,8 +130,7 @@ public class RequisitionLineDetailsFragment extends AbstractRequisitionLineFragm
                     ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_newrequisition));
                 }
             } else {
-                PandoraHelper.showAlertMessage(context, output.getString(output.getString(PandoraConstant.TITLE)),
-                        output.getString(PandoraConstant.TITLE), "Ok", null);
+                PandoraHelper.showMessage(context, output.getString(output.getString(PandoraConstant.TITLE)));
             }
         }
     }

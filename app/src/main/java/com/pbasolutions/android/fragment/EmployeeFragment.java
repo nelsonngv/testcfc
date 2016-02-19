@@ -79,7 +79,7 @@ public class EmployeeFragment extends Fragment {
                 Bundle result = recCont.triggerEvent(recCont.GET_EMPLOYEES_EVENT, input, new Bundle(), null);
                 return (ObservableArrayList<MEmployee>) result.getSerializable(recCont.EMPLOYEE_LIST);
             } else {
-                PandoraHelper.showAlertMessage((PandoraMain) getActivity(), getString(R.string.text_projectloc_na), PandoraConstant.ERROR, "Ok", null);
+                PandoraHelper.showErrorMessage((PandoraMain) getActivity(), getString(R.string.text_projectloc_na));
             }
         }
         return null;

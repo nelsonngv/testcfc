@@ -62,9 +62,8 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
                     ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_newmovementline));
                 }
             } else  {
-                PandoraHelper.showAlertMessage(context,
-                        output.getString(output.getString(PandoraConstant.TITLE)),
-                        output.getString(PandoraConstant.TITLE), "Ok", null);
+                PandoraHelper.showMessage(context,
+                        output.getString(output.getString(PandoraConstant.TITLE)));
             }
         }
     }
@@ -86,14 +85,14 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
             BigDecimal quantityOnHand =  new BigDecimal(qtyOnHd);
             BigDecimal moveQty = new BigDecimal(movementQuantity);
             if (moveQty.compareTo(quantityOnHand) == 1) {
-                PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
-                        getString(R.string.movement_greater_than), PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+                PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
+                        getString(R.string.movement_greater_than));
             } else {
                 result = true;
             }
         } else {
-            PandoraHelper.showAlertMessage((PandoraMain) getActivity(),
-                    getString(R.string.no_value_movement_qty), PandoraConstant.ERROR, PandoraConstant.OK_BUTTON, null);
+            PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
+                    getString(R.string.no_value_movement_qty));
         }
         return result;
     }

@@ -185,7 +185,7 @@ public class NewCheckInFragment extends Fragment {
             Bundle resultBundle = checkInController.triggerEvent(PBSCheckInController.INSERT_DATA, inputBundle, new Bundle(), null);
             if (resultBundle != null){
                 if (PandoraConstant.ERROR.equalsIgnoreCase(resultBundle.getString(PandoraConstant.TITLE)))
-                PandoraHelper.showAlertMessage((PandoraMain)getActivity(), resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)), resultBundle.getString(PandoraConstant.TITLE), "Ok", null);
+                PandoraHelper.showMessage((PandoraMain)getActivity(), resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)));
                 else {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
