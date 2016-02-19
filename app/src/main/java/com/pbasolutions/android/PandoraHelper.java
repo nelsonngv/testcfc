@@ -155,6 +155,10 @@ public class PandoraHelper  {
         Toast.makeText(context, "Alert : " + message, Toast.LENGTH_SHORT).show();
     }
 
+    public static void showInfoMessage(Context context, String message) {
+        Toast.makeText(context, "Information : " + message, Toast.LENGTH_SHORT).show();
+    }
+
     public static boolean isInternetOn(Context context) {
         // get Connectivity Manager object to check connection
         ConnectivityManager connec =
