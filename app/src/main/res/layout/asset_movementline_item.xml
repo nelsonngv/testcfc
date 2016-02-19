@@ -17,13 +17,13 @@
                 android:id="@+id/removeLine"
              />
             <TextView
-                style="@style/LineInfo"
+                style="@style/LineInfoD"
                 android:id="@+id/prodName"
                 android:text="@{line.ProductName}"
             />
             <TextView
                 android:id="@+id/prlQtyRequested"
-                style="@style/LineQty"
+                style="@style/LineQtyD"
                 android:text="@{String.valueOf(line.MovementQty.doubleValue())}"
                 />
             <TextView

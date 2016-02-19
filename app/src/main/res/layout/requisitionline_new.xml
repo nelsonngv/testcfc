@@ -4,51 +4,52 @@
             name="prLine"
             type="com.pbasolutions.android.model.MPurchaseRequestLine"/>
     </data>
-    <LinearLayout android:layout_width = "wrap_content"
+    <LinearLayout android:layout_width = "match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TableLayout android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <TableLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle"
+            >
             <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:layout_marginTop="10dp">
-                <TextView
-                    android:text="@string/label_productname"
-                    style="@style/TableLabel"/>
-                <Spinner
-                    android:layout_width="210dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/prlProdNameSpinner"
-                    android:layout_column="1"/>
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        android:text="@string/label_productname"
+                        style="@style/TableInfoLabel"/>
+                    <Spinner
+                        style="@style/TableValue"
+                        android:id="@+id/prlProdNameSpinner"/>
+                </LinearLayout>
             </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
                     android:text="@string/label_qty"
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:inputType="number"/>
                 <EditText
-                    style="@style/Value"
+                    style="@style/TableValue"
                     android:id="@+id/prlQty"
                     android:inputType="number"
                     android:text="@{prLine.QtyRequestedString}"
                     />
+                </LinearLayout>
             </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
                     android:text="@string/label_required_date"
-                    style="@style/TableLabel"
+                    style="@style/TableInfoLabel"
                     android:textSize="@dimen/abc_text_size_body_1_material"/>
                 <EditText
-                    style="@style/Value"
+                    style="@style/TableValue"
                     android:id="@+id/prlDateRequired"
                     android:inputType="date"
                     android:text="@{prLine.DateRequired}"
                     />
+                </LinearLayout>
             </TableRow>
         </TableLayout>
         <Button

@@ -12,7 +12,7 @@
     <dimen name="margin_right">10dp</dimen>
     <dimen name="text_width">300dp</dimen>
     <dimen name="common_margin_top">5dp</dimen>
-    <dimen name="dimen_small_pic">400px</dimen>
+    <dimen name="dimen_small_pic">200px</dimen>
     <dimen name="checkbox_margin_top">5.1dp</dimen>
     <dimen name="checkbox_text_margin_top">10dp</dimen>
     <dimen name="margin_bottom">10dp</dimen>

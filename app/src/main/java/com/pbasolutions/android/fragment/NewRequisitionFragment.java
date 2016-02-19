@@ -205,6 +205,13 @@ public class NewRequisitionFragment extends Fragment {
             populatePR();
         }
 
+        if (pr == null) {
+            PandoraHelper.showAlertMessage((PandoraMain) getActivity(), getString(
+                            R.string.no_line_error, getString(R.string.request)),
+                    PandoraConstant.ERROR, "Ok", null);
+            return;
+        }
+
         PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
         String projLocID = pc.getC_projectlocation_id();
         pr.setC_ProjectLocation_ID(projLocID);
@@ -214,7 +221,7 @@ public class NewRequisitionFragment extends Fragment {
 
         MPurchaseRequestLine[] lines = pr.getLines();
 
-        if (lines == null){
+        if (lines == null) {
             PandoraHelper.showAlertMessage((PandoraMain)getActivity(), getString(
                     R.string.no_line_error,getString(R.string.request)),
                     PandoraConstant.ERROR, "Ok", null);
