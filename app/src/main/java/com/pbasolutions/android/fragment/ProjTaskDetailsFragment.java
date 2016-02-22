@@ -293,6 +293,9 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
                 picturePath = context.getmCurrentPhotoPath();
             }
 
+            if (!picturePath.endsWith(".jpg") && !picturePath.endsWith(".jpg"))
+                picturePath += ".jpg";
+
             switch (requestCode) {
                 case CameraUtil.CAPTURE_ATTACH_1: {
                     CameraUtil.handleBigCameraPhoto(taskPicture1, picturePath, context);

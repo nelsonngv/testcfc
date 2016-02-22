@@ -335,6 +335,9 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
                 picturePath = context.getmCurrentPhotoPath();
             }
 
+            if (!picturePath.endsWith(".jpg") && !picturePath.endsWith(".jpg"))
+                picturePath += ".jpg";
+
             switch (requestCode) {
                 case CameraUtil.CAPTURE_PROF_PIC : {
                     CameraUtil.handleBigCameraPhoto(profileImage,
