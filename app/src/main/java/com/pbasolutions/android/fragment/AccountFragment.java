@@ -105,12 +105,16 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        return rootView;
+    }
+
+    public void onStart() {
+        super.onStart();
         if(context.globalVariable != null){
             viewPager.setCurrentItem(1);
 //            if (context.globalVariable.isAuth()){
 //            }
         }
-        return rootView;
     }
 
     @Override

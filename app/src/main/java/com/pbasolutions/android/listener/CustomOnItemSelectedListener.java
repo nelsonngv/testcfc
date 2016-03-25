@@ -46,7 +46,8 @@ public class CustomOnItemSelectedListener implements AdapterView.OnItemSelectedL
             for ( int x=0; x<objectArray.length; x++) {
                 PBSRoleJSON role = (PBSRoleJSON) objectArray[x] ;
                 if (role.getName().equals(selectedValue)) {
-                    if (view != null && view.getContext()!=null
+                    if (view != null
+                            && view.getContext()!=null
                             && view.getContext().getApplicationContext()!=null){
                         final PandoraContext globalVariable = (PandoraContext) view.getContext().getApplicationContext();
                         context.globalVariable.setAd_role_name(role.getName());
@@ -56,13 +57,13 @@ public class CustomOnItemSelectedListener implements AdapterView.OnItemSelectedL
                         context.globalVariable.setAd_org_spinner_index(ZERO_INDEX);
                         //if the role is changed always set back the client spinner index to 0
                         context.globalVariable.setAd_client_spinner_index(ZERO_INDEX);
-                        this.orgSpinner.setVisibility(View.VISIBLE);
-                        this.clientSpinner.setVisibility(View.VISIBLE);
-
-                        fragment.addItemsOnSpinner(this.orgSpinner, role.getOrgNames(role.getOrgs()), "orgSpinner");
-                        orgSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(fragment, role.getOrgs(), orgSpinner, clientSpinner, projectSpinner));
-                        return;
                     }
+                    this.orgSpinner.setVisibility(View.VISIBLE);
+                    this.clientSpinner.setVisibility(View.VISIBLE);
+
+                    fragment.addItemsOnSpinner(this.orgSpinner, role.getOrgNames(role.getOrgs()), "orgSpinner");
+                    orgSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(fragment, role.getOrgs(), orgSpinner, clientSpinner, projectSpinner));
+                    return;
                 }
             }
         } else if (objectArray instanceof PBSOrgJSON[]) {

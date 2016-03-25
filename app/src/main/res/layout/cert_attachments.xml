@@ -14,7 +14,7 @@
 
         <TableRow android:layout_marginTop="10dp">
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableLabelL"
                 android:text="@string/label_certpic1" />
 
             <ImageView
@@ -31,7 +31,7 @@
         <TableRow android:layout_marginTop="10dp">
 
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableLabelL"
                 android:text="@string/label_certpic2" />
 
             <ImageView
@@ -47,7 +47,7 @@
         <TableRow android:layout_marginTop="10dp">
 
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableLabelL"
                 android:text="@string/label_certpic3" />
 
             <ImageView
@@ -63,7 +63,7 @@
         <TableRow android:layout_marginTop="10dp">
 
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableLabelL"
                 android:text="@string/label_certpic4" />
 
             <ImageView
@@ -79,7 +79,7 @@
         <TableRow android:layout_marginTop="10dp">
 
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableLabelL"
                 android:text="@string/label_certpic5" />
 
             <ImageView
@@ -95,7 +95,7 @@
         <TableRow android:layout_marginTop="10dp">
 
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableLabelL"
                 android:text="@string/label_certpic6" />
 
             <ImageView
@@ -111,7 +111,7 @@
         <TableRow android:layout_marginTop="10dp">
 
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableLabelL"
                 android:text="@string/label_certpic7" />
 
             <ImageView
@@ -127,7 +127,7 @@
         <TableRow android:layout_marginTop="10dp">
 
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableLabelL"
                 android:text="@string/label_certpic8" />
 
             <ImageView
@@ -143,7 +143,7 @@
         <TableRow android:layout_marginTop="10dp">
 
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableLabelL"
                 android:text="@string/label_certpic9" />
 
             <ImageView
@@ -158,7 +158,7 @@
 
         <TableRow android:layout_marginTop="10dp">
             <TextView
-                style="@style/TableLabel"
+                style="@style/TableLabelL"
                 android:text="@string/label_certpic10" />
 
             <ImageView

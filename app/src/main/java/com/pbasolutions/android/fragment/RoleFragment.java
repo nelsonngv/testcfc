@@ -2,6 +2,7 @@ package com.pbasolutions.android.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -60,7 +61,6 @@ public class RoleFragment extends Fragment {
         projectSpinner = (Spinner) rootView.findViewById(R.id.project);
         authenticatorController = new PBSAuthenticatorController(getActivity());
 
-        addSpinnerData();
         Button okButton = (Button) rootView.findViewById(R.id.roleOK);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +73,12 @@ public class RoleFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    public void onStart() {
+        super.onStart();
+
+        addSpinnerData();
     }
 
     private void addSpinnerData() {
