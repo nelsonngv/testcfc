@@ -148,11 +148,11 @@ public class PandoraHelper  {
     }
 
     public static void showErrorMessage(Context context, String message) {
-        Toast.makeText(context, "Error : " + message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     public static void showWarningMessage(Context context, String message) {
-        Toast.makeText(context, "Alert : " + message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     public static void showInfoMessage(Context context, String message) {
@@ -350,9 +350,12 @@ public class PandoraHelper  {
                 setProjLocUserData(globalVar, projLocJSONs, activity);
             }
             if (showResult)
-             PandoraHelper.showAlertMessage((PandoraMain) activity, result
-                     .getString(result.getString(PandoraConstant.TITLE)),
-                     result.getString(PandoraConstant.TITLE), "Ok", null);
+            {
+                PandoraHelper.showMessage((PandoraMain) activity, result.getString(result.getString(PandoraConstant.TITLE)));
+//                PandoraHelper.showAlertMessage((PandoraMain) activity, result
+//                                .getString(result.getString(PandoraConstant.TITLE)),
+//                        result.getString(PandoraConstant.TITLE), "Ok", null);
+            }
         } else {
             isInitialSyncCompleted = true;
         }

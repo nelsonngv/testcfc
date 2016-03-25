@@ -117,9 +117,12 @@ public class BroadcastFragment extends Fragment {
                 super.onPostExecute(message);
 
                 if (message != null)
-                    PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
-                            message[1],
-                            message[0], PandoraConstant.OK_BUTTON, null);
+                {
+                    PandoraHelper.showMessage((PandoraMain)getActivity(), message[1]);
+//                    PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
+//                            message[1],
+//                            message[0], PandoraConstant.OK_BUTTON, null);
+                }
 
                 viewAdapter = new BroadcastRVA(getActivity(),broadCastList, inflater);
                 recyclerView.setAdapter(viewAdapter);
