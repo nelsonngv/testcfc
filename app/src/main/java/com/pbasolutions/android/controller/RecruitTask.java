@@ -352,7 +352,9 @@ public class RecruitTask extends Task {
                 for (int x = 0; x < cursor.getColumnNames().length; x++) {
                     if (ModelConst.NAME_COL
                             .equalsIgnoreCase(cursor.getColumnName(x))) {
-                        pair.setValue(cursor.getString(x));
+                        String strVal = cursor.getString(x);
+                        strVal = strVal.replace("\\/", "/");
+                        pair.setValue(strVal);
                     } else if (ModelConst.HR_SETUP_JOB_UUID_COL
                             .equalsIgnoreCase(cursor.getColumnName(x))) {
                         pair.setKey(cursor.getString(x));

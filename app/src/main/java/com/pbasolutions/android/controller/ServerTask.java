@@ -409,12 +409,12 @@ public class ServerTask extends Task {
                             tableCursor.getInt(x)));
                 }
                 else {
-                    String value = tableCursor.getString(x);
+                    String value = unescapedString(tableCursor.getString(x));
                     if(value == null)
                     {
                         value = "null";
                     }
-                    columns.add(new PBSColumnsJSON(tableCursor.getColumnName(x),value));
+                    columns.add(new PBSColumnsJSON(tableCursor.getColumnName(x), value));
                 }
             }
         } catch (Exception e) {
@@ -472,6 +472,11 @@ public class ServerTask extends Task {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
         }
         return resultBundle;
+    }
+
+    String unescapedString(String inputStr) {
+        if (inputStr == null) return null;
+        return inputStr.replace("\\", "");
     }
 
 }

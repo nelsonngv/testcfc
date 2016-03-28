@@ -73,19 +73,6 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.act_login, container, false);
-        if ( context.globalVariable != null) {
-            if (context.globalVariable.getAd_user_name()!=null)
-                ((TextView) rootView.findViewById(R.id.accountName))
-                        .setText(context.globalVariable.getAd_user_name());
-            if (context.globalVariable.getAd_user_password() != null) {
-                ((TextView) rootView.findViewById(R.id.accountPassword))
-                        .setText(context.globalVariable.getAd_user_password());
-            }
-            if (context.globalVariable.getServer_url() != null) {
-                ((TextView) rootView.findViewById(R.id.serverURL))
-                        .setText(context.globalVariable.getServer_url());
-            }
-        }
         rootView.findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +80,23 @@ public class LoginFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    public void onStart() {
+        super.onStart();
+        if ( context.globalVariable != null) {
+            if (context.globalVariable.getAd_user_name()!=null)
+                ((TextView) getView().findViewById(R.id.accountName))
+                        .setText(context.globalVariable.getAd_user_name());
+            if (context.globalVariable.getAd_user_password() != null) {
+                ((TextView) getView().findViewById(R.id.accountPassword))
+                        .setText(context.globalVariable.getAd_user_password());
+            }
+            if (context.globalVariable.getServer_url() != null) {
+                ((TextView) getView().findViewById(R.id.serverURL))
+                        .setText(context.globalVariable.getServer_url());
+            }
+        }
     }
 
     /**

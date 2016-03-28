@@ -415,6 +415,10 @@ public class PandoraHelper  {
         PandoraContext var = ((PandoraMain)activity).globalVariable;
         if (result.getString(authCont.USER_NAME_ARG) != null){
             var.setAd_user_name(result.getString(authCont.USER_NAME_ARG));
+            var.setAd_user_password(
+                    result.getString(authCont.USER_PASS_ARG));
+            var.setServer_url(
+                    result.getString(authCont.SERVER_URL_ARG));
         }
 
         if (result.getString(authCont.AUTH_TOKEN_ARG) != null) {
