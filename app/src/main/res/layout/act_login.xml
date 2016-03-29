@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
+    <ImageView
+        android:id="@+id/imageViewProfPic"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/pandora"/>
     <TableLayout android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TableRow
-            android:background="@drawable/pandora"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="50dp"
-            android:layout_height="100dp">
-        </TableRow>
 <!--        <TableRow>
             <TextView
                 android:text="@string/text_welcome_login"
@@ -74,4 +76,4 @@
         android:layout_marginLeft="10dp"
         android:visibility="invisible"
         />
-</FrameLayout>
+</LinearLayout>

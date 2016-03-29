@@ -12,7 +12,8 @@
         android:showDividers="middle"
         >
 
-        <TableRow android:layout_marginTop="10dp">
+        <TableRow android:layout_marginTop="10dp"
+            >
             <TextView
                 style="@style/TableLabelL"
                 android:text="@string/label_certpic1" />
@@ -28,7 +29,8 @@
                 android:adjustViewBounds="false" />
         </TableRow>
 
-        <TableRow android:layout_marginTop="10dp">
+        <TableRow android:layout_marginTop="10dp"
+            >
 
             <TextView
                 style="@style/TableLabelL"

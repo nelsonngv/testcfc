@@ -48,7 +48,7 @@ public class CheckInFragment extends Fragment {
      */
     private static final String TAG = "CheckpointsFragment";
 
-    private static final int ACTION_SYNC = 100;
+    private static final int ACTION_SYNC = 102;
     private static final int ACTION_ADD = 101;
 
     RecyclerView recyclerView;
@@ -145,7 +145,7 @@ public class CheckInFragment extends Fragment {
         sync.setIcon(R.drawable.refresh);
 
         MenuItem add;
-        sync = menu.add(0, ACTION_ADD, 0, "Add");
+        sync = menu.add(0, ACTION_ADD, 1, "Add");
         sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         sync.setIcon(R.drawable.add);
     }
@@ -155,6 +155,9 @@ public class CheckInFragment extends Fragment {
         switch (id) {
             case ACTION_ADD:
                 ((PandoraMain)getActivity()).displayView(PandoraMain.FRAGMENT_NEW_CHECK_IN, false);
+                return true;
+            case ACTION_SYNC:
+                ((PandoraMain)getActivity()).sync(false);
                 return true;
         }
 

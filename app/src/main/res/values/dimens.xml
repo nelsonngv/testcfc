@@ -8,6 +8,7 @@
     <dimen name="fab_button_margin_bottom">16dp</dimen>
     <dimen name="fab_button_margin_right">16dp</dimen>
     <dimen name="label_margin_left">10dp</dimen>
+    <dimen name="margin_leftd2">20dp</dimen>
     <dimen name="margin_left">10dp</dimen>
     <dimen name="margin_right">10dp</dimen>
     <dimen name="text_width">300dp</dimen>

@@ -172,6 +172,9 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     public DrawerLayout mDrawerLayout;
 
+    // to check sync result
+    public static final String GOTO_RECRUIT = "GotoRecruit";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -356,7 +359,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         if (lockMode == DrawerLayout.LOCK_MODE_UNLOCKED) {
             switch (id) {
                 case SYNC_ID: {
-                    sync();
+                    sync(true);
                     break;
                 }
                 case LOGOUT_ID: {
@@ -456,7 +459,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     /**
      * Perform sync.
      */
-    private void sync() {
+    public void sync(boolean gotoRecrut) {
         Bundle inputAuth = new Bundle();
         inputAuth.putString(authenticatorController.USER_NAME_ARG,
                 globalVariable.getAd_user_name());
@@ -466,6 +469,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 globalVariable.getServer_url());
         inputAuth.putString(authenticatorController.SERIAL_ARG,
                 globalVariable.getSerial());
+        inputAuth.putBoolean(GOTO_RECRUIT, gotoRecrut);
 
         new AsyncTask<Bundle, Void, Bundle>() {
             @Override
@@ -482,6 +486,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 Bundle syncResult = new Bundle();
 
                 Bundle result = new Bundle();
+                result.putBoolean(GOTO_RECRUIT, inputAuth.getBoolean(GOTO_RECRUIT));
+
                 try {
                     authenticateResult = authenticatorController
                             .triggerEvent(PBSAuthenticatorController.AUTHENTICATE_TOKEN_SERVER,
@@ -539,10 +545,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                         if (updateResult.getBoolean(PandoraConstant.RESULT)
                                 && syncResult.getBoolean(PandoraConstant.RESULT)) {
                             PandoraHelper.showMessage(PandoraMain.this, "Successfully sync");
-                            getSupportFragmentManager().popBackStack();
-                            Fragment fragment = new RecruitFragment();
-                            updateFragment(fragment, getString(R.string.title_recruit),
-                                    false);
+                            if (result.getBoolean(GOTO_RECRUIT))
+                            {
+                                getSupportFragmentManager().popBackStack();
+                                Fragment fragment = new RecruitFragment();
+                                updateFragment(fragment, getString(R.string.title_recruit),
+                                        false);
+                            }
                         } else if (updateResult.getString(PandoraConstant.ERROR) != null) {
                             PandoraHelper.showErrorMessage(PandoraMain.this,
                                     updateResult.getString(PandoraConstant.ERROR));
