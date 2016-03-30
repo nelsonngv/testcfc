@@ -53,9 +53,6 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (PBSServerConst.cookieStore == null) {
-            PBSServerConst.instantiateCookie();
-        }
         context = ((PandoraMain)getActivity());
         authController = new PBSAuthenticatorController(getActivity());
         accountManager = AccountManager.get(getActivity());

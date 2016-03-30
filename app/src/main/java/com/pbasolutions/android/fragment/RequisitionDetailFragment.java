@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.RequisitionLineRVA;
@@ -38,6 +39,8 @@ public class RequisitionDetailFragment extends PBSDetailsFragment {
 
         private ObservableArrayList<MPurchaseRequestLine> purchaseRequestLineList;
 
+        private Button requestButton;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -48,6 +51,9 @@ public class RequisitionDetailFragment extends PBSDetailsFragment {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.requisition_details, container, false);
+            requestButton = (Button) rootView.findViewById(R.id.prRequest);
+            requestButton.setVisibility(View.INVISIBLE);
+
             binding =  RequisitionDetailsBinding.bind(rootView);
             binding.setPr(getRequisition());
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.requisitionline_rv);
@@ -55,6 +61,8 @@ public class RequisitionDetailFragment extends PBSDetailsFragment {
             purchaseRequestLineList = getRequisitionLines();
             RequisitionLineRVA viewAdapter = new RequisitionLineRVA(getActivity(),purchaseRequestLineList, inflater);
             recyclerView.setAdapter(viewAdapter);
+
+
             return rootView;
         }
 
@@ -69,7 +77,13 @@ public class RequisitionDetailFragment extends PBSDetailsFragment {
             Bundle input = new Bundle();
             input.putString(reqCont.ARG_PURCHASEREQUEST_UUID, _UUID);
             Bundle result = reqCont.triggerEvent(reqCont.GET_REQUISITION_EVENT, input, new Bundle(), null);
-            return (MPurchaseRequest)result.getSerializable(reqCont.ARG_PURCHASEREQUEST);
+
+            MPurchaseRequest req = (MPurchaseRequest)result.getSerializable(reqCont.ARG_PURCHASEREQUEST);
+//            String status = req.getStatus();
+//            boolean showRequestBtn = status == null || status.isEmpty();
+//            if (requestButton != null)
+//                requestButton.setVisibility(showRequestBtn? View.VISIBLE : View.INVISIBLE);
+            return req;
         }
 
         @Override

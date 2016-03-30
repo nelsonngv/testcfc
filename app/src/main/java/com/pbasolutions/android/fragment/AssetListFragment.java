@@ -71,10 +71,10 @@ public class AssetListFragment extends Fragment {
             @Override
             protected void onPostExecute(Void avoid) {
                 super.onPostExecute(avoid);
-                if (assetList == null) {
+                if (PBSServerConst.cookieStore == null) {
                     PandoraHelper.showErrorMessage((PandoraMain) getActivity(),
                             getString(R.string.error_logged_out_sync, getString(R.string.assets_and_movements)));
-                } else {
+                } else if (assetList == null) {
                     AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
                     recyclerView.setAdapter(viewAdapter);
                 }

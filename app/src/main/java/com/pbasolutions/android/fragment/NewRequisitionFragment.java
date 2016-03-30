@@ -226,6 +226,7 @@ public class NewRequisitionFragment extends Fragment {
             return;
         }
 
+        requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtonDisable));
         if (lines.length>0) {
             for (int i=0; i<lines.length; i++) {
                 String mProductUUID = lines[i].getM_Product_UUID();
@@ -261,6 +262,9 @@ public class NewRequisitionFragment extends Fragment {
             @Override
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
+
+                requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
+
                 if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

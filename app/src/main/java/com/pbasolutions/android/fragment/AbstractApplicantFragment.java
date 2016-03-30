@@ -335,8 +335,14 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
                 picturePath = context.getmCurrentPhotoPath();
             }
 
-//            if (!picturePath.endsWith(".jpg") && !picturePath.endsWith(".jpg"))
-//                picturePath += ".jpg";
+            int extIndex = picturePath.lastIndexOf(".");
+            if (extIndex == -1) {
+                picturePath += ".jpg";
+            } else {
+                int extCnt = picturePath.length() - extIndex;
+                if (extCnt > 4)
+                    picturePath += ".jpg";
+            }
 
             switch (requestCode) {
                 case CameraUtil.CAPTURE_PROF_PIC : {

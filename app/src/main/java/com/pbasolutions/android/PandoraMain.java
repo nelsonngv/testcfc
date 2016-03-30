@@ -331,6 +331,11 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     PandoraHelper.getProjLocAvailable(this, false);
                     defaultFragment = FRAGMENT_RECRUIT;
                 }
+
+                if (PBSServerConst.cookieStore == null) {
+                    PBSServerConst.instantiateCookie();
+                }
+
             } else {
                 defaultFragment = FRAGMENT_ACCOUNT;
             }
