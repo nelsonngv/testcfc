@@ -20,6 +20,7 @@
                 <EditText
                     android:id="@+id/editTextEmpName"
                     style="@style/TableValue"
+                    android:editable="false"
                     android:text="@{employee.name}" />
             </LinearLayout>
         </TableRow>
@@ -31,6 +32,7 @@
                 <EditText
                     android:id="@+id/editTextEmpIDNumber"
                     style="@style/TableValue"
+                    android:editable="false"
                     android:text="@{employee.idNumber}" />
             </LinearLayout>
         </TableRow>
@@ -42,7 +44,7 @@
                 <EditText
                     android:id="@+id/editTextEmpPhone"
                     style="@style/TableValue"
-                    android:inputType="phone"
+                    android:editable="false"
                     android:text="@{employee.phone}" />
             </LinearLayout>
         </TableRow>
@@ -54,6 +56,7 @@
                 <EditText
                     style="@style/TableValue"
                     android:id="@+id/editTextJobTitle"
+                    android:editable="false"
                     android:text="@{employee.jobTitle}" />
             </LinearLayout>
         </TableRow>
