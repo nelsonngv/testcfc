@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
@@ -31,7 +32,7 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
 
     protected Spinner prodNameSpinner;
     protected SpinnerOnItemSelected prodNameItem;
-    protected EditText requiredDate;
+    protected TextView requiredDate;
 
     protected ArrayAdapter prodNameAdapter;
     EditText qtyRequested;
@@ -51,7 +52,7 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
         Activity act = getActivity();
         prodNameSpinner = (Spinner) rootView.findViewById(R.id.prlProdNameSpinner);
         prodNameAdapter = PandoraHelper.addListToSpinner(act, prodNameSpinner, getProdList());
-        requiredDate = (EditText)rootView.findViewById(R.id.prlDateRequired);
+        requiredDate = (TextView)rootView.findViewById(R.id.prlDateRequired);
         saveButton = (Button) rootView.findViewById(R.id.savePRLine);
         qtyRequested = (EditText) rootView.findViewById(R.id.prlQty);
     }
@@ -77,7 +78,7 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
             public void onClick(View v) {
                 switch (event) {
                     case EVENT_DATE: {
-                        PandoraHelper.promptDatePicker((EditText) object, getActivity());
+                        PandoraHelper.promptDatePicker((TextView) object, getActivity());
                         break;
                     }
                     case EVENT_SAVE_PRLINE: {

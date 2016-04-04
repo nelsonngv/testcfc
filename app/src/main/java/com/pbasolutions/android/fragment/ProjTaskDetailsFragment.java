@@ -211,7 +211,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
             public void onClick(View v) {
                 switch (event) {
                     case EVENT_DATE: {
-                        PandoraHelper.promptDatePicker((EditText) object, getActivity());
+                        PandoraHelper.promptDatePicker((TextView) object, getActivity());
                         break;
                     }
 //                    case EVENT_COMPLETEPROJ: {

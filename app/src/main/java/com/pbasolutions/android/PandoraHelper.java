@@ -267,7 +267,7 @@ public class PandoraHelper  {
      *
      * @param date
      */
-    public static void promptDatePicker(final EditText date, Activity activity) {
+    public static void promptDatePicker(final TextView date, Activity activity) {
         final Calendar c = Calendar.getInstance();
         int  mYear = c.get(Calendar.YEAR);
         int  mMonth = c.get(Calendar.MONTH);

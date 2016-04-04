@@ -57,10 +57,9 @@
                     style="@style/TableInfoLabel"
                     android:text="@string/label_movementdate"
                     />
-                <EditText
+                <TextView
                     android:id="@+id/movementDate"
-                    style="@style/TableValue"
-                    android:inputType="date"
+                    style="@style/TableValueDate"
                     android:text="@{movement.MovementDate}"
                     />
                 </LinearLayout>>

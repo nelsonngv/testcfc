@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
@@ -56,7 +57,7 @@ public class NewRequisitionFragment extends Fragment {
     private EditText documentNo;
     private EditText isApproved;
     private EditText projLoc;
-    private EditText requestDate;
+    private TextView requestDate;
     private ImageButton addButton;
     private ImageButton removeButton;
     private Button requestButton;
@@ -133,7 +134,7 @@ public class NewRequisitionFragment extends Fragment {
         documentNo =  (EditText)view.findViewById(R.id.prDocNo) ;
         isApproved = (EditText)view.findViewById(R.id.prStatus) ;
         projLoc = (EditText) view.findViewById(R.id.prProjLoc);
-        requestDate = (EditText) view.findViewById(R.id.prRequestDate);
+        requestDate = (TextView) view.findViewById(R.id.prRequestDate);
 //        addButton = (ImageButton)view.findViewById(R.id.addPrLine);
 //        removeButton = (ImageButton) view.findViewById(R.id.removePrLine);
         requestButton = (Button) view.findViewById(R.id.prRequest);
@@ -173,7 +174,7 @@ public class NewRequisitionFragment extends Fragment {
             public void onClick(View v) {
                 switch (event) {
                     case EVENT_DATE: {
-                        PandoraHelper.promptDatePicker((EditText) object, getActivity());
+                        PandoraHelper.promptDatePicker((TextView) object, getActivity());
                         break;
                     }
                     case EVENT_ADD_LINE: {

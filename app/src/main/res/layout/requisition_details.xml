@@ -61,11 +61,10 @@
                     style="@style/TableLabel"
                     android:text="@string/reqdetails_label_requested_date"
                     />
-                <EditText
+                <TextView
                     android:id="@+id/prRequestDate"
-                    style="@style/Value"
+                    style="@style/TableValueDate"
                     android:text="@{pr.RequestDate}"
-                    android:inputType="date"
                     android:layout_marginBottom="@dimen/margin_bottom" />
             </TableRow>
         </TableLayout>

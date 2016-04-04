@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
@@ -74,7 +75,7 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
     protected static final String EVENT_CERTPIC_9 = "EVENT_CERTPIC_9";
     protected static final String EVENT_CERTPIC_10 = "EVENT_CERTPIC_10";
 
-    protected EditText date;
+    protected TextView date;
     protected EditText expSalary;
     protected ImageView profileImage;
     protected EditText name;
@@ -131,7 +132,7 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
     protected void setUI(View rootView) {
         Activity act = getActivity();
 
-        date = (EditText)rootView.findViewById(R.id.editTextApplDate);
+        date = (TextView)rootView.findViewById(R.id.editTextApplDate);
         genderSpinner = (Spinner) rootView.findViewById(R.id.genderSpinner);
         genderAdapter = PandoraHelper.addListToSpinner(act, genderSpinner,
                 PandoraHelper.getGenderList());
@@ -238,7 +239,7 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
             public void onClick(View v) {
                 switch (event) {
                     case EVENT_DATE: {
-                        PandoraHelper.promptDatePicker((EditText) object, getActivity());
+                        PandoraHelper.promptDatePicker((TextView)object, getActivity());
                         break;
                     }
                     case EVENT_PROFPIC: {

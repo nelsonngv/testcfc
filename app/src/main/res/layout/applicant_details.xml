@@ -67,10 +67,9 @@
                 <TextView
                     style="@style/TableInfoLabel"
                     android:text="@string/label_applicationdate"/>
-                <EditText
+                <TextView
                     android:id="@+id/editTextApplDate"
-                    style="@style/TableValue"
-                    android:inputType="date"
+                    style="@style/TableValueDate"
                     android:hint="Press to Select Date" />
                 </LinearLayout>
             </TableRow>

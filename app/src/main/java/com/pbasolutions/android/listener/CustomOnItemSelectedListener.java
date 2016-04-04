@@ -50,13 +50,17 @@ public class CustomOnItemSelectedListener implements AdapterView.OnItemSelectedL
                             && view.getContext()!=null
                             && view.getContext().getApplicationContext()!=null){
                         final PandoraContext globalVariable = (PandoraContext) view.getContext().getApplicationContext();
+                        String prevRoleName = context.globalVariable.getAd_role_name();
                         context.globalVariable.setAd_role_name(role.getName());
                         context.globalVariable.setAd_role_id(role.getAD_Role_ID());
                         context.globalVariable.setAd_role_spinner_index(x);
                         //if the role is changed always set back the org spinner index to 0
-                        context.globalVariable.setAd_org_spinner_index(ZERO_INDEX);
-                        //if the role is changed always set back the client spinner index to 0
-                        context.globalVariable.setAd_client_spinner_index(ZERO_INDEX);
+                        if (prevRoleName == null || !prevRoleName.equals(role.getName()))
+                        {
+                            context.globalVariable.setAd_org_spinner_index(ZERO_INDEX);
+                            //if the role is changed always set back the client spinner index to 0
+                            context.globalVariable.setAd_client_spinner_index(ZERO_INDEX);
+                        }
                     }
                     this.orgSpinner.setVisibility(View.VISIBLE);
                     this.clientSpinner.setVisibility(View.VISIBLE);

@@ -47,7 +47,7 @@ public abstract class AbstractMovementFragment extends PBSDetailsFragment{
     protected Spinner toProjectLocation;
     protected SpinnerOnItemSelected toProjectLocationItem;
     protected ArrayAdapter toProjectLocationAdapter;
-    protected EditText movementDate;
+    protected TextView movementDate;
     protected CheckBox lineCheckBox;
     boolean isToComplete = false;
 
@@ -117,7 +117,7 @@ public abstract class AbstractMovementFragment extends PBSDetailsFragment{
         toProjectLocationAdapter = PandoraHelper
                 .addListToSpinner(act, toProjectLocation,
                         getProjectLocationsTo());
-        movementDate = (EditText) rootView
+        movementDate = (TextView) rootView
                 .findViewById(R.id.movementDate);
         documentNo = (TextView) rootView.findViewById(R.id.documentNo);
         lineCheckBox = (CheckBox)rootView.findViewById(R.id.removeLine);
@@ -154,7 +154,7 @@ public abstract class AbstractMovementFragment extends PBSDetailsFragment{
             public void onClick(View v) {
                 switch (event) {
                     case EVENT_DATE: {
-                        PandoraHelper.promptDatePicker((EditText) object, getActivity());
+                        PandoraHelper.promptDatePicker((TextView) object, getActivity());
                         break;
                     }
                     default:

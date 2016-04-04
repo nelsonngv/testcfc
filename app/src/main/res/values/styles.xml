@@ -64,6 +64,8 @@
     <style name="TableValueW" parent="TableValue">
         <item name="android:layout_weight">1</item>
     </style>
+    <style name="TableValueDate" parent="TableValue">
+    </style>
     <style name="TableInfoLabelW" parent="TableInfoLabel">
         <item name="android:layout_weight">1</item>
     </style>>

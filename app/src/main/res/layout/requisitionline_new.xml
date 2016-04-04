@@ -43,10 +43,9 @@
                     android:text="@string/label_required_date"
                     style="@style/TableInfoLabel"
                     android:textSize="@dimen/abc_text_size_body_1_material"/>
-                <EditText
-                    style="@style/TableValue"
+                <TextView
+                    style="@style/TableValueDate"
                     android:id="@+id/prlDateRequired"
-                    android:inputType="date"
                     android:text="@{prLine.DateRequired}"
                     />
                 </LinearLayout>
