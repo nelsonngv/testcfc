@@ -623,18 +623,6 @@ public class PandoraHelper  {
                 title, PandoraConstant.OK_BUTTON, null);
     }
 
-    public static void displayResultToast(Bundle result, Context pContext) {
-        String resultTitle = result.getString(PandoraConstant.TITLE);
-        String text;
-        if (resultTitle != null && !result.isEmpty()) {
-            text = result.getString(resultTitle);
-        } else {
-            text = "Project Task is up to date";
-        }
-
-        showMessage(pContext, text);
-    }
-
     /**
      * Method to replace all "\\n" character in text database to "\n"/system line seperator
      * @param string

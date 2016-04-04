@@ -1,5 +1,6 @@
 package com.pbasolutions.android.fragment;
 
+import android.content.Context;
 import android.databinding.ObservableArrayList;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pbasolutions.android.PBSServerConst;
+import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
@@ -52,10 +54,13 @@ public class ProjTaskFragment extends Fragment {
      * Sync menu id.
      */
     public static final int SYNC_PROJTASK_ID = 800;
+
+    private boolean isrecyclerviewAdded;
     /**
      * Contructor.
      */
     public ProjTaskFragment() {
+        isrecyclerviewAdded = false;
     }
 
     @Override
@@ -95,13 +100,22 @@ public class ProjTaskFragment extends Fragment {
             @Override
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
-                if (result != null)
-                    PandoraHelper.displayResultToast(result, getActivity());
+                PandoraMain pandoraMain = PandoraMain.instance;
+                pandoraMain.dismissProgressDialog();
+
+                String resultTitle = result.getString(PandoraConstant.TITLE);
+                String text;
+                if (resultTitle != null && !result.isEmpty()) {
+                    text = result.getString(resultTitle);
+                } else {
+                    text = "Project Task is up to date";
+                }
+
+                PandoraHelper.showMessage(pandoraMain, text);
 
                 addRecyclerViewListener(recyclerView);
-                TaskRVA viewAdapter = new TaskRVA(getActivity(), taskList , inflater);
+                TaskRVA viewAdapter = new TaskRVA(pandoraMain, taskList, inflater);
                 recyclerView.setAdapter(viewAdapter);
-                ((PandoraMain)getActivity()).dismissProgressDialog();
             }
         }.execute(inflater, recyclerView);
 
@@ -165,9 +179,9 @@ public class ProjTaskFragment extends Fragment {
     private Bundle syncProjTasks() {
         if (PBSServerConst.cookieStore !=null){
             Bundle input = new Bundle();
-            input.putString(taskCont.ARG_PROJLOC_UUID, globalVar.getC_projectlocation_uuid());
+            input.putString(PBSTaskController.ARG_PROJLOC_UUID, globalVar.getC_projectlocation_uuid());
             input.putString(PBSServerConst.PARAM_URL, globalVar.getServer_url());
-            Bundle result = taskCont.triggerEvent(taskCont.SYNC_PROJTASKS_EVENT, input, new Bundle(), null);
+            Bundle result = taskCont.triggerEvent(PBSTaskController.SYNC_PROJTASKS_EVENT, input, new Bundle(), null);
 
             return result;
         }
@@ -197,6 +211,9 @@ public class ProjTaskFragment extends Fragment {
      * @param rv
      */
     protected void addRecyclerViewListener(RecyclerView rv) {
+        if (isrecyclerviewAdded) return;
+        isrecyclerviewAdded = true;
+
         ObservableArrayList<IModel> modelList = (ObservableArrayList) taskList;
         rv.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
                 new FragmentListOnItemClickListener(modelList, new ProjTaskDetailsFragment(),

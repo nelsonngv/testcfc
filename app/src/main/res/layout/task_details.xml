@@ -21,20 +21,19 @@
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle"
                 >
 
                 <TableRow
-                    android:layout_marginTop="@dimen/margin_top">
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle"
+                    >
 
                     <TextView
                         android:id="@+id/taskSeqNo"
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="0"
-                        android:layout_marginLeft="@dimen/margin_left"
-                        android:editable="false"
+                        style="@style/TableLabel"
                         android:text="10"
-                        android:gravity="right"
                         android:textSize="@dimen/abc_text_size_subhead_material" />
 
                     <TextView
@@ -48,12 +47,10 @@
                         android:textStyle="bold"
                         android:textSize="@dimen/abc_text_size_subhead_material" />
                 </TableRow>
-            </TableLayout>
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle"
+                    >
                     <TextView
                         style="@style/TableLabel"
                         android:text="@string/label_projloc"
@@ -65,7 +62,10 @@
                         />
                 </TableRow>
 
-                <TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle"
+                    >
 
                     <TextView
                         style="@style/TableLabel"
