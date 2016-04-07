@@ -344,7 +344,7 @@ public class AuthenticatorTask extends Task {
                         PBSAuthenticatorController.USER_NAME_ARG),
                 input.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
                 input.getString(PBSAuthenticatorController.SERVER_URL_ARG)
-                        + "/wstore/Auth.jsp?action=Version");
+                        + "/wstore/Auth.jsp?action=Logout");
         if (logOutResult == true) {
             ((PandoraMain) ctx).globalVariable = null;
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
