@@ -327,6 +327,8 @@ public class PandoraHelper  {
         Bundle result = authController
                 .triggerEvent(authController.GET_USER_ACCOUNT_EVENT,
                         input, new Bundle(), null);
+
+        boolean hasAccount = false;
         if (result != null) {
             Account userAccount = result.getParcelable(authController.USER_ACC_ARG);
             if (userAccount != null) {

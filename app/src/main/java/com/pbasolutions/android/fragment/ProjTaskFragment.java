@@ -124,7 +124,7 @@ public class ProjTaskFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         MenuItem sync;
-        sync = menu.add(0, PandoraMain.SYNC_DEPLOY_ID, 0, "Sync Deploy");
+        sync = menu.add(0, SYNC_PROJTASK_ID, 0, "Sync Task");
         sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         sync.setIcon(R.drawable.refresh);
 
