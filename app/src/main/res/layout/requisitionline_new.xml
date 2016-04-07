@@ -46,6 +46,7 @@
                 <TextView
                     style="@style/TableValueDate"
                     android:id="@+id/prlDateRequired"
+                    android:hint="Press to Select Date"
                     android:text="@{prLine.DateRequired}"
                     />
                 </LinearLayout>
