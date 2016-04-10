@@ -445,10 +445,9 @@ public class AuthenticatorTask extends Task {
                                     userPass, authType, user.getToken());
                         }
                     } else {
+                        PandoraMain.instance.resetServerData(serverURL);
                         createNewAccount(userName, accType, deviceID, serverURL,
                                 userPass, authType, user.getToken());
-
-                        PandoraMain.instance.resetServerData();
                     }
                     //insert data into master data tables. for first time, check the master
                     //table data is empty first.

@@ -441,28 +441,24 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         }.execute(inputBundle);
     }
 
-    public void resetServerData() {
+    public void resetServerData(String serverUrl) {
         // danny test code to reset sync data
-        (new Thread() {
-            public void run() {
-                PBSServer pbsServer = new PBSServer();
-                String resetUrl = globalVariable.getServer_url() + "/wstore/Sync.jsp?action=Reset";
-                PBSResultJSON resultJSON = (PBSResultJSON) pbsServer.callServer(resetUrl, PBSResultJSON.class.getName());
+        PBSServer pbsServer = new PBSServer();
+        String resetUrl = serverUrl + "/wstore/Sync.jsp?action=Reset";
+        PBSResultJSON resultJSON = (PBSResultJSON) pbsServer.callServer(resetUrl, PBSResultJSON.class.getName());
 
-                boolean result;
-                if (resultJSON != null){
-                    if (resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT)) {
-                        result = false;
-                    } else {
-                        result = true;
-                    }
-                } else {
-                    result = false;
-                }
-
-                Log.d("Sync Reset", " reset result : " + result);
+        boolean result;
+        if (resultJSON != null){
+            if (resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT)) {
+                result = false;
+            } else {
+                result = true;
             }
-        }).start();
+        } else {
+            result = false;
+        }
+
+        Log.d("Sync Reset", " reset result : " + result);
     }
 
     /**

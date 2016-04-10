@@ -109,18 +109,18 @@ public class AssetNewMovement extends AbstractMovementFragment {
     @Override
     public void addLine() {
         Fragment fragment = new NewMovementLineFragment();
-        if (get_UUID() != null){
+        if (get_UUID() != null) {
             ((NewMovementLineFragment) fragment).set_UUID(_UUID);
-            if (fragment != null) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragment.setRetainInstance(true);
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                fragmentTransaction.commit();
-                ((PandoraMain) getActivity()).getSupportActionBar()
-                        .setTitle(getString(R.string.title_newrequisitionline));
-            }
+        }
+        if (fragment != null) {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragment.setRetainInstance(true);
+            fragmentTransaction.replace(R.id.container_body, fragment);
+            fragmentTransaction.addToBackStack(fragment.getClass().getName());
+            fragmentTransaction.commit();
+            ((PandoraMain) getActivity()).getSupportActionBar()
+                    .setTitle(getString(R.string.title_newrequisitionline));
         }
     }
 

@@ -197,6 +197,8 @@
         <item name="android:layout_marginLeft">@dimen/margin_left</item>
         <item name="android:layout_marginRight">@dimen/margin_right</item>
         <item name="android:layout_weight">8</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
         <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>
     </style>
     <style name="LineQtyD">
