@@ -13,14 +13,14 @@ import java.util.concurrent.FutureTask;
 /**
  * Created by pbadell on 10/12/15.
  */
-public class PBSRequisitionController extends ContextWrapper implements PBSIController {
+public class PBSAttendanceController extends ContextWrapper implements PBSIController {
 
     /**
      * Event name : get employee list.
      */
-    public static final String GET_REQUISITIONS_EVENT = "GET_ATTENDANCES_EVENT";
+    public static final String GET_ATTENDANCES_EVENT = "GET_ATTENDANCES_EVENT";
 
-    public static final String SYNC_REQUISITIONS_EVENT = "SYNC_ATTENDANCES_EVENT";
+    public static final String SYNC_ATTENDANCES_EVENT = "SYNC_ATTENDANCES_EVENT";
 
     public static final String CREATE_REQUISITION_EVENT = "CREATE_REQUISITION_EVENT";
 
@@ -28,7 +28,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
     /**
      *
      */
-    public static final String ARG_REQUISITION_LIST = "ARG_ATTENDANCE_LIST";
+    public static final String ARG_ATTENDANCE_LIST = "ARG_ATTENDANCE_LIST";
     public static final String ARG_PURCHASEREQUEST_UUID = "ARG_PURCHASEREQUEST_UUID";
     public static final String ARG_REQUISITION = "ARG_REQUISITION";
     public static final String ARG_PROJECT_LOCATION_UUID = "ARG_PROJECT_LOCATION_UUID";
@@ -66,7 +66,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
      *
      * @param base
      */
-    public PBSRequisitionController(Context base) {
+    public PBSAttendanceController(Context base) {
         super(base);
         cr = getContentResolver();
         reqTask = new RequisitionTask(cr);
@@ -75,11 +75,11 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
     @Override
     public Bundle triggerEvent(String eventName, Bundle input, Bundle result, Object object) {
         switch (eventName) {
-            case GET_REQUISITIONS_EVENT: {
+            case GET_ATTENDANCES_EVENT: {
                 getRequisitions(input, result, object);
                 break;
             }
-            case SYNC_REQUISITIONS_EVENT: {
+            case SYNC_ATTENDANCES_EVENT: {
                 syncRequisitions(input, result, object);
                 break;
             }
@@ -327,7 +327,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
     }
 
     private Bundle syncRequisitions(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, SYNC_REQUISITIONS_EVENT);
+        input.putString(ARG_TASK_EVENT, SYNC_ATTENDANCES_EVENT);
         reqTask.setInput(input);
         reqTask.setOutput(result);
         taskResult = new FutureTask<Bundle> (reqTask);
@@ -349,7 +349,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
      * @param object
      */
     private Bundle getRequisitions(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, GET_REQUISITIONS_EVENT);
+        input.putString(ARG_TASK_EVENT, GET_ATTENDANCES_EVENT);
         reqTask.setInput(input);
         reqTask.setOutput(result);
         taskResult = new FutureTask<Bundle> (reqTask);

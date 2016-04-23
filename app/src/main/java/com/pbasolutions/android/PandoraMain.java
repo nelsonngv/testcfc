@@ -41,6 +41,8 @@ import com.pbasolutions.android.fragment.AssetFragment;
 import com.pbasolutions.android.fragment.AssetListFragment;
 import com.pbasolutions.android.fragment.AssetMovementDetails;
 import com.pbasolutions.android.fragment.AssetNewMovement;
+import com.pbasolutions.android.fragment.AttendanceDetailFragment;
+import com.pbasolutions.android.fragment.AttendanceFragment;
 import com.pbasolutions.android.fragment.BroadcastDetailsFragment;
 import com.pbasolutions.android.fragment.BroadcastFragment;
 import com.pbasolutions.android.fragment.CheckPointFragment;
@@ -55,6 +57,8 @@ import com.pbasolutions.android.fragment.LoginFragment;
 import com.pbasolutions.android.fragment.MovementLineDetails;
 import com.pbasolutions.android.fragment.MovementListFragment;
 import com.pbasolutions.android.fragment.NewApplicantFragment;
+import com.pbasolutions.android.fragment.NewAttendanceFragment;
+import com.pbasolutions.android.fragment.NewAttendanceLineFragment;
 import com.pbasolutions.android.fragment.NewCheckInFragment;
 import com.pbasolutions.android.fragment.AccountFragment;
 import com.pbasolutions.android.fragment.NewMovementLineFragment;
@@ -145,7 +149,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public static final int FRAGMENT_CHECKPOINTS = 4;
     public static final int FRAGMENT_CHECKPOINT_SEQ = 5;
     public static final int FRAGMENT_BROADCAST = 6;
-    public static final int SETTING_MENU = 7;
+    public static final int FRAGMENT_ATTENDANCE = 7;
+    public static final int SETTING_MENU = 8;
     public static final int FRAGMENT_CHECKPOINTS_DETAILS = 50;
     public static final int FRAGMENT_NEW_CHECK_IN = 51;
     public static final int FRAGMENT_ACCOUNT = 80;
@@ -154,6 +159,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public static final int FRAGMENT_CREATE_REQUISITIONLINE = 12;
     public static final int FRAGMENT_CREATE_MOVEMENT = 13;
     public static final int FRAGMENT_CREATE_MOVEMENTLINE = 14;
+    public static final int FRAGMENT_CREATE_ATTENDANCE = 16;
+    public static final int FRAGMENT_CREATE_ATTENDANCELINE = 17;
 
     /**
      * Toolbar menu id.
@@ -301,6 +308,14 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             titleID = R.string.title_requisitionlinedetails;
         } else if (EmployeeDetailsFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_employee_details;
+        } else if (AttendanceFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_attentance;
+        } else if (NewAttendanceFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_create_attendance;
+        } else if (NewAttendanceLineFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_create_attendanceline;
+        } else if (AttendanceDetailFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_attentance;
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -708,6 +723,24 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             case FRAGMENT_CREATE_MOVEMENTLINE: {
                 fragment = new NewMovementLineFragment();
                 title = getString(R.string.title_newmovementline);
+                break;
+            }
+
+            case FRAGMENT_ATTENDANCE: {
+                fragment = new AttendanceFragment();
+                title = getString(R.string.title_attentance);
+                break;
+            }
+
+            case FRAGMENT_CREATE_ATTENDANCE: {
+                fragment = new NewAttendanceFragment();
+                title = getString(R.string.title_create_attendance);
+                break;
+            }
+
+            case FRAGMENT_CREATE_ATTENDANCELINE: {
+                fragment = new NewAttendanceLineFragment();
+                title = getString(R.string.title_create_attendanceline);
                 break;
             }
 
