@@ -17,13 +17,14 @@
     <string name="nav_item_guardtour_checkin">Check In</string>
     <string name="nav_item_guardtour_projectlocation">Check Point</string>
     <string name="nav_item_broadcast">Broadcasts</string>
+    <string name="nav_item_attendance">Attendance</string>
     <string name="nav_item_newcheckin">New Check In</string>
     <string name="nav_item_settings">Settings</string>
 
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_recruit</item>
-<!-- temporary disable module.        <item>@string/nav_item_deploy</item> !-->
+        <item>@string/nav_item_attendance</item>
         <item>@string/nav_item_assets</item>
         <item>@string/nav_item_requisition</item>
         <item>@string/nav_item_task</item>
@@ -100,6 +101,7 @@
     <string name="label_value">Value </string>
     <string name="label_shift">Shift </string>
     <string name="label_employees">Employees </string>
+    <string name="label_isabsent">Is Absent</string>
     <!--
      Asset list
     !-->
@@ -170,6 +172,7 @@
     <string name="label_lines">Lines</string>
     <string name="label_line">Line </string>
     <string name="label_button_request">Request</string>
+    <string name="label_button_submit">Submit</string>
     <string name="label_button_save">Save</string>
     <!--
     Task layout.
@@ -203,6 +206,9 @@
     <string name="title_deployment_details">Deployment Details</string>
     <string name="title_movementline_details">Movement Line Details</string>
     <string name="title_task_details">Project Task Details</string>
+    <string name="title_attentance">Attendance</string>
+    <string name="title_create_attendance">New Attendance</string>
+    <string name="title_create_attendanceline">New Attendance Line</string>
     <!--
     Error text
     !-->

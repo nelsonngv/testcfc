@@ -2,8 +2,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
-            name="pr"
-            type="com.pbasolutions.android.model.MPurchaseRequest" />
+            name="deploy"
+            type="com.pbasolutions.android.model.MResourceAlloc" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,26 +22,23 @@
                     android:text="@string/label_date"
                     />
                 <TextView
-                    android:id="@+id/prRequestDate"
+                    android:id="@+id/attDeployDate"
                     style="@style/TableValueDate"
                     android:hint="Press to Select Date"
-                    android:text="@{pr.RequestDate}"
+                    android:text="@{deploy.Deployment_Date}"
                     android:layout_marginBottom="@dimen/margin_bottom" />
                 </LinearLayout>
             </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TableRow>
                 <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_shift" />
-                <EditText
-                    android:id="@+id/prStatus"
-                    style="@style/TableValue"
-                    android:editable="false"
-                    android:text="@{pr.Status}"
-                    />
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_shift"
+                        android:editable="false"
+                        android:textSize="15sp"/>
+                    <Spinner
+                        style="@style/TableValue"
+                        android:id="@+id/attShiftSpinner"/>
                 </LinearLayout>
             </TableRow>
         </TableLayout>
@@ -64,7 +61,7 @@
         <TableLayout
             style="@style/LineRV">
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/requisitionline_rv"
+                android:id="@+id/attendance_rv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             </android.support.v7.widget.RecyclerView>

@@ -142,14 +142,14 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     public static final int FRAGMENT_DEFAULT = -1;
     public static final int FRAGMENT_RECRUIT = 0;
-    public static final int FRAGMENT_DEPLOY = -11;
-    public static final int FRAGMENT_ASSET = 1;
-    public static final int FRAGMENT_REQUISITION = 2;
-    public static final int FRAGMENT_TASK = 3;
-    public static final int FRAGMENT_CHECKPOINTS = 4;
-    public static final int FRAGMENT_CHECKPOINT_SEQ = 5;
-    public static final int FRAGMENT_BROADCAST = 6;
-    public static final int FRAGMENT_ATTENDANCE = 7;
+//    public static final int FRAGMENT_DEPLOY =1;
+    public static final int FRAGMENT_ATTENDANCE = 1;
+    public static final int FRAGMENT_ASSET = 2;
+    public static final int FRAGMENT_REQUISITION = 3;
+    public static final int FRAGMENT_TASK = 4;
+    public static final int FRAGMENT_CHECKPOINTS = 5;
+    public static final int FRAGMENT_CHECKPOINT_SEQ = 6;
+    public static final int FRAGMENT_BROADCAST = 7;
     public static final int SETTING_MENU = 8;
     public static final int FRAGMENT_CHECKPOINTS_DETAILS = 50;
     public static final int FRAGMENT_NEW_CHECK_IN = 51;
@@ -672,12 +672,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 title = getString(R.string.title_newapplicant);
                 break;
             }
-            case FRAGMENT_DEPLOY: {
-                fragment = new DeploymentFragment();
-                title = getString(R.string.title_deploy);
-                break;
-            }
-
+//            case FRAGMENT_DEPLOY: {
+//                fragment = new DeploymentFragment();
+//                title = getString(R.string.title_deploy);
+//                break;
+//            }
+//
             case FRAGMENT_ASSET: {
                 fragment = new AssetFragment();
                 title = getString(R.string.title_assets);

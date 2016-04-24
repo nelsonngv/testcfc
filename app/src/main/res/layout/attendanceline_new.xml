@@ -16,24 +16,25 @@
                 android:layout_marginTop="10dp">
                 <LinearLayout style="@style/PTableVirtRowW">
                     <TextView
-                        android:text="@string/label_productname"
+                        android:text="@string/label_employees"
                         style="@style/TableInfoLabel"/>
                     <Spinner
                         style="@style/TableValue"
-                        android:id="@+id/prlProdNameSpinner"/>
+                        android:id="@+id/emplShiftSpinner"/>
                 </LinearLayout>
             </TableRow>
             <TableRow>
-                <LinearLayout style="@style/PTableVirtRowW">
+                <LinearLayout style="@style/PTableVirtRowW" android:orientation="horizontal">
                 <TextView
-                    android:text="@string/label_qty"
-                    style="@style/TableInfoLabel"
-                    android:inputType="number"/>
-                <EditText
-                    style="@style/TableValue"
-                    android:id="@+id/prlQty"
-                    android:inputType="number"
-                    android:text="@{prLine.QtyRequestedString}"
+                    android:text="@string/label_isabsent"
+                    style="@style/TableLabelL"
+                    android:layout_marginLeft="0dp"
+                    android:layout_weight="1"
+                    />
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
                     />
                 </LinearLayout>
             </TableRow>
