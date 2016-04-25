@@ -30,6 +30,9 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
     public static final String ARG_CONTENTVALUES = "ARG_CONTENTVALUES";
     public static final String INSERT_REQLINE_EVENT = "INSERT_REQLINE_EVENT";
 
+    public static final String EMPLOYEE_LIST = "EMPLOYEE_LIST";
+    public static final String GET_EMPLOYEES_EVENT = "GET_EMPLOYEES_EVENT";
+    public static final String ARG_EMPLOYEE = "ARG_EMPLOYEE";
 
     ContentResolver cr;
     ExecutorService exec = Executors.newSingleThreadExecutor();
@@ -53,6 +56,9 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
                 getShifts(input, result, object);
                 break;
             }
+            case GET_EMPLOYEES_EVENT: {
+                getEmploys(input, result, object);
+            }
         }
         return result;
     }
@@ -75,6 +81,22 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
 
     private Bundle getShifts(Bundle input, Bundle result, Object object) {
         input.putString(ARG_TASK_EVENT, GET_SHIFTS_EVENT);
+        attendanceTask.setInput(input);
+        attendanceTask.setOutput(result);
+        taskResult = new FutureTask (attendanceTask);
+        exec.execute(taskResult);
+        try {
+            result = taskResult.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private Bundle getEmploys(Bundle input, Bundle result, Object object) {
+        input.putString(ARG_TASK_EVENT, GET_EMPLOYEES_EVENT);
         attendanceTask.setInput(input);
         attendanceTask.setOutput(result);
         taskResult = new FutureTask (attendanceTask);

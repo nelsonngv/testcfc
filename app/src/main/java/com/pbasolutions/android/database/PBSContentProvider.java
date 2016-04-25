@@ -752,6 +752,12 @@ public class PBSContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(uri, null);
                 return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
             }
+            case ModelConst.HR_LEAVETYPE_VIEW_TIKEN: {
+                long id = db.insert(ModelConst.HR_LEAVETYPE_TABLE, null, values);
+                if (id != -1)
+                    getContext().getContentResolver().notifyChange(uri, null);
+                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+            }
             default: {
                 Log.e(TAG, PandoraConstant.ERROR +
                         PandoraConstant.SPACE + "URI " + uri + " is not supported.");

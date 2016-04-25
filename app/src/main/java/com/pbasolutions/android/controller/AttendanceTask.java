@@ -12,7 +12,9 @@ import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.api.PBSIServerAPI;
 import com.pbasolutions.android.api.PBSServerAPI;
+import com.pbasolutions.android.model.IModel;
 import com.pbasolutions.android.model.MDeploy;
+import com.pbasolutions.android.model.MEmployee;
 import com.pbasolutions.android.model.MShift;
 import com.pbasolutions.android.model.ModelConst;
 
@@ -45,6 +47,9 @@ public class AttendanceTask implements Callable<Bundle> {
             }
             case PBSAttendanceController.GET_SHIFTS_EVENT: {
                 return getHRShift();
+            }
+            case PBSAttendanceController.GET_EMPLOYEES_EVENT: {
+                return getEmployees();
             }
 
             default:
@@ -115,6 +120,31 @@ public class AttendanceTask implements Callable<Bundle> {
 
         }
         return names.toString();
+    }
+
+    private Bundle getEmployees() {
+        String[] projection = {MEmployee.C_BPARTNER_UUID_COL, ModelConst.NAME_COL, ModelConst.IDNUMBER_COL, ModelConst.PHONE_COL, MEmployee.JOB_TITLE_COL};
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW),
+                projection, null, null, null);
+        ObservableArrayList<SpinnerPair> employeeList = new ObservableArrayList();
+        if (cursor != null && cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            do {
+                SpinnerPair pair = new SpinnerPair();
+                for (int x = 0; x < cursor.getColumnNames().length; x++) {
+                    if (MEmployee.C_BPARTNER_UUID_COL.equalsIgnoreCase(cursor.getColumnName(x))) {
+                        pair.setKey(cursor.getString(x));
+                    } else if (ModelConst.NAME_COL
+                            .equalsIgnoreCase(cursor.getColumnName(x))) {
+                        pair.setValue(cursor.getString(x));
+                    }
+                }
+                employeeList.add(pair);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        output.putSerializable(PBSAttendanceController.EMPLOYEE_LIST, employeeList);
+        return output;
     }
 
     private Bundle getHRShift(){

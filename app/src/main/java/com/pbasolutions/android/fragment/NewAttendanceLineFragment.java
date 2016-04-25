@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -18,14 +19,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.pbasolutions.android.PandoraConstant;
+import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSAttendanceController;
+import com.pbasolutions.android.controller.PBSRequisitionController;
 import com.pbasolutions.android.model.MAttendanceLine;
 import com.pbasolutions.android.model.MPurchaseRequestLine;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -56,6 +60,14 @@ public class NewAttendanceLineFragment extends Fragment {
 
     PBSAttendanceController attendCont;
 
+    private ArrayAdapter employAdapter;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        attendCont = new PBSAttendanceController(getActivity());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,7 +77,7 @@ public class NewAttendanceLineFragment extends Fragment {
             setUIListener();
             setValues();
         } catch (Exception e) {
-          //  Log.e(TAG, e.getMessage());
+            Log.e("ttt", e.getMessage());
         }
         return rootView;
     }
@@ -119,6 +131,8 @@ public class NewAttendanceLineFragment extends Fragment {
     }
 
     protected void setValues() {
+        employAdapter = PandoraHelper.addListToSpinner(getActivity(), employSpinner, getEmployeeList());
+
         refreshUIState();
     }
 
@@ -128,8 +142,8 @@ public class NewAttendanceLineFragment extends Fragment {
         View checkoutRow = rootView.findViewById(R.id.atCheckoutRow);
 
         leavetypeRow.setVisibility(switchAbsent.isChecked() ? View.VISIBLE : View.GONE);
-        checkinRow.setVisibility(switchAbsent.isChecked()? View.GONE : View.VISIBLE);
-        checkoutRow.setVisibility(switchAbsent.isChecked()? View.GONE : View.VISIBLE);
+        checkinRow.setVisibility(switchAbsent.isChecked() ? View.GONE : View.VISIBLE);
+        checkoutRow.setVisibility(switchAbsent.isChecked() ? View.GONE : View.VISIBLE);
     }
 
     public Fragment getAttendanceFragment() {
@@ -144,24 +158,35 @@ public class NewAttendanceLineFragment extends Fragment {
         //check all value is not null.
         SpinnerPair emplSpinner = (SpinnerPair) employSpinner.getSelectedItem();
         SpinnerPair leaveSpinner = (SpinnerPair) leavetypeSpinner.getSelectedItem();
+
+        boolean isEmpty = false;
         if (emplSpinner == null
-                || leaveSpinner == null
-                || emplSpinner.getValue().isEmpty()
-                || leaveSpinner.getValue().isEmpty()
-                || textCheckoutDate.getText().toString().isEmpty()
-                || textCheckoutDate.getText().toString().isEmpty())
+                || emplSpinner.getValue().isEmpty()) isEmpty = true;
+
+        boolean isAbsent = switchAbsent.isChecked();
+        if (isAbsent) {
+            isEmpty = leaveSpinner == null || leaveSpinner.getValue().isEmpty();
+        } else {
+            isEmpty = textCheckoutDate.getText().toString().isEmpty()
+                    || textCheckoutDate.getText().toString().isEmpty();
+        }
+
+        if (isEmpty)
         {
-            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please fill up all fields");
+            PandoraHelper.showWarningMessage(getActivity(), "Please fill up all fields");
             return;
         }
         tempATLine = new MAttendanceLine();
 
-        tempATLine.setEmployeeId(Integer.parseInt(emplSpinner.getValue()));
+        tempATLine.setEmployeeId(emplSpinner.getKey());
         tempATLine.setIsAbsent(switchAbsent.isChecked());
         tempATLine.setIsPresent(switchShow.isChecked());
-        tempATLine.setLeaveType(Integer.parseInt(leaveSpinner.getValue()));
-        tempATLine.setCheckInDate(textCheckinDate.getText().toString());
-        tempATLine.setCheckOutDate(textCheckoutDate.getText().toString());
+        if (isAbsent) {
+            tempATLine.setLeaveType(Integer.parseInt(leaveSpinner.getValue()));
+        } else {
+            tempATLine.setCheckInDate(textCheckinDate.getText().toString());
+            tempATLine.setCheckOutDate(textCheckoutDate.getText().toString());
+        }
         tempATLine.setComment(textComment.getText().toString());
 
         //insertion values.
@@ -170,9 +195,12 @@ public class NewAttendanceLineFragment extends Fragment {
         cv.put(MAttendanceLine.C_BPARTNER_ID, emplSpinner.getValue());
         cv.put(MAttendanceLine.ISABSENT, switchAbsent.isChecked());
         cv.put(MAttendanceLine.ISNOSHOW, switchShow.isChecked());
-        cv.put(MAttendanceLine.HR_LEAVETYPE_ID, Integer.parseInt(leaveSpinner.getValue()));
-        cv.put(MAttendanceLine.CHECKIN, textCheckinDate.getText().toString());
-        cv.put(MAttendanceLine.CHECKOUT, textCheckoutDate.getText().toString());
+        if (isAbsent) {
+            cv.put(MAttendanceLine.HR_LEAVETYPE_ID, Integer.parseInt(leaveSpinner.getValue()));
+        } else {
+            cv.put(MAttendanceLine.CHECKIN, textCheckinDate.getText().toString());
+            cv.put(MAttendanceLine.CHECKOUT, textCheckoutDate.getText().toString());
+        }
         cv.put(MAttendanceLine.COMMENTS, textComment.getText().toString());
 
         Bundle input = new Bundle();
@@ -199,6 +227,16 @@ public class NewAttendanceLineFragment extends Fragment {
             PandoraHelper.showMessage(getActivity(), output.getString(output.getString(PandoraConstant.TITLE)));
         }
     }
+
+    public List<SpinnerPair> getEmployeeList() {
+        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+
+        Bundle input = new Bundle();
+        Bundle result = attendCont.triggerEvent(PBSAttendanceController.GET_EMPLOYEES_EVENT, input, new Bundle(),null);
+        return result.getParcelableArrayList(PBSAttendanceController.EMPLOYEE_LIST);
+    }
+
+
 
     public String getAtUUID() {
         return atUUID;

@@ -86,6 +86,8 @@ public class ModelConst {
     public static final String C_BPARTNER_VIEW = "C_BPartner_View" ;
     public static final String C_BPARTNER_ID_COL = "C_BPartner_ID";
     public static final String HR_IDENTITY_TABLE = "HR_Identity";
+    public static final String HR_LEAVETYPE_TABLE = "HR_LeaveType";
+
 
 
     /**
@@ -123,6 +125,8 @@ public class ModelConst {
     public static final int JOBAPP_SHIFTS_TOKEN = 2800;
     public static final int JOBAPP_LIST_TOKEN = 2900;
     public static final int C_BPARTNER_VIEW_TOKEN = 3100;
+
+    public static final int HR_LEAVETYPE_VIEW_TIKEN = 3200;
 
     /**
      * TODO : Evaluate which table to be joined and provide table tokens for that.
@@ -171,7 +175,8 @@ public class ModelConst {
                     ModelConst.M_PRODUCT_TABLE,
                     ModelConst.A_ASSET_TABLE,
                     ModelConst.HR_PROJECTASSIGNMENT_TABLE,
-                    ModelConst.HR_JOBAPPLICATION_TABLE
+                    ModelConst.HR_JOBAPPLICATION_TABLE,
+                    ModelConst.HR_LEAVETYPE_TABLE
             };
 
     //TODO : other table then master data is updateable by phone.

@@ -18,7 +18,7 @@ public class MAttendanceLine extends PBSJson {
     public static String CHECKIN = "CheckIn";
     public static String CHECKOUT = "CheckOut";
 
-private int     employeeId; // C_BPartner_ID
+    private String     employeeId; // C_BPartner_ID
     private String checkInDate;
     private String checkOutDate;
     public boolean isAbsent;
@@ -30,7 +30,7 @@ private int     employeeId; // C_BPartner_ID
         return isAbsent;
     }
 
-    public int getEmployeeId() {
+    public String getEmployeeId() {
         return employeeId;
     }
 
@@ -66,7 +66,7 @@ private int     employeeId; // C_BPartner_ID
         this.comment = comment;
     }
 
-    public void setEmployeeId(int employeeId) {
+    public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
 
