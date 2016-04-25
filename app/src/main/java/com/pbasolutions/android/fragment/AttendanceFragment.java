@@ -50,7 +50,7 @@ public class AttendanceFragment  extends Fragment {
 
     private static final int ADD_ATTENDANCE_LINE = 500;
 
-    PBSDeployController deployCont;
+    PBSAttendanceController attendanceCont;
     TextView deployDateView;
     protected Spinner shiftSpinner;
     protected ArrayAdapter shiftAdapter;
@@ -63,7 +63,8 @@ public class AttendanceFragment  extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        deployCont = new PBSDeployController(getActivity());
+        setHasOptionsMenu(true);
+        attendanceCont = new PBSAttendanceController(getActivity());
     }
 
     @Override
@@ -144,8 +145,8 @@ public class AttendanceFragment  extends Fragment {
 
         input.putString(PBSDeployController.ARG_DEPLOYMENTDATE, deployDateView.getText().toString());
 
-        Bundle result = deployCont.triggerEvent(deployCont.GET_DEPLOYS_EVENT, input, new Bundle(), null);
-        return (ObservableArrayList<MDeploy>)result.get(deployCont.ARG_DEPLOYS);
+        Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.GET_ATTENDANCES_EVENT, input, new Bundle(), null);
+        return (ObservableArrayList<MDeploy>)result.get(PBSAttendanceController.ARG_ATTENDANCES);
     }
 
     @Override
@@ -183,9 +184,9 @@ public class AttendanceFragment  extends Fragment {
         PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
 
         Bundle input = new Bundle();
-        input.putString(PBSDeployController.ARG_PROJECTLOCATION_UUID, pc.getC_projectlocation_uuid());
-        Bundle result = deployCont.triggerEvent(PBSDeployController.GET_SHIFTS_EVENT, input, new Bundle(),null);
-        return result.getParcelableArrayList(PBSDeployController.SHIFT_LIST);
+        input.putString(PBSAttendanceController.ARG_PROJECTLOCATION_UUID, pc.getC_projectlocation_uuid());
+        Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.GET_SHIFTS_EVENT, input, new Bundle(),null);
+        return result.getParcelableArrayList(PBSAttendanceController.SHIFT_LIST);
     }
 
     protected void shiftChanged(String shiftUUID) {

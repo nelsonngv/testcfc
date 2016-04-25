@@ -21,6 +21,8 @@ import com.pbasolutions.android.fragment.PBSDetailsFragment;
 import com.pbasolutions.android.fragment.AttendanceLineDetailFragment;
 import com.pbasolutions.android.listener.FragmentListOnItemClickListener;
 import com.pbasolutions.android.model.IModel;
+import com.pbasolutions.android.model.MAttendance;
+import com.pbasolutions.android.model.MAttendanceLine;
 import com.pbasolutions.android.model.MPurchaseRequestLine;
 
 /**
@@ -28,12 +30,12 @@ import com.pbasolutions.android.model.MPurchaseRequestLine;
  */
 public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.AttendanceLineVH> {
     private Context mContext;
-    private ObservableArrayList<MPurchaseRequestLine> reqLineList;
+    private ObservableArrayList<MAttendanceLine> attLineList;
     private LayoutInflater inflater;
 
-    public AttendanceLineRVA(Context mContext, ObservableArrayList<MPurchaseRequestLine> reqLineList, LayoutInflater inflater) {
+    public AttendanceLineRVA(Context mContext, ObservableArrayList<MAttendanceLine> attLineList, LayoutInflater inflater) {
         this.mContext = mContext;
-        this.reqLineList = reqLineList;
+        this.attLineList = attLineList;
         this.inflater = LayoutInflater.from(mContext);
     }
 
@@ -41,19 +43,19 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
     public AttendanceLineRVA.AttendanceLineVH onCreateViewHolder(ViewGroup parent, int viewType) {
         AttendancelineItemBinding binding = AttendancelineItemBinding.inflate(inflater);
         View view = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.requisitionline_item, null);
+                R.layout.attendanceline_item, null);
         AttendanceLineVH viewHolder = new AttendanceLineVH(binding, view, new BroadcastRVA.IViewHolderOnClicks(){
             @Override
             public void onCheckbox(CheckBox cb, int pos) {
                 MPurchaseRequestLine prline = (MPurchaseRequestLine) cb.getTag();
                 prline.setIsSelected(cb.isChecked());
-                reqLineList.get(pos).setIsSelected(cb.isChecked());
+                attLineList.get(pos).setIsSelected(cb.isChecked());
             }
 
             @Override
             public void onText(TextView tvCaller, int pos) {
                 //    TextView _uuid = (TextView) view.findViewById(R.id._UUID);
-                ObservableArrayList<IModel> modelList = (ObservableArrayList) reqLineList;
+                ObservableArrayList<IModel> modelList = (ObservableArrayList) attLineList;
                 Fragment fragment = new AttendanceLineDetailFragment();
                 Object tag = tvCaller.getTag();
                 if (tvCaller!=null) {
@@ -81,11 +83,11 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
 
     @Override
     public void onBindViewHolder(AttendanceLineVH holder, int position) {
-        MPurchaseRequestLine prLine = reqLineList.get(position);
-        holder.cbox.setChecked(prLine.isSelected());
-        holder.cbox.setTag(prLine);
-        holder.prodName.setTag(prLine.get_UUID());
-        holder.vBinding.setPrLine(prLine);
+        MAttendanceLine atLine = attLineList.get(position);
+        holder.cbox.setChecked(atLine.isSelected());
+        holder.cbox.setTag(atLine);
+        holder.prodName.setTag(atLine.get_UUID());
+        holder.vBinding.setAtLine(atLine);
     }
 
     /**
@@ -95,8 +97,8 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
      */
     @Override
     public int getItemCount() {
-        if (reqLineList != null)
-            return reqLineList.size();
+        if (attLineList != null)
+            return attLineList.size();
         else return 0;
     }
 
@@ -132,7 +134,7 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         }
     }
 
-    public ObservableArrayList<MPurchaseRequestLine> getLines() {
-        return reqLineList;
+    public ObservableArrayList<MAttendanceLine> getLines() {
+        return attLineList;
     }
 }

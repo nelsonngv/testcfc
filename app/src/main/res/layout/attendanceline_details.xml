@@ -3,8 +3,8 @@
 
     <data>
         <variable
-            name="prLine"
-            type="com.pbasolutions.android.model.MPurchaseRequestLine" />
+            name="atLine"
+            type="com.pbasolutions.android.model.MAttendanceLine" />
     </data>
 
     <LinearLayout
@@ -14,6 +14,6 @@
         android:weightSum="1">
         <include
             layout="@layout/attendanceline_new"
-            bind:prLine="@{prLine}" />
+            bind:atLine="@{atLine}" />
     </LinearLayout>
 </layout>

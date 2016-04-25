@@ -27,6 +27,10 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
     public static final String SHIFT_LIST = "SHIFT_LIST";
     public static final String GET_SHIFTS_EVENT = "GET_SHIFTS_EVENT";
 
+    public static final String ARG_CONTENTVALUES = "ARG_CONTENTVALUES";
+    public static final String INSERT_REQLINE_EVENT = "INSERT_REQLINE_EVENT";
+
+
     ContentResolver cr;
     ExecutorService exec = Executors.newSingleThreadExecutor();
     AttendanceTask attendanceTask;

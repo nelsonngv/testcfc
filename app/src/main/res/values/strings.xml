@@ -101,7 +101,11 @@
     <string name="label_value">Value </string>
     <string name="label_shift">Shift </string>
     <string name="label_employees">Employees </string>
-    <string name="label_isabsent">Is Absent</string>
+    <string name="label_isabsent">Absent</string>
+    <string name="label_isshow">Show</string>
+    <string name="label_checkindate">Check In Date</string>
+    <string name="label_checkoutdate">Check Out Date</string>
+    <string name="label_leavetype">Leave Type</string>
     <!--
      Asset list
     !-->
