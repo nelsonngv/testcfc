@@ -134,6 +134,9 @@ public class PBSContentProvider extends ContentProvider {
             //HR_IDENTITY
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.HR_IDENTITY_TABLE, ModelConst.HR_IDENTITY_TOKEN);
 
+            //HR_LEAVETYPE_TABLE
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.HR_LEAVETYPE_TABLE, ModelConst.HR_LEAVETYPE_TOKEN);
+
             //PBS_SYNC_TABLE
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.PBS_SYNCTABLE_TABLE, ModelConst.PBS_SYNCTABLE_TOKEN);
 
@@ -152,6 +155,13 @@ public class PBSContentProvider extends ContentProvider {
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.CHECKIN_JOIN_CHECKPOINT_TABLE, ModelConst.CHECKIN_JOIN_CHECKPOINT_TOKEN);
 
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.CHECKIN_JOIN_CHECKPOINT_DETAILS_TABLE, ModelConst.CHECKIN_JOIN_CHECKPOINT_DETAILS_TOKEN);
+
+            // M_Attendance
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.M_ATTENDANCE_TABLE, ModelConst.M_ATTENDANCE_TOKEN);
+
+            // M_AttendanceLine
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.M_ATTENDANCELINE_TABLE, ModelConst.M_ATTENDANCELINE_TOKEN);
+
         } catch(Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
         }
@@ -297,6 +307,12 @@ public class PBSContentProvider extends ContentProvider {
             case ModelConst.HR_IDENTITY_TOKEN: {
                 SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
                 builder.setTables(ModelConst.HR_IDENTITY_TABLE);
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
+            case ModelConst.HR_LEAVETYPE_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.HR_LEAVETYPE_TABLE);
                 return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
             }
 
@@ -463,6 +479,18 @@ public class PBSContentProvider extends ContentProvider {
                 return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
             }
 
+            case ModelConst.M_ATTENDANCE_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.M_ATTENDANCE_TABLE);
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
+            case ModelConst.M_ATTENDANCELINE_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.M_ATTENDANCELINE_TABLE);
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
             default:
                 return null;
         }
@@ -543,6 +571,12 @@ public class PBSContentProvider extends ContentProvider {
             case ModelConst.C_BPARTNER_VIEW_TOKEN:
                 return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_IDENTITY_TOKEN:
+                return ModelConst.CONTENT_TYPE_DIR;
+            case ModelConst.HR_LEAVETYPE_TOKEN:
+                return ModelConst.CONTENT_TYPE_DIR;
+            case ModelConst.M_ATTENDANCE_TOKEN:
+                return ModelConst.CONTENT_TYPE_DIR;
+            case ModelConst.M_ATTENDANCELINE_TOKEN:
                 return ModelConst.CONTENT_TYPE_DIR;
             default: {
                 Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + "URI " + uri + " is not supported.");
@@ -752,8 +786,20 @@ public class PBSContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(uri, null);
                 return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
             }
-            case ModelConst.HR_LEAVETYPE_VIEW_TIKEN: {
+            case ModelConst.HR_LEAVETYPE_TOKEN: {
                 long id = db.insert(ModelConst.HR_LEAVETYPE_TABLE, null, values);
+                if (id != -1)
+                    getContext().getContentResolver().notifyChange(uri, null);
+                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+            }
+            case ModelConst.M_ATTENDANCE_TOKEN: {
+                long id = db.insert(ModelConst.M_ATTENDANCE_TABLE, null, values);
+                if (id != -1)
+                    getContext().getContentResolver().notifyChange(uri, null);
+                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+            }
+            case ModelConst.M_ATTENDANCELINE_TOKEN: {
+                long id = db.insert(ModelConst.M_ATTENDANCELINE_TABLE, null, values);
                 if (id != -1)
                     getContext().getContentResolver().notifyChange(uri, null);
                 return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
@@ -907,6 +953,19 @@ public class PBSContentProvider extends ContentProvider {
                 break;
             }
 
+            case ModelConst.HR_LEAVETYPE_TOKEN: {
+                rowsDeleted = db.delete(ModelConst.HR_LEAVETYPE_TABLE, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.M_ATTENDANCE_TOKEN: {
+                rowsDeleted = db.delete(ModelConst.M_ATTENDANCE_TABLE, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.M_ATTENDANCELINE_TOKEN: {
+                rowsDeleted = db.delete(ModelConst.M_ATTENDANCELINE_TABLE, selection, selectionArgs);
+                break;
+            }
+
             default:{
                 Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + "URI " + uri + " is not supported.");
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -1053,6 +1112,18 @@ public class PBSContentProvider extends ContentProvider {
             }
             case ModelConst.HR_IDENTITY_TOKEN: {
                 rowsUpdated = db.update(ModelConst.HR_IDENTITY_TABLE, values, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.HR_LEAVETYPE_TOKEN: {
+                rowsUpdated = db.update(ModelConst.HR_LEAVETYPE_TABLE, values, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.M_ATTENDANCE_TOKEN: {
+                rowsUpdated = db.update(ModelConst.M_ATTENDANCE_TABLE, values, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.M_ATTENDANCELINE_TOKEN: {
+                rowsUpdated = db.update(ModelConst.M_ATTENDANCELINE_TABLE, values, selection, selectionArgs);
                 break;
             }
             default:{

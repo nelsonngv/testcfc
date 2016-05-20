@@ -38,6 +38,7 @@ public class ModelConst {
     public static final String IS_UPDATED_COL = "IsUpdated";
     public static final String IS_SYNCED_COL = "IsSynced";
     public static final String IS_DELETED_COL = "IsDeleted";
+    public static final String HR_SHIFT_ID_COL = "HR_Shift_ID";
     public static final String HR_SHIFT_UUID_COL = "HR_Shift_UUID";
     public static final String HR_PROJLOCATION_SHIFT_UUID_COL = "HR_ProjLocation_Shift_UUID";
     public static final String HR_SETUP_JOB_UUID_COL = "HR_SETUP_JOB_UUID";
@@ -46,6 +47,8 @@ public class ModelConst {
     public static final String PHONE_COL = "Phone" ;
     public static final String STATUS_COL = "Status";
     public static final String CREATED_COL = "Created";
+    public static final String HR_LEAVETYPE_UUID_COL = "HR_LEAVETYPE_UUID";
+    public static final String HR_LEAVETYPE_ID_COL = "HR_LEAVETYPE_ID";
 
     /**
      * table names.
@@ -85,8 +88,12 @@ public class ModelConst {
     public static final String HR_SETUP_JOB_TABLE = "HR_Setup_Job" ;
     public static final String C_BPARTNER_VIEW = "C_BPartner_View" ;
     public static final String C_BPARTNER_ID_COL = "C_BPartner_ID";
+    public static final String C_BPARTNER_UUID_COL = "C_BPartner_UUID";
     public static final String HR_IDENTITY_TABLE = "HR_Identity";
+
     public static final String HR_LEAVETYPE_TABLE = "HR_LeaveType";
+    public static final String M_ATTENDANCE_TABLE = "M_AttendanceLine";
+    public static final String M_ATTENDANCELINE_TABLE = "M_AttendanceLine";
 
 
 
@@ -126,7 +133,9 @@ public class ModelConst {
     public static final int JOBAPP_LIST_TOKEN = 2900;
     public static final int C_BPARTNER_VIEW_TOKEN = 3100;
 
-    public static final int HR_LEAVETYPE_VIEW_TIKEN = 3200;
+    public static final int HR_LEAVETYPE_TOKEN = 3200;
+    public static final int M_ATTENDANCE_TOKEN = 3300;
+    public static final int M_ATTENDANCELINE_TOKEN = 3400;
 
     /**
      * TODO : Evaluate which table to be joined and provide table tokens for that.

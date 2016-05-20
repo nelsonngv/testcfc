@@ -173,7 +173,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 //OTHERS
                                 "NAME NVARCHAR2(300) NOT NULL," +
                                 "VALUE NVARCHAR2(60) NOT NULL," +
-                                "CONSTRAINT PROJLOC_UNIQCONS UNIQUE (C_PROJECTLOCATION_ID)," +
+//                                "CONSTRAINT PROJLOC_UNIQCONS UNIQUE (C_PROJECTLOCATION_ID)," +
                                 "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                                 "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                                 "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
@@ -570,7 +570,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "NAME VARCHAR2(300) ," +
                                 "VALUE NVARCHAR2(300) ," +
                                 //--
-                                "CONSTRAINT PROCAT_UNIQCONS UNIQUE (M_PRODUCT_CATEGORY_ID)," +
+//                                "CONSTRAINT PROCAT_UNIQCONS UNIQUE (M_PRODUCT_CATEGORY_ID)," +
                                 "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                                 "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                                 "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
@@ -747,7 +747,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "NAME VARCHAR2(300) ," +
                                 "VALUE NVARCHAR2(300) ," +
                                 //--
-                                "CONSTRAINT PRODUCTID_UNIQCONS UNIQUE (M_PRODUCT_ID)," +
+//                                "CONSTRAINT PRODUCTID_UNIQCONS UNIQUE (M_PRODUCT_ID)," +
                                 "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                                 "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                                 "FOREIGN KEY(C_UOM_UUID) REFERENCES C_UOM(C_UOM_UUID)," +
@@ -782,7 +782,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "NAME VARCHAR2(300) ," +
                                 "VALUE NVARCHAR2(300) ," +
                                 //--
-                                "CONSTRAINT ASSETID_UNIQCONS UNIQUE (A_ASSET_ID)," +
+//                                "CONSTRAINT ASSETID_UNIQCONS UNIQUE (A_ASSET_ID)," +
                                 "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                                 "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                                 "FOREIGN KEY(M_PRODUCT_UUID) REFERENCES M_PRODUCT(M_PRODUCT_UUID)," +
@@ -875,7 +875,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 //FK
                                 "C_BPARTNER_UUID TEXT," +
                                 "C_PROJECTLOCATION_UUID TEXT," +
-                                "HR_PROJECTLOCATION_SHIFT_UUID TEXT, " +
+                                "HR_PROJLOCATION_SHIFT_UUID TEXT, " +
                                 "HR_SHIFT_UUID TEXT," +
                                 //OTHERS
                                 "NAME NVARCHAR2(300)," +
@@ -883,12 +883,12 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "ASSIGNMENT_TYPE VARCHAR2(20) ," +
                                 "ISDEFAULT BOOLEAN," +
                                 //--
-                                "CONSTRAINT HRPROJASSID_UNIQCONS UNIQUE (HR_PROJECTASSIGNMENT_ID)," +
+//                                "CONSTRAINT HRPROJASSID_UNIQCONS UNIQUE (HR_PROJECTASSIGNMENT_ID)," +
                                 "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                                 "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                                 "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID)," +
                                 "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
-                                "FOREIGN KEY(HR_PROJECTLOCATION_SHIFT_UUID) REFERENCES HR_PROJECTLOCATION_SHIFT(HR_PROJECTLOCATION_SHIFT_UUID)," +
+                                "FOREIGN KEY(HR_PROJLOCATION_SHIFT_UUID) REFERENCES HR_PROJLOCATION_SHIFT(HR_PROJLOCATION_SHIFT_UUID)," +
                                 "FOREIGN KEY(HR_SHIFT_UUID) REFERENCES HR_SHIFT(HR_SHIFT_UUID)," +
                                 "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
                                 "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
@@ -982,7 +982,64 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                                 ");");
 
+                        //HR_LeaveType
+                        db.execSQL("CREATE TABLE HR_LEAVETYPE(" +
+                                //STANDARD
+                                "HR_LEAVETYPE_ID NUMBER(10,0) DEFAULT NULL," +
+                                "HR_LEAVETYPE_UUID TEXT PRIMARY KEY NOT NULL," +
+                                "AD_CLIENT_UUID TEXT NOT NULL," +
+                                "AD_ORG_UUID TEXT NOT NULL," +
+                                "NAME NVARCHAR2(60)," +
+                                "DESCRIPTION NVARCHAR2(1000)," +
+                                "CREATEDBY TEXT NOT NULL," +
+                                "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW'))," +
+                                "UPDATEDBY TEXT NOT NULL," +
+                                "UPDATED DATETIME NOT NULL DEFAULT (DATETIME('NOW'))," +
+                                "ISAL CHAR(1)," + // -- IS ANNUAL LEAVE
+                                "ISTRAININGLEAVE CHAR(1)," +
+                                "ISACTIVE CHAR(1) DEFAULT 'Y' NOT NULL," +
+                                "ISUPDATED BOOLEAN DEFAULT 'Y' NOT NULL," +
+                                "ISSYNCED BOOLEAN DEFAULT 'Y' NOT NULL," +
+                                "ISDELETED BOOLEAN DEFAULT 'N'," +
 
+                                "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
+                                "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
+                                "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
+                                ");");
+
+                        //M_Attendance
+                        db.execSQL("CREATE TABLE M_ATTENDANCE(" +
+                                //STANDARD
+                                "M_ATTENDANCE_ID NUMBER(10, 0) DEFAULT NULL," +
+                                "M_ATTENDANCE_UUID TEXT PRIMARY KEY NOT NULL," +
+                                "C_PROJECTLOCATION_ID NUMBER(10, 0) DEFAULT NULL," +
+                                "C_PROJECTLOCATION_UUID TEXT NOT NULL," +
+                                "HR_SHIFT_ID NUMBER(10, 0) DEFAULT NULL," +
+                                "HR_SHIFT_UUID TEXT NOT NULL," +
+                                //FK
+                                "CREATED DEPLOYMENT_DATE NOT NULL DEFAULT (DATETIME('NOW'))," +
+
+                                "FOREIGN KEY(C_PROJECTLOCATION_ID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_ID)" +
+                                "FOREIGN KEY(HR_SHIFT_ID) REFERENCES HR_SHIFT(HR_SHIFT_ID)" +
+                                ");");
+
+                        //M_Attendanceline
+                        db.execSQL("CREATE TABLE M_ATTENDANCELINE(" +
+                                //PK
+                                "M_ATTENDANCELINE_UUID TEXT PRIMARY KEY NOT NULL," +
+                                //FK
+                                "C_BPARTNER_UUID TEXT DEFAULT NULL," +
+                                "CHECKINDATE DATETIME," +
+                                "CHECKOUTDATE DATETIME, " +
+                                "ISABSENT CHAR(1)," +
+                                "ISPRESENT CHAR(1), "+
+                                //OTHERS
+                                "COMMENT TEXT ," +
+                                "HR_LEAVETYPE_ID NUMBER(10,0) DEFAULT NULL" +
+                                ");");
+                        //create index for M_MOVEMENT_ID_INDEX
+                        db.execSQL("CREATE INDEX M_ATTENDANCE_ID_INDEX ON M_ATTENDANCE(M_ATTENDANCE_ID)");
+                        db.execSQL("CREATE INDEX M_ATTENDANCELINE_UUID_INDEX ON M_ATTENDANCELINE(M_ATTENDANCELINE_UUID)");
 
                         db.execSQL("PRAGMA FOREIGN_KEYS=ON;");
                         //due to key constraint issue, below rows created before syncing happens.

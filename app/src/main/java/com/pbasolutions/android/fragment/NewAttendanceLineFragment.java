@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
@@ -61,6 +62,7 @@ public class NewAttendanceLineFragment extends Fragment {
     PBSAttendanceController attendCont;
 
     private ArrayAdapter employAdapter;
+    private ArrayAdapter leaveTypeAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -132,7 +134,7 @@ public class NewAttendanceLineFragment extends Fragment {
 
     protected void setValues() {
         employAdapter = PandoraHelper.addListToSpinner(getActivity(), employSpinner, getEmployeeList());
-
+        leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
         refreshUIState();
     }
 
@@ -178,34 +180,46 @@ public class NewAttendanceLineFragment extends Fragment {
         }
         tempATLine = new MAttendanceLine();
 
-        tempATLine.setEmployeeId(emplSpinner.getKey());
-        tempATLine.setIsAbsent(switchAbsent.isChecked());
-        tempATLine.setIsPresent(switchShow.isChecked());
+        tempATLine.setC_BPartner_ID(emplSpinner.getKey());
+        tempATLine.setIsAbsent(switchAbsent.isChecked() ? "Y" : "N");
+        tempATLine.setIsPresent(switchShow.isChecked() ? "Y" : "N");
         if (isAbsent) {
-            tempATLine.setLeaveType(Integer.parseInt(leaveSpinner.getValue()));
+            tempATLine.setHR_LeaveType_ID(leaveSpinner.getKey());
+            tempATLine.setHR_LeaveType_Name(leaveSpinner.getValue());
         } else {
             tempATLine.setCheckInDate(textCheckinDate.getText().toString());
             tempATLine.setCheckOutDate(textCheckoutDate.getText().toString());
         }
-        tempATLine.setComment(textComment.getText().toString());
+        tempATLine.setComments(textComment.getText().toString());
 
         //insertion values.
         ContentValues cv = new ContentValues();
 
-        cv.put(MAttendanceLine.C_BPARTNER_ID, emplSpinner.getValue());
-        cv.put(MAttendanceLine.ISABSENT, switchAbsent.isChecked());
-        cv.put(MAttendanceLine.ISNOSHOW, switchShow.isChecked());
+        cv.put(MAttendanceLine.M_ATTENDANCELINE_UUID_COL, UUID.randomUUID().toString());
+        cv.put(MAttendanceLine.C_BPARTNER_UUID_COL, emplSpinner.getKey());
+        cv.put(MAttendanceLine.ISABSENT_COL, switchAbsent.isChecked() ? "Y" : "N");
+        cv.put(MAttendanceLine.ISPRESENT_COL, switchShow.isChecked() ? "Y" : "N");
         if (isAbsent) {
-            cv.put(MAttendanceLine.HR_LEAVETYPE_ID, Integer.parseInt(leaveSpinner.getValue()));
+            cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, Integer.parseInt(leaveSpinner.getKey()));
+
+            cv.put(MAttendanceLine.CHECKIN_COL, "");
+            cv.put(MAttendanceLine.CHECKOUT_COL, "");
         } else {
-            cv.put(MAttendanceLine.CHECKIN, textCheckinDate.getText().toString());
-            cv.put(MAttendanceLine.CHECKOUT, textCheckoutDate.getText().toString());
+            cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, 0);
+
+            cv.put(MAttendanceLine.CHECKIN_COL, textCheckinDate.getText().toString());
+            cv.put(MAttendanceLine.CHECKOUT_COL, textCheckoutDate.getText().toString());
         }
-        cv.put(MAttendanceLine.COMMENTS, textComment.getText().toString());
+        cv.put(MAttendanceLine.COMMENT_COL, textComment.getText().toString());
+
+
+        PandoraContext appContext = PandoraMain.instance.globalVariable;
 
         Bundle input = new Bundle();
         input.putParcelable(PBSAttendanceController.ARG_CONTENTVALUES, cv);
-        Bundle output = attendCont.triggerEvent(PBSAttendanceController.INSERT_REQLINE_EVENT, input, new Bundle(), null);
+        input.putString(PBSAttendanceController.ARG_PROJECTLOCATION_ID, appContext.getC_projectlocation_id());
+        Bundle output = attendCont.triggerEvent(PBSAttendanceController.SAVE_ATTENDANCELINE_EVENT, input, new Bundle(), null);
+
         if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
 
             PandoraMain.instance.getSupportFragmentManager().popBackStack();
@@ -229,11 +243,15 @@ public class NewAttendanceLineFragment extends Fragment {
     }
 
     public List<SpinnerPair> getEmployeeList() {
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
-
         Bundle input = new Bundle();
         Bundle result = attendCont.triggerEvent(PBSAttendanceController.GET_EMPLOYEES_EVENT, input, new Bundle(),null);
         return result.getParcelableArrayList(PBSAttendanceController.EMPLOYEE_LIST);
+    }
+
+    public List<SpinnerPair> getLeaveTypeList() {
+        Bundle input = new Bundle();
+        Bundle result = attendCont.triggerEvent(PBSAttendanceController.GET_LEAVETYPES_EVENT, input, new Bundle(),null);
+        return result.getParcelableArrayList(PBSAttendanceController.LEAVETYPE_LIST);
     }
 
 

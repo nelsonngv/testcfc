@@ -18,7 +18,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
     /**
      * Event name : get employee list.
      */
-    public static final String GET_REQUISITIONS_EVENT = "GET_ATTENDANCES_EVENT";
+    public static final String GET_REQUISITIONS_EVENT = "GET_REQUISITIONS_EVENT";
 
     public static final String SYNC_REQUISITIONS_EVENT = "SYNC_ATTENDANCES_EVENT";
 

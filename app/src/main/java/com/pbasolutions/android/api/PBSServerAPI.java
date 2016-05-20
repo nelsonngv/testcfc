@@ -9,6 +9,7 @@ import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.json.PBSJson;
 import com.pbasolutions.android.json.PBSNotesJSON;
 import com.pbasolutions.android.json.PBSProjTasksJSON;
+import com.pbasolutions.android.model.MAttendance;
 import com.pbasolutions.android.model.MMovement;
 import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.model.MPurchaseRequest;
@@ -96,6 +97,26 @@ public class PBSServerAPI extends PBSServer implements PBSIServerAPI {
         String strJson = new Gson().toJson(json);
         String res = postServer(url, strJson);
         return new Gson().fromJson(res,MPurchaseRequest.class);
+    }
+
+    @Override
+    public MAttendance createAttendance(PBSJson json, String serverURL) {
+        String url = getURL(serverURL, PBSServerConst.PATH, PBSServerConst.CFC_JSP);
+        String query = null;
+        try {
+            query = String.format(
+                    "%s=%s",
+                    PBSServerConst.ACTION,
+                    URLEncoder.encode(PBSServerConst.UPDATE_ATTENDANCE, PBSServerConst.UTF_8)
+            );
+        } catch (UnsupportedEncodingException e){
+            Log.e(TAG, e.getMessage());
+        }
+        url += query;
+
+        String strJson = new Gson().toJson(json);
+        String res = postServer(url, strJson);
+        return new Gson().fromJson(res,MAttendance.class);
     }
 
     @Override

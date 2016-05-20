@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 
@@ -33,7 +34,7 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
     private ObservableArrayList<MAttendanceLine> attLineList;
     private LayoutInflater inflater;
 
-    public AttendanceLineRVA(Context mContext, ObservableArrayList<MAttendanceLine> attLineList, LayoutInflater inflater) {
+    public AttendanceLineRVA(Context mContext, ObservableArrayList<MAttendanceLine> attLineList) {
         this.mContext = mContext;
         this.attLineList = attLineList;
         this.inflater = LayoutInflater.from(mContext);
@@ -47,7 +48,7 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         AttendanceLineVH viewHolder = new AttendanceLineVH(binding, view, new BroadcastRVA.IViewHolderOnClicks(){
             @Override
             public void onCheckbox(CheckBox cb, int pos) {
-                MPurchaseRequestLine prline = (MPurchaseRequestLine) cb.getTag();
+                MAttendanceLine prline = (MAttendanceLine) cb.getTag();
                 prline.setIsSelected(cb.isChecked());
                 attLineList.get(pos).setIsSelected(cb.isChecked());
             }
@@ -55,27 +56,27 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
             @Override
             public void onText(TextView tvCaller, int pos) {
                 //    TextView _uuid = (TextView) view.findViewById(R.id._UUID);
-                ObservableArrayList<IModel> modelList = (ObservableArrayList) attLineList;
-                Fragment fragment = new AttendanceLineDetailFragment();
-                Object tag = tvCaller.getTag();
-                if (tvCaller!=null) {
-                    String _UUID = tvCaller.getTag().toString();
-                    if (_UUID != null && !_UUID.isEmpty()) {
-                        ((PBSDetailsFragment) fragment).set_UUID(_UUID);
-                        ((PBSDetailsFragment) fragment).setModelList(modelList);
-                        if (fragment != null) {
-                            FragmentManager fragmentManager = ((PandoraMain)mContext).getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragment.setRetainInstance(true);
-                            fragmentTransaction.replace(R.id.container_body, fragment);
-                            fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                            fragmentTransaction.commit();
-                            ((PandoraMain) mContext).getSupportActionBar().setTitle(mContext.getString(R.string.title_requisitionline));
-                        }
-                    }
-                }
-                new FragmentListOnItemClickListener(modelList, new AttendanceLineDetailFragment(),
-                        (FragmentActivity)mContext, mContext.getString(R.string.title_requisitionline));
+//                ObservableArrayList<IModel> modelList = (ObservableArrayList) attLineList;
+//                Fragment fragment = new AttendanceLineDetailFragment();
+//                Object tag = tvCaller.getTag();
+//                if (tvCaller!=null) {
+//                    String _UUID = tvCaller.getTag().toString();
+//                    if (_UUID != null && !_UUID.isEmpty()) {
+//                        ((PBSDetailsFragment) fragment).set_UUID(_UUID);
+//                        ((PBSDetailsFragment) fragment).setModelList(modelList);
+//                        if (fragment != null) {
+//                            FragmentManager fragmentManager = ((PandoraMain)mContext).getSupportFragmentManager();
+//                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                            fragment.setRetainInstance(true);
+//                            fragmentTransaction.replace(R.id.container_body, fragment);
+//                            fragmentTransaction.addToBackStack(fragment.getClass().getName());
+//                            fragmentTransaction.commit();
+//                            ((PandoraMain) mContext).getSupportActionBar().setTitle(mContext.getString(R.string.title_requisitionline));
+//                        }
+//                    }
+//                }
+//                new FragmentListOnItemClickListener(modelList, new AttendanceLineDetailFragment(),
+//                        (FragmentActivity)mContext, mContext.getString(R.string.title_attendanceline));
             }
         });
         return viewHolder;
@@ -86,8 +87,24 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         MAttendanceLine atLine = attLineList.get(position);
         holder.cbox.setChecked(atLine.isSelected());
         holder.cbox.setTag(atLine);
-        holder.prodName.setTag(atLine.get_UUID());
+
+        String strTag = atLine.get_UUID();
+
+        holder.at_isabsent.setTag(strTag);
+        holder.at_ispresent.setTag(strTag);
+        holder.at_checkindate.setTag(strTag);
+        holder.at_checkoutdate.setTag(strTag);
+        holder.at_leavetype.setTag(strTag);
+        holder.at_comments.setTag(strTag);
+
         holder.vBinding.setAtLine(atLine);
+
+        boolean isAbsent = atLine.getIsAbsent().equalsIgnoreCase("Y") || atLine.getIsAbsent().equalsIgnoreCase("1");
+        boolean isPresent = atLine.getIsPresent().equalsIgnoreCase("Y") || atLine.getIsPresent().equalsIgnoreCase("1");
+
+        holder.at_rowLeaveType.setVisibility(isAbsent? View.VISIBLE : View.GONE);
+        holder.at_rowCheckinDate.setVisibility(isAbsent? View.GONE : View.VISIBLE);
+        holder.at_rowCheckoutDate.setVisibility(isAbsent? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -105,7 +122,17 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
     public class AttendanceLineVH extends RecyclerView.ViewHolder implements View.OnClickListener {
         AttendancelineItemBinding vBinding;
         CheckBox cbox;
-        TextView prodName;
+        TextView at_isabsent;
+        TextView at_ispresent;
+        TextView at_checkindate;
+        TextView at_checkoutdate;
+        TextView at_leavetype;
+        TextView at_comments;
+
+        TableRow at_rowCheckinDate;
+        TableRow at_rowCheckoutDate;
+        TableRow at_rowLeaveType;
+
         private BroadcastRVA.IViewHolderOnClicks listeners;
 
         public AttendanceLineVH(AttendancelineItemBinding binding, View view, BroadcastRVA.IViewHolderOnClicks listeners) {
@@ -114,9 +141,26 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
             this.listeners = listeners;
             View bindView = binding.getRoot();
             this.cbox = (CheckBox) bindView.findViewById(R.id.removePrl);
-            this.prodName = (TextView) bindView.findViewById(R.id.prlProdName);
+
+            at_isabsent = (TextView) bindView.findViewById(R.id.at_isabsent);
+            at_ispresent = (TextView) bindView.findViewById(R.id.at_ispresent);
+            at_checkindate = (TextView) bindView.findViewById(R.id.at_checkindate);
+            at_checkoutdate = (TextView) bindView.findViewById(R.id.at_checkoutdate);
+            at_leavetype = (TextView) bindView.findViewById(R.id.at_leavetype);
+            at_comments = (TextView) bindView.findViewById(R.id.at_comments);
+
+            at_rowCheckinDate = (TableRow) bindView.findViewById(R.id.at_row_checkindate);
+            at_rowCheckoutDate = (TableRow) bindView.findViewById(R.id.at_row_checkoutdate);
+            at_rowLeaveType = (TableRow) bindView.findViewById(R.id.at_row_leavetype);
+
             cbox.setOnClickListener(this);
-            prodName.setOnClickListener(this);
+
+            at_isabsent.setOnClickListener(this);
+            at_ispresent.setOnClickListener(this);
+            at_checkindate.setOnClickListener(this);
+            at_checkoutdate.setOnClickListener(this);
+            at_leavetype.setOnClickListener(this);
+            at_comments.setOnClickListener(this);
         }
 
         /**

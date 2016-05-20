@@ -6,6 +6,7 @@ import com.pbasolutions.android.json.PBSNotesJSON;
 import com.pbasolutions.android.json.PBSProjTasksJSON;
 
 
+import com.pbasolutions.android.model.MAttendance;
 import com.pbasolutions.android.model.MMovement;
 import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.model.MPurchaseRequest;
@@ -25,6 +26,7 @@ public interface PBSIServerAPI {
     MMovement createMovement(PBSJson json, String serverURL);
     String getRequisitions(PBSJson json, String serverURL);
     String getMStorage(JsonObject json, String serverURL);
+    MAttendance createAttendance(PBSJson json, String serverURL);
 
     String getMovements(JsonObject json, String serverURL);
     String completeMovement(JsonObject json, String serverURL);

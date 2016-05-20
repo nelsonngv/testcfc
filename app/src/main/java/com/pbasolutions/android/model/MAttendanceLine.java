@@ -1,84 +1,150 @@
 package com.pbasolutions.android.model;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.pbasolutions.android.json.IPBSJson;
 import com.pbasolutions.android.json.PBSJson;
+
+import java.io.Serializable;
 
 /**
  * Created by tinker on 4/24/16.
  */
-public class MAttendanceLine extends PBSJson {
-    public static final String TABLENAME = "";
-    public static final String DEPLOYMENT_DATE_COL = "Deployment_Date";
+public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
+    public static final String TABLENAME = "M_AttendanceLine";
 
-    public static String C_BPARTNER_ID = "C_BPartner_ID";
-    public static String ISABSENT = "IsAbsent";
-    public static String HR_LEAVETYPE_ID = "HR_LeaveType_ID";
-    public static String COMMENTS = "Comments";
+    public static final String M_ATTENDANCELINE_UUID_COL = "M_ATTENDANCELINE_UUID";
 
-    public static String ISNOSHOW = "IsNoShow";
-    public static String CHECKIN = "CheckIn";
-    public static String CHECKOUT = "CheckOut";
+    public static final String C_BPARTNER_ID_COL = "C_BPARTNER_ID";
+    public static final String C_BPARTNER_UUID_COL = "C_BPARTNER_UUID";
+    public static final String ISABSENT_COL = "ISABSENT";
+    public static final String HR_LEAVETYPE_ID_COL = "HR_LEAVETYPE_ID";
+    public static final String COMMENT_COL = "COMMENT";
 
-    private String     employeeId; // C_BPartner_ID
-    private String checkInDate;
-    private String checkOutDate;
-    public boolean isAbsent;
-    private boolean isPresent;
-    private String comment;
-    private int     leaveType;
+    public static final String ISPRESENT_COL = "ISPRESENT";
+    public static final String CHECKIN_COL = "CHECKINDATE";
+    public static final String CHECKOUT_COL = "CHECKOUTDATE";
 
-    public boolean isAbsent() {
-        return isAbsent;
+    private String C_BPartner_ID; // C_BPartner_ID
+    private transient String C_BPartner_Name;
+    private String CheckInDate;
+    private String CheckOutDate;
+    private String IsAbsent;
+    private String IsPresent;
+    private String Comments;
+    private String HR_LeaveType_ID;
+    private transient String HR_LeaveType_Name;
+
+    private transient boolean isSelected = false;
+    transient String _UUID;
+    transient int _ID;
+
+    public String getC_BPartner_ID() {
+        return C_BPartner_ID;
     }
 
-    public String getEmployeeId() {
-        return employeeId;
+    public void setC_BPartner_ID(String c_BPartner_ID) {
+        C_BPartner_ID = c_BPartner_ID;
     }
 
-    public boolean isPresent() {
-        return isPresent;
+    public String getIsAbsent() {
+        return IsAbsent;
     }
 
-    public int getLeaveType() {
-        return leaveType;
+    public void setIsAbsent(String isAbsent) {
+        IsAbsent = isAbsent;
+    }
+
+    public String getComments() {
+        return Comments;
+    }
+
+    public void setComments(String comment) {
+        Comments = comment;
+    }
+
+    public String getHR_LeaveType_ID() {
+        return HR_LeaveType_ID;
+    }
+
+    public void setHR_LeaveType_ID(String HR_LeaveType_ID) {
+        this.HR_LeaveType_ID = HR_LeaveType_ID;
     }
 
     public String getCheckInDate() {
-        return checkInDate;
-    }
-
-    public String getCheckOutDate() {
-        return checkOutDate;
-    }
-
-    public String getComment() {
-        return comment;
+        return CheckInDate;
     }
 
     public void setCheckInDate(String checkInDate) {
-        this.checkInDate = checkInDate;
+        CheckInDate = checkInDate;
+    }
+
+    public String getCheckOutDate() {
+        return CheckOutDate;
     }
 
     public void setCheckOutDate(String checkOutDate) {
-        this.checkOutDate = checkOutDate;
+        CheckOutDate = checkOutDate;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public String getIsPresent() {
+        return IsPresent;
     }
 
-    public void setEmployeeId(String employeeId) {
-        this.employeeId = employeeId;
+    public void setIsPresent(String isPresent) {
+        IsPresent = isPresent;
     }
 
-    public void setIsAbsent(boolean isAbsent) {
-        this.isAbsent = isAbsent;
+    public String getHR_LeaveType_Name() {
+        return HR_LeaveType_Name;
     }
 
-    public void setIsPresent(boolean isPresent) {
-        this.isPresent = isPresent;
+    public void setHR_LeaveType_Name(String HR_LeaveType_Name) {
+        this.HR_LeaveType_Name = HR_LeaveType_Name;
     }
 
-    public void setLeaveType(int leaveType) {
-        this.leaveType = leaveType;
+    public String getC_BPartner_Name() {
+        return C_BPartner_Name;
+    }
+
+    public void setC_BPartner_Name(String c_BPartner_Name) {
+        C_BPartner_Name = c_BPartner_Name;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    @Override
+    public void set_UUID(String _UUID) {
+        this._UUID = _UUID;
+    }
+
+    @Override
+    public String get_UUID() {
+        return _UUID;
+    }
+
+    @Override
+    public void set_ID(int _ID) {
+        this._ID = _ID;
+    }
+
+    public int get_ID() {
+        return _ID;
+    }
+
+    public void prepareForGson() {
+        if (IsAbsent.equalsIgnoreCase("Y")) {
+            CheckInDate = null;
+            CheckOutDate = null;
+        }
+        else {
+            HR_LeaveType_ID = null;
+        }
     }
 }

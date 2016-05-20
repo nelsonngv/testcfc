@@ -97,7 +97,7 @@
                         style="@style/TableValueDate"
                         android:id="@+id/atCheckinDate"
                         android:hint="Press to Select Date"
-                        android:text="@{atLine.checkInDate}"
+                        android:text="@{atLine.CheckInDate}"
                         />
                 </LinearLayout>
             </TableRow>
@@ -116,7 +116,7 @@
                         style="@style/TableValueDate"
                         android:id="@+id/atCheckoutDate"
                         android:hint="Press to Select Date"
-                        android:text="@{atLine.checkOutDate}"
+                        android:text="@{atLine.CheckOutDate}"
                         />
                 </LinearLayout>
             </TableRow>
@@ -129,7 +129,7 @@
                     <EditText
                         style="@style/TableValueDate"
                         android:id="@+id/atComment"
-                        android:text="@{atLine.comment}"
+                        android:text="@{atLine.Comments}"
                         />
                 </LinearLayout>
             </TableRow>

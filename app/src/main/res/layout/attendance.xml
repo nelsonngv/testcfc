@@ -59,21 +59,28 @@
             </TableRow>
         </TableLayout>
         <TableLayout
-            style="@style/LineRV">
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/attendance_rv"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                >
             </android.support.v7.widget.RecyclerView>
         </TableLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_gravity="center_horizontal|bottom"
+            android:orientation="horizontal"
+            >
             <Button
-                android:id="@+id/prRequest"
+                android:id="@+id/atRequest"
                 style="@style/PLargeButton"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
                 android:text="@string/label_button_submit" />
         </LinearLayout>
     </LinearLayout>
