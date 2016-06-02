@@ -49,7 +49,7 @@ public class NewAttendanceLineFragment extends Fragment {
 
     Spinner employSpinner;
     Switch  switchAbsent;
-    Switch  switchShow;
+    Switch  switchNoShow;
     Spinner leavetypeSpinner;
     TextView textCheckinDate;
     TextView textCheckoutDate;
@@ -87,7 +87,7 @@ public class NewAttendanceLineFragment extends Fragment {
     protected void setUI(View rootView) {
         employSpinner = (Spinner) rootView.findViewById(R.id.atEmplShiftSpinner);
         switchAbsent = (Switch) rootView.findViewById(R.id.atAbsentSwitch);
-        switchShow = (Switch)rootView.findViewById(R.id.atShowSwitch);
+        switchNoShow = (Switch)rootView.findViewById(R.id.atNoShowSwitch);
         leavetypeSpinner = (Spinner)rootView.findViewById(R.id.attLeaveTypeSpinner);
         textCheckinDate = (TextView)rootView.findViewById(R.id.atCheckinDate);
         textCheckoutDate = (TextView)rootView.findViewById(R.id.atCheckoutDate);
@@ -117,7 +117,7 @@ public class NewAttendanceLineFragment extends Fragment {
                 refreshUIState();
             }
         });
-        switchShow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchNoShow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 refreshUIState();
@@ -142,10 +142,24 @@ public class NewAttendanceLineFragment extends Fragment {
         View leavetypeRow = rootView.findViewById(R.id.atLeavetypeRow);
         View checkinRow = rootView.findViewById(R.id.atCheckinRow);
         View checkoutRow = rootView.findViewById(R.id.atCheckoutRow);
+        View noShowSwitchRow = rootView.findViewById(R.id.atNoShowSwitchRow);
 
-        leavetypeRow.setVisibility(switchAbsent.isChecked() ? View.VISIBLE : View.GONE);
-        checkinRow.setVisibility(switchAbsent.isChecked() ? View.GONE : View.VISIBLE);
-        checkoutRow.setVisibility(switchAbsent.isChecked() ? View.GONE : View.VISIBLE);
+        if (switchAbsent.isChecked()) {
+            noShowSwitchRow.setVisibility(View.VISIBLE);
+            if (switchNoShow.isChecked()) {
+                leavetypeRow.setVisibility(View.GONE);
+            } else {
+                leavetypeRow.setVisibility(View.VISIBLE);
+                leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
+            }
+            checkinRow.setVisibility(View.GONE);
+            checkoutRow.setVisibility(View.GONE);
+        } else {
+            noShowSwitchRow.setVisibility(View.GONE);
+            leavetypeRow.setVisibility(View.GONE);
+            checkinRow.setVisibility(View.VISIBLE);
+            checkoutRow.setVisibility(View.VISIBLE);
+        }
     }
 
     public Fragment getAttendanceFragment() {
@@ -166,8 +180,10 @@ public class NewAttendanceLineFragment extends Fragment {
                 || emplSpinner.getValue().isEmpty()) isEmpty = true;
 
         boolean isAbsent = switchAbsent.isChecked();
+        boolean isNoShow = switchNoShow.isChecked();
         if (isAbsent) {
-            isEmpty = leaveSpinner == null || leaveSpinner.getValue().isEmpty();
+            if (!isNoShow)
+                isEmpty = leaveSpinner == null || leaveSpinner.getValue().isEmpty();
         } else {
             isEmpty = textCheckoutDate.getText().toString().isEmpty()
                     || textCheckoutDate.getText().toString().isEmpty();
@@ -182,10 +198,12 @@ public class NewAttendanceLineFragment extends Fragment {
 
         tempATLine.setC_BPartner_ID(emplSpinner.getKey());
         tempATLine.setIsAbsent(switchAbsent.isChecked() ? "Y" : "N");
-        tempATLine.setIsPresent(switchShow.isChecked() ? "Y" : "N");
+        tempATLine.setIsNoShow(switchNoShow.isChecked() ? "Y" : "N");
         if (isAbsent) {
-            tempATLine.setHR_LeaveType_ID(leaveSpinner.getKey());
-            tempATLine.setHR_LeaveType_Name(leaveSpinner.getValue());
+            if (!isNoShow) {
+                tempATLine.setHR_LeaveType_ID(leaveSpinner.getKey());
+                tempATLine.setHR_LeaveType_Name(leaveSpinner.getValue());
+            }
         } else {
             tempATLine.setCheckInDate(textCheckinDate.getText().toString());
             tempATLine.setCheckOutDate(textCheckoutDate.getText().toString());
@@ -198,9 +216,12 @@ public class NewAttendanceLineFragment extends Fragment {
         cv.put(MAttendanceLine.M_ATTENDANCELINE_UUID_COL, UUID.randomUUID().toString());
         cv.put(MAttendanceLine.C_BPARTNER_UUID_COL, emplSpinner.getKey());
         cv.put(MAttendanceLine.ISABSENT_COL, switchAbsent.isChecked() ? "Y" : "N");
-        cv.put(MAttendanceLine.ISPRESENT_COL, switchShow.isChecked() ? "Y" : "N");
+        cv.put(MAttendanceLine.ISNOSHOW_COL, switchNoShow.isChecked() ? "Y" : "N");
         if (isAbsent) {
-            cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, Integer.parseInt(leaveSpinner.getKey()));
+            if (isNoShow)
+                cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, 0);
+            else
+                cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, Integer.parseInt(leaveSpinner.getKey()));
 
             cv.put(MAttendanceLine.CHECKIN_COL, "");
             cv.put(MAttendanceLine.CHECKOUT_COL, "");

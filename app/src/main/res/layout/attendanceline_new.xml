@@ -46,14 +46,16 @@
                         />
                 </LinearLayout>
             </TableRow>
-            <TableRow>
+            <TableRow
+                android:id="@+id/atNoShowSwitchRow"
+                >
                 <LinearLayout style="@style/PTableVirtRowW"
                     android:orientation="horizontal"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     >
                     <TextView
-                        android:text="@string/label_isshow"
+                        android:text="@string/label_isnoshow"
                         style="@style/TableLabelL"
                         android:layout_gravity="left|center_vertical"
                         android:layout_marginLeft="0dp"
@@ -63,7 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right|center_vertical"
-                        android:id="@+id/atShowSwitch"
+                        android:id="@+id/atNoShowSwitch"
                         />
                 </LinearLayout>
             </TableRow>

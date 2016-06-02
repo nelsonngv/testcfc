@@ -42,7 +42,7 @@
                         android:divider="?android:attr/dividerVertical"
                         android:showDividers="middle">
                         <TextView
-                            android:text="IsAbsent"
+                            android:text="Absent"
                             style="@style/TableLabel"/>
                         <TextView
                             android:id="@+id/at_isabsent"
@@ -50,15 +50,15 @@
                             style="@style/TableValue2"/>
                     </TableRow>
                     <TableRow
-                        android:id="@+id/at_row_ispresent"
+                        android:id="@+id/at_row_isnoshow"
                         android:divider="?android:attr/dividerVertical"
                         android:showDividers="middle">
                         <TextView
-                            android:text="IsNotShow"
+                            android:text="No Show"
                             style="@style/TableLabel"/>
                         <TextView
-                            android:id="@+id/at_ispresent"
-                            android:text="@{atLine.IsPresent}"
+                            android:id="@+id/at_isnoshow"
+                            android:text="@{atLine.IsNoShow}"
                             style="@style/TableValue2"/>
                     </TableRow>
                     <TableRow

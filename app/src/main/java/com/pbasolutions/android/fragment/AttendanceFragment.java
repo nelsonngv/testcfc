@@ -287,7 +287,7 @@ public class AttendanceFragment  extends Fragment {
         String projLocID = pc.getC_projectlocation_id();
         attendance.setC_ProjectLocation_ID(projLocID);
 
-        attendance.setDeployment_Date(deployDateView.getText().toString());
+        attendance.setDeploymentDate(deployDateView.getText().toString());
 
         SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
         String shiftId = ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_ID_COL, spinnerPair.getKey(), ModelConst.HR_SHIFT_UUID_COL, cr);

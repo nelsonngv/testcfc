@@ -52,7 +52,7 @@ public class AttendanceTask implements Callable<Bundle> {
             MAttendanceLine.HR_LEAVETYPE_ID_COL,
             MAttendanceLine.COMMENT_COL,
 
-            MAttendanceLine.ISPRESENT_COL,
+            MAttendanceLine.ISNOSHOW_COL,
             MAttendanceLine.CHECKIN_COL,
             MAttendanceLine.CHECKOUT_COL,
     };
@@ -187,9 +187,9 @@ public class AttendanceTask implements Callable<Bundle> {
             } else if (MAttendanceLine.COMMENT_COL
                     .equalsIgnoreCase(columnName)) {
                 prl.setComments(rowValue);
-            } else if (MAttendanceLine.ISPRESENT_COL
+            } else if (MAttendanceLine.ISNOSHOW_COL
                     .equalsIgnoreCase(columnName)) {
-                prl.setIsPresent(rowValue);
+                prl.setIsNoShow(rowValue);
             } else if (MAttendanceLine.CHECKIN_COL
                     .equalsIgnoreCase(columnName)) {
                 prl.setCheckInDate(
@@ -372,7 +372,7 @@ public class AttendanceTask implements Callable<Bundle> {
         PBSIServerAPI serverAPI = new PBSServerAPI();
 
         MAttendance pr = (MAttendance) input.getSerializable(PBSAttendanceController.ARG_ATTENDANCE_REQUEST);
-        pr.setDeployment_Date(PandoraHelper.parseToDisplaySDate(pr.getDeployment_Date(), "yyyy-MM-dd hh:mm", null));
+        pr.setDeploymentDate(PandoraHelper.parseToDisplaySDate(pr.getDeploymentDate(), "yyyy-MM-dd hh:mm", null));
         MAttendance resultAtt = serverAPI.createAttendance
                 (
                         pr,

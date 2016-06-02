@@ -91,7 +91,7 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         String strTag = atLine.get_UUID();
 
         holder.at_isabsent.setTag(strTag);
-        holder.at_ispresent.setTag(strTag);
+        holder.at_isnoshow.setTag(strTag);
         holder.at_checkindate.setTag(strTag);
         holder.at_checkoutdate.setTag(strTag);
         holder.at_leavetype.setTag(strTag);
@@ -100,11 +100,23 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         holder.vBinding.setAtLine(atLine);
 
         boolean isAbsent = atLine.getIsAbsent().equalsIgnoreCase("Y") || atLine.getIsAbsent().equalsIgnoreCase("1");
-        boolean isPresent = atLine.getIsPresent().equalsIgnoreCase("Y") || atLine.getIsPresent().equalsIgnoreCase("1");
+        boolean isNoShow = atLine.getIsNoShow().equalsIgnoreCase("Y") || atLine.getIsNoShow().equalsIgnoreCase("1");
 
-        holder.at_rowLeaveType.setVisibility(isAbsent? View.VISIBLE : View.GONE);
-        holder.at_rowCheckinDate.setVisibility(isAbsent? View.GONE : View.VISIBLE);
-        holder.at_rowCheckoutDate.setVisibility(isAbsent? View.GONE : View.VISIBLE);
+        if (isAbsent)
+        {
+            if (isNoShow) {
+                holder.at_rowLeaveType.setVisibility(View.GONE);
+                holder.at_rowIsabsent.setVisibility(View.GONE);
+            } else {
+                holder.at_rowIsnoshow.setVisibility(View.GONE);
+            }
+            holder.at_rowCheckinDate.setVisibility(View.GONE);
+            holder.at_rowCheckoutDate.setVisibility(View.GONE);
+        } else {
+            holder.at_rowIsabsent.setVisibility(View.GONE);
+            holder.at_rowIsnoshow.setVisibility(View.GONE);
+            holder.at_rowLeaveType.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -123,7 +135,7 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         AttendancelineItemBinding vBinding;
         CheckBox cbox;
         TextView at_isabsent;
-        TextView at_ispresent;
+        TextView at_isnoshow;
         TextView at_checkindate;
         TextView at_checkoutdate;
         TextView at_leavetype;
@@ -132,6 +144,8 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         TableRow at_rowCheckinDate;
         TableRow at_rowCheckoutDate;
         TableRow at_rowLeaveType;
+        TableRow at_rowIsabsent;
+        TableRow at_rowIsnoshow;
 
         private BroadcastRVA.IViewHolderOnClicks listeners;
 
@@ -143,7 +157,7 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
             this.cbox = (CheckBox) bindView.findViewById(R.id.removePrl);
 
             at_isabsent = (TextView) bindView.findViewById(R.id.at_isabsent);
-            at_ispresent = (TextView) bindView.findViewById(R.id.at_ispresent);
+            at_isnoshow = (TextView) bindView.findViewById(R.id.at_isnoshow);
             at_checkindate = (TextView) bindView.findViewById(R.id.at_checkindate);
             at_checkoutdate = (TextView) bindView.findViewById(R.id.at_checkoutdate);
             at_leavetype = (TextView) bindView.findViewById(R.id.at_leavetype);
@@ -152,11 +166,13 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
             at_rowCheckinDate = (TableRow) bindView.findViewById(R.id.at_row_checkindate);
             at_rowCheckoutDate = (TableRow) bindView.findViewById(R.id.at_row_checkoutdate);
             at_rowLeaveType = (TableRow) bindView.findViewById(R.id.at_row_leavetype);
+            at_rowIsabsent = (TableRow) bindView.findViewById(R.id.at_row_isabsent);
+            at_rowIsnoshow = (TableRow) bindView.findViewById(R.id.at_row_isnoshow);
 
             cbox.setOnClickListener(this);
 
             at_isabsent.setOnClickListener(this);
-            at_ispresent.setOnClickListener(this);
+            at_isnoshow.setOnClickListener(this);
             at_checkindate.setOnClickListener(this);
             at_checkoutdate.setOnClickListener(this);
             at_leavetype.setOnClickListener(this);
