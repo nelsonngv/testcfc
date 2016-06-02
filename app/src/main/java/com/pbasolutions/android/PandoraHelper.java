@@ -679,7 +679,9 @@ public class PandoraHelper  {
 
     public static String getDeviceID(Activity act) {
         TelephonyManager tm = (TelephonyManager) act.getSystemService(Context.TELEPHONY_SERVICE);
-        return tm.getDeviceId();
+        String deviceId = tm.getDeviceId();
+        Log.d("Information", "Device Id = " + deviceId);
+        return deviceId;
     }
 
 }
