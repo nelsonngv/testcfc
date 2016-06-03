@@ -884,14 +884,14 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "ISDEFAULT BOOLEAN," +
                                 //--
 //                                "CONSTRAINT HRPROJASSID_UNIQCONS UNIQUE (HR_PROJECTASSIGNMENT_ID)," +
-                                "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
-                                "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
+//                                "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
+//                                "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
 //                                "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID)," +
 //                                "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
 //                                "FOREIGN KEY(HR_PROJLOCATION_SHIFT_UUID) REFERENCES HR_PROJLOCATION_SHIFT(HR_PROJLOCATION_SHIFT_UUID)," +
 //                                "FOREIGN KEY(HR_SHIFT_UUID) REFERENCES HR_SHIFT(HR_SHIFT_UUID)," +
-                                "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
-                                "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
+//                                "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
+//                                "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                                 ");");
 
                         //create index for HR_PROJECTASSIGNMENT_ID_INDEX
