@@ -629,7 +629,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 //OTHERS
                                 "DESCRIPTION NVARCHAR2(255) ," +
                                 //--
-                                "CONSTRAINT ATTRIBUTESETINSTANCEID_UNIQCONS UNIQUE (M_ATTRIBUTESETINSTANCE_ID)," +
+//                                "CONSTRAINT ATTRIBUTESETINSTANCEID_UNIQCONS UNIQUE (M_ATTRIBUTESETINSTANCE_ID)," +
                                 "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                                 "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                                 "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
@@ -780,7 +780,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "M_PRODUCT_UUID TEXT," +
                                 //OTHERS
                                 "NAME VARCHAR2(300) ," +
-                                "VALUE NVARCHAR2(300) ," +
+                                "VALUE NVARCHAR2(300)," +
                                 //--
 //                                "CONSTRAINT ASSETID_UNIQCONS UNIQUE (A_ASSET_ID)," +
                                 "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
@@ -806,7 +806,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "SENDER TEXT NOT NULL," +
                                 "MESSAGE NVARCHAR2(5000)," +
                                 //--
-                                "CONSTRAINT NOTEID_UNIQCONS UNIQUE (AD_NOTE_ID)," +
+//                                "CONSTRAINT NOTEID_UNIQCONS UNIQUE (AD_NOTE_ID)," +
                                 "FOREIGN KEY(AD_USER_UUID) REFERENCES AD_USER(AD_USER_UUID)," +
                                 "FOREIGN KEY(SENDER) REFERENCES AD_USER(AD_USER_UUID)" +
                                 ");");
@@ -884,14 +884,14 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "ISDEFAULT BOOLEAN," +
                                 //--
 //                                "CONSTRAINT HRPROJASSID_UNIQCONS UNIQUE (HR_PROJECTASSIGNMENT_ID)," +
-//                                "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
-//                                "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
-//                                "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID)," +
-//                                "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
-//                                "FOREIGN KEY(HR_PROJLOCATION_SHIFT_UUID) REFERENCES HR_PROJLOCATION_SHIFT(HR_PROJLOCATION_SHIFT_UUID)," +
-//                                "FOREIGN KEY(HR_SHIFT_UUID) REFERENCES HR_SHIFT(HR_SHIFT_UUID)," +
-//                                "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
-//                                "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
+                                "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
+                                "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
+                                "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID)," +
+                                "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
+                                "FOREIGN KEY(HR_PROJLOCATION_SHIFT_UUID) REFERENCES HR_PROJLOCATION_SHIFT(HR_PROJLOCATION_SHIFT_UUID)," +
+                                "FOREIGN KEY(HR_SHIFT_UUID) REFERENCES HR_SHIFT(HR_SHIFT_UUID)," +
+                                "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
+                                "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                                 ");");
 
                         //create index for HR_PROJECTASSIGNMENT_ID_INDEX

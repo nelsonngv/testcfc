@@ -463,7 +463,9 @@ public class AuthenticatorTask extends Task {
                         }
                     }
                     output.putSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON, user);
+                    output.putBoolean(PBSServerConst.RESULT, true);
                 } else {
+                    output.putBoolean(PBSServerConst.RESULT, false);
                     output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
                     output.putString(PandoraConstant.ERROR, "Invalid username and password." +
                             " Please re-enter.");
@@ -474,6 +476,7 @@ public class AuthenticatorTask extends Task {
         } catch (Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE +e.getMessage());
         }
+        output.putBoolean(PBSServerConst.RESULT, false);
         return output;
     }
 

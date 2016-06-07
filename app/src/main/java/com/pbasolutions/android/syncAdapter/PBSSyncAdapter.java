@@ -105,7 +105,29 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
             authenticateResult = authController.triggerEvent(
                     PBSAuthenticatorController.AUTHENTICATE_TOKEN_SERVER,
                     inputAuth, authenticateResult, null);
-            if (authenticateResult.getBoolean(PandoraConstant.RESULT)) {
+
+            boolean isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
+
+            if (!isAuthSuccess) {
+                inputAuth = new Bundle();
+
+                inputAuth.putString(PBSAuthenticatorController.ARG_ACCOUNT_NAME, global.getAd_user_name());
+                inputAuth.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE,
+                        PBSAccountInfo.ACCOUNT_TYPE);
+                inputAuth.putString(PBSAuthenticatorController.USER_PASS_ARG, global.getAd_user_password());
+                inputAuth.putString(PBSAuthenticatorController.ARG_AUTH_TYPE,
+                        PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
+                inputAuth.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
+                inputAuth.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
+
+                authenticateResult = new Bundle();
+                authenticateResult = authController.triggerEvent(
+                        PBSAuthenticatorController.SUBMIT_LOGIN,
+                        inputAuth, authenticateResult, null);
+
+                isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
+            }
+            if (isAuthSuccess) {
                 deleteRetentionPeriod = serverController.
                         triggerEvent(PBSServerController.DELETE_RETENTION_RECORD,
                                 inputAuth, deleteRetentionPeriod,null);
