@@ -180,7 +180,7 @@ public class ModelConst {
                     ModelConst.C_BPARTNER_LOCATION_TABLE,
                     ModelConst.M_PRODUCT_CATEGORY_TABLE,
                     ModelConst.C_UOM_TABLE,
-                  //  ModelConst.M_ATTRIBUTESETINSTANCE_TABLE,
+                    ModelConst.M_ATTRIBUTESETINSTANCE_TABLE,
                     ModelConst.M_PRODUCT_TABLE,
                     ModelConst.A_ASSET_TABLE,
                     ModelConst.HR_PROJECTASSIGNMENT_TABLE,
