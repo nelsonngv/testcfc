@@ -477,7 +477,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                                 "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
                                 "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
-                                "FOREIGN KEY(HR_PROJLOCATION_SHIFT_UUID) REFERENCES HR_PROJLOCATION_SHIFT(HR_PROJLOCATION_SHIFT_UUID), "+
+//                                "FOREIGN KEY(HR_PROJLOCATION_SHIFT_UUID) REFERENCES HR_PROJLOCATION_SHIFT(HR_PROJLOCATION_SHIFT_UUID), "+
                                 "FOREIGN KEY(HR_NATIONALITY_UUID) REFERENCES HR_NATIONALITY(HR_NATIONALITY_UUID), "+
                                 "FOREIGN KEY(HR_SETUP_JOB_UUID) REFERENCES HR_SETUP_JOB(HR_SETUP_JOB_UUID)" +
                                 ");");
@@ -752,7 +752,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                                 "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                                 "FOREIGN KEY(C_UOM_UUID) REFERENCES C_UOM(C_UOM_UUID)," +
-                                "FOREIGN KEY(M_PRODUCT_CATEGORY_UUID) REFERENCES M_PRODUCT_CATEGORY(M_PRODUCT_CATEGORY_UUID)," +
+//                                "FOREIGN KEY(M_PRODUCT_CATEGORY_UUID) REFERENCES M_PRODUCT_CATEGORY(M_PRODUCT_CATEGORY_UUID)," +
                                 "FOREIGN KEY(M_ATTRIBUTESETINSTANCE_UUID) REFERENCES M_ATTRIBUTESETINSTANCE(M_ATTRIBUTESETINSTANCE_UUID)," +
                                 "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
                                 "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
@@ -889,7 +889,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                                 "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID)," +
                                 "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
-                                "FOREIGN KEY(HR_PROJLOCATION_SHIFT_UUID) REFERENCES HR_PROJLOCATION_SHIFT(HR_PROJLOCATION_SHIFT_UUID)," +
+//                                "FOREIGN KEY(HR_PROJLOCATION_SHIFT_UUID) REFERENCES HR_PROJLOCATION_SHIFT(HR_PROJLOCATION_SHIFT_UUID)," +
 //                                "FOREIGN KEY(HR_SHIFT_UUID) REFERENCES HR_SHIFT(HR_SHIFT_UUID)," +
                                 "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
                                 "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
@@ -1059,16 +1059,16 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                         insertSQL = "insert into HR_IDENTITY(hr_identity_uuid, ad_client_uuid, ad_org_uuid,  created, createdby, updated, updatedby, isactive, isupdated, issynced, isdeleted, name, value) values ('1002','400','300','11-FEB-06','100','11-FEB-06','100','Y','Y','Y','N', 'FIN','F')";
                         db.execSQL(insertSQL);
 
-                        insertSQL = "insert into M_PRODUCT_CATEGORY(" +
-                                "M_PRODUCT_CATEGORY_ID,AD_ORG_UUID,AD_CLIENT_UUID,CREATED,CREATEDBY,UPDATED,UPDATEDBY,ISACTIVE,ISUPDATED,ISSYNCED,ISDELETED,M_PRODUCT_CATEGORY_UUID,NAME,VALUE) " +
-                                "values ('1000264','502a1593-01b9-4d28-8739-57316b11f3c2','4884dc2a-1491-4dab-a394-0c7b7b20322e','11-FEB-06','e191a5bc-358d-4ac6-8e2d-6fc066656605','11-FEB-06','e191a5bc-358d-4ac6-8e2d-6fc066656605','Y','Y','Y','N','f36d7d43-876d-44e2-bab6-a549b9015da6','Trade - Repair / Training-NC','Trade - Repair / Training-NC')";
-                        db.execSQL(insertSQL);
-                        insertSQL = "insert into HR_PROJLOCATION_SHIFT(" +
-                        "HR_PROJLOCATION_SHIFT_ID,AD_ORG_UUID,AD_CLIENT_UUID,CREATED,CREATEDBY,UPDATED,UPDATEDBY,ISACTIVE,ISUPDATED,ISSYNCED,ISDELETED,HR_PROJLOCATION_SHIFT_UUID,HR_SHIFT_UUID,C_PROJECTLOCATION_UUID) " +
-                        "values ('1000021','502a1593-01b9-4d28-8739-57316b11f3c2','4884dc2a-1491-4dab-a394-0c7b7b20322e','2016-01-16T12:04:32.000+0800','e191a5bc-358d-4ac6-8e2d-6fc066656605','2016-01-16T12:04:32.000+0800','e191a5bc-358d-4ac6-8e2d-6fc066656605','Y','Y','Y','N','57602605-5d18-4252-bc41-6f3878d24004','5c93ea3d-7d08-4f98-a4b4-f44ad04aa44c','b044209d-ae8f-44dc-aa0e-1176d88631d4')";
+//                        insertSQL = "insert into M_PRODUCT_CATEGORY(" +
+//                                "M_PRODUCT_CATEGORY_ID,AD_ORG_UUID,AD_CLIENT_UUID,CREATED,CREATEDBY,UPDATED,UPDATEDBY,ISACTIVE,ISUPDATED,ISSYNCED,ISDELETED,M_PRODUCT_CATEGORY_UUID,NAME,VALUE) " +
+//                                "values ('1000264','502a1593-01b9-4d28-8739-57316b11f3c2','4884dc2a-1491-4dab-a394-0c7b7b20322e','11-FEB-06','e191a5bc-358d-4ac6-8e2d-6fc066656605','11-FEB-06','e191a5bc-358d-4ac6-8e2d-6fc066656605','Y','Y','Y','N','f36d7d43-876d-44e2-bab6-a549b9015da6','Trade - Repair / Training-NC','Trade - Repair / Training-NC')";
+//                        db.execSQL(insertSQL);
+//                        insertSQL = "insert into HR_PROJLOCATION_SHIFT(" +
+//                        "HR_PROJLOCATION_SHIFT_ID,AD_ORG_UUID,AD_CLIENT_UUID,CREATED,CREATEDBY,UPDATED,UPDATEDBY,ISACTIVE,ISUPDATED,ISSYNCED,ISDELETED,HR_PROJLOCATION_SHIFT_UUID,HR_SHIFT_UUID,C_PROJECTLOCATION_UUID) " +
+//                        "values ('1000021','502a1593-01b9-4d28-8739-57316b11f3c2','4884dc2a-1491-4dab-a394-0c7b7b20322e','2016-01-16T12:04:32.000+0800','e191a5bc-358d-4ac6-8e2d-6fc066656605','2016-01-16T12:04:32.000+0800','e191a5bc-358d-4ac6-8e2d-6fc066656605','Y','Y','Y','N','57602605-5d18-4252-bc41-6f3878d24004','5c93ea3d-7d08-4f98-a4b4-f44ad04aa44c','b044209d-ae8f-44dc-aa0e-1176d88631d4')";
                         db.execSQL(insertSQL);
                 } catch (SQLException e) {
-                        PandoraHelper.showErrorMessage((PandoraMain)context,"Error in initializing database");
+//                        PandoraHelper.showErrorMessage(context, "Error in initializing database");
                         Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
                 }
         }

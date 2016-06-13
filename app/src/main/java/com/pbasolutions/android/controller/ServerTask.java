@@ -171,7 +171,8 @@ public class ServerTask extends Task {
     private Bundle syncLocalTables() {
         //first check the local tables for isSync = Y, if Y then only trigger sync.
         boolean isSuccessSync = true;
-        if (isLocalTableSync(cr, ModelConst.tableNames)) {
+//        if (isLocalTableSync(cr, ModelConst.tableNames))
+        {
             PBSIServerAccessor serverAccessor = new PBSServerAccessor();
             PBSSyncJSON syncJSON = serverAccessor.syncTables(
                     input.getString(PBSAuthenticatorController.USER_NAME_ARG),
@@ -187,6 +188,7 @@ public class ServerTask extends Task {
                         ContentValues cv = ModelConst.mapDataToContentValues(insertTable,
                                 cr);
                         String tableName = insertTable.getTableName();
+
                         String selection = ModelConst.getTableColumnIdName(tableName, cv);
                         String[] arg = {cv.getAsString(selection)};
                         if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
