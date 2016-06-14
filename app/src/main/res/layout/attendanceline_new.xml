@@ -25,7 +25,9 @@
                         android:id="@+id/atEmplShiftSpinner"/>
                 </LinearLayout>
             </TableRow>
-            <TableRow>
+            <TableRow
+                android:id="@+id/atAbsentSwitchRow"
+                >
                 <LinearLayout style="@style/PTableVirtRowW"
                     android:orientation="horizontal"
                     android:layout_marginTop="5dp"
@@ -98,7 +100,7 @@
                     <TextView
                         style="@style/TableValueDate"
                         android:id="@+id/atCheckinDate"
-                        android:hint="Press to Select Date"
+                        android:hint="@string/cmn_select_datetime"
                         android:text="@{atLine.CheckInDate}"
                         />
                 </LinearLayout>
@@ -117,7 +119,7 @@
                     <TextView
                         style="@style/TableValueDate"
                         android:id="@+id/atCheckoutDate"
-                        android:hint="Press to Select Date"
+                        android:hint="@string/cmn_select_datetime"
                         android:text="@{atLine.CheckOutDate}"
                         />
                 </LinearLayout>

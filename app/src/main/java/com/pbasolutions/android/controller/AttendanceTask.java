@@ -192,14 +192,10 @@ public class AttendanceTask implements Callable<Bundle> {
                 prl.setIsNoShow(rowValue);
             } else if (MAttendanceLine.CHECKIN_COL
                     .equalsIgnoreCase(columnName)) {
-                prl.setCheckInDate(
-                        PandoraHelper.parseToDisplaySDate(rowValue, "dd-MM-yyyy",
-                                TimeZone.getDefault()));
+                prl.setCheckInDate(rowValue);
             } else if (MAttendanceLine.CHECKOUT_COL
                     .equalsIgnoreCase(columnName)) {
-                prl.setCheckOutDate(
-                        PandoraHelper.parseToDisplaySDate(rowValue, "dd-MM-yyyy",
-                                TimeZone.getDefault()));
+                prl.setCheckOutDate(rowValue);
             }
         }
         return prl;

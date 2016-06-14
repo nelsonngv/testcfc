@@ -100,14 +100,14 @@ public class NewAttendanceLineFragment extends Fragment {
         textCheckinDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PandoraHelper.promptDatePicker(textCheckinDate, getActivity());
+                PandoraHelper.promptDateTimePicker(textCheckinDate, getActivity());
             }
         });
 
         textCheckoutDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PandoraHelper.promptDatePicker(textCheckoutDate, getActivity());
+                PandoraHelper.promptDateTimePicker(textCheckoutDate, getActivity());
             }
         });
 
@@ -139,27 +139,24 @@ public class NewAttendanceLineFragment extends Fragment {
     }
 
     void refreshUIState() {
+        boolean isLeaveTypeHidden = leavetypeSpinner.getVisibility() != View.VISIBLE;
         View leavetypeRow = rootView.findViewById(R.id.atLeavetypeRow);
         View checkinRow = rootView.findViewById(R.id.atCheckinRow);
         View checkoutRow = rootView.findViewById(R.id.atCheckoutRow);
         View noShowSwitchRow = rootView.findViewById(R.id.atNoShowSwitchRow);
+        View absentSwitchRow = rootView.findViewById(R.id.atAbsentSwitchRow);
 
-        if (switchAbsent.isChecked()) {
-            noShowSwitchRow.setVisibility(View.VISIBLE);
-            if (switchNoShow.isChecked()) {
-                leavetypeRow.setVisibility(View.GONE);
-            } else {
-                leavetypeRow.setVisibility(View.VISIBLE);
-                leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
-            }
-            checkinRow.setVisibility(View.GONE);
-            checkoutRow.setVisibility(View.GONE);
-        } else {
-            noShowSwitchRow.setVisibility(View.GONE);
-            leavetypeRow.setVisibility(View.GONE);
-            checkinRow.setVisibility(View.VISIBLE);
-            checkoutRow.setVisibility(View.VISIBLE);
-        }
+        boolean isAbsent = (switchAbsent.getVisibility() == View.VISIBLE) && switchAbsent.isChecked();
+        boolean isNoShow = (switchNoShow.getVisibility() == View.VISIBLE) && switchNoShow.isChecked();
+
+        PandoraHelper.setVisibleView(absentSwitchRow, !isNoShow);
+        PandoraHelper.setVisibleView(noShowSwitchRow, !isAbsent);
+        PandoraHelper.setVisibleView(leavetypeRow, isAbsent && !isNoShow);
+        PandoraHelper.setVisibleView(checkinRow, !isAbsent && !isNoShow);
+        PandoraHelper.setVisibleView(checkoutRow, !isAbsent && !isNoShow);
+
+        if (isLeaveTypeHidden && leavetypeSpinner.getVisibility() == View.VISIBLE)
+            leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
     }
 
     public Fragment getAttendanceFragment() {
@@ -179,13 +176,13 @@ public class NewAttendanceLineFragment extends Fragment {
         if (emplSpinner == null
                 || emplSpinner.getValue().isEmpty()) isEmpty = true;
 
-        boolean isAbsent = switchAbsent.isChecked();
-        boolean isNoShow = switchNoShow.isChecked();
+        boolean isAbsent = (switchAbsent.getVisibility() == View.VISIBLE) && switchAbsent.isChecked();
+        boolean isNoShow = (switchNoShow.getVisibility() == View.VISIBLE) && switchNoShow.isChecked();
+
         if (isAbsent) {
-            if (!isNoShow)
-                isEmpty = leaveSpinner == null || leaveSpinner.getValue().isEmpty();
-        } else {
-            isEmpty = textCheckoutDate.getText().toString().isEmpty()
+            isEmpty |= leaveSpinner == null || leaveSpinner.getValue().isEmpty();
+        } else if (!isNoShow) {
+            isEmpty |= textCheckoutDate.getText().toString().isEmpty()
                     || textCheckoutDate.getText().toString().isEmpty();
         }
 
@@ -200,11 +197,9 @@ public class NewAttendanceLineFragment extends Fragment {
         tempATLine.setIsAbsent(switchAbsent.isChecked() ? "Y" : "N");
         tempATLine.setIsNoShow(switchNoShow.isChecked() ? "Y" : "N");
         if (isAbsent) {
-            if (!isNoShow) {
                 tempATLine.setHR_LeaveType_ID(leaveSpinner.getKey());
                 tempATLine.setHR_LeaveType_Name(leaveSpinner.getValue());
-            }
-        } else {
+        } else if (!isNoShow) {
             tempATLine.setCheckInDate(textCheckinDate.getText().toString());
             tempATLine.setCheckOutDate(textCheckoutDate.getText().toString());
         }

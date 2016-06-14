@@ -21,6 +21,11 @@
     <string name="nav_item_newcheckin">New Check In</string>
     <string name="nav_item_settings">Settings</string>
 
+    <!--
+    Common
+    -->
+    <string name="cmn_select_datetime">Press to Select Date/Time</string>
+
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_recruit</item>

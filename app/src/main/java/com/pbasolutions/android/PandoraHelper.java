@@ -4,6 +4,7 @@ package com.pbasolutions.android;
 import android.accounts.Account;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
@@ -26,11 +27,13 @@ import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -159,6 +162,11 @@ public class PandoraHelper  {
         Toast.makeText(context, "Information : " + message, Toast.LENGTH_SHORT).show();
     }
 
+    public static void setVisibleView(View v, boolean bShow) {
+        v.setVisibility(bShow ? View.VISIBLE : View.GONE);
+    }
+
+
     public static boolean isInternetOn(Context context) {
         // get Connectivity Manager object to check connection
         ConnectivityManager connec =
@@ -282,6 +290,41 @@ public class PandoraHelper  {
                         date.setText(dayOfMonth + "-"
                                 + (monthOfYear + 1) + "-" + year);
 
+                    }
+                }, mYear, mMonth, mDay);
+        dpd.getDatePicker().setMinDate(c.getTimeInMillis());
+        dpd.show();
+    }
+
+    /**
+     *
+     * @param date
+     */
+    public static void promptDateTimePicker(final TextView date, final Activity activity) {
+        final Calendar c = Calendar.getInstance();
+        int  mYear = c.get(Calendar.YEAR);
+        int  mMonth = c.get(Calendar.MONTH);
+        int  mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dpd = new DatePickerDialog(activity,
+                new DatePickerDialog.OnDateSetListener() {
+                    int m_nYear;
+                    int m_nMonth;
+                    int m_nDay;
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        m_nYear = year;
+                        m_nMonth = monthOfYear;
+                        m_nDay = dayOfMonth;
+                        TimePickerDialog timedlg = new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                String timeStr = String.format("%d-%d-%d %02d:%02d", m_nDay, m_nMonth + 1, m_nYear, hourOfDay, minute);
+                                date.setText(timeStr);
+                            }
+                        }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
+                        timedlg.show();
                     }
                 }, mYear, mMonth, mDay);
         dpd.getDatePicker().setMinDate(c.getTimeInMillis());

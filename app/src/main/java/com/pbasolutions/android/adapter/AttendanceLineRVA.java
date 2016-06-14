@@ -15,6 +15,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 
+import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.databinding.AttendancelineItemBinding;
@@ -102,21 +103,11 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         boolean isAbsent = atLine.getIsAbsent().equalsIgnoreCase("Y") || atLine.getIsAbsent().equalsIgnoreCase("1");
         boolean isNoShow = atLine.getIsNoShow().equalsIgnoreCase("Y") || atLine.getIsNoShow().equalsIgnoreCase("1");
 
-        if (isAbsent)
-        {
-            if (isNoShow) {
-                holder.at_rowLeaveType.setVisibility(View.GONE);
-                holder.at_rowIsabsent.setVisibility(View.GONE);
-            } else {
-                holder.at_rowIsnoshow.setVisibility(View.GONE);
-            }
-            holder.at_rowCheckinDate.setVisibility(View.GONE);
-            holder.at_rowCheckoutDate.setVisibility(View.GONE);
-        } else {
-            holder.at_rowIsabsent.setVisibility(View.GONE);
-            holder.at_rowIsnoshow.setVisibility(View.GONE);
-            holder.at_rowLeaveType.setVisibility(View.GONE);
-        }
+        PandoraHelper.setVisibleView(holder.at_rowIsabsent, isAbsent);
+        PandoraHelper.setVisibleView(holder.at_rowIsnoshow, isNoShow);
+        PandoraHelper.setVisibleView(holder.at_rowLeaveType, isAbsent && !isNoShow);
+        PandoraHelper.setVisibleView(holder.at_rowCheckinDate, !isAbsent && !isNoShow);
+        PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, !isAbsent && !isNoShow);
     }
 
     /**
