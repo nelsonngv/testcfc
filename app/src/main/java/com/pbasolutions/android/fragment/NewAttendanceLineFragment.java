@@ -30,6 +30,10 @@ import com.pbasolutions.android.controller.PBSRequisitionController;
 import com.pbasolutions.android.model.MAttendanceLine;
 import com.pbasolutions.android.model.MPurchaseRequestLine;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,14 +104,22 @@ public class NewAttendanceLineFragment extends Fragment {
         textCheckinDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PandoraHelper.promptDateTimePicker(textCheckinDate, getActivity());
+                String deployDate = PBSAttendanceController.deployDate;
+                Date dt =  PandoraHelper.stringToDate("dd-MM-yyyy", deployDate);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dt);
+                PandoraHelper.promptDateTimePicker(textCheckinDate, cal, getActivity());
             }
         });
 
         textCheckoutDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PandoraHelper.promptDateTimePicker(textCheckoutDate, getActivity());
+                String deployDate = PBSAttendanceController.deployDate;
+                Date dt =  PandoraHelper.stringToDate("dd-MM-yyyy", deployDate);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dt);
+                PandoraHelper.promptDateTimePicker(textCheckoutDate, cal, getActivity());
             }
         });
 

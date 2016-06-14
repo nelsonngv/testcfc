@@ -302,32 +302,42 @@ public class PandoraHelper  {
      */
     public static void promptDateTimePicker(final TextView date, final Activity activity) {
         final Calendar c = Calendar.getInstance();
-        int  mYear = c.get(Calendar.YEAR);
-        int  mMonth = c.get(Calendar.MONTH);
-        int  mDay = c.get(Calendar.DAY_OF_MONTH);
+        promptDateTimePicker(date, c, activity);
+    }
+    public static void promptDateTimePicker(final TextView date, final Calendar calendar, final Activity activity) {
+        int  mYear = calendar.get(Calendar.YEAR);
+        int  mMonth = calendar.get(Calendar.MONTH);
+        int  mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog dpd = new DatePickerDialog(activity,
                 new DatePickerDialog.OnDateSetListener() {
                     int m_nYear;
                     int m_nMonth;
                     int m_nDay;
+                    boolean isPrompted = false;
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
+
+                        if (isPrompted) return;
+                        isPrompted = true;
+
                         m_nYear = year;
                         m_nMonth = monthOfYear;
                         m_nDay = dayOfMonth;
+
+                        Calendar calTime = Calendar.getInstance();
                         TimePickerDialog timedlg = new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 String timeStr = String.format("%d-%d-%d %02d:%02d", m_nDay, m_nMonth + 1, m_nYear, hourOfDay, minute);
                                 date.setText(timeStr);
                             }
-                        }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), false);
+                        }, calTime.get(Calendar.HOUR_OF_DAY), calTime.get(Calendar.MINUTE), false);
                         timedlg.show();
                     }
                 }, mYear, mMonth, mDay);
-        dpd.getDatePicker().setMinDate(c.getTimeInMillis());
+        dpd.getDatePicker().setMinDate(calendar.getTimeInMillis());
         dpd.show();
     }
 

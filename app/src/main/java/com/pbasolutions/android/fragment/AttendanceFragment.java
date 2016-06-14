@@ -215,6 +215,13 @@ public class AttendanceFragment  extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case ADD_ATTENDANCE_LINE: {
+                String deployDate = deployDateView.getText().toString();
+                if (deployDate == null || deployDate.length() == 0)
+                {
+                    PandoraHelper.showMessage(getContext(), "Please select Deployment Date.");
+                    return false;
+                }
+                PBSAttendanceController.deployDate = deployDate;
                 ((PandoraMain)getActivity()).
                         displayView(PandoraMain.FRAGMENT_CREATE_ATTENDANCELINE, false);
                 return  true;
