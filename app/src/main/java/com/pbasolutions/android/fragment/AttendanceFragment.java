@@ -115,7 +115,7 @@ public class AttendanceFragment  extends Fragment {
         super.onStart();
         projLocNameAdapter = PandoraHelper.addListToSpinner(getActivity(), projLocationSpinner, getProjLocList());
 
-        refreshAttendances();
+//        refreshAttendances();
 //        PandoraHelper.addRecyclerViewListener(recyclerView, deployList, getActivity(),
 //                new RequisitionDetailFragment(), getString(R.string.title_deployment_details));
         if (projLocNameAdapter.getCount() > 0)

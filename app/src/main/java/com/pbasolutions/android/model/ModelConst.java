@@ -478,7 +478,7 @@ public class ModelConst {
 
     public static String getProjLocationUUID(String projLocationID, ContentResolver cr){
         return ModelConst.mapIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_UUID_COL, projLocationID,
-                ModelConst.C_PROJECT_LOCATION_TABLE + ModelConst.C_PROJECTLOCATION_ID_COL, cr);
+                ModelConst.C_PROJECTLOCATION_ID_COL, cr);
     }
 
     //TODO: review back inserdataRow code.
