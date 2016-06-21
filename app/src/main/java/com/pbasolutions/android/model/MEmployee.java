@@ -53,6 +53,8 @@ public class MEmployee extends PBSJson{
     }
 
     public void setPhone(String phone) {
+        if (phone == null || phone.equalsIgnoreCase("null"))
+            phone = "";
         this.phone = phone;
     }
 

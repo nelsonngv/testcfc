@@ -226,10 +226,12 @@ public class RequisitionTask implements Callable<Bundle> {
         //populate the purchaseRequestLine.
         Cursor prlCursor = cr.query(ModelConst.uriCustomBuilder(MPurchaseRequestLine.TABLENAME),
                 prlProjection, selection, selectArgs, null);
-        prlCursor.moveToFirst();
-        do {
-            prlList.add(populatePurchaseRequestLine(prlCursor));
-        } while (prlCursor.moveToNext());
+        if (prlCursor != null && prlCursor.getCount() > 0) {
+            prlCursor.moveToFirst();
+            do {
+                prlList.add(populatePurchaseRequestLine(prlCursor));
+            } while (prlCursor.moveToNext());
+        }
         prlCursor.close();
         output.putSerializable(PBSRequisitionController.ARG_PURCHASEREQUESTLINE_LIST, prlList);
 
@@ -245,11 +247,13 @@ public class RequisitionTask implements Callable<Bundle> {
         //populate the purchaseRequestLine.
         Cursor prlCursor = cr.query(ModelConst.uriCustomBuilder(MPurchaseRequestLine.TABLENAME),
                 prlProjection, selection, selectArgs, null);
-        prlCursor.moveToFirst();
-        do {
-            output.putSerializable(PBSRequisitionController.ARG_PURCHASEREQUESTLINE,
-                    populatePurchaseRequestLine(prlCursor));
-        } while (prlCursor.moveToNext());
+        if (prlCursor != null && prlCursor.getCount() > 0) {
+            prlCursor.moveToFirst();
+            do {
+                output.putSerializable(PBSRequisitionController.ARG_PURCHASEREQUESTLINE,
+                        populatePurchaseRequestLine(prlCursor));
+            } while (prlCursor.moveToNext());
+        }
         prlCursor.close();
         return output;
     }

@@ -409,7 +409,9 @@ public class AttendanceFragment  extends Fragment {
 
                 requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
 
-                if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                if (PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                    PandoraHelper.showErrorMessage(getActivity(), result.getString(PandoraConstant.ERROR));
+                } else {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentManager.popBackStack();

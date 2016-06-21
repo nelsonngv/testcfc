@@ -178,7 +178,7 @@ public class NewRequisitionFragment extends Fragment {
                         break;
                     }
                     case EVENT_ADD_LINE: {
-                        savePR();
+                        savePR(false);
                         addLine();
                         break;
                     }
@@ -187,7 +187,7 @@ public class NewRequisitionFragment extends Fragment {
                         break;
                     }
                     case EVENT_REQUEST: {
-                        savePR();
+                        savePR(true);
                         requestPR();
                         break;
                     }
@@ -284,11 +284,14 @@ public class NewRequisitionFragment extends Fragment {
 
     }
 
-    private void savePR() {
-        Bundle input = new Bundle();
-        ContentValues cv= new ContentValues();
+    private void savePR(boolean saveToDB) {
         if (get_UUID() == null || get_UUID().isEmpty())
         set_UUID(UUID.randomUUID().toString());
+
+        if (!saveToDB) return;
+
+        Bundle input = new Bundle();
+        ContentValues cv= new ContentValues();
         cv.put(MPurchaseRequest.M_PURCHASEREQUEST_UUID_COL, get_UUID());
         cv.put(MPurchaseRequest.REQUESTDATE_COL, requestDate.getText().toString());
         PandoraContext cont = ((PandoraMain) activity).globalVariable;
@@ -398,7 +401,7 @@ public class NewRequisitionFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case ACTION_ADD_LINE: {
-                savePR();
+                savePR(false);
                 addLine();
                 return true;
             }

@@ -383,6 +383,8 @@ public class AttendanceTask implements Callable<Bundle> {
         String selection = MAttendance.M_ATTENDANCE_UUID_COL + "=?";
         String selectionArgs[] = {pr.getM_Attendance_UUID()};
 
+        Bundle dbout = new Bundle();
+
         if (PandoraConstant.TRUE.equalsIgnoreCase(resultAtt.getSuccess())) {
             //update the data document no and id
             ContentValues cv = new ContentValues();
@@ -413,8 +415,11 @@ public class AttendanceTask implements Callable<Bundle> {
                         .withSelection(selection, lineSelectionArgs)
                         .build());
             }
-            output = PandoraHelper.providerApplyBatch(output, cr, ops, "create attendance");
+            dbout = PandoraHelper.providerApplyBatch(dbout, cr, ops, "create attendance");
         } else {
+            output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+            output.putString(PandoraConstant.ERROR, "Fail to request attendance");
+
             //delete the data
             ArrayList<ContentProviderOperation> ops =
                     new ArrayList<>();
@@ -428,7 +433,7 @@ public class AttendanceTask implements Callable<Bundle> {
                     .newDelete(ModelConst.uriCustomBuilder(MAttendance.TABLENAME))
                     .build());
 
-            output = PandoraHelper.providerApplyBatch(output, cr, ops, "delete attendance.");
+            dbout = PandoraHelper.providerApplyBatch(dbout, cr, ops, "delete attendance.");
         }
         return output;
     }
