@@ -48,8 +48,12 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
 
     public static final String INSERT_ATTENDANCE_REQ_EVENT = "INSERT_ATTENDANCE_REQ_EVENT";
 
-    public static String deployDate;
+    public static final String GET_PROJECTLOCATIONS_EVENT = "GET_PROJECTLOCATIONS_EVENT";
+    public static final String ARG_PROJECTLOCATIONS = "ARG_PROJECTLOCATIONS";
 
+    public static String deployDate;
+    public static String projectLocationId;
+    public static String shiftUUID;
 
     ContentResolver cr;
     ExecutorService exec = Executors.newSingleThreadExecutor();
@@ -93,8 +97,10 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
                 createAttendance(input, result, object);
                 break;
             }
-
-
+            case GET_PROJECTLOCATIONS_EVENT: {
+                getProjectLocations(input, result, object);
+                break;
+            }
         }
         return result;
     }
@@ -210,4 +216,22 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
         }
         return result;
     }
+
+    private Bundle getProjectLocations(Bundle input, Bundle result, Object object) {
+        input.putString(ARG_TASK_EVENT, GET_PROJECTLOCATIONS_EVENT);
+        attendanceTask.setInput(input);
+        attendanceTask.setOutput(result);
+        taskResult = new FutureTask(attendanceTask);
+        exec.execute(taskResult);
+        try {
+            result = taskResult.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
 }

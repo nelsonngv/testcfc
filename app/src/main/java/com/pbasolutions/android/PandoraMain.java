@@ -679,6 +679,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 //            }
 //
             case FRAGMENT_ASSET: {
+                String projId = globalVariable.getC_projectlocation_id();
+                if (projId == null || projId.equalsIgnoreCase("")) {
+                    Toast.makeText(this, "Please select project location.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 fragment = new AssetFragment();
                 title = getString(R.string.title_assets);
                 break;

@@ -29,6 +29,7 @@ import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.controller.PBSRequisitionController;
 import com.pbasolutions.android.model.MAttendanceLine;
 import com.pbasolutions.android.model.MPurchaseRequestLine;
+import com.pbasolutions.android.model.ModelConst;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -238,14 +239,13 @@ public class NewAttendanceLineFragment extends Fragment {
             cv.put(MAttendanceLine.CHECKIN_COL, textCheckinDate.getText().toString());
             cv.put(MAttendanceLine.CHECKOUT_COL, textCheckoutDate.getText().toString());
         }
-        cv.put(MAttendanceLine.COMMENT_COL, textComment.getText().toString());
-
+        cv.put(ModelConst.C_PROJECTLOCATION_ID_COL, PBSAttendanceController.projectLocationId);
+        cv.put(ModelConst.HR_SHIFT_UUID_COL, PBSAttendanceController.shiftUUID);
 
         PandoraContext appContext = PandoraMain.instance.globalVariable;
 
         Bundle input = new Bundle();
         input.putParcelable(PBSAttendanceController.ARG_CONTENTVALUES, cv);
-        input.putString(PBSAttendanceController.ARG_PROJECTLOCATION_ID, appContext.getC_projectlocation_id());
         Bundle output = attendCont.triggerEvent(PBSAttendanceController.SAVE_ATTENDANCELINE_EVENT, input, new Bundle(), null);
 
         if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {

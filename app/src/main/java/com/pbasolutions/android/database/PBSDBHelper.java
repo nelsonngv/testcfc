@@ -1028,6 +1028,9 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                         db.execSQL("CREATE TABLE M_ATTENDANCELINE(" +
                                 //PK
                                 "M_ATTENDANCELINE_UUID TEXT PRIMARY KEY NOT NULL," +
+                                "C_PROJECTLOCATION_ID TEXT NOT NULL," +
+                                "HR_SHIFT_UUID TEXT NOT NULL," +
+
                                 //FK
                                 "C_BPARTNER_UUID TEXT DEFAULT NULL," +
                                 "CHECKINDATE DATETIME," +

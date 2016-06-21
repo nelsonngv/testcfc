@@ -87,6 +87,9 @@ public class AttendanceTask implements Callable<Bundle> {
             case PBSAttendanceController.CREATE_ATTENDANCE_EVENT: {
                 return createAttendance();
             }
+            case PBSAttendanceController.GET_PROJECTLOCATIONS_EVENT:{
+                return getProjectLocations();
+            }
 
             default:
                 return null;
@@ -133,8 +136,9 @@ public class AttendanceTask implements Callable<Bundle> {
     private Bundle getAttendanceLines() {
         ObservableArrayList<MAttendanceLine> atlList = new ObservableArrayList();
         //populate the attendanceLine.
+        String[] selectionArg = {input.getString(PBSAttendanceController.ARG_PROJECTLOCATION_ID)};
         Cursor prlCursor = cr.query(ModelConst.uriCustomBuilder(MAttendanceLine.TABLENAME),
-                atlProjection, null, null, null);
+                atlProjection, ModelConst.C_PROJECTLOCATION_ID_COL + "=?", selectionArg, null);
         if (prlCursor != null && prlCursor.getCount() > 0) {
 
             prlCursor.moveToFirst();
@@ -257,7 +261,8 @@ public class AttendanceTask implements Callable<Bundle> {
 
     private Bundle getHRShift(){
         String[] projection = {ModelConst.HR_SHIFT_UUID_COL, ModelConst.NAME_COL};
-        String[] selectionArg = {input.getString(PBSAttendanceController.ARG_PROJECTLOCATION_UUID)};
+        String projLocationUUID = ModelConst.getProjLocationUUID(input.getString(PBSAttendanceController.ARG_PROJECTLOCATION_ID), cr);
+        String[] selectionArg = {projLocationUUID};
         //grab the shift names from database view.
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.JOBAPP_SHIFTS_VIEW),
                 projection, ModelConst.C_PROJECTLOCATION_UUID_COL + "=?", selectionArg, null);
@@ -427,6 +432,43 @@ public class AttendanceTask implements Callable<Bundle> {
         }
         return output;
     }
+
+    private Bundle getProjectLocations() {
+        String projection[] = {ModelConst.C_PROJECTLOCATION_ID_COL,
+                ModelConst.NAME_COL};
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
+                projection, null,
+                null, null);
+
+        //get the projectLocations list.
+        ArrayList<SpinnerPair> projectLocations = new ArrayList<>();
+        if (cursor != null && cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            do {
+                projectLocations.add(getProjectLocation(cursor));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        output.putParcelableArrayList(PBSTaskController.ARG_PROJECTLOCATIONS, projectLocations);
+        return output;
+    }
+
+    private SpinnerPair getProjectLocation(Cursor cursor) {
+        SpinnerPair pair = new SpinnerPair();
+        for (int x = 0; x < cursor.getColumnNames().length; x++) {
+            String columnName = cursor.getColumnName(x);
+            String rowValue = cursor.getString(x);
+            if (ModelConst.C_PROJECTLOCATION_ID_COL
+                    .equalsIgnoreCase(columnName)) {
+                pair.setKey(rowValue);
+            } else if (ModelConst.NAME_COL
+                    .equalsIgnoreCase(columnName)) {
+                pair.setValue(rowValue);
+            }
+        }
+        return pair;
+    }
+
 
     public AttendanceTask(ContentResolver cr) {
         this.cr = cr;

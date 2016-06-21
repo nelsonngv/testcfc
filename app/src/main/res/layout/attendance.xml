@@ -17,16 +17,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_date"
-                    />
-                <TextView
-                    android:id="@+id/attDeployDate"
-                    style="@style/TableValueDate"
-                    android:hint="Press to Select Date"
-                    android:text="@{deploy.Deployment_Date}"
-                    android:layout_marginBottom="@dimen/margin_bottom" />
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_taskprojloc"
+                        />
+                    <Spinner
+                        style="@style/TableValue"
+                        android:id="@+id/attProjLocation"/>
+                </LinearLayout>
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_date"
+                        />
+                    <TextView
+                        android:id="@+id/attDeployDate"
+                        style="@style/TableValueDate"
+                        android:hint="Press to Select Date"
+                        android:text="@{deploy.Deployment_Date}"
+                        android:layout_marginBottom="@dimen/margin_bottom" />
                 </LinearLayout>
             </TableRow>
             <TableRow>

@@ -47,6 +47,7 @@ import com.pbasolutions.android.model.MPurchaseRequestLine;
 import com.pbasolutions.android.model.ModelConst;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -74,6 +75,10 @@ public class AttendanceFragment  extends Fragment {
     TextView deployDateView;
     protected Spinner shiftSpinner;
     protected ArrayAdapter shiftAdapter;
+
+    protected Spinner projLocationSpinner;
+    private ArrayAdapter projLocNameAdapter;
+
     RecyclerView recyclerView;
     AttendanceLineRVA linesAdapter;
     Button requestButton;
@@ -108,17 +113,34 @@ public class AttendanceFragment  extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        projLocNameAdapter = PandoraHelper.addListToSpinner(getActivity(), projLocationSpinner, getProjLocList());
+
+        refreshAttendances();
+//        PandoraHelper.addRecyclerViewListener(recyclerView, deployList, getActivity(),
+//                new RequisitionDetailFragment(), getString(R.string.title_deployment_details));
+        if (projLocNameAdapter.getCount() > 0)
+        {
+            PandoraMain pandoraMain = PandoraMain.instance;
+            int plindex = pandoraMain.globalVariable.getC_ProjectLocation_Index();
+
+            if (plindex >= 0)
+                projLocationSpinner.setSelection(plindex);
+        }
+    }
+
+    void refreshAttendances() {
+        shiftAdapter = PandoraHelper.addListToSpinner(getActivity(), shiftSpinner,
+                getPrefShiftList());
         attendanceLines  = getAttendances();
         linesAdapter = new AttendanceLineRVA(getActivity(), attendanceLines);
         recyclerView.setAdapter(linesAdapter);
-//        PandoraHelper.addRecyclerViewListener(recyclerView, deployList, getActivity(),
-//                new RequisitionDetailFragment(), getString(R.string.title_deployment_details));
     }
 
     void setUI(View rootView) {
         shiftSpinner = (Spinner) rootView.findViewById(R.id.attShiftSpinner);
-        shiftAdapter = PandoraHelper.addListToSpinner(getActivity(), shiftSpinner,
-                getPrefShiftList());
+
+        projLocationSpinner = (Spinner) rootView.findViewById(R.id.attProjLocation);
+        projLocationSpinner.setEnabled(false);
 
         deployDateView = (TextView) rootView.findViewById(R.id.attDeployDate);
 
@@ -129,6 +151,18 @@ public class AttendanceFragment  extends Fragment {
         requestButton = (Button) rootView.findViewById(R.id.atRequest);
     }
     void setUIListener() {
+        projLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                refreshAttendances();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         shiftSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -179,14 +213,31 @@ public class AttendanceFragment  extends Fragment {
         Bundle input = new Bundle();
         PandoraMain pandoraMain = PandoraMain.instance;
 
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
-        input.putInt(PBSDeployController.ARG_PROJECTLOCATION_ID, Integer.parseInt(pc.getC_projectlocation_id()));
+        SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
+        if (projlocPair == null) { // when no selected
+            return new ObservableArrayList<MAttendanceLine>();
+        }
+
+        String projLocId = projlocPair.getKey();
+
+        PandoraContext pc = pandoraMain.globalVariable;
+
+        input.putString(PBSDeployController.ARG_PROJECTLOCATION_ID, projLocId);
         input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
 
         input.putString(PBSDeployController.ARG_DEPLOYMENTDATE, deployDateView.getText().toString());
 
         Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.GET_ATTENDANCES_EVENT, input, new Bundle(), null);
         return (ObservableArrayList<MAttendanceLine>)result.get(PBSAttendanceController.ARG_ATTENDANCES);
+    }
+
+    public List<SpinnerPair> getProjLocList() {
+        Bundle input = new Bundle();
+        Bundle result = attendanceCont
+                .triggerEvent(PBSAttendanceController.GET_PROJECTLOCATIONS_EVENT,
+                        input, new Bundle(), null);
+        return result
+                .getParcelableArrayList(PBSAttendanceController.ARG_PROJECTLOCATIONS);
     }
 
     @Override
@@ -215,16 +266,7 @@ public class AttendanceFragment  extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case ADD_ATTENDANCE_LINE: {
-                String deployDate = deployDateView.getText().toString();
-                if (deployDate == null || deployDate.length() == 0)
-                {
-                    PandoraHelper.showMessage(getContext(), "Please select Deployment Date.");
-                    return false;
-                }
-                PBSAttendanceController.deployDate = deployDate;
-                ((PandoraMain)getActivity()).
-                        displayView(PandoraMain.FRAGMENT_CREATE_ATTENDANCELINE, false);
-                return  true;
+                return addLine();
             }
             case REMOVE_ATTENDANCE_LINE: {
                 removeLine();
@@ -234,12 +276,38 @@ public class AttendanceFragment  extends Fragment {
         }
     }
 
+    boolean addLine() {
+        String deployDate = deployDateView.getText().toString();
+        if (deployDate == null || deployDate.length() == 0)
+        {
+            PandoraHelper.showMessage(getContext(), "Please select Deployment Date.");
+            return false;
+        }
+        PBSAttendanceController.deployDate = deployDate;
+        SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
+        String projLocId = projlocPair.getKey();
+        PBSAttendanceController.projectLocationId = projLocId;
+
+        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
+        PBSAttendanceController.shiftUUID = spinnerPair.getKey();
+
+        ((PandoraMain) getActivity()).
+                displayView(PandoraMain.FRAGMENT_CREATE_ATTENDANCELINE, false);
+        return  true;
+    }
 
     public List<SpinnerPair> getPrefShiftList() {
         PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
 
+        SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
+        if (projlocPair == null) { // when no selected
+            return new ArrayList<SpinnerPair>();
+        }
+
+        String projLocId = projlocPair.getKey();
+
         Bundle input = new Bundle();
-        input.putString(PBSAttendanceController.ARG_PROJECTLOCATION_UUID, pc.getC_projectlocation_uuid());
+        input.putString(PBSAttendanceController.ARG_PROJECTLOCATION_ID, projLocId);
         Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.GET_SHIFTS_EVENT, input, new Bundle(),null);
         return result.getParcelableArrayList(PBSAttendanceController.SHIFT_LIST);
     }
@@ -291,8 +359,9 @@ public class AttendanceFragment  extends Fragment {
         }
 
         PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
-        String projLocID = pc.getC_projectlocation_id();
-        attendance.setC_ProjectLocation_ID(projLocID);
+        SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
+        String projLocId = projlocPair.getKey();
+        attendance.setC_ProjectLocation_ID(projLocId);
 
         attendance.setDeploymentDate(deployDateView.getText().toString());
 
@@ -345,10 +414,6 @@ public class AttendanceFragment  extends Fragment {
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentManager.popBackStack();
                     fragmentManager.popBackStack();
-//                    Fragment frag = new RequisitionFragment();
-//                    frag.setRetainInstance(true);
-//                    fragmentTransaction.replace(R.id.container_body, frag);
-//                    fragmentTransaction.addToBackStack(frag.getClass().getName());
                     fragmentTransaction.commit();
                 }
 

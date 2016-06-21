@@ -476,6 +476,11 @@ public class ModelConst {
                 ModelConst.AD_ORG_TABLE + ModelConst._ID, cr);
     }
 
+    public static String getProjLocationUUID(String projLocationID, ContentResolver cr){
+        return ModelConst.mapIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_UUID_COL, projLocationID,
+                ModelConst.C_PROJECT_LOCATION_TABLE + ModelConst.C_PROJECTLOCATION_ID_COL, cr);
+    }
+
     //TODO: review back inserdataRow code.
     public static  Bundle insertData(ContentValues cv, ContentResolver cr, String tableName, Bundle output) {
         Uri uri = cr.insert(uriCustomBuilder(tableName), cv);
