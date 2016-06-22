@@ -235,9 +235,20 @@ public class AttendanceTask implements Callable<Bundle> {
     }
 
     private Bundle getEmployees() {
+        String projLocationId = input.getString(PBSAttendanceController.ARG_PROJECTLOCATION_ID);
+
         String[] projection = {MAttendanceLine.C_BPARTNER_UUID_COL, ModelConst.NAME_COL, ModelConst.IDNUMBER_COL, ModelConst.PHONE_COL, MEmployee.JOB_TITLE_COL};
+
+        String[] selectionArg = { projLocationId };
+
+        String wherePhase = String.format("%s NOT IN (SELECT %s FROM %s WHERE %s=?)",
+                MAttendanceLine.C_BPARTNER_UUID_COL,
+                MAttendanceLine.C_BPARTNER_UUID_COL,
+                ModelConst.M_ATTENDANCELINE_TABLE,
+                ModelConst.C_PROJECTLOCATION_ID_COL
+                );
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW),
-                projection, null, null, null);
+                projection, wherePhase, selectionArg, ModelConst.NAME_COL + " ASC");
         ObservableArrayList<SpinnerPair> employeeList = new ObservableArrayList();
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
