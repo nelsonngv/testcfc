@@ -66,7 +66,7 @@
                         android:divider="?android:attr/dividerVertical"
                         android:showDividers="middle">
                         <TextView
-                            android:text="Checkin Date"
+                            android:text="Checkin"
                             style="@style/TableLabel"/>
                         <TextView
                             android:id="@+id/at_checkindate"
@@ -79,7 +79,7 @@
                         android:divider="?android:attr/dividerVertical"
                         android:showDividers="middle">
                         <TextView
-                            android:text="Checkout Date"
+                            android:text="Checkout"
                             style="@style/TableLabel"/>
                         <TextView
                             android:id="@+id/at_checkoutdate"

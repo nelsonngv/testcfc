@@ -43,6 +43,8 @@ public class RequisitionFragment extends Fragment{
     private ArrayAdapter statusAdapter;
     private SpinnerOnItemSelected statusItem;
 
+    protected String requisitionDetailTitle;
+
 
     Context context;
 
@@ -57,8 +59,9 @@ public class RequisitionFragment extends Fragment{
         setHasOptionsMenu(true);
         requisCont = new PBSRequisitionController(getActivity());
         context =  getActivity();
-        statusItem = new SpinnerOnItemSelected(
-                statusSpinner, new SpinnerPair());
+        statusItem = new SpinnerOnItemSelected(statusSpinner, new SpinnerPair());
+
+        requisitionDetailTitle = getString(R.string.title_requisitiondetails);
     }
 
     @Override
@@ -100,7 +103,7 @@ public class RequisitionFragment extends Fragment{
                 RequisitionRVA viewAdapter = new RequisitionRVA(getActivity(),requisitionList, inflater);
                 recyclerView.setAdapter(viewAdapter);
                 PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
-                        new RequisitionDetailFragment(), getString(R.string.title_requisitiondetails));
+                        new RequisitionDetailFragment(), requisitionDetailTitle);
 
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }

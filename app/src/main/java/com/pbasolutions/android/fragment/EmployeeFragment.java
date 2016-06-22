@@ -41,6 +41,8 @@ public class EmployeeFragment extends Fragment {
      *
      */
     ObservableArrayList<MEmployee> employees;
+
+    protected String employDetailTitle;
     /**
      * Constructor method.
      */
@@ -51,6 +53,8 @@ public class EmployeeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recCont = new PBSRecruitController(getActivity());
+
+        employDetailTitle = getString(R.string.title_employee_details);
     }
 
     @Override
@@ -93,7 +97,7 @@ public class EmployeeFragment extends Fragment {
         //TODO: refactor method to be shareable.
         ObservableArrayList<IModel> modelList = (ObservableArrayList) employees;
         rv.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), new FragmentListOnItemClickListener(modelList, new EmployeeDetailsFragment(), getActivity(), getString(R.string.title_employee_details)))
+                new RecyclerItemClickListener(getActivity(), new FragmentListOnItemClickListener(modelList, new EmployeeDetailsFragment(), getActivity(), employDetailTitle))
 //                {
 //                    @Override
 //                    public void onItemClick(View view, int position) {

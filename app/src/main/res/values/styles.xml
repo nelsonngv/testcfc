@@ -24,12 +24,17 @@
         <item name="android:orientation">vertical</item>
         <item name="android:background">@color/dim_foreground_material_dark</item>
     </style>
-    <style name="TableLabel">
+    <style name="TableLabel" parent="TableLabelNoW">
         <item name="android:layout_width">100dp</item>
+    </style>
+    <style name="TableLabelWide" parent="TableLabelNoW">
+        <item name="android:layout_width">130dp</item>
+    </style>
+    <style name="TableLabelNoW">
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">right</item>
         <item name="android:layout_marginLeft">@dimen/margin_left</item>
         <item name="android:layout_marginRight">@dimen/margin_right</item>
+        <item name="android:gravity">right</item>
         <item name="android:layout_column">0</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>

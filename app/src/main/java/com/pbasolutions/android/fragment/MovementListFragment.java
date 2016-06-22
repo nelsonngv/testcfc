@@ -36,10 +36,14 @@ public class MovementListFragment extends Fragment {
      */
     private ObservableArrayList<MMovement> movements;
 
+    protected String movementDetailTitle;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         assetCont = new PBSAssetController(getActivity());
+
+        movementDetailTitle = getString(R.string.title_movement_details);
     }
 
     @Override
@@ -79,7 +83,7 @@ public class MovementListFragment extends Fragment {
                 AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(), movements, inflater);
                 recyclerView.setAdapter(viewAdapter);
                 PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
-                        new AssetMovementDetails(), getString(R.string.title_movement_details));
+                        new AssetMovementDetails(), movementDetailTitle);
 
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }

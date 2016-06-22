@@ -16,7 +16,7 @@
             android:divider="?android:attr/dividerVertical"
             android:showDividers="middle">
             <TextView
-                android:layout_width="40dp"
+                android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:id="@+id/task_seqno"
                 android:text="@{String.valueOf(projTask.seqNo)}"
@@ -42,7 +42,7 @@
                     android:divider="?android:attr/dividerVertical"
                     android:showDividers="middle">
                     <TextView
-                        style="@style/TableLabel"
+                        style="@style/TableLabelWide"
                         android:text="@string/label_projloc" />
                     <TextView
                         style="@style/TableValue"
@@ -55,7 +55,7 @@
                     android:divider="?android:attr/dividerVertical"
                     android:showDividers="middle">
                     <TextView
-                        style="@style/TableLabel"
+                        style="@style/TableLabelWide"
                         android:text="@string/label_status" />
                     <TextView
                         android:id="@+id/task_status"

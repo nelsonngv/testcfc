@@ -39,6 +39,8 @@ public class ApplicantFragment extends Fragment {
      *
      */
     ObservableArrayList<MApplicant> applicantList;
+
+    protected String applicantDetailTitle;
     /**
      * Constructor method.
      */
@@ -49,6 +51,8 @@ public class ApplicantFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recCont = new PBSRecruitController(getActivity());
+
+        applicantDetailTitle = getString(R.string.title_applicantdetails);
     }
 
     @Override
@@ -73,7 +77,7 @@ public class ApplicantFragment extends Fragment {
         ObservableArrayList<IModel> modelList = (ObservableArrayList)applicantList;
         rv.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
                 new FragmentListOnItemClickListener(modelList, new ApplicantDetailsFragment(),
-                        getActivity(), getString(R.string.title_applicantdetails))));
+                        getActivity(), applicantDetailTitle)));
     }
 
     /**

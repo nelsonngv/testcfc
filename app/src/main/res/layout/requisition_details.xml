@@ -17,7 +17,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                   style="@style/TableLabel"
+                   style="@style/TableLabelWide"
                     android:text="@string/req_label_docno"
                 />
                 <EditText
@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableLabelWide"
                     android:text="@string/reqdetails_label_status" />
                 <EditText
                     android:id="@+id/prStatus"
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableLabelWide"
                     android:text="@string/reqdetails_label_projloc"
                     />
                 <EditText
@@ -58,12 +58,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
-                    style="@style/TableLabel"
+                    style="@style/TableLabelWide"
                     android:text="@string/reqdetails_label_requested_date"
                     />
                 <TextView
                     android:id="@+id/prRequestDate"
                     style="@style/TableValueDate"
+                    android:layout_marginLeft="@dimen/margin_left"
+                    android:layout_marginRight="@dimen/margin_right"
                     android:text="@{pr.RequestDate}"
                     android:layout_marginBottom="@dimen/margin_bottom" />
             </TableRow>
