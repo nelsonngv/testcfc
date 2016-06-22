@@ -56,11 +56,14 @@ public class ProjTaskFragment extends Fragment {
     public static final int SYNC_PROJTASK_ID = 800;
 
     private boolean isrecyclerviewAdded;
+
+    protected String taskDetailTitle;
     /**
      * Contructor.
      */
     public ProjTaskFragment() {
         isrecyclerviewAdded = false;
+
     }
 
     @Override
@@ -69,6 +72,7 @@ public class ProjTaskFragment extends Fragment {
         taskCont = new PBSTaskController(getActivity());
         globalVar = ((PandoraMain) getActivity()).globalVariable;
         setHasOptionsMenu(true);
+        taskDetailTitle = getString(R.string.title_projtaskdetails);
     }
 
     @Override
@@ -113,9 +117,9 @@ public class ProjTaskFragment extends Fragment {
 
                 PandoraHelper.showMessage(pandoraMain, text);
 
-                addRecyclerViewListener(recyclerView);
                 TaskRVA viewAdapter = new TaskRVA(pandoraMain, taskList, inflater);
                 recyclerView.setAdapter(viewAdapter);
+                addRecyclerViewListener(recyclerView);
             }
         }.execute(inflater, recyclerView);
 
@@ -211,12 +215,12 @@ public class ProjTaskFragment extends Fragment {
      * @param rv
      */
     protected void addRecyclerViewListener(RecyclerView rv) {
-        if (isrecyclerviewAdded) return;
+//        if (isrecyclerviewAdded) return;
         isrecyclerviewAdded = true;
 
         ObservableArrayList<IModel> modelList = (ObservableArrayList) taskList;
         rv.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
                 new FragmentListOnItemClickListener(modelList, new ProjTaskDetailsFragment(),
-                        getActivity(), getString(R.string.title_projtaskdetails))));
+                        getActivity(), taskDetailTitle)));
     }
 }
