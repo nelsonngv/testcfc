@@ -6,11 +6,7 @@ import com.pbasolutions.android.json.PBSJson;
  * Created by pbadell on 10/13/15.
  */
 public class MProjectTask extends PBSJson {
-
-
-
-    private String projLocID;
-    private String projLocUUID;
+    transient private String projLocUUID;
     private String Name;
     private int SeqNo;
     private String isDone;
@@ -48,17 +44,6 @@ public class MProjectTask extends PBSJson {
     public static final String ATTACHMENT_TASKPICTURE_4_COL = "ATTACHMENT_TASKPICTURE_4";
     public static final String ATTACHMENT_TASKPICTURE_5_COL = "ATTACHMENT_TASKPICTURE_5";
 
-
-
-
-
-    public String getProjLocID() {
-        return projLocID;
-    }
-
-    public void setProjLocID(String projLocID) {
-        this.projLocID = projLocID;
-    }
 
     public String getProjLocUUID() {
         return projLocUUID;

@@ -681,9 +681,9 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 //OTHERS
                                 "DATEREQUIRED DATETIME NOT NULL,"+
                                 "LINE NUMBER(10,0), " +
-                                "QTYREQUESTED NUMBER, " +
+                                "QTYREQUESTED NUMBER" +
                                 //--
-                                "FOREIGN KEY(M_PURCHASEREQUEST_UUID) REFERENCES M_PURCHASEREQUEST(M_PURCHASEREQUEST_UUID)" +
+//                                "FOREIGN KEY(M_PURCHASEREQUEST_UUID) REFERENCES M_PURCHASEREQUEST(M_PURCHASEREQUEST_UUID)" +
 //                                "FOREIGN KEY(M_PRODUCT_UUID) REFERENCES M_PRODUCT(M_PRODUCT_UUID)" +
                                 ");");
 

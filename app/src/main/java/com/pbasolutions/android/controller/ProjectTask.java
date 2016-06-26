@@ -161,40 +161,43 @@ public class ProjectTask implements Callable<Bundle> {
     }
 
     private Bundle createTask() {
-        MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
-        ContentValues cv = getContentValuesFromTask(task);
-        Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv);
-        boolean result = ModelConst.getURIResult(uri);
-
-        if (result) {
-            output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-            output.putString(PandoraConstant.RESULT, "Successfuly insert new task.");
-        } else {
-            output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-            output.putString(PandoraConstant.ERROR, "Failed to create task");
-        }
-        return output;
-
 //        MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
+//        ContentValues cv = getContentValuesFromTask(task);
+//        Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv);
+//        boolean result = ModelConst.getURIResult(uri);
 //
-//        PBSIServerAPI serverAPI = new PBSServerAPI();
-//        String result = serverAPI.createProjectTask(task,
-//                input.getString(PBSServerConst.PARAM_URL));
-//        if (result != null && result.isEmpty()) {
-//            JsonParser p = new JsonParser();
-//            JsonObject jsonObj = p.parse(result).getAsJsonObject();
-//            String success = jsonObj.get(PBSServerConst.SUCCESS).getAsString();
-//            if (PBSServerConst.TRUE.equalsIgnoreCase(success)){
-//             output.putBoolean(PandoraConstant.RESULT, true);
-//                return output;
-//            }
-//
-//        }
-//            output.putBoolean(PandoraConstant.RESULT, false);
+//        if (result) {
+//            output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+//            output.putString(PandoraConstant.RESULT, "Successfuly insert new task.");
+//        } else {
 //            output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
 //            output.putString(PandoraConstant.ERROR, "Failed to create task");
-//
+//        }
 //        return output;
+//
+        MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
+
+        PBSIServerAPI serverAPI = new PBSServerAPI();
+        String result = serverAPI.createProjectTask(task,
+                input.getString(PBSServerConst.PARAM_URL));
+        if (result != null && !result.isEmpty()) {
+            JsonParser p = new JsonParser();
+            JsonObject jsonObj = p.parse(result).getAsJsonObject();
+            String success = jsonObj.get(PBSServerConst.SUCCESS).getAsString();
+            if (PBSServerConst.TRUE.equalsIgnoreCase(success)){
+                output.putBoolean(PandoraConstant.RESULT, true);
+                output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+                output.putString(PandoraConstant.RESULT, "Successfuly insert new task.");
+                return output;
+            }
+
+        }
+
+        output.putBoolean(PandoraConstant.RESULT, false);
+        output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+        output.putString(PandoraConstant.ERROR, "Failed to create task");
+
+        return output;
     }
 
     private Bundle completeProjectTask() {

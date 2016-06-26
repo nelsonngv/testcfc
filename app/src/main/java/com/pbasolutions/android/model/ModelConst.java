@@ -491,7 +491,7 @@ public class ModelConst {
             output.putString(PandoraConstant.RESULT, "Successfuly inserted.");
         } else {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-            output.putString(PandoraConstant.ERROR, "Fail to inserts.");
+            output.putString(PandoraConstant.ERROR, "Fail to insert.");
         }
         return output;
     }
