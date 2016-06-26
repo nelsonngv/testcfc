@@ -662,7 +662,10 @@ public class AssetTask extends Task {
                 if (!m_product_uuids.isEmpty()) {
                     //get the product uuid info
                     String pProjection[] = {MProduct.M_PRODUCT_UUID_COL, MProduct.NAME_COL, MProduct.VALUE_COL};
-                    String selection = MProduct.M_PRODUCT_UUID_COL + "=?";
+                    String selection = MProduct.M_PRODUCT_UUID_COL + " IN (?";
+                    for (int i = 0; i < m_product_uuids.size() - 1; i++)
+                        selection += ",?";
+                    selection += ")";
                     String selectionArg[] = m_product_uuids.toArray(new String[m_product_uuids.size()]);
                     Cursor pCursor = cr.query(ModelConst.uriCustomBuilder(MProduct.TABLENAME), pProjection, selection, selectionArg, null);
                     ArrayList<SpinnerPair> productList = new ArrayList<>();
