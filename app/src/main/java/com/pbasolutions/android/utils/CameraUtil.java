@@ -194,7 +194,7 @@ public class CameraUtil {
         if (path != null) {
             Bitmap immagex=resizeImage(500, 500, path);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            immagex.compress(Bitmap.CompressFormat.JPEG, 50, baos);
             byte[] b = baos.toByteArray();
             String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
             return imageEncoded;
