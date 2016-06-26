@@ -198,11 +198,13 @@ public class ProjectTask implements Callable<Bundle> {
     }
 
     private Bundle completeProjectTask() {
+        String projLocId = input.getString(PBSTaskController.ARG_PROJLOC_ID);
         String taskUUID = input.getString(PBSTaskController.ARG_TASK_UUID);
         String taskID = input.getString(PBSTaskController.ARG_TASK_ID);
         String comments = input.getString(PBSTaskController.ARG_COMMENTS);
 
         PBSProjTaskJSON projTask = new PBSProjTaskJSON();
+        projTask.setC_ProjectLocation_ID(projLocId);
         projTask.setC_ProjectTask_ID(taskID);
         projTask.setComments(comments);
 

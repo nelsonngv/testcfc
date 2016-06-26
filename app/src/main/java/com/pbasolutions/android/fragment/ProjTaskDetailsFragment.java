@@ -256,6 +256,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
         PandoraContext globalVar = ((PandoraMain) getActivity()).globalVariable;
         Bundle input = new Bundle();
         input.putString(PBSServerConst.PARAM_URL, globalVar.getServer_url());
+        input.putString(taskCont.ARG_PROJLOC_ID, globalVar.getC_projectlocation_id());
         input.putString(taskCont.ARG_TASK_ID,String.valueOf(projTask.get_ID()));
         input.putString(taskCont.ARG_TASK_UUID, _UUID);
         input.putString(taskCont.ARG_COMMENTS, taskComments.getText().toString());
