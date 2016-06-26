@@ -115,7 +115,7 @@ public class NewRequisitionFragment extends Fragment {
                     input, new Bundle(), null);
             lines = (ObservableArrayList<MPurchaseRequestLine>)result
                     .getSerializable(reqCont.ARG_PURCHASEREQUESTLINE_LIST);
-            if (lines != null)
+            if (pr != null && lines != null)
                 pr.setLines(lines.toArray(new MPurchaseRequestLine[lines.size()]));
         }
     }

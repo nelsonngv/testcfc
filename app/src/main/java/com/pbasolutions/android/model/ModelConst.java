@@ -92,7 +92,7 @@ public class ModelConst {
     public static final String HR_IDENTITY_TABLE = "HR_Identity";
 
     public static final String HR_LEAVETYPE_TABLE = "HR_LeaveType";
-    public static final String M_ATTENDANCE_TABLE = "M_AttendanceLine";
+    public static final String M_ATTENDANCE_TABLE = "M_Attendance";
     public static final String M_ATTENDANCELINE_TABLE = "M_AttendanceLine";
 
 

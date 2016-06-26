@@ -683,8 +683,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "LINE NUMBER(10,0), " +
                                 "QTYREQUESTED NUMBER, " +
                                 //--
-                                "FOREIGN KEY(M_PURCHASEREQUEST_UUID) REFERENCES M_PURCHASEREQUEST(M_PURCHASEREQUEST_UUID)," +
-                                "FOREIGN KEY(M_PRODUCT_UUID) REFERENCES M_PRODUCT(M_PRODUCT_UUID)" +
+                                "FOREIGN KEY(M_PURCHASEREQUEST_UUID) REFERENCES M_PURCHASEREQUEST(M_PURCHASEREQUEST_UUID)" +
+//                                "FOREIGN KEY(M_PRODUCT_UUID) REFERENCES M_PRODUCT(M_PRODUCT_UUID)" +
                                 ");");
 
                         //create index for M_PURCHASEREQUESTLINE_ID_INDEX
@@ -1018,10 +1018,10 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "HR_SHIFT_ID NUMBER(10, 0) DEFAULT NULL," +
                                 "HR_SHIFT_UUID TEXT NOT NULL," +
                                 //FK
-                                "CREATED DEPLOYMENT_DATE NOT NULL DEFAULT (DATETIME('NOW'))," +
+                                "CREATED DEPLOYMENT_DATE NOT NULL DEFAULT (DATETIME('NOW'))" +
 
-                                "FOREIGN KEY(C_PROJECTLOCATION_ID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_ID)" +
-                                "FOREIGN KEY(HR_SHIFT_ID) REFERENCES HR_SHIFT(HR_SHIFT_ID)" +
+//                                "FOREIGN KEY(C_PROJECTLOCATION_ID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_ID)" +
+//                                "FOREIGN KEY(HR_SHIFT_ID) REFERENCES HR_SHIFT(HR_SHIFT_ID)" +
                                 ");");
 
                         //M_Attendanceline

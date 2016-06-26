@@ -248,7 +248,7 @@ public class AttendanceTask implements Callable<Bundle> {
                 ModelConst.C_PROJECTLOCATION_ID_COL
                 );
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW),
-                projection, wherePhase, selectionArg, ModelConst.NAME_COL + " ASC");
+                projection, wherePhase, selectionArg, "LOWER(" + ModelConst.NAME_COL + ") ASC");
         ObservableArrayList<SpinnerPair> employeeList = new ObservableArrayList();
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
@@ -396,7 +396,7 @@ public class AttendanceTask implements Callable<Bundle> {
 
         Bundle dbout = new Bundle();
 
-        if (PandoraConstant.TRUE.equalsIgnoreCase(resultAtt.getSuccess())) {
+        if (resultAtt != null && PandoraConstant.TRUE.equalsIgnoreCase(resultAtt.getSuccess())) {
             //update the data document no and id
             ContentValues cv = new ContentValues();
             cv.put(MAttendance.M_ATTENDANCE_UUID_COL, resultAtt.getM_Attendance_UUID());
@@ -427,6 +427,9 @@ public class AttendanceTask implements Callable<Bundle> {
                         .build());
             }
             dbout = PandoraHelper.providerApplyBatch(dbout, cr, ops, "create attendance");
+            output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+            output.putString(PandoraConstant.RESULT, "Successfully request");
+
         } else {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
             output.putString(PandoraConstant.ERROR, "Fail to request attendance");

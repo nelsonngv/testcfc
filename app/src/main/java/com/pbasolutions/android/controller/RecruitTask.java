@@ -235,7 +235,7 @@ public class RecruitTask extends Task {
     private Bundle getEmployees() {
         String[] projection = {MEmployee.C_BPARTNER_UUID_COL, ModelConst.NAME_COL, ModelConst.IDNUMBER_COL, ModelConst.PHONE_COL, MEmployee.JOB_TITLE_COL};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW),
-                projection, null, null, ModelConst.NAME_COL + " ASC");
+                projection, null, null, "LOWER(" + ModelConst.NAME_COL + ") ASC");
         ObservableArrayList<MEmployee> employeeList = new ObservableArrayList();
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
