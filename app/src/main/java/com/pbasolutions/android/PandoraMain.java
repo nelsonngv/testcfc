@@ -626,8 +626,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public void displayView(int position, boolean firstInstantiate) {
         if (position != FRAGMENT_ACCOUNT)
         {
-            String projLocId = globalVariable.getProject_id();
-            if (!globalVariable.isInitialSynced() || projLocId == null || projLocId.length() == 0) {
+            if (!globalVariable.isInitialSynced()) {
                 Toast.makeText(this, "Please wait while initial syncing.",
                         Toast.LENGTH_SHORT).show();
                 return;

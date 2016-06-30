@@ -481,6 +481,10 @@ public class PandoraHelper  {
                     result.getString(authCont.USER_PASS_ARG));
             var.setServer_url(
                     result.getString(authCont.SERVER_URL_ARG));
+
+            String synced = result.getString(authCont.INITIALSYNC_ARG);
+            if (synced != null)
+                var.setIsInitialSynced(Integer.parseInt(synced) != 0);
         }
 
         if (result.getString(authCont.AUTH_TOKEN_ARG) != null) {
@@ -533,9 +537,6 @@ public class PandoraHelper  {
             if (projLocIndex != null)
                 var.setC_ProjectLocation_Spinner_Index(Integer.parseInt(projLocIndex));
 
-            String synced = result.getString(authCont.PROJLOC_INDEX_ARG);
-            if (synced != null)
-                var.setIsInitialSynced(Integer.parseInt(synced) != 0);
         }
 
     }
