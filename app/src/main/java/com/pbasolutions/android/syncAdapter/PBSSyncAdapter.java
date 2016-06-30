@@ -144,9 +144,9 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                     syncResult.hasError();
                 }
 
-                boolean isSync = syncResultBundle.getInt(PandoraConstant.SYNC_COUNT) != 0;
+                boolean isSyncCompleted = syncResultBundle.getInt(PandoraConstant.SYNC_COUNT) == 0;
                     if (PandoraMain.instance != null)
-                        PandoraMain.instance.updateInitialSyncState(isSync);
+                        PandoraMain.instance.updateInitialSyncState(isSyncCompleted);
             } else{
                 syncResult.hasError();
             }
