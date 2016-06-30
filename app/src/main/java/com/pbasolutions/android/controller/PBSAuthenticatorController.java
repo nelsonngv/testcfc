@@ -55,6 +55,8 @@ public class PBSAuthenticatorController extends PBSController {
     public static final String PROJLOC_NAME_ARG = "PROJLOC_NAME_ARG";
     public static final String ARG_PROGRESS_BAR = "ARG_PROGRESS_BAR";
 
+    public static final String INITIALSYNC_ARG = "INITIALSYNC_ARG";
+
     /**
      * Account Manager.
      */

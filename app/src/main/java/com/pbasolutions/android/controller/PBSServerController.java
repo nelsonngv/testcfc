@@ -42,6 +42,7 @@ public class PBSServerController extends PBSController {
      */
     public static final String DELETE_RETENTION_RECORD = "DELETE_RETENTION_RECORD";
 
+    public static final String SYNCED_COUNT = "SYNCED_COUNT";
     /**
      * Constructor.
      * @param base

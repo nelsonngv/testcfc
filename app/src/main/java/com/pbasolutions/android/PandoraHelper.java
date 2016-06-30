@@ -154,6 +154,10 @@ public class PandoraHelper  {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
+    public static void showMessage(Context context, int resId) {
+        Toast.makeText(context, resId, Toast.LENGTH_SHORT).show();
+    }
+
     public static void showWarningMessage(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
@@ -400,8 +404,8 @@ public class PandoraHelper  {
                     new Bundle(), null);
             PBSProjLocJSON[] projLocJSONs = (PBSProjLocJSON[]) result
                     .getSerializable(cont.ARG_PROJECT_LOCATION_JSON);
-            isInitialSyncCompleted = projLocJSONs != null;
-            if (isInitialSyncCompleted) {
+//            isInitialSyncCompleted = projLocJSONs != null;
+            if (projLocJSONs != null) {
                 setProjLocUserData(globalVar, projLocJSONs, activity);
             }
             if (showResult)
@@ -412,7 +416,7 @@ public class PandoraHelper  {
 //                        result.getString(PandoraConstant.TITLE), "Ok", null);
             }
         } else {
-            isInitialSyncCompleted = true;
+//            isInitialSyncCompleted = true;
         }
     }
 
@@ -449,6 +453,9 @@ public class PandoraHelper  {
         inputAccount.putString(authController.ORG_INDEX_ARG, String.valueOf(pandoraContext.getAd_org_spinner_index()));
         inputAccount.putString(authController.CLIENT_INDEX_ARG, String.valueOf(pandoraContext.getAd_client_spinner_index()));
         inputAccount.putString(authController.PROJLOC_INDEX_ARG, String.valueOf(pandoraContext.getC_ProjectLocation_Index()));
+
+        inputAccount.putString(authController.INITIALSYNC_ARG, pandoraContext.isInitialSynced()? "1" : "0");
+
         if (pandoraContext.getProjLocJSON() != null) {
             String projLocJSON = new Gson().toJson(pandoraContext.getProjLocJSON());
             inputAccount.putString(authController.PROJLOCS_ARG, projLocJSON);
@@ -525,6 +532,10 @@ public class PandoraHelper  {
             String projLocIndex = result.getString(authCont.PROJLOC_INDEX_ARG);
             if (projLocIndex != null)
                 var.setC_ProjectLocation_Spinner_Index(Integer.parseInt(projLocIndex));
+
+            String synced = result.getString(authCont.PROJLOC_INDEX_ARG);
+            if (synced != null)
+                var.setIsInitialSynced(Integer.parseInt(synced) != 0);
         }
 
     }

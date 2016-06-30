@@ -26,5 +26,6 @@ public class PandoraConstant {
     public static final String APPROVED = "APPROVED";
     public static final String INFO = "INFO";
     public static final String FALSE = "false";
+    public static final String SYNC_COUNT = "SYNC_COUNT"; // added by danny 20160628 to check complete of sync
 
 }

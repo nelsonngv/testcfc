@@ -624,12 +624,16 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * @param firstInstantiate
      */
     public void displayView(int position, boolean firstInstantiate) {
-        if (position != FRAGMENT_ACCOUNT && !PandoraHelper.isInitialSyncCompleted)
+        if (position != FRAGMENT_ACCOUNT)
         {
-            Toast.makeText(this, "Please wait while initial syncing.",
-                    Toast.LENGTH_SHORT).show();
-            return;
+            String projLocId = globalVariable.getProject_id();
+            if (!globalVariable.isInitialSynced() || projLocId == null || projLocId.length() == 0) {
+                Toast.makeText(this, "Please wait while initial syncing.",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
+
         String title = getString(R.string.app_name);
         switch (position) {
             case FRAGMENT_CHECKPOINTS: {
@@ -901,28 +905,22 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             progressDialog.dismiss();
     }
 
-    public void updateInitialSyncState(boolean isFirst) {
-//        if (PandoraHelper.isInitialSyncCompleted)
-//            dismissProgressDialog();
-//        else
-//            showProgressDialog("Initial Syncing");
+    public void updateInitialSyncState(boolean isCompleted) {
+        if (!isCompleted) return;
+
+        boolean prevSyncState = globalVariable.isInitialSynced();
+        globalVariable.setIsInitialSynced(true);
         new AsyncTask<Boolean, Void, Boolean>() {
             @Override
-            protected Boolean doInBackground(Boolean... isFirst) {
-                boolean prevSyncState = true;
-                if (!isFirst[0].booleanValue())
-                    prevSyncState = PandoraHelper.isInitialSyncCompleted;
+            protected Boolean doInBackground(Boolean... prevSyncState) {
                 PandoraHelper.getProjLocAvailable(PandoraMain.this, false);
-                return new Boolean(prevSyncState);
+                return new Boolean(prevSyncState[0]);
             }
 
             @Override
             protected void onPostExecute(Boolean bPrevState) {
                 super.onPostExecute(bPrevState);
-                if (!PandoraHelper.isInitialSyncCompleted)
-                    Toast.makeText(PandoraMain.this, "Initial Syncing",
-                            Toast.LENGTH_SHORT).show();
-                else if (bPrevState.booleanValue() == false) {
+                if (bPrevState.booleanValue() == false) {
                     Toast.makeText(PandoraMain.this, "Initial Sync completed",
                             Toast.LENGTH_SHORT).show();
                     if (fragment != null && fragment instanceof AccountFragment) {
@@ -930,6 +928,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     }
                 }
             }
-        }.execute(Boolean.valueOf(isFirst));
+        }.execute(Boolean.valueOf(prevSyncState));
     }
 }

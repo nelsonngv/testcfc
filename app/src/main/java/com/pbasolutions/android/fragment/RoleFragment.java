@@ -38,6 +38,9 @@ public class RoleFragment extends Fragment {
     private Spinner orgSpinner;
     private Spinner clientSpinner;
     private Spinner projectSpinner;
+
+    Button okButton;
+
     private PandoraMain context;
     private PBSAuthenticatorController authenticatorController;
 
@@ -61,7 +64,7 @@ public class RoleFragment extends Fragment {
         projectSpinner = (Spinner) rootView.findViewById(R.id.project);
         authenticatorController = new PBSAuthenticatorController(getActivity());
 
-        Button okButton = (Button) rootView.findViewById(R.id.roleOK);
+        okButton = (Button) rootView.findViewById(R.id.roleOK);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +81,16 @@ public class RoleFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        refreshSyncState();
         addSpinnerData();
+    }
+
+    void refreshSyncState() {
+        if (context.globalVariable.isInitialSynced()) {
+            okButton.setText(R.string.label_ok);
+        } else {
+            okButton.setText(R.string.label_sync);
+        }
     }
 
     private void addSpinnerData() {
@@ -134,6 +146,10 @@ public class RoleFragment extends Fragment {
      */
     //TODO: check if already set role to server~
     public void roleOkClicked() {
+        if (!context.globalVariable.isInitialSynced()) {
+            PandoraHelper.showMessage(context, R.string.label_sync);
+            return;
+        }
         new AsyncTask<Void, Void, Bundle>() {
             @Override
             protected void onPreExecute() {
@@ -180,6 +196,7 @@ public class RoleFragment extends Fragment {
     }
 
     public void completedInitialSync() {
+        refreshSyncState();
         addSpinnerData();
     }
 }

@@ -51,7 +51,7 @@ public class PandoraContext extends Application implements Serializable{
     private String c_projectlocation_name = "";
     private int C_ProjectLocation_Spinner_Index;
 
-
+    private boolean isInitialSynced = false;
 
     /**
      * Keeps a reference of the application context
@@ -316,5 +316,13 @@ public class PandoraContext extends Application implements Serializable{
 
     public void setC_projectlocation_id(String c_projectlocation_id) {
         this.c_projectlocation_id = c_projectlocation_id;
+    }
+
+    public boolean isInitialSynced() {
+        return isInitialSynced;
+    }
+
+    public void setIsInitialSynced(boolean isSyncCompleted) {
+        this.isInitialSynced = isSyncCompleted;
     }
 }

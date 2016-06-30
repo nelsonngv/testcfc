@@ -178,13 +178,14 @@ public class ServerTask extends Task {
                     input.getString(PBSAuthenticatorController.USER_NAME_ARG),
                     input.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
                     input.getString(PBSAuthenticatorController.SERVER_URL_ARG));
+            int syncedCount = 0;
             if (syncJSON != null) {
                 if (syncJSON.getNew() != null) {
                     //as this data coming from server side, the checking will be against
                     // pbs_syncdata id if the pbs_syncdata_id
                     //is not exist, this means the record is new.
                     for (PBSTableJSON insertTable : syncJSON.getNew()) {
-
+                        syncedCount++;
                         ContentValues cv = ModelConst.mapDataToContentValues(insertTable,
                                 cr);
                         String tableName = insertTable.getTableName();
@@ -205,6 +206,7 @@ public class ServerTask extends Task {
 
                 if (syncJSON.getUpdate() != null) {
                     for (PBSTableJSON updateTable : syncJSON.getUpdate()) {
+                        syncedCount++;
                         ContentValues cv = ModelConst.mapDataToContentValues(updateTable,
                                 cr);
                         String selection = ModelConst.getTableColumnIdName(
@@ -225,6 +227,7 @@ public class ServerTask extends Task {
 
                 if (syncJSON.getDelete() != null) {
                     for (PBSTableJSON deleteTable : syncJSON.getDelete()) {
+                        syncedCount++;
                         ContentValues cv = ModelConst.mapDataToContentValues(deleteTable,
                                 cr);
                         String selection = ModelConst.getTableColumnIdName(
@@ -246,8 +249,11 @@ public class ServerTask extends Task {
                 } else {
                     output.putBoolean(PandoraConstant.RESULT, false);
                 }
+
+                output.putInt(PandoraConstant.SYNC_COUNT, syncedCount);
             } else {
                 output.putBoolean(PandoraConstant.RESULT, false);
+                output.putInt(PandoraConstant.SYNC_COUNT, -1);
             }
         }
         return output;

@@ -112,6 +112,8 @@
     <string name="label_checkindate">Check In Date</string>
     <string name="label_checkoutdate">Check Out Date</string>
     <string name="label_leavetype">Leave Type</string>
+    <string name="label_ok">OK</string>
+    <string name="label_sync">Initial Syncing. Please wait</string>
     <!--
      Asset list
     !-->

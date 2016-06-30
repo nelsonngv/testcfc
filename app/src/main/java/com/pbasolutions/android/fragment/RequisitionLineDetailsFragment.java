@@ -76,7 +76,7 @@ public class RequisitionLineDetailsFragment extends AbstractRequisitionLineFragm
     protected void setValues() {
         prodNameSpinner.setSelection(((SpinAdapter) prodNameAdapter)
         .getPosition(prl.getM_Product_UUID()));
-    }
+}
 
     private MPurchaseRequestLine getRequisitionLine() {
         Bundle input = new Bundle();

@@ -159,6 +159,9 @@ public class AuthenticatorTask extends Task {
                     input.getString(PBSAuthenticatorController.PROJLOCS_ARG));
             am.setUserData(account, PBSAuthenticatorController.AD_USER_ARG,
                     input.getString(PBSAuthenticatorController.AD_USER_ARG));
+
+            am.setUserData(account, PBSAuthenticatorController.INITIALSYNC_ARG,
+                    input.getString(PBSAuthenticatorController.INITIALSYNC_ARG));
         } catch (Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage()
                     + PandoraConstant.SPACE
@@ -259,6 +262,11 @@ public class AuthenticatorTask extends Task {
                 PBSAuthenticatorController.AD_USER_ARG,
                 am.getUserData(acc,
                         PBSAuthenticatorController.AD_USER_ARG));
+
+        output.putString(
+                PBSAuthenticatorController.INITIALSYNC_ARG,
+                am.getUserData(acc,
+                        PBSAuthenticatorController.INITIALSYNC_ARG));
     }
 
     private String authToken;

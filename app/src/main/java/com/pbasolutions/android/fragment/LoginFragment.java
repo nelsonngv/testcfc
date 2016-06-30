@@ -201,7 +201,7 @@ public class LoginFragment extends Fragment {
                     context.globalVariable.setServer_url(serverURL);
                     context.globalVariable.setAuth_token(loginJSON.getToken());
 
-                    context.updateInitialSyncState(true);
+                    PandoraHelper.getProjLocAvailable(PandoraMain.instance, false);
 
                     PandoraHelper.setAccountData(getActivity());
                     //set the apps to only start auto sync after successfully send the role to Server.
