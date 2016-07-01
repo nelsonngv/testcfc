@@ -924,7 +924,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                         " C_BPARTNER_LOCATION.PHONE, HR_JOBPOSITION.JOB_TITLE" +
                                         " FROM C_BPARTNER" +
                                         " LEFT JOIN C_BPARTNER_LOCATION ON (C_BPARTNER.C_BPARTNER_UUID = C_BPARTNER_LOCATION.C_BPARTNER_UUID)" +
-                                        " LEFT JOIN HR_JOBPOSITION ON (HR_JOBPOSITION.C_BPARTNER_UUID = C_BPARTNER.C_BPARTNER_UUID);"
+                                        " LEFT JOIN HR_JOBPOSITION ON (HR_JOBPOSITION.C_BPARTNER_UUID = C_BPARTNER.C_BPARTNER_UUID)" +
+                                        " GROUP BY C_BPARTNER.C_BPARTNER_UUID;"
                         );
 
                         db.execSQL("CREATE VIEW JOBAPP_LIST_VIEW AS " +
