@@ -909,6 +909,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
         boolean prevSyncState = globalVariable.isInitialSynced();
         globalVariable.setIsInitialSynced(true);
+        PandoraHelper.setAccountData(this);
         new AsyncTask<Boolean, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Boolean... prevSyncState) {

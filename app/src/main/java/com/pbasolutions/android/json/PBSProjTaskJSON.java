@@ -10,6 +10,7 @@ public class PBSProjTaskJSON extends PBSJson {
     private String CreatedBy;
     private String Name;
     private String Description;
+    private String AssignedTo;
     private String SeqNo;
     private Boolean IsDone;
     private String Comments;
@@ -131,5 +132,13 @@ public class PBSProjTaskJSON extends PBSJson {
 
     public void setAttachment_Pic5(String attachment_Pic5) {
         Attachment_Pic5 = attachment_Pic5;
+    }
+
+    public String getAssignedTo() {
+        return AssignedTo;
+    }
+
+    public void setAssignedTo(String assignedTo) {
+        AssignedTo = assignedTo;
     }
 }

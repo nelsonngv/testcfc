@@ -255,7 +255,7 @@
     <string name="label_taskprojloc">Project Location</string>
     <string name="label_taskdesc">Description</string>
     <string name="label_assignto">Assign To</string>
-    <string name="label_taskSeqNo">Sequence No</string>
+    <string name="label_taskSeqNo">Priority</string>
     <string name="text_icon_assign">Assign Project</string>
     <string name="title_newprojecttask">New Task</string>
     <string name="text_icon_complete">Complete</string>

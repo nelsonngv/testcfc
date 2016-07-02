@@ -19,7 +19,7 @@
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:id="@+id/task_seqno"
-                android:text="@{String.valueOf(projTask.seqNo)}"
+                android:text="@{String.valueOf(projTask.Priority)}"
                 android:editable="false"
                 android:gravity="center"
                 android:textSize="@dimen/abc_text_size_subhead_material"/>
@@ -51,6 +51,20 @@
                         android:text="@{projTask.projLocName}"
                         />
                 </TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
+                    <TextView
+                        style="@style/TableLabelWide"
+                        android:text="@string/label_assignto" />
+                    <TextView
+                        style="@style/TableValue"
+                        android:layout_marginLeft="@dimen/table_margin_middle"
+                        android:id="@+id/task_assignedto"
+                        android:text="@{projTask.assignedToName}"
+                        />
+                </TableRow>
+
                 <TableRow
                     android:divider="?android:attr/dividerVertical"
                     android:showDividers="middle">

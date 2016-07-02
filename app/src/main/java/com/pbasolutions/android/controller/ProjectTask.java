@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.databinding.ObservableArrayList;
+import android.graphics.AvoidXfermode;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -205,11 +206,13 @@ public class ProjectTask implements Callable<Bundle> {
         String taskUUID = input.getString(PBSTaskController.ARG_TASK_UUID);
         String taskID = input.getString(PBSTaskController.ARG_TASK_ID);
         String comments = input.getString(PBSTaskController.ARG_COMMENTS);
+        String assignedTo = input.getString(PBSTaskController.ARG_AD_USER_ID);
 
         PBSProjTaskJSON projTask = new PBSProjTaskJSON();
         projTask.setC_ProjectLocation_ID(projLocId);
         projTask.setC_ProjectTask_ID(taskID);
         projTask.setComments(comments);
+        projTask.setAssignedTo(assignedTo);
 
         String pic1 = CameraUtil
                 .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_1));
@@ -278,7 +281,8 @@ public class ProjectTask implements Callable<Bundle> {
         cv.put(MProjectTask.CREATEDBY_COL, projTask.getCreatedBy());
 
         cv.put(MProjectTask.C_PROJECTLOCATION_UUID_COL, projTask.getProjLocUUID());
-        cv.put(MProjectTask.SEQNO_COL, projTask.getSeqNo());
+        cv.put(MProjectTask.ASSIGNEDTO_COL, projTask.getAssignedTo());
+        cv.put(MProjectTask.PRIORITY_COL, projTask.getPriority());
         cv.put(MProjectTask.NAME_COL, projTask.getName());
         cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
         cv.put(MProjectTask.ISDONE_COL, projTask.isDone());
@@ -318,7 +322,8 @@ public class ProjectTask implements Callable<Bundle> {
                 cv.put(MProjectTask.CREATEDBY_COL, createdBy);
 
                 cv.put(MProjectTask.C_PROJECTLOCATION_UUID_COL, input.getString(PBSBroadcastController.ARG_PROJLOC_UUID));
-                cv.put(MProjectTask.SEQNO_COL, projTask.getSeqNo());
+                cv.put(MProjectTask.ASSIGNEDTO_COL, projTask.getAssignedTo());
+                cv.put(MProjectTask.PRIORITY_COL, projTask.getSeqNo());
                 cv.put(MProjectTask.NAME_COL, projTask.getName());
                 cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
                 String isDone = (projTask.getIsDone()) ? "Y":"N";
@@ -377,7 +382,8 @@ public class ProjectTask implements Callable<Bundle> {
             MProjectTask.C_PROJECTLOCATION_UUID_COL,
             MProjectTask.NAME_COL,
             MProjectTask.ISDONE_COL,
-            MProjectTask.SEQNO_COL,
+            MProjectTask.ASSIGNEDTO_COL,
+            MProjectTask.PRIORITY_COL,
             MProjectTask.DESCRIPTION_COL,
             MProjectTask.COMMENTS_COL,
             MProjectTask.CREATED_COL,
@@ -391,7 +397,7 @@ public class ProjectTask implements Callable<Bundle> {
 
     private Bundle getProjectTasks() {
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE),
-                projection, null, null, MProjectTask.SEQNO_COL + " ASC");
+                projection, null, null, MProjectTask.PRIORITY_COL + " ASC");
         ObservableArrayList<MProjectTask> projectTaskList = new ObservableArrayList();
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
@@ -446,9 +452,15 @@ public class ProjectTask implements Callable<Bundle> {
                 } else {
                     projTask.setStatus("Completed");
                 }
-            } else if (MProjectTask.SEQNO_COL
+            } else if (MProjectTask.PRIORITY_COL
                     .equalsIgnoreCase(columnName)) {
-                projTask.setSeqNo(cursor.getInt(x));
+                projTask.setPriority(cursor.getInt(x));
+            } else if (MProjectTask.ASSIGNEDTO_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setAssignedTo(Integer.parseInt(rowValue));
+                String assignedToName = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.NAME_COL,
+                        rowValue, ModelConst.AD_USER_ID_COL, cr);
+                projTask.setAssignedToName(assignedToName);
             } else if (MProjectTask.DESCRIPTION_COL
                     .equalsIgnoreCase(columnName)) {
                 projTask.setDescription(rowValue);

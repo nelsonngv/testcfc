@@ -97,7 +97,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
      */
     protected void setValues() {
         if (projTask != null) {
-            seqNo.setText(String.valueOf(projTask.getSeqNo()));
+            seqNo.setText(String.valueOf(projTask.getPriority()));
             taskName.setText(projTask.getName());
             taskProjLoc.setText(projTask.getProjLocName());
             taskStatus.setText(projTask.getStatus());

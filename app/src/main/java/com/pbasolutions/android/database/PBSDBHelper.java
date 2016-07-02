@@ -705,8 +705,10 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 //FK
                                 "C_PROJECTLOCATION_UUID TEXT NOT NULL," +
                                 //OTHERS
-                                "SEQNO NUMBER(10,0), " +
+                                "PRIORITY NUMBER(10,0), " +
                                 "NAME NVARCHAR2(300), " +
+                                "ASSIGNEDTO NUMBER(10, 0)," + //AD_USER_ID
+
                                 "ISDONE CHAR(1) DEFAULT 'N' NOT NULL, " +
                                 "DESCRIPTION NVARCHAR2(255), " +
                                 "COMMENTS NVARCHAR2(255)," +

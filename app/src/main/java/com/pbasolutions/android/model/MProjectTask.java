@@ -8,11 +8,11 @@ import com.pbasolutions.android.json.PBSJson;
 public class MProjectTask extends PBSJson {
     transient private String projLocUUID;
     private String Name;
-    private int SeqNo;
+    private int Priority;
     private String isDone;
     private String Description;
     private String comments;
-    private String projLocName;
+    transient private String projLocName;
     private String ATTACHMENT_TASKPICTURE_1;
     private String ATTACHMENT_TASKPICTURE_2;
     private String ATTACHMENT_TASKPICTURE_3;
@@ -21,6 +21,7 @@ public class MProjectTask extends PBSJson {
     private String created;
     private String createdBy;
     private String Status;
+    transient private String assignedToName;
     private int AssignedTo;
     private int C_ProjectLocation_ID;
 
@@ -30,7 +31,8 @@ public class MProjectTask extends PBSJson {
     public static final String C_PROJECTLOCATION_UUID_COL = "C_ProjectLocation_UUID";
     public static final String NAME_COL = "Name";
     public static final String ISDONE_COL = "IsDone";
-    public static final String SEQNO_COL = "SeqNo";
+    public static final String ASSIGNEDTO_COL = "AssignedTo";
+    public static final String PRIORITY_COL = "Priority";
     public static final String DESCRIPTION_COL = "Description";
     public static final String COMMENTS_COL = "Comments";
     public static final String CREATED_COL = "Created";
@@ -61,12 +63,12 @@ public class MProjectTask extends PBSJson {
         this.Name = name;
     }
 
-    public int getSeqNo() {
-        return SeqNo;
+    public int getPriority() {
+        return Priority;
     }
 
-    public void setSeqNo(int seqNo) {
-        this.SeqNo = seqNo;
+    public void setPriority(int nPriority) {
+        this.Priority = nPriority;
     }
 
     public String isDone() {
@@ -179,5 +181,13 @@ public class MProjectTask extends PBSJson {
 
     public void setC_ProjectLocation_ID(int c_ProjectLocation_ID) {
         C_ProjectLocation_ID = c_ProjectLocation_ID;
+    }
+
+    public String getAssignedToName() {
+        return assignedToName;
+    }
+
+    public void setAssignedToName(String assignedToName) {
+        this.assignedToName = assignedToName;
     }
 }

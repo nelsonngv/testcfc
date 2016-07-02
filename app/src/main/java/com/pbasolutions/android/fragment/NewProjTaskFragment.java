@@ -193,23 +193,23 @@ public class NewProjTaskFragment extends Fragment {
         pt.setC_ProjectLocation_ID(Integer.parseInt(locID));
         pt.setDescription(desc);
         pt.setAssignedTo(Integer.parseInt(assignedTo));
-        pt.setSeqNo(Integer.parseInt(seqNo));
+        pt.setPriority(Integer.parseInt(seqNo));
         // added by danny 1/29/2016
         pt.setIsDone("N");
 
         PandoraMain context = (PandoraMain) getActivity();
-        String ad_user_uuid = context.globalVariable.getAd_user_uuid();
+        String ad_user_id = context.globalVariable.getAd_user_id();
         //as we dont know when does the initial sync completed. we try check if the uuid isEmpty.
         // if it is .. we have to search the uuid in database
-        if (ad_user_uuid.isEmpty()) {
-            ad_user_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
-                    ModelConst.AD_USER_UUID_COL, context.globalVariable.getAd_user_id(),
-                    ModelConst.AD_USER_TABLE + ModelConst._ID, getActivity().getContentResolver());
+        if (ad_user_id.isEmpty()) {
+            ad_user_id = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE,
+                    ModelConst.AD_USER_ID_COL, context.globalVariable.getAd_user_uuid(),
+                    ModelConst.AD_USER_TABLE + ModelConst._UUID, getActivity().getContentResolver());
             //set the uuid.
-            context.globalVariable.setAd_user_uuid(ad_user_uuid);
+            context.globalVariable.setAd_user_id(ad_user_id);
         }
 
-        pt.setCreatedBy(ad_user_uuid);
+        pt.setCreatedBy(ad_user_id);
 
         pt.set_UUID(UUID.randomUUID().toString());
 
