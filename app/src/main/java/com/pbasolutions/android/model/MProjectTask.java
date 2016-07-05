@@ -8,7 +8,7 @@ import com.pbasolutions.android.json.PBSJson;
 public class MProjectTask extends PBSJson {
     transient private String projLocUUID;
     private String Name;
-    private int Priority;
+    private int SeqNo;
     private String isDone;
     private String Description;
     private String comments;
@@ -64,11 +64,11 @@ public class MProjectTask extends PBSJson {
     }
 
     public int getPriority() {
-        return Priority;
+        return SeqNo;
     }
 
-    public void setPriority(int nPriority) {
-        this.Priority = nPriority;
+    public void setPriority(int nSeqNo) {
+        this.SeqNo = nSeqNo;
     }
 
     public String isDone() {

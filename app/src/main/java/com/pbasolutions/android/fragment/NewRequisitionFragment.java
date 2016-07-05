@@ -204,6 +204,7 @@ public class NewRequisitionFragment extends Fragment {
     private void requestPR() {
         if (!get_UUID().isEmpty() && pr == null){
             populatePR();
+            populatePRLines();
         }
 
         if (pr == null) {
@@ -220,6 +221,7 @@ public class NewRequisitionFragment extends Fragment {
         pr.setAD_User_ID(adUserID);
 
         MPurchaseRequestLine[] lines = pr.getLines();
+
 
         if (lines == null) {
             PandoraHelper.showWarningMessage((PandoraMain)getActivity(), getString(
