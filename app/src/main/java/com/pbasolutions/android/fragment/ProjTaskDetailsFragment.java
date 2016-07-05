@@ -215,6 +215,16 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
     @Override
     public boolean onBackKeyPressed() {
+        boolean hasChanged = !taskComments.getText().toString().isEmpty();
+        hasChanged |= !(taskPicture1.getTag() == null || ((String)taskPicture1.getTag()).isEmpty());
+        hasChanged |= !(taskPicture2.getTag() == null || ((String)taskPicture2.getTag()).isEmpty());
+        hasChanged |= !(taskPicture3.getTag() == null || ((String)taskPicture3.getTag()).isEmpty());
+        hasChanged |= !(taskPicture4.getTag() == null || ((String)taskPicture4.getTag()).isEmpty());
+        hasChanged |= !(taskPicture5.getTag() == null || ((String)taskPicture5.getTag()).isEmpty());
+
+        if (hasChanged == false)
+            return false;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         // 2. Chain together various setter methods to set the dialog characteristics

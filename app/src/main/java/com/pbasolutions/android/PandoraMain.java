@@ -205,7 +205,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Fragment frag = getCurrentFragment();
         if (frag instanceof PBABackKeyListener) {
-            return ((PBABackKeyListener)frag).onBackKeyPressed();
+            if (((PBABackKeyListener)frag).onBackKeyPressed())
+                return true;
         }
         return super.onKeyDown(keyCode, event);
     }
