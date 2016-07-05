@@ -162,9 +162,9 @@ public class ProjectTask implements Callable<Bundle> {
     }
 
     private Bundle createTask() {
-//        MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
-//        ContentValues cv = getContentValuesFromTask(task);
-//        Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv);
+        MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
+        ContentValues cv = getContentValuesFromTask(task);
+        Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv);
 //        boolean result = ModelConst.getURIResult(uri);
 //
 //        if (result) {
@@ -176,7 +176,7 @@ public class ProjectTask implements Callable<Bundle> {
 //        }
 //        return output;
 //
-        MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
+//        MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
 
         PBSIServerAPI serverAPI = new PBSServerAPI();
         String result = serverAPI.createProjectTask(task,
@@ -457,6 +457,7 @@ public class ProjectTask implements Callable<Bundle> {
                 projTask.setPriority(cursor.getInt(x));
             } else if (MProjectTask.ASSIGNEDTO_COL
                     .equalsIgnoreCase(columnName)) {
+                if (rowValue == null) rowValue = "0";
                 projTask.setAssignedTo(Integer.parseInt(rowValue));
                 String assignedToName = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.NAME_COL,
                         rowValue, ModelConst.AD_USER_ID_COL, cr);

@@ -209,7 +209,7 @@ public class NewProjTaskFragment extends Fragment {
             context.globalVariable.setAd_user_id(ad_user_id);
         }
 
-        pt.setCreatedBy(ad_user_id);
+        pt.setCreatedBy(context.globalVariable.getAd_user_uuid());
 
         pt.set_UUID(UUID.randomUUID().toString());
 
