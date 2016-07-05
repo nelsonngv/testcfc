@@ -27,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,8 +76,11 @@ import com.pbasolutions.android.utils.AlbumStorageDirFactory;
 import com.pbasolutions.android.utils.BaseAlbumDirFactory;
 import com.pbasolutions.android.utils.CameraUtil;
 
+import com.pbasolutions.android.listener.PBABackKeyListener;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by pbadell on 6/29/15.
@@ -197,6 +201,14 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         super.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Fragment frag = getCurrentFragment();
+        if (frag instanceof PBABackKeyListener) {
+            return ((PBABackKeyListener)frag).onBackKeyPressed();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
     /**
      * Initial.
      */
@@ -923,11 +935,23 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 if (bPrevState.booleanValue() == false) {
                     Toast.makeText(PandoraMain.this, "Initial Sync completed",
                             Toast.LENGTH_SHORT).show();
-                    if (fragment != null && fragment instanceof AccountFragment) {
-                        ((AccountFragment) fragment).completedInitialSync();
+                    Fragment frag = getCurrentFragment();
+                    if (frag != null && frag instanceof AccountFragment) {
+                        ((AccountFragment) frag).completedInitialSync();
                     }
                 }
             }
         }.execute(Boolean.valueOf(prevSyncState));
+    }
+
+    Fragment getCurrentFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        List<Fragment> fragList = fragmentManager.getFragments();
+        for (Fragment frag : fragList) {
+            if (frag != null && frag.isVisible())
+                return frag;
+        }
+
+        return null;
     }
 }

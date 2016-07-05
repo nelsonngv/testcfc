@@ -1,11 +1,15 @@
 package com.pbasolutions.android.fragment;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,13 +29,14 @@ import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.controller.PBSTaskController;
 import com.pbasolutions.android.databinding.TaskDetailsBinding;
+import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.utils.CameraUtil;
 
 /**
  * Created by pbadell on 10/13/15.
  */
-public class ProjTaskDetailsFragment extends PBSDetailsFragment {
+public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABackKeyListener {
     /**
      * Class tag name.
      */
@@ -63,6 +68,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
    // Button taskIsDoneButton;
     PandoraMain context;
 
+    View m_rootView;
+
 
     protected static final String EVENT_DATE = "EVENT_DATE";
     protected static final String EVENT_COMPLETEPROJ = "EVENT_COMPLETEPROJ";
@@ -84,6 +91,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.task_details, container, false);
+        m_rootView = rootView;
         setUI(rootView);
         setUIListener();
         context.fragment = this;
@@ -196,13 +204,32 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
      //   taskIsDoneButton = (Button) rootView.findViewById(R.id.buttonTaskStatus);
     }
 
-    protected void setUIListener(){
+    protected void setUIListener() {
        // setOnClickListener(taskIsDoneButton, EVENT_COMPLETEPROJ);
         setOnClickListener(taskPicture1, EVENT_PIC1);
         setOnClickListener(taskPicture2, EVENT_PIC2);
         setOnClickListener(taskPicture3, EVENT_PIC3);
         setOnClickListener(taskPicture4, EVENT_PIC4);
         setOnClickListener(taskPicture5, EVENT_PIC5);
+    }
+
+    @Override
+    public boolean onBackKeyPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage("Changes will be lost. continue to leave?")
+                .setTitle(PandoraConstant.WARNING)
+                .setPositiveButton("Leave", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
+                })
+                .setNegativeButton("Close", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        return true;
     }
 
     protected void setOnClickListener(final View object, final String event) {
@@ -268,7 +295,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment {
 
         Bundle result = taskCont.triggerEvent(taskCont.COMPLETE_PROJTASK_EVENT, input, new Bundle(), null);
 
-        if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+        if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
             PandoraHelper.redirectToFragment(new ProjTaskFragment(), getActivity());
         } else {
             PandoraHelper.showMessage((PandoraMain)getActivity(),
