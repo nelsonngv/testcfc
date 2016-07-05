@@ -457,7 +457,7 @@ public class AttendanceTask implements Callable<Bundle> {
                 ModelConst.NAME_COL};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
                 projection, null,
-                null, null);
+                null, "LOWER(" + ModelConst.NAME_COL + ") ASC");
 
         //get the projectLocations list.
         ArrayList<SpinnerPair> projectLocations = new ArrayList<>();

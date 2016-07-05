@@ -740,7 +740,7 @@ public class AssetTask extends Task {
 
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
                 projection, selection,
-                selectionArgs, null);
+                selectionArgs, "LOWER(" + ModelConst.NAME_COL + ") ASC");
 
         //get the projectLocations list.
         ArrayList<SpinnerPair> projectLocations = new ArrayList<>();

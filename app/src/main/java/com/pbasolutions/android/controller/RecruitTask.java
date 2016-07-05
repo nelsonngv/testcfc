@@ -309,7 +309,7 @@ public class RecruitTask extends Task {
         String[] selectionArg = {input.getString(PBSRecruitController.ARG_PROJECT_LOCATION_UUID)};
         //grab the shift names from database view.
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.JOBAPP_SHIFTS_VIEW),
-                projection, ModelConst.C_PROJECTLOCATION_UUID_COL + "=?", selectionArg, null);
+                projection, ModelConst.C_PROJECTLOCATION_UUID_COL + "=?", selectionArg, "LOWER(" + ModelConst.NAME_COL + ") ASC");
 
         ArrayList<SpinnerPair> shiftList = new ArrayList<>();
         if (cursor != null && cursor.getCount() != 0) {
