@@ -21,7 +21,7 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
     public static final String HR_LEAVETYPE_ID_COL = "HR_LEAVETYPE_ID";
     public static final String COMMENT_COL = "COMMENT";
 
-    public static final String ISNOSHOW_COL = "ISNOSHOW";
+//    public static final String ISNOSHOW_COL = "ISNOSHOW";
     public static final String CHECKIN_COL = "CHECKINDATE";
     public static final String CHECKOUT_COL = "CHECKOUTDATE";
 
@@ -30,7 +30,6 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
     private String CheckInDate;
     private String CheckOutDate;
     private String IsAbsent;
-    private String IsNoShow;
     private String Comments;
     private String HR_LeaveType_ID;
     private transient String HR_LeaveType_Name;
@@ -132,27 +131,12 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
 
     public void prepareForGson() {
         if (IsAbsent.equalsIgnoreCase("Y")) {
-            IsNoShow = null;
-            CheckInDate = null;
-            CheckOutDate = null;
-        } else if (IsNoShow.equalsIgnoreCase("Y")) {
-            IsAbsent = null;
-            HR_LeaveType_ID = null;
             CheckInDate = null;
             CheckOutDate = null;
         }
         else {
             IsAbsent = null;
-            IsNoShow = null;
             HR_LeaveType_ID = null;
         }
-    }
-
-    public String getIsNoShow() {
-        return IsNoShow;
-    }
-
-    public void setIsNoShow(String isNoShow) {
-        IsNoShow = isNoShow;
     }
 }

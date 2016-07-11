@@ -50,18 +50,6 @@
                             style="@style/TableValue2"/>
                     </TableRow>
                     <TableRow
-                        android:id="@+id/at_row_isnoshow"
-                        android:divider="?android:attr/dividerVertical"
-                        android:showDividers="middle">
-                        <TextView
-                            android:text="No Show"
-                            style="@style/TableLabel"/>
-                        <TextView
-                            android:id="@+id/at_isnoshow"
-                            android:text="@{atLine.IsNoShow}"
-                            style="@style/TableValue2"/>
-                    </TableRow>
-                    <TableRow
                         android:id="@+id/at_row_checkindate"
                         android:divider="?android:attr/dividerVertical"
                         android:showDividers="middle">

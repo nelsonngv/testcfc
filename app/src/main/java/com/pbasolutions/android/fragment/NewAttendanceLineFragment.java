@@ -54,7 +54,6 @@ public class NewAttendanceLineFragment extends Fragment {
 
     Spinner employSpinner;
     Switch  switchAbsent;
-    Switch  switchNoShow;
     Spinner leavetypeSpinner;
     TextView textCheckinDate;
     TextView textCheckoutDate;
@@ -92,7 +91,6 @@ public class NewAttendanceLineFragment extends Fragment {
     protected void setUI(View rootView) {
         employSpinner = (Spinner) rootView.findViewById(R.id.atEmplShiftSpinner);
         switchAbsent = (Switch) rootView.findViewById(R.id.atAbsentSwitch);
-        switchNoShow = (Switch)rootView.findViewById(R.id.atNoShowSwitch);
         leavetypeSpinner = (Spinner)rootView.findViewById(R.id.attLeaveTypeSpinner);
         textCheckinDate = (TextView)rootView.findViewById(R.id.atCheckinDate);
         textCheckoutDate = (TextView)rootView.findViewById(R.id.atCheckoutDate);
@@ -130,12 +128,6 @@ public class NewAttendanceLineFragment extends Fragment {
                 refreshUIState();
             }
         });
-        switchNoShow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                refreshUIState();
-            }
-        });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,17 +148,13 @@ public class NewAttendanceLineFragment extends Fragment {
         View leavetypeRow = rootView.findViewById(R.id.atLeavetypeRow);
         View checkinRow = rootView.findViewById(R.id.atCheckinRow);
         View checkoutRow = rootView.findViewById(R.id.atCheckoutRow);
-        View noShowSwitchRow = rootView.findViewById(R.id.atNoShowSwitchRow);
         View absentSwitchRow = rootView.findViewById(R.id.atAbsentSwitchRow);
 
         boolean isAbsent = (switchAbsent.getVisibility() == View.VISIBLE) && switchAbsent.isChecked();
-        boolean isNoShow = (switchNoShow.getVisibility() == View.VISIBLE) && switchNoShow.isChecked();
 
-        PandoraHelper.setVisibleView(absentSwitchRow, !isNoShow);
-        PandoraHelper.setVisibleView(noShowSwitchRow, !isAbsent);
-        PandoraHelper.setVisibleView(leavetypeRow, isAbsent && !isNoShow);
-        PandoraHelper.setVisibleView(checkinRow, !isAbsent && !isNoShow);
-        PandoraHelper.setVisibleView(checkoutRow, !isAbsent && !isNoShow);
+        PandoraHelper.setVisibleView(leavetypeRow, isAbsent);
+        PandoraHelper.setVisibleView(checkinRow, !isAbsent);
+        PandoraHelper.setVisibleView(checkoutRow, !isAbsent);
 
         if (isLeaveTypeHidden && leavetypeSpinner.getVisibility() == View.VISIBLE)
             leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
@@ -190,11 +178,10 @@ public class NewAttendanceLineFragment extends Fragment {
                 || emplSpinner.getValue().isEmpty()) isEmpty = true;
 
         boolean isAbsent = (switchAbsent.getVisibility() == View.VISIBLE) && switchAbsent.isChecked();
-        boolean isNoShow = (switchNoShow.getVisibility() == View.VISIBLE) && switchNoShow.isChecked();
 
         if (isAbsent) {
             isEmpty |= leaveSpinner == null || leaveSpinner.getValue().isEmpty();
-        } else if (!isNoShow) {
+        } else {
             isEmpty |= textCheckoutDate.getText().toString().isEmpty()
                     || textCheckoutDate.getText().toString().isEmpty();
         }
@@ -208,11 +195,10 @@ public class NewAttendanceLineFragment extends Fragment {
 
         tempATLine.setC_BPartner_ID(emplSpinner.getKey());
         tempATLine.setIsAbsent(switchAbsent.isChecked() ? "Y" : "N");
-        tempATLine.setIsNoShow(switchNoShow.isChecked() ? "Y" : "N");
         if (isAbsent) {
                 tempATLine.setHR_LeaveType_ID(leaveSpinner.getKey());
                 tempATLine.setHR_LeaveType_Name(leaveSpinner.getValue());
-        } else if (!isNoShow) {
+        } else {
             tempATLine.setCheckInDate(textCheckinDate.getText().toString());
             tempATLine.setCheckOutDate(textCheckoutDate.getText().toString());
         }
@@ -224,12 +210,8 @@ public class NewAttendanceLineFragment extends Fragment {
         cv.put(MAttendanceLine.M_ATTENDANCELINE_UUID_COL, UUID.randomUUID().toString());
         cv.put(MAttendanceLine.C_BPARTNER_UUID_COL, emplSpinner.getKey());
         cv.put(MAttendanceLine.ISABSENT_COL, switchAbsent.isChecked() ? "Y" : "N");
-        cv.put(MAttendanceLine.ISNOSHOW_COL, switchNoShow.isChecked() ? "Y" : "N");
         if (isAbsent) {
-            if (isNoShow)
-                cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, 0);
-            else
-                cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, Integer.parseInt(leaveSpinner.getKey()));
+            cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, Integer.parseInt(leaveSpinner.getKey()));
 
             cv.put(MAttendanceLine.CHECKIN_COL, "");
             cv.put(MAttendanceLine.CHECKOUT_COL, "");
@@ -241,6 +223,7 @@ public class NewAttendanceLineFragment extends Fragment {
         }
         cv.put(ModelConst.C_PROJECTLOCATION_ID_COL, PBSAttendanceController.projectLocationId);
         cv.put(ModelConst.HR_SHIFT_UUID_COL, PBSAttendanceController.shiftUUID);
+        cv.put(MAttendanceLine.COMMENT_COL, textComment.getText().toString());
 
         PandoraContext appContext = PandoraMain.instance.globalVariable;
 

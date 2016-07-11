@@ -52,7 +52,6 @@ public class AttendanceTask implements Callable<Bundle> {
             MAttendanceLine.HR_LEAVETYPE_ID_COL,
             MAttendanceLine.COMMENT_COL,
 
-            MAttendanceLine.ISNOSHOW_COL,
             MAttendanceLine.CHECKIN_COL,
             MAttendanceLine.CHECKOUT_COL,
     };
@@ -191,9 +190,6 @@ public class AttendanceTask implements Callable<Bundle> {
             } else if (MAttendanceLine.COMMENT_COL
                     .equalsIgnoreCase(columnName)) {
                 prl.setComments(rowValue);
-            } else if (MAttendanceLine.ISNOSHOW_COL
-                    .equalsIgnoreCase(columnName)) {
-                prl.setIsNoShow(rowValue);
             } else if (MAttendanceLine.CHECKIN_COL
                     .equalsIgnoreCase(columnName)) {
                 prl.setCheckInDate(rowValue);

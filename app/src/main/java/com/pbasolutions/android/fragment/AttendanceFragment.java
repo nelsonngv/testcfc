@@ -115,16 +115,23 @@ public class AttendanceFragment  extends Fragment {
         super.onStart();
         projLocNameAdapter = PandoraHelper.addListToSpinner(getActivity(), projLocationSpinner, getProjLocList());
 
-//        refreshAttendances();
+        refreshAttendances();
 //        PandoraHelper.addRecyclerViewListener(recyclerView, deployList, getActivity(),
 //                new RequisitionDetailFragment(), getString(R.string.title_deployment_details));
         if (projLocNameAdapter.getCount() > 0)
         {
             PandoraMain pandoraMain = PandoraMain.instance;
-            int plindex = pandoraMain.globalVariable.getC_ProjectLocation_Index();
+            String projLocID = pandoraMain.globalVariable.getC_projectlocation_id();
 
-            if (plindex >= 0)
-                projLocationSpinner.setSelection(plindex);
+            for (int i = 0; i < projLocNameAdapter.getCount(); i++)
+            {
+                SpinnerPair pair = (SpinnerPair) projLocNameAdapter.getItem(i);
+                if (projLocID.equalsIgnoreCase(pair.getKey()))
+                {
+                    projLocationSpinner.setSelection(i);
+                    break;
+                }
+            }
         }
     }
 
@@ -283,12 +290,18 @@ public class AttendanceFragment  extends Fragment {
             PandoraHelper.showMessage(getContext(), "Please select Deployment Date.");
             return false;
         }
+        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
+        if (spinnerPair == null)
+        {
+            PandoraHelper.showMessage(getContext(), "Please select Project Shift.");
+            return false;
+        }
+
         PBSAttendanceController.deployDate = deployDate;
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         String projLocId = projlocPair.getKey();
         PBSAttendanceController.projectLocationId = projLocId;
 
-        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
         PBSAttendanceController.shiftUUID = spinnerPair.getKey();
 
         ((PandoraMain) getActivity()).
