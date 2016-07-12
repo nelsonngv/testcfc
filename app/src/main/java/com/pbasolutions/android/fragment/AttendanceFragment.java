@@ -136,8 +136,16 @@ public class AttendanceFragment  extends Fragment {
     }
 
     void refreshAttendances() {
+        List<SpinnerPair> prefShiftList = getPrefShiftList();
+        if(prefShiftList.size() == 0) {
+            SpinnerPair pair = new SpinnerPair();
+            pair.setKey(null);
+            pair.setValue(getString(R.string.no_shift_spinner));
+            prefShiftList = new ArrayList<>();
+            prefShiftList.add(pair);
+        }
         shiftAdapter = PandoraHelper.addListToSpinner(getActivity(), shiftSpinner,
-                getPrefShiftList());
+                prefShiftList);
         attendanceLines  = getAttendances();
         linesAdapter = new AttendanceLineRVA(getActivity(), attendanceLines);
         recyclerView.setAdapter(linesAdapter);
@@ -290,10 +298,12 @@ public class AttendanceFragment  extends Fragment {
             PandoraHelper.showMessage(getContext(), "Please select Deployment Date.");
             return false;
         }
+
         SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
-        if (spinnerPair == null)
+        if (spinnerPair.getKey() == null)
         {
-            PandoraHelper.showMessage(getContext(), "Please select Project Shift.");
+            PandoraHelper.showMessage(getContext(), getString(
+                    R.string.no_shift_error, getString(R.string.proj_shift)));
             return false;
         }
 
@@ -371,6 +381,13 @@ public class AttendanceFragment  extends Fragment {
             return;
         }
 
+        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
+        if (spinnerPair.getKey() == null) {
+            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+                    R.string.no_shift_error, getString(R.string.proj_shift)));
+            return;
+        }
+
         PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         String projLocId = projlocPair.getKey();
@@ -378,7 +395,6 @@ public class AttendanceFragment  extends Fragment {
 
         attendance.setDeploymentDate(deployDateView.getText().toString());
 
-        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
         String shiftId = ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_ID_COL, spinnerPair.getKey(), ModelConst.HR_SHIFT_UUID_COL, cr);
         attendance.setHR_Shift_ID(shiftId);
 

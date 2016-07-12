@@ -37,47 +37,10 @@
     <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
-  </component>
-  <component name="SvnBranchConfigurationManager">
-    <option name="myConfigurationMap">
-      <map>
-        <entry key="$PROJECT_DIR$">
-          <value>
-            <SvnBranchConfiguration>
-              <option name="branchUrls">
-                <list>
-                  <option value="svn://192.168.1.246/adempiere/Adempiere%20Trunk%20354a" />
-                  <option value="svn://192.168.1.246/adempiere/BV" />
-                  <option value="svn://192.168.1.246/adempiere/BVRhoMobileApp" />
-                  <option value="svn://192.168.1.246/adempiere/BaseWHApp" />
-                  <option value="svn://192.168.1.246/adempiere/Finespun" />
-                  <option value="svn://192.168.1.246/adempiere/Pandora_Distribution" />
-                  <option value="svn://192.168.1.246/adempiere/Pandora_FNB" />
-                  <option value="svn://192.168.1.246/adempiere/Pandora_HR" />
-                  <option value="svn://192.168.1.246/adempiere/Pandora_HR_William" />
-                  <option value="svn://192.168.1.246/adempiere/Pandora_TailoringDemo" />
-                  <option value="svn://192.168.1.246/adempiere/Pandora_VMS" />
-                  <option value="svn://192.168.1.246/adempiere/Pantos" />
-                  <option value="svn://192.168.1.246/adempiere/Patrol" />
-                  <option value="svn://192.168.1.246/adempiere/Sinspec_DB_Backup" />
-                  <option value="svn://192.168.1.246/adempiere/TuckLee%20DB" />
-                  <option value="svn://192.168.1.246/adempiere/TuckLee%20ERP" />
-                  <option value="svn://192.168.1.246/adempiere/TuckLeeRhoMobileApp" />
-                  <option value="svn://192.168.1.246/adempiere/_ELK" />
-                  <option value="svn://192.168.1.246/adempiere/android_orderDistribution" />
-                  <option value="svn://192.168.1.246/adempiere/branches" />
-                  <option value="svn://192.168.1.246/adempiere/tags" />
-                </list>
-              </option>
-              <option name="trunkUrl" value="svn://192.168.1.246/adempiere/branches/CFC%20App" />
-            </SvnBranchConfiguration>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="mySupportsUserInfoFilter" value="true" />
   </component>
 </project>

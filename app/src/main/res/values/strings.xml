@@ -246,6 +246,9 @@
     <string name="label_projdesc">Description</string>
     <string name="no_value_movement_qty">Please insert value for movement quantity</string>
     <string name="no_line_error">Please add at least one line to %1$s</string>
+    <string name="no_shift_spinner">No shift to be selected</string>
+    <string name="no_shift_error">Please select a %1$s</string>
+    <string name="proj_shift">Project Shift</string>
     <string name="request">request</string>
     <string name="please_fill_in_fields">Please fill in required field(s) : %1$s</string>
     <string name="text_icon_remove">remove</string>
