@@ -36,11 +36,11 @@
                     style="@style/TableInfoLabel"
                     android:text="@string/mvl_label_productvalue"
                     />
-                <Spinner
+                <com.pbasolutions.android.control.SearchableSpinner
+                    style="@style/SpinnerTableValue"
                     android:id="@+id/prodValue"
-                    style="@style/TableValue"
-                    android:textSize="@dimen/abc_text_size_body_1_material">
-                </Spinner>
+                    android:textSize="@dimen/abc_text_size_body_1_material"
+                />
                 </LinearLayout>
             </TableRow>
 

@@ -21,8 +21,8 @@
                         style="@style/TableInfoLabel"
                         android:text="@string/label_taskprojloc"
                         />
-                    <Spinner
-                        style="@style/TableValue"
+                    <com.pbasolutions.android.control.SearchableSpinner
+                        style="@style/SpinnerTableValue"
                         android:id="@+id/attProjLocation"/>
                 </LinearLayout>
             </TableRow>

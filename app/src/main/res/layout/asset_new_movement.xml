@@ -45,10 +45,10 @@
                 <TextView
                     style="@style/TableInfoLabel"
                     android:text="@string/label_toprojloc" />
-                <Spinner
-                    style="@style/TableValue"
-                    android:id="@+id/toProjectLocation">
-                </Spinner>
+                <com.pbasolutions.android.control.SearchableSpinner
+                    style="@style/SpinnerTableValue"
+                    android:id="@+id/toProjectLocation"
+                />
                 </LinearLayout>>
             </TableRow>
             <TableRow>

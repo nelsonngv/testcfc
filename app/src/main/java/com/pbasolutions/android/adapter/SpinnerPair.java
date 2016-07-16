@@ -25,6 +25,11 @@ public class SpinnerPair implements Parcelable {
         value = in.readString();
     }
 
+    @Override
+    public String toString() {
+        return value;
+    }
+
     public static final Creator<SpinnerPair> CREATOR = new Creator<SpinnerPair>() {
         @Override
         public SpinnerPair createFromParcel(Parcel in) {

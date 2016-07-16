@@ -48,7 +48,7 @@
             <com.pbasolutions.android.control.SearchableSpinner
                 android:id="@+id/project"
                 android:visibility="invisible"
-                style="@style/TableValue" />
+                style="@style/SpinnerTableValue" />
         </LinearLayout>
         <LinearLayout style="@style/PTableVirtRow">
             <Button

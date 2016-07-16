@@ -20,9 +20,10 @@
             style="@style/TableInfoLabel"
             android:text="@string/label_assignto" />
 
-        <Spinner
+        <com.pbasolutions.android.control.SearchableSpinner
+            style="@style/SpinnerTableValue"
             android:id="@+id/newTaskAssignTo"
-            style="@style/TableValue" />
+        />
 
     </LinearLayout>
     <LinearLayout style="@style/PTableVirtRow">
@@ -31,9 +32,9 @@
             style="@style/TableInfoLabel"
             android:text="@string/label_taskprojloc" />
 
-        <Spinner
-            android:id="@+id/newTaskProjLoc"
-            style="@style/TableValue" />
+        <com.pbasolutions.android.control.SearchableSpinner
+            style="@style/SpinnerTableValue"
+            android:id="@+id/newTaskProjLoc"/>
 
     </LinearLayout>
     <LinearLayout style="@style/PTableVirtRow">

@@ -20,8 +20,8 @@
                     <TextView
                         android:text="@string/label_employees"
                         style="@style/TableInfoLabel"/>
-                    <Spinner
-                        style="@style/TableValue"
+                    <com.pbasolutions.android.control.SearchableSpinner
+                        style="@style/SpinnerTableValue"
                         android:id="@+id/atEmplShiftSpinner"/>
                 </LinearLayout>
             </TableRow>

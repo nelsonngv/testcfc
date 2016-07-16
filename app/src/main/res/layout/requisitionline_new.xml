@@ -18,8 +18,8 @@
                     <TextView
                         android:text="@string/label_productname"
                         style="@style/TableInfoLabel"/>
-                    <Spinner
-                        style="@style/TableValue"
+                    <com.pbasolutions.android.control.SearchableSpinner
+                        style="@style/SpinnerTableValue"
                         android:id="@+id/prlProdNameSpinner"/>
                 </LinearLayout>
             </TableRow>
