@@ -45,7 +45,7 @@
                 android:text="Project Location"
                 style="@style/TableInfoLabel" />
 
-            <Spinner
+            <com.pbasolutions.android.control.SearchableSpinner
                 android:id="@+id/project"
                 android:visibility="invisible"
                 style="@style/TableValue" />
