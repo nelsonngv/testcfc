@@ -20,6 +20,7 @@ import com.pbasolutions.android.controller.PBSAssetController;
 import com.pbasolutions.android.controller.PBSController;
 import com.pbasolutions.android.model.MMovement;
 import com.pbasolutions.android.model.MMovementLine;
+import com.pbasolutions.android.model.ModelConst;
 
 import java.util.List;
 import java.util.UUID;
@@ -91,15 +92,15 @@ public class AssetNewMovement extends AbstractMovementFragment {
         if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE)) &&
                 result.getString(PandoraConstant.TITLE) != null){
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentManager.popBackStack();
-                fragmentManager.popBackStack();
-                Fragment frag = new AssetFragment();
-                ((AssetFragment)frag).setIsMovementFrag(true);
-                frag.setRetainInstance(true);
-                fragmentTransaction.replace(R.id.container_body, frag);
-                fragmentTransaction.addToBackStack(frag.getClass().getName());
-                fragmentTransaction.commit();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentManager.popBackStack();
+            fragmentManager.popBackStack();
+            Fragment frag = new AssetFragment();
+            ((AssetFragment)frag).setIsMovementFrag(true);
+            frag.setRetainInstance(true);
+            fragmentTransaction.replace(R.id.container_body, frag);
+            fragmentTransaction.addToBackStack(frag.getClass().getName());
+            fragmentTransaction.commit();
         } else {
             PandoraHelper.showErrorMessage(context,
                     result.getString(result.getString(PandoraConstant.TITLE)));
@@ -150,7 +151,12 @@ public class AssetNewMovement extends AbstractMovementFragment {
 
     @Override
     protected void setValues() {
-        projectLocation.setText(appContext.getC_projectlocation_name());
+        String locName = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE,
+                ModelConst.C_PROJECTLOCATION_UUID_COL,
+                appContext.getC_projectlocation_uuid(),
+                ModelConst.NAME_COL, getActivity().getContentResolver());
+        projectLocation.setText(locName);
+//        projectLocation.setText(appContext.getC_projectlocation_name());
         projectLocation.
                 setTag(appContext.getC_projectlocation_uuid().toString());
         if (movement != null && ! movement.getMovementDate().isEmpty()) {
