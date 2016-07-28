@@ -135,7 +135,7 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
             CheckOutDate = null;
         }
         else {
-//            IsAbsent = null;
+            IsAbsent = null;
             HR_LeaveType_ID = null;
         }
     }
