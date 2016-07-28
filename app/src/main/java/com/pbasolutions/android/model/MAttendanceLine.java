@@ -130,7 +130,7 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
     }
 
     public void prepareForGson() {
-        if (IsAbsent.equalsIgnoreCase("Y")) {
+        if (IsAbsent != null && IsAbsent.equalsIgnoreCase("Y")) {
             CheckInDate = null;
             CheckOutDate = null;
         }
