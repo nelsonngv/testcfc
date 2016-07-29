@@ -78,6 +78,17 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
             PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please fill up all fields");
             return;
         }
+
+        int nQty = -1;
+        try {
+            nQty = Integer.parseInt(qtyRequested.getText().toString());
+        } catch (Exception e) {
+        }
+
+        if (nQty < 0) {
+            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please fill up valid Qty.");
+            return;
+        }
         tempPRLine = new MPurchaseRequestLine();
         tempPRLine.setProductName(prodNameItem.getPair().getValue());
         //TODO: make choice available. tempPRLine.setProductValue();
@@ -94,7 +105,7 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
         cv.put(MPurchaseRequestLine.M_PRODUCT_UUID_COL, prodNameItem.getPair().getKey());
         cv.put(MPurchaseRequestLine.DATEREQUIRED_COL, requiredDate.getText().toString());
         cv.put(MPurchaseRequestLine.M_PURCHASEREQUEST_UUID_COL, getPrUUID());
-        cv.put(MPurchaseRequestLine.QTYREQUESTED_COL, Integer.parseInt(qtyRequested.getText().toString()));
+        cv.put(MPurchaseRequestLine.QTYREQUESTED_COL, nQty);
 
         Bundle input = new Bundle();
         input.putParcelable(reqCont.ARG_CONTENTVALUES, cv);

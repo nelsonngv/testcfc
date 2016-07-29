@@ -188,12 +188,23 @@ public class NewProjTaskFragment extends Fragment {
             return;
         }
 
+        int nSeqNo = -1;
+        try {
+            nSeqNo = Integer.parseInt(seqNo);
+        } catch (Exception e) {
+        }
+
+        if (nSeqNo < 0) {
+            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please fill up valid Priority.");
+            return;
+        }
+
         MProjectTask pt = new MProjectTask();
         pt.setName(name);
         pt.setC_ProjectLocation_ID(Integer.parseInt(locID));
         pt.setDescription(desc);
         pt.setAssignedTo(Integer.parseInt(assignedTo));
-        pt.setPriority(Integer.parseInt(seqNo));
+        pt.setPriority(nSeqNo);
         // added by danny 1/29/2016
         pt.setIsDone("N");
 
