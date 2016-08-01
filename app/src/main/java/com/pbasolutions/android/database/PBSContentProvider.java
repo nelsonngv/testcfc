@@ -152,6 +152,8 @@ public class PBSContentProvider extends ContentProvider {
             //C_BPARTNER_VIEW_TOKEN
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.C_BPARTNER_VIEW, ModelConst.C_BPARTNER_VIEW_TOKEN);
 
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TABLE, ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TOKEN);
+
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.CHECKIN_JOIN_CHECKPOINT_TABLE, ModelConst.CHECKIN_JOIN_CHECKPOINT_TOKEN);
 
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.CHECKIN_JOIN_CHECKPOINT_DETAILS_TABLE, ModelConst.CHECKIN_JOIN_CHECKPOINT_DETAILS_TOKEN);
@@ -454,7 +456,14 @@ public class PBSContentProvider extends ContentProvider {
                 builder.setTables(ModelConst.C_BPARTNER_VIEW);
                 return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
             }
+            case ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.C_BPARTNER_VIEW + " left join " + ModelConst.HR_PROJECTASSIGNMENT_TABLE +
+                        " on (" + ModelConst.C_BPARTNER_VIEW + "." + ModelConst.C_BPARTNER_TABLE + "_uuid = "
+                        + ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_BPARTNER_TABLE + "_uuid)");
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 
+            }
             case ModelConst.M_PURCHASEREQUEST_TOKEN: {
                 SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
                 builder.setTables(ModelConst.M_PURCHASEREQUEST_TABLE);

@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.databinding.ObservableArrayList;
+import android.graphics.AvoidXfermode;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
@@ -231,20 +232,27 @@ public class AttendanceTask implements Callable<Bundle> {
     }
 
     private Bundle getEmployees() {
+        String cbpartner = ModelConst.C_BPARTNER_VIEW + ".";
+
         String projLocationId = input.getString(PBSAttendanceController.ARG_PROJECTLOCATION_ID);
+        String projLocationUUID = ModelConst.getProjLocationUUID(projLocationId, cr);
 
-        String[] projection = {MAttendanceLine.C_BPARTNER_UUID_COL, ModelConst.NAME_COL, ModelConst.IDNUMBER_COL, ModelConst.PHONE_COL, MEmployee.JOB_TITLE_COL};
+        String[] projection = {cbpartner + MAttendanceLine.C_BPARTNER_UUID_COL,
+                cbpartner + ModelConst.NAME_COL,
+                cbpartner + ModelConst.IDNUMBER_COL,
+                cbpartner + ModelConst.PHONE_COL,
+                cbpartner + MEmployee.JOB_TITLE_COL};
 
-        String[] selectionArg = { projLocationId };
+        String[] selectionArg = { projLocationUUID };
 
-        String wherePhase = String.format("%s NOT IN (SELECT %s FROM %s WHERE %s=?)",
-                MAttendanceLine.C_BPARTNER_UUID_COL,
-                MAttendanceLine.C_BPARTNER_UUID_COL,
+        String wherePhase = String.format("%s NOT IN (SELECT %s FROM %s) AND %s=?",
+                cbpartner + MAttendanceLine.C_BPARTNER_UUID_COL,
+                cbpartner + MAttendanceLine.C_BPARTNER_UUID_COL,
                 ModelConst.M_ATTENDANCELINE_TABLE,
-                ModelConst.C_PROJECTLOCATION_ID_COL
+                ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_PROJECTLOCATION_UUID_COL
                 );
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW),
-                projection, wherePhase, selectionArg, "LOWER(" + ModelConst.NAME_COL + ") ASC");
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TABLE),
+                projection, wherePhase, selectionArg, "LOWER(" + cbpartner + ModelConst.NAME_COL + ") ASC");
         ObservableArrayList<SpinnerPair> employeeList = new ObservableArrayList();
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();

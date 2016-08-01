@@ -233,9 +233,21 @@ public class RecruitTask extends Task {
      * @return
      */
     private Bundle getEmployees() {
-        String[] projection = {MEmployee.C_BPARTNER_UUID_COL, ModelConst.NAME_COL, ModelConst.IDNUMBER_COL, ModelConst.PHONE_COL, MEmployee.JOB_TITLE_COL};
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW),
-                projection, null, null, "LOWER(" + ModelConst.NAME_COL + ") ASC");
+        String cbpartner = ModelConst.C_BPARTNER_VIEW + ".";
+
+        String projLocationUUID = input.getString(PBSRecruitController.ARG_PROJECT_LOCATION_UUID);
+
+        String[] projection = { cbpartner + MEmployee.C_BPARTNER_UUID_COL, cbpartner + ModelConst.NAME_COL, cbpartner + ModelConst.IDNUMBER_COL,
+                cbpartner + ModelConst.PHONE_COL, cbpartner + MEmployee.JOB_TITLE_COL};
+
+        String[] selectionArg = { projLocationUUID };
+
+        String wherePhase = String.format("%s=?",
+                ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_PROJECTLOCATION_UUID_COL
+        );
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TABLE),
+                projection, wherePhase, selectionArg, "LOWER(" + cbpartner + ModelConst.NAME_COL + ") ASC");
+
         ObservableArrayList<MEmployee> employeeList = new ObservableArrayList();
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();

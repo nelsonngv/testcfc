@@ -80,6 +80,7 @@ public class EmployeeFragment extends Fragment {
             String projectLocationUUID = globalVar.getC_projectlocation_uuid();
             if (projectLocationUUID != null) {
                 Bundle input = new Bundle();
+                input.putString(PBSRecruitController.ARG_PROJECT_LOCATION_UUID, projectLocationUUID);
                 Bundle result = recCont.triggerEvent(recCont.GET_EMPLOYEES_EVENT, input, new Bundle(), null);
                 return (ObservableArrayList<MEmployee>) result.getSerializable(recCont.EMPLOYEE_LIST);
             } else {

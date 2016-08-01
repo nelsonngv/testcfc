@@ -87,6 +87,7 @@ public class ModelConst {
     public static final String JOBAPP_LIST_VIEW = "JobApp_List_View";
     public static final String HR_SETUP_JOB_TABLE = "HR_Setup_Job" ;
     public static final String C_BPARTNER_VIEW = "C_BPartner_View" ;
+    public static final String C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TABLE = "c_bpartner_view_join_hr_hr_projectassignment_table" ;
     public static final String C_BPARTNER_ID_COL = "C_BPartner_ID";
     public static final String C_BPARTNER_UUID_COL = "C_BPartner_UUID";
     public static final String HR_IDENTITY_TABLE = "HR_Identity";
@@ -142,7 +143,7 @@ public class ModelConst {
      */
     public static final int CHECKIN_JOIN_CHECKPOINT_TOKEN = 20;
     public static final int CHECKIN_JOIN_CHECKPOINT_DETAILS_TOKEN = 30;
-
+    public static final int C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TOKEN = 40;
     /**
      *
      */
