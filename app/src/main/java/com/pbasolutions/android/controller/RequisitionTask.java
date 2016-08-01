@@ -350,21 +350,22 @@ public class RequisitionTask implements Callable<Bundle> {
             output = PandoraHelper.providerApplyBatch(output, cr, ops, "create requisition");
         } else {
             //delete the data
-            ArrayList<ContentProviderOperation> ops =
-                    new ArrayList<>();
-
-            //delete line tables first. due to dependency
-            ops.add(ContentProviderOperation
-                    .newDelete(ModelConst.uriCustomBuilder(MPurchaseRequestLine.TABLENAME))
-                    .withSelection(selection, selectionArgs)
-                    .build());
-
-            ops.add(ContentProviderOperation
-                    .newDelete(ModelConst.uriCustomBuilder(MPurchaseRequest.TABLENAME))
-                    .withSelection(selection, selectionArgs)
-                    .build());
-
-            output = PandoraHelper.providerApplyBatch(output, cr, ops, "delete requisition.");
+//            ArrayList<ContentProviderOperation> ops =
+//                    new ArrayList<>();
+//
+//            //delete line tables first. due to dependency
+//            ops.add(ContentProviderOperation
+//                    .newDelete(ModelConst.uriCustomBuilder(MPurchaseRequestLine.TABLENAME))
+//                    .withSelection(selection, selectionArgs)
+//                    .build());
+//
+//            ops.add(ContentProviderOperation
+//                    .newDelete(ModelConst.uriCustomBuilder(MPurchaseRequest.TABLENAME))
+//                    .withSelection(selection, selectionArgs)
+//                    .build());
+//
+//            output = PandoraHelper.providerApplyBatch(output, cr, ops, "delete requisition.");
+            output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
         }
         return output;
     }

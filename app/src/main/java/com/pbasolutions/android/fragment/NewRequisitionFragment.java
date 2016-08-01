@@ -52,7 +52,7 @@ public class NewRequisitionFragment extends Fragment {
     private PBSRequisitionController reqCont ;
 
     private ObservableArrayList<MPurchaseRequestLine> lines;
-    private MPurchaseRequest pr;
+//    private MPurchaseRequest pr;
 
     private EditText documentNo;
     private EditText isApproved;
@@ -96,7 +96,7 @@ public class NewRequisitionFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.requisition_new, container, false);
         setUI(rootView);
-        populatePR();
+//        populatePR();
         populatePRLines();
         setValues();
         addListener();
@@ -115,20 +115,20 @@ public class NewRequisitionFragment extends Fragment {
                     input, new Bundle(), null);
             lines = (ObservableArrayList<MPurchaseRequestLine>)result
                     .getSerializable(reqCont.ARG_PURCHASEREQUESTLINE_LIST);
-            if (pr != null && lines != null)
-                pr.setLines(lines.toArray(new MPurchaseRequestLine[lines.size()]));
+//            if (pr != null && lines != null)
+//                pr.setLines(lines.toArray(new MPurchaseRequestLine[lines.size()]));
         }
     }
-
-    private void populatePR() {
-        if (_UUID != null && !_UUID.isEmpty()) {
-            Bundle input = new Bundle();
-            input.putString(reqCont.ARG_PURCHASEREQUEST_UUID, get_UUID());
-            Bundle result = reqCont.triggerEvent(reqCont.GET_REQUISITION_EVENT,
-                    input, new Bundle(), null);
-            pr = (MPurchaseRequest)result.getSerializable(reqCont.ARG_PURCHASEREQUEST);
-        }
-    }
+//
+//    private void populatePR() {
+//        if (_UUID != null && !_UUID.isEmpty()) {
+//            Bundle input = new Bundle();
+//            input.putString(reqCont.ARG_PURCHASEREQUEST_UUID, get_UUID());
+//            Bundle result = reqCont.triggerEvent(reqCont.GET_REQUISITION_EVENT,
+//                    input, new Bundle(), null);
+//            pr = (MPurchaseRequest)result.getSerializable(reqCont.ARG_PURCHASEREQUEST);
+//        }
+//    }
 
     private void setUI(View view){
         documentNo =  (EditText)view.findViewById(R.id.prDocNo) ;
@@ -153,11 +153,11 @@ public class NewRequisitionFragment extends Fragment {
                 ModelConst.NAME_COL, cr);
         projLoc.setText(locName);
         projLoc.setTag(projLocUUID);
-        if (pr != null && ! pr.getRequestDate().isEmpty()) {
-           requestDate.setText(pr.getRequestDate());
-        } else {
+//        if (pr != null && ! pr.getRequestDate().isEmpty()) {
+//           requestDate.setText(pr.getRequestDate());
+//        } else {
             requestDate.setText(PandoraHelper.getTodayDate("dd-MM-yyyy"));
-        }
+//        }
     }
 
     private void addListener(){
@@ -202,46 +202,62 @@ public class NewRequisitionFragment extends Fragment {
      * Request PR will make call to Server API for processing the requisition/purchase request.
      */
     private void requestPR() {
-        if (!get_UUID().isEmpty() && pr == null){
-            populatePR();
-            populatePRLines();
-        }
+//        if (!get_UUID().isEmpty() && pr == null){
+//            populatePR();
+//            populatePRLines();
+//        }
+//
+//        if (pr == null) {
+//            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+//                    R.string.no_line_error, getString(R.string.request)));
+//            return;
+//        }
 
-        if (pr == null) {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
-                    R.string.no_line_error, getString(R.string.request)));
-            return;
-        }
-
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
-        String projLocID = pc.getC_projectlocation_id();
-        pr.setC_ProjectLocation_ID(projLocID);
-
-        String adUserID = pc.getAd_user_id();
-        pr.setAD_User_ID(adUserID);
-
-        MPurchaseRequestLine[] lines = pr.getLines();
-
-
-        if (lines == null) {
+        if (lines == null || lines.size() == 0) {
             PandoraHelper.showWarningMessage((PandoraMain)getActivity(), getString(
                     R.string.no_line_error,getString(R.string.request)));
             return;
         }
 
-        requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtonDisable));
-        if (lines.length>0) {
-            for (int i=0; i<lines.length; i++) {
-                String mProductUUID = lines[i].getM_Product_UUID();
-                if (mProductUUID!= null && !mProductUUID.isEmpty()) {
-                    String m_product_id = ModelConst.mapUUIDtoColumn(ModelConst.M_PRODUCT_TABLE, MProduct.M_PRODUCT_UUID_COL,
-                            mProductUUID,MProduct.M_PRODUCT_ID_COL, cr);
-                    lines[i].setM_Product_ID(m_product_id);
+        MPurchaseRequest pr = new MPurchaseRequest();
 
-                }
-            }
-            pr.setLines(lines);
+        pr.set_UUID(get_UUID());
+        pr.setM_PurchaseRequest_UUID(get_UUID());
+
+        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+
+        pr.setC_ProjectLocation_ID(pc.getC_projectlocation_id());
+        pr.setC_ProjectLocation_UUID(pc.getC_projectlocation_uuid());
+        pr.setProjLocName(projLoc.getText().toString());
+
+        pr.setRequestDate(requestDate.getText().toString());
+        pr.setIsApproved("N");
+        pr.setStatus("");
+        pr.setUserName(pc.getAd_user_name());
+
+        pr.setAD_User_ID(pc.getAd_user_id());
+        String ad_user_uuid = pc.getAd_user_uuid();
+        if (ad_user_uuid.isEmpty()) {
+            ad_user_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_UUID_COL,
+                    pc.getAd_user_id(),
+                    ModelConst.AD_USER_TABLE + ModelConst._ID,
+                    getActivity().getContentResolver());
         }
+        pr.setAD_User_UUID(ad_user_uuid);
+
+        requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtonDisable));
+
+        for (MPurchaseRequestLine aLine : lines) {
+            String mProductUUID = aLine.getM_Product_UUID();
+            if (mProductUUID!= null && !mProductUUID.isEmpty()) {
+                String m_product_id = ModelConst.mapUUIDtoColumn(ModelConst.M_PRODUCT_TABLE, MProduct.M_PRODUCT_UUID_COL,
+                        mProductUUID,MProduct.M_PRODUCT_ID_COL, cr);
+                aLine.setM_Product_ID(m_product_id);
+
+            }
+        }
+
+        pr.setLines(lines.toArray(lines.toArray(new MPurchaseRequestLine[lines.size()])));
 
         Bundle input = new Bundle();
         input.putSerializable(reqCont.ARG_PURCHASEREQUEST, pr);
@@ -278,7 +294,10 @@ public class NewRequisitionFragment extends Fragment {
                     fragmentTransaction.replace(R.id.container_body, frag);
                     fragmentTransaction.addToBackStack(frag.getClass().getName());
                     fragmentTransaction.commit();
+                } else {
+                    PandoraHelper.showWarningMessage((PandoraMain) getActivity(), "Failed to request!");
                 }
+
 
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }

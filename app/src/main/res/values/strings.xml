@@ -9,17 +9,17 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <string name="nav_item_recruit">Recruit</string>
+    <string name="nav_item_recruit">Recruit(Beta)</string>
     <string name="nav_item_deploy">Deploy/Track/Inspect</string>
-    <string name="nav_item_assets">Assets</string>
-    <string name="nav_item_requisition">Requisition</string>
-    <string name="nav_item_task">Task</string>
-    <string name="nav_item_guardtour_checkin">Check In</string>
-    <string name="nav_item_guardtour_projectlocation">Check Point</string>
-    <string name="nav_item_broadcast">Broadcasts</string>
-    <string name="nav_item_attendance">Attendance</string>
-    <string name="nav_item_newcheckin">New Check In</string>
-    <string name="nav_item_settings">Settings</string>
+    <string name="nav_item_assets">Assets(Beta)</string>
+    <string name="nav_item_requisition">Requisition(Beta)</string>
+    <string name="nav_item_task">Task(Beta)</string>
+    <string name="nav_item_guardtour_checkin">Check In(Beta)</string>
+    <string name="nav_item_guardtour_projectlocation">Check Point(Beta)</string>
+    <string name="nav_item_broadcast">Broadcasts(Beta)</string>
+    <string name="nav_item_attendance">Attendance(Beta)</string>
+    <string name="nav_item_newcheckin">New Check In(Beta)</string>
+    <string name="nav_item_settings">Settings(Beta)</string>
 
     <!--
     Common

@@ -112,18 +112,19 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
         Bundle output = reqCont.triggerEvent(reqCont.INSERT_REQLINE_EVENT, input, new Bundle(), null);
         if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
 
-            Fragment fragment = new NewRequisitionFragment();
+            PandoraMain.instance.getSupportFragmentManager().popBackStack();
+//            Fragment fragment = new NewRequisitionFragment();
          //   if (get_UUID() != null){
-                ((NewRequisitionFragment) fragment).set_UUID(getPrUUID());
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragment.setRetainInstance(true);
-                    fragmentTransaction.replace(R.id.container_body, fragment);
-                    fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                    fragmentTransaction.commit();
-                    ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_newrequisitionline));
-                }
+//                ((NewRequisitionFragment) fragment).set_UUID(getPrUUID());
+//                if (fragment != null) {
+//                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                    fragment.setRetainInstance(true);
+//                    fragmentTransaction.replace(R.id.container_body, fragment);
+//                    fragmentTransaction.addToBackStack(fragment.getClass().getName());
+//                    fragmentTransaction.commit();
+//                    ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_newrequisitionline));
+//                }
            // }
 
         } else {

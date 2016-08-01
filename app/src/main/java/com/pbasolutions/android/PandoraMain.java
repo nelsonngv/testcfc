@@ -418,6 +418,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 ////            updateInitialSyncState(false);
 //            return;
 //        }
+
+        if (!globalVariable.isInitialSynced()) {
+            PandoraHelper.showMessage(PandoraMain.this, "Please logout after complete initial sync.");
+            return;
+        }
+
         clearAllFragmentStack();
         Bundle inputBundle = new Bundle();
         if (PandoraHelper.isInternetOn(this)) {
