@@ -163,7 +163,7 @@ public class AttendanceTask implements Callable<Bundle> {
 
         JsonObject object = new JsonObject();
         object.addProperty(MAttendance.C_PROJECTLOCATION_ID_COL, attendance.getC_ProjectLocation_ID());
-        object.addProperty(MAttendance.DEPLOYMENT_DATE_COL, attendance.getDeploymentDate());
+        object.addProperty(MAttendance.DEPLOYMENT_DATE_COL,     attendance.getDeploymentDate());
         object.addProperty(MAttendance.HR_SHIFT_ID_COL, attendance.getHR_Shift_ID());
 
         PBSIServerAPI serverAPI = new PBSServerAPI();
@@ -176,7 +176,7 @@ public class AttendanceTask implements Callable<Bundle> {
 
         //convert from array to list
         ObservableArrayList<MAttendanceLine> list = new ObservableArrayList<MAttendanceLine>();
-        for (int x=0; x<deploy.length; x++) {
+//        for (int x=0; x<deploy.length; x++) {
 //            deploy[x].setEmployeesName(getEmployeesName(deploy[x].getC_BPartner_IDs()));
 //            deploy[x].setProjectLocationName(getProjectLocationName(
 //                    deploy[x].getC_ProjectLocation_ID()));
@@ -190,7 +190,7 @@ public class AttendanceTask implements Callable<Bundle> {
 //            deploy[x].setHRShiftTimeTo(shift.getTimeTo().toString());
 //
 //            list.add(deploy[x]);
-        }
+//        }
         output.putSerializable(PBSAttendanceController.ARG_ATTENDANCES,  list);
         return output;
     }

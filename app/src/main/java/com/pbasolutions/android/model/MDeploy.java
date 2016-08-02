@@ -7,9 +7,9 @@ import com.pbasolutions.android.json.PBSJson;
  */
 public class MDeploy extends PBSJson {
     public static final String TABLENAME = "";
-    public static final String DEPLOYMENT_DATE_COL = "Deployment_Date";
+    public static final String DEPLOYMENT_DATE_COL = "DeploymentDate";
 
-    private String Deployment_Date;
+    private String DeploymentDate;
     private int HR_Shift_ID;
     private int C_ProjectLocation_ID;
     private int C_BPartner_IDs[];
@@ -19,12 +19,12 @@ public class MDeploy extends PBSJson {
     private String HRShiftTimeFrom;
     private String HRShiftTimeTo;
 
-    public String getDeployment_Date() {
-        return Deployment_Date;
+    public String getDeploymentDate() {
+        return DeploymentDate;
     }
 
-    public void setDeployment_Date(String deployment_Date) {
-        Deployment_Date = deployment_Date;
+    public void setDeploymentDate(String deploymentDate) {
+        DeploymentDate = deploymentDate;
     }
 
     public int getHR_Shift_ID() {

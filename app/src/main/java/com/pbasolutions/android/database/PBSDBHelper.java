@@ -1023,7 +1023,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "HR_SHIFT_ID NUMBER(10, 0) DEFAULT NULL," +
                                 "HR_SHIFT_UUID TEXT NOT NULL," +
                                 //FK
-                                "CREATED DEPLOYMENT_DATE NOT NULL DEFAULT (DATETIME('NOW'))" +
+                                "CREATED DEPLOYMENTDATE NOT NULL DEFAULT (DATETIME('NOW'))" +
 
 //                                "FOREIGN KEY(C_PROJECTLOCATION_ID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_ID)" +
 //                                "FOREIGN KEY(HR_SHIFT_ID) REFERENCES HR_SHIFT(HR_SHIFT_ID)" +

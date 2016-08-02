@@ -13,7 +13,7 @@ public class MAttendance extends PBSJson {
     public static final String C_PROJECTLOCATION_UUID_COL = "C_ProjectLocation_UUID";
     public static final String HR_SHIFT_ID_COL = "HR_Shift_ID";
     public static final String HR_SHIFT_UUID_COL = "HR_Shift_UUID";
-    public static final String DEPLOYMENT_DATE_COL = "Deployment_Date";
+    public static final String DEPLOYMENT_DATE_COL = "DeploymentDate";
 
     private String DeploymentDate;
     private String M_Attendance_ID;
