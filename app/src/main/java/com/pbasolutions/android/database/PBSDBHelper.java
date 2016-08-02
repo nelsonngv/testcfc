@@ -506,6 +506,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 //Value column is referring to IC number.
                                 "VALUE VARCHAR2(60) ," +
                                 "ISEMPLOYEE CHAR(1) ," +
+                                "ICNo VARCHAR2(20) ," +
+                                "WorkPermit VARCHAR2(20) ," +
                                 //--
                                 //--
                                 "CONSTRAINT BIZPART_UNIQCONS UNIQUE (C_BPARTNER_ID)," +
