@@ -50,7 +50,7 @@ public class NewAttendanceLineFragment extends Fragment {
 
     MAttendanceLine tempATLine;
     String atUUID;
-    Fragment attendanceFragment;
+    Fragment newAttendanceFragment;
 
     Spinner employSpinner;
     Switch  switchAbsent;
@@ -160,12 +160,12 @@ public class NewAttendanceLineFragment extends Fragment {
             leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
     }
 
-    public Fragment getAttendanceFragment() {
-        return attendanceFragment;
+    public Fragment getNewAttendanceFragment() {
+        return newAttendanceFragment;
     }
 
-    public void setAttendanceFragment(Fragment attendanceFragment) {
-        this.attendanceFragment = attendanceFragment;
+    public void setNewAttendanceFragment(Fragment ewattendanceFragment) {
+        this.newAttendanceFragment = newAttendanceFragment;
     }
 
     public void saveATLine(){

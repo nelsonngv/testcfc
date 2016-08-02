@@ -1,25 +1,29 @@
 package com.pbasolutions.android.fragment;
 
+
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.databinding.ObservableArrayList;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.pbasolutions.android.PBSServerConst;
@@ -28,13 +32,18 @@ import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
-import com.pbasolutions.android.adapter.RequisitionLineRVA;
-import com.pbasolutions.android.controller.PBSRequisitionController;
-import com.pbasolutions.android.model.MProduct;
-import com.pbasolutions.android.model.MPurchaseRequest;
-import com.pbasolutions.android.model.MPurchaseRequestLine;
+import com.pbasolutions.android.adapter.AttendanceLineRVA;
+import com.pbasolutions.android.adapter.SpinnerPair;
+import com.pbasolutions.android.controller.PBSAttendanceController;
+import com.pbasolutions.android.controller.PBSDeployController;
+import com.pbasolutions.android.model.MAttendance;
+import com.pbasolutions.android.model.MAttendanceLine;
 import com.pbasolutions.android.model.ModelConst;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -44,287 +53,279 @@ public class NewAttendanceFragment extends Fragment {
     /**
      * Class tag name.
      */
-    private static final String TAG = "NewRequisitionFragment";
+    private static final String TAG = "NewAttendanceFragment";
 
-    /**
-     * PBSRequisitionController.
-     */
-    private PBSRequisitionController reqCont ;
+    private static final int ADD_ATTENDANCE_LINE = 500;
+    private static final int REMOVE_ATTENDANCE_LINE = 501;
 
-    private ObservableArrayList<MPurchaseRequestLine> lines;
-    private MPurchaseRequest pr;
-
-    private EditText documentNo;
-    private EditText isApproved;
-    private EditText projLoc;
-    private TextView requestDate;
-    private ImageButton addButton;
-    private ImageButton removeButton;
-    private Button requestButton;
     private String _UUID;
 
-    protected static final String EVENT_DATE = "EVENT_DATE";
-    protected static final String EVENT_ADD_LINE = "EVENT_ADD_LINE";
-    private static final String EVENT_REMOVE_LINE = "EVENT_REMOVE_LINE";
-    private static final String EVENT_SAVE = "EVENT_SAVE";
-    private static final String EVENT_REQUEST = "EVENT_REQUEST";
-
-    protected static final int ACTION_ADD_LINE = 300;
-    protected static final int ACTION_REMOVE_LINE = 301;
-
+    MAttendance attendance;
     ContentResolver cr;
 
-    FragmentActivity activity;
-    RequisitionLineRVA viewAdapter;
+
+    PBSAttendanceController attendanceCont;
+    TextView deployDateView;
+    protected Spinner shiftSpinner;
+    protected ArrayAdapter shiftAdapter;
+
+    protected Spinner projLocationSpinner;
+    private ArrayAdapter projLocNameAdapter;
 
     RecyclerView recyclerView;
-    View rootView;
+    AttendanceLineRVA linesAdapter;
+    Button requestButton;
 
+    private ObservableArrayList<MAttendanceLine> attendanceLines;
 
+    public NewAttendanceFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = getActivity();
-        reqCont = new PBSRequisitionController(activity);
-        cr = activity.getContentResolver();
         setHasOptionsMenu(true);
+        attendanceCont = new PBSAttendanceController(getActivity());
+
+        cr = getActivity().getContentResolver();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.requisition_new, container, false);
+        View rootView = inflater.inflate(R.layout.attendance_new, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.attendance_rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         setUI(rootView);
-        populatePR();
-        populatePRLines();
-        setValues();
-        addListener();
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.requisitionline_rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        viewAdapter = new RequisitionLineRVA(getActivity(),lines, inflater);
-        recyclerView.setAdapter(viewAdapter);
+        setUIListener();
+
         return rootView;
     }
 
-    private void populatePRLines() {
-        if (_UUID != null && !_UUID.isEmpty()) {
-            Bundle input = new Bundle();
-            input.putString(reqCont.ARG_PURCHASEREQUEST_UUID, get_UUID());
-            Bundle result = reqCont.triggerEvent(reqCont.GET_REQUISITIONLINES_EVENT,
-                    input, new Bundle(), null);
-            lines = (ObservableArrayList<MPurchaseRequestLine>)result
-                    .getSerializable(reqCont.ARG_PURCHASEREQUESTLINE_LIST);
-            if (lines != null)
-                pr.setLines(lines.toArray(new MPurchaseRequestLine[lines.size()]));
+    @Override
+    public void onStart() {
+        super.onStart();
+        projLocNameAdapter = PandoraHelper.addListToSpinner(getActivity(), projLocationSpinner, getProjLocList());
+
+        refreshAttendances();
+//        PandoraHelper.addRecyclerViewListener(recyclerView, deployList, getActivity(),
+//                new RequisitionDetailFragment(), getString(R.string.title_deployment_details));
+        if (projLocNameAdapter.getCount() > 0)
+        {
+            PandoraMain pandoraMain = PandoraMain.instance;
+            String projLocID = pandoraMain.globalVariable.getC_projectlocation_id();
+
+            for (int i = 0; i < projLocNameAdapter.getCount(); i++)
+            {
+                SpinnerPair pair = (SpinnerPair) projLocNameAdapter.getItem(i);
+                if (projLocID.equalsIgnoreCase(pair.getKey()))
+                {
+                    projLocationSpinner.setSelection(i);
+                    break;
+                }
+            }
         }
     }
 
-    private void populatePR() {
-        if (_UUID != null && !_UUID.isEmpty()) {
-            Bundle input = new Bundle();
-            input.putString(reqCont.ARG_PURCHASEREQUEST_UUID, get_UUID());
-            Bundle result = reqCont.triggerEvent(reqCont.GET_REQUISITION_EVENT,
-                    input, new Bundle(), null);
-            pr = (MPurchaseRequest)result.getSerializable(reqCont.ARG_PURCHASEREQUEST);
+    void refreshAttendances() {
+        List<SpinnerPair> prefShiftList = getPrefShiftList();
+        if(prefShiftList.size() == 0) {
+            SpinnerPair pair = new SpinnerPair();
+            pair.setKey(null);
+            pair.setValue(getString(R.string.no_shift_spinner));
+            prefShiftList = new ArrayList<>();
+            prefShiftList.add(pair);
         }
+        shiftAdapter = PandoraHelper.addListToSpinner(getActivity(), shiftSpinner,
+                prefShiftList);
+        attendanceLines  = getAttendances();
+        linesAdapter = new AttendanceLineRVA(getActivity(), attendanceLines);
+        recyclerView.setAdapter(linesAdapter);
     }
 
-    private void setUI(View view){
-        documentNo =  (EditText)view.findViewById(R.id.prDocNo) ;
-        isApproved = (EditText)view.findViewById(R.id.prStatus) ;
-        projLoc = (EditText) view.findViewById(R.id.prProjLoc);
-        requestDate = (TextView) view.findViewById(R.id.prRequestDate);
-//        addButton = (ImageButton)view.findViewById(R.id.addPrLine);
-//        removeButton = (ImageButton) view.findViewById(R.id.removePrLine);
-        requestButton = (Button) view.findViewById(R.id.prRequest);
+    void setUI(View rootView) {
+        shiftSpinner = (Spinner) rootView.findViewById(R.id.attShiftSpinner);
+
+        projLocationSpinner = (Spinner) rootView.findViewById(R.id.attProjLocation);
+        projLocationSpinner.setEnabled(false);
+
+        deployDateView = (TextView) rootView.findViewById(R.id.attDeployDate);
+
+        Date date= new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        deployDateView.setText(sdf.format(date));
+
+        requestButton = (Button) rootView.findViewById(R.id.atRequest);
     }
+    void setUIListener() {
+        projLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                refreshAttendances();
+            }
 
-    private void setValues() {
-        //set predefined values.
-        documentNo.setEnabled(false);
-        documentNo.setVisibility(View.INVISIBLE);
-        isApproved.setText("Not Approved");
-        PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
-        String projLocUUID = globalVar.getC_projectlocation_uuid();
-        String locName = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE,
-                ModelConst.C_PROJECTLOCATION_UUID_COL,
-                projLocUUID,
-                ModelConst.NAME_COL, cr);
-        projLoc.setText(locName);
-        projLoc.setTag(projLocUUID);
-        if (pr != null && ! pr.getRequestDate().isEmpty()) {
-           requestDate.setText(pr.getRequestDate());
-        } else {
-            requestDate.setText(PandoraHelper.getTodayDate("dd-MM-yyyy"));
-        }
-    }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-    private void addListener(){
-        setOnClickListener(requestDate, EVENT_DATE);
-//        setOnClickListener(addButton, EVENT_ADD_LINE);
-//        setOnClickListener(removeButton, EVENT_REMOVE_LINE);
-        setOnClickListener(requestButton, EVENT_REQUEST);
-    }
+            }
+        });
 
+        shiftSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SpinnerPair pair = (SpinnerPair) shiftAdapter.getItem(position);
+                shiftChanged(pair.getKey());
+            }
 
-    protected void setOnClickListener(final View object, final String event) {
-        object.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        deployDateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (event) {
-                    case EVENT_DATE: {
-                        PandoraHelper.promptDatePicker((TextView) object, getActivity());
-                        break;
-                    }
-                    case EVENT_ADD_LINE: {
-                        savePR();
-                        addLine();
-                        break;
-                    }
-                    case EVENT_REMOVE_LINE: {
-                        removeLine();
-                        break;
-                    }
-                    case EVENT_REQUEST: {
-                        savePR();
-                        requestPR();
-                        break;
-                    }
-                    default:
-                        break;
-                }
+                PandoraHelper.promptDatePicker(deployDateView, getActivity());
+            }
+        });
+
+        deployDateView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                dateChanged(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        requestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                saveAttendance();
+                requestAttendance();
             }
         });
     }
 
-    /**
-     * Request PR will make call to Server API for processing the requisition/purchase request.
-     */
-    private void requestPR() {
-        if (!get_UUID().isEmpty() && pr == null){
-            populatePR();
-        }
-
-        if (pr == null) {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
-                    R.string.no_line_error, getString(R.string.request)));
-            return;
-        }
-
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
-        String projLocID = pc.getC_projectlocation_id();
-        pr.setC_ProjectLocation_ID(projLocID);
-
-        String adUserID = pc.getAd_user_id();
-        pr.setAD_User_ID(adUserID);
-
-        MPurchaseRequestLine[] lines = pr.getLines();
-
-        if (lines == null) {
-            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), getString(
-                    R.string.no_line_error,getString(R.string.request)));
-            return;
-        }
-
-        requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtonDisable));
-        if (lines.length>0) {
-            for (int i=0; i<lines.length; i++) {
-                String mProductUUID = lines[i].getM_Product_UUID();
-                if (mProductUUID!= null && !mProductUUID.isEmpty()) {
-                    String m_product_id = ModelConst.mapUUIDtoColumn(ModelConst.M_PRODUCT_TABLE, MProduct.M_PRODUCT_UUID_COL,
-                            mProductUUID,MProduct.M_PRODUCT_ID_COL, cr);
-                    lines[i].setM_Product_ID(m_product_id);
-
-                }
-            }
-            pr.setLines(lines);
-        }
-
+    private ObservableArrayList<MAttendanceLine> getAttendances() {
         Bundle input = new Bundle();
-        input.putSerializable(reqCont.ARG_PURCHASEREQUEST, pr);
+        PandoraMain pandoraMain = PandoraMain.instance;
+
+        SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
+        if (projlocPair == null) { // when no selected
+            return new ObservableArrayList<MAttendanceLine>();
+        }
+
+        String projLocId = projlocPair.getKey();
+
+        PandoraContext pc = pandoraMain.globalVariable;
+
+        input.putString(PBSDeployController.ARG_PROJECTLOCATION_ID, projLocId);
         input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
 
-        new AsyncTask<Bundle, Void, Bundle>() {
-            protected LayoutInflater inflater;
-            protected RecyclerView recyclerView;
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
-            }
+        input.putString(PBSDeployController.ARG_DEPLOYMENTDATE, deployDateView.getText().toString());
 
-            @Override
-            protected Bundle doInBackground(Bundle... params) {
-                Bundle result = reqCont.triggerEvent(reqCont.CREATE_REQUISITION_EVENT, params[0], new Bundle(), null);
-                return result;
-            }
-
-            @Override
-            protected void onPostExecute(Bundle result) {
-                super.onPostExecute(result);
-
-                requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
-
-                if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentManager.popBackStack();
-                    fragmentManager.popBackStack();
-                    Fragment frag = new RequisitionFragment();
-                    frag.setRetainInstance(true);
-                    fragmentTransaction.replace(R.id.container_body, frag);
-                    fragmentTransaction.addToBackStack(frag.getClass().getName());
-                    fragmentTransaction.commit();
-                }
-
-                ((PandoraMain)getActivity()).dismissProgressDialog();
-            }
-        }.execute(input);
-
+        Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.GET_ATTENDANCES_EVENT, input, new Bundle(), null);
+        return (ObservableArrayList<MAttendanceLine>)result.get(PBSAttendanceController.ARG_ATTENDANCES);
     }
 
-    private void savePR() {
+    public List<SpinnerPair> getProjLocList() {
         Bundle input = new Bundle();
-        ContentValues cv= new ContentValues();
-        if (get_UUID() == null || get_UUID().isEmpty())
-        set_UUID(UUID.randomUUID().toString());
-        cv.put(MPurchaseRequest.M_PURCHASEREQUEST_UUID_COL, get_UUID());
-        cv.put(MPurchaseRequest.REQUESTDATE_COL, requestDate.getText().toString());
-        PandoraContext cont = ((PandoraMain) activity).globalVariable;
-        cv.put(ModelConst.C_PROJECTLOCATION_UUID_COL, cont.getC_projectlocation_uuid());
+        Bundle result = attendanceCont
+                .triggerEvent(PBSAttendanceController.GET_PROJECTLOCATIONS_EVENT,
+                        input, new Bundle(), null);
+        return result
+                .getParcelableArrayList(PBSAttendanceController.ARG_PROJECTLOCATIONS);
+    }
 
-        String ad_user_uuid = cont.getAd_user_uuid();
-        if (ad_user_uuid.isEmpty()) {
-            ad_user_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_UUID_COL,
-                    cont.getAd_user_id(),
-                    ModelConst.AD_USER_TABLE + ModelConst._ID,
-                    getActivity().getContentResolver());
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        MenuItem add;
+        add = menu.add(0, ADD_ATTENDANCE_LINE, 0, getString(R.string.text_icon_add));
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.add);
+
+        add = menu.add(0, REMOVE_ATTENDANCE_LINE, 1, getString(R.string.text_icon_remove));
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.minus_white);
+    }
+
+//
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        MenuItem sync;
+//        sync = menu.add(0, PandoraMain.SYNC_DEPLOY_ID, 0, "Sync Deploy");
+//        sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//        sync.setIcon(R.drawable.refresh);
+//    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case ADD_ATTENDANCE_LINE: {
+                return addLine();
+            }
+            case REMOVE_ATTENDANCE_LINE: {
+                removeLine();
+                return  true;
+            }
+            default:return false;
         }
-        cv.put(ModelConst.AD_USER_UUID_COL, ad_user_uuid);
-        input.putParcelable(reqCont.ARG_CONTENTVALUES, cv);
+    }
 
-        new AsyncTask<Bundle, Void, Void>() {
-            protected LayoutInflater inflater;
-            protected RecyclerView recyclerView;
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
-            }
+    boolean addLine() {
+        String deployDate = deployDateView.getText().toString();
+        if (deployDate == null || deployDate.length() == 0)
+        {
+            PandoraHelper.showMessage(getContext(), "Please select Deployment Date.");
+            return false;
+        }
 
-            @Override
-            protected Void doInBackground(Bundle... params) {
-                reqCont.triggerEvent(reqCont.INSERT_REQ_EVENT, params[0], new Bundle(), null);
-                return null;
-            }
+        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
+        if (spinnerPair.getKey() == null)
+        {
+            PandoraHelper.showMessage(getContext(), getString(
+                    R.string.no_shift_error, getString(R.string.proj_shift)));
+            return false;
+        }
 
-            @Override
-            protected void onPostExecute(Void result) {
-                super.onPostExecute(result);
-                ((PandoraMain)getActivity()).dismissProgressDialog();
-            }
-        }.execute(input);
+        PBSAttendanceController.deployDate = deployDate;
+        SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
+        String projLocId = projlocPair.getKey();
+        PBSAttendanceController.projectLocationId = projLocId;
+
+        PBSAttendanceController.shiftUUID = spinnerPair.getKey();
+
+        ((PandoraMain) getActivity()).
+                displayView(PandoraMain.FRAGMENT_CREATE_ATTENDANCELINE, false);
+        return  true;
+    }
+
+    public List<SpinnerPair> getPrefShiftList() {
+        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+
+        SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
+        if (projlocPair == null) { // when no selected
+            return new ArrayList<SpinnerPair>();
+        }
+
+        String projLocId = projlocPair.getKey();
+
+        Bundle input = new Bundle();
+        input.putString(PBSAttendanceController.ARG_PROJECTLOCATION_ID, projLocId);
+        Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.GET_SHIFTS_EVENT, input, new Bundle(),null);
+        return result.getParcelableArrayList(PBSAttendanceController.SHIFT_LIST);
     }
 
     private void removeLine() {
@@ -340,8 +341,8 @@ public class NewAttendanceFragment extends Fragment {
             @Override
             protected Bundle doInBackground(Void... params) {
                 Bundle input = new Bundle();
-                input.putSerializable(reqCont.ARG_REQUISITIONLINE_LIST, viewAdapter.getLines());
-                Bundle result = reqCont.triggerEvent(reqCont.REMOVE_REQLINES_EVENT, input, new Bundle(), null);
+                input.putSerializable(PBSAttendanceController.ARG_ATTENDANCELINE_LIST, linesAdapter.getLines());
+                Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.REMOVE_ATTDLINES_EVENT, input, new Bundle(), null);
                 return result;
             }
 
@@ -357,21 +358,141 @@ public class NewAttendanceFragment extends Fragment {
         }.execute();
     }
 
-    private boolean addLine() {
-        Fragment fragment = new NewRequisitionLineFragment();
-        if (get_UUID() != null){
-            ((NewRequisitionLineFragment) fragment).setPrUUID(_UUID);
-            if (fragment != null) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragment.setRetainInstance(true);
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                fragmentTransaction.commit();
-                ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_newrequisitionline));
-            }
+    /**
+     * Request Attendance will make call to Server API for processing the requisition/purchase request.
+     */
+    protected void requestAttendance() {
+//        if (!get_UUID().isEmpty() && attendance == null){
+//            populatePR();
+//        }
+//
+        attendance = new MAttendance();
+
+        if (attendance == null) {
+            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+                    R.string.no_line_error, getString(R.string.request)));
+            return;
         }
-        return  true;
+
+        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
+        if (spinnerPair.getKey() == null) {
+            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+                    R.string.no_shift_error, getString(R.string.proj_shift)));
+            return;
+        }
+
+        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+        SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
+        String projLocId = projlocPair.getKey();
+        attendance.setC_ProjectLocation_ID(projLocId);
+
+        attendance.setDeploymentDate(deployDateView.getText().toString());
+
+        String shiftId = ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_ID_COL, spinnerPair.getKey(), ModelConst.HR_SHIFT_UUID_COL, cr);
+        attendance.setHR_Shift_ID(shiftId);
+
+        ObservableArrayList<MAttendanceLine> lines = linesAdapter.getLines();
+        if (lines == null || lines.size() == 0) {
+            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+                    R.string.no_line_error, getString(R.string.request)));
+            return;
+        }
+
+        for (MAttendanceLine line: lines ) {
+            line.prepareForGson();
+        }
+
+        attendance.setLines(lines.toArray(new MAttendanceLine[lines.size()]));
+
+        requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtonDisable));
+
+        Bundle input = new Bundle();
+        input.putSerializable(PBSAttendanceController.ARG_ATTENDANCE_REQUEST, attendance);
+        input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
+
+        new AsyncTask<Bundle, Void, Bundle>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.CREATE_ATTENDANCE_EVENT, params[0], new Bundle(), null);
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+
+                requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
+
+                if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentManager.popBackStack();
+                    fragmentManager.popBackStack();
+                    fragmentTransaction.commit();
+                } else {
+                    PandoraHelper.showErrorMessage(getActivity(), result.getString(PandoraConstant.ERROR));
+                }
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
+
+    }
+
+    protected void saveAttendance() {
+        Bundle input = new Bundle();
+        ContentValues cv= new ContentValues();
+        if (get_UUID() == null || get_UUID().isEmpty())
+            set_UUID(UUID.randomUUID().toString());
+        cv.put(MAttendance.M_ATTENDANCE_UUID_COL, get_UUID());
+        cv.put(MAttendance.DEPLOYMENT_DATE_COL, deployDateView.getText().toString());
+        PandoraContext cont = PandoraMain.instance.globalVariable;
+
+        cv.put(ModelConst.C_PROJECTLOCATION_UUID_COL, cont.getC_projectlocation_uuid());
+
+        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
+        String shiftId = ModelConst.mapIDtoColumn(ModelConst.HR_LEAVETYPE_TABLE, ModelConst.HR_LEAVETYPE_ID_COL, spinnerPair.getKey(), ModelConst.HR_LEAVETYPE_UUID_COL, cr);
+        cv.put(ModelConst.HR_SHIFT_UUID_COL, spinnerPair.getValue());
+
+        input.putParcelable(PBSAttendanceController.ARG_CONTENTVALUES, cv);
+
+        new AsyncTask<Bundle, Void, Void>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Void doInBackground(Bundle... params) {
+                attendanceCont.triggerEvent(PBSAttendanceController.INSERT_ATTENDANCE_REQ_EVENT, params[0], new Bundle(), null);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
+    }
+
+    protected void shiftChanged(String shiftUUID) {
+        Log.d("ttt", "Shift Changed:" + shiftUUID);
+    }
+
+    protected void dateChanged(String deployDate) {
+        Log.d("ttt", "Date Changed:" + deployDate);
     }
 
     public String get_UUID() {
@@ -381,34 +502,4 @@ public class NewAttendanceFragment extends Fragment {
     public void set_UUID(String _UUID) {
         this._UUID = _UUID;
     }
-
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem add;
-        add = menu.add(0, ACTION_ADD_LINE, 0, getString(R.string.text_add_line));
-        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        add.setIcon(R.drawable.add);
-
-        add = menu.add(0, ACTION_REMOVE_LINE, 1, getString(R.string.text_remove_line));
-        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        add.setIcon(R.drawable.minus_white);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case ACTION_ADD_LINE: {
-                savePR();
-                addLine();
-                return true;
-            }
-            case ACTION_REMOVE_LINE: {
-                removeLine();
-                return true;
-            }
-        }
-
-        return false;
-    }
-
 }

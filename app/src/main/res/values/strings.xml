@@ -63,6 +63,8 @@
     <string name="title_camera_button">Take Picture</string>
     <string name="title_gallery_button">Load From Gallery</string>
     <string name="title_attendanceline">Attendance Line</string>
+    <string name="title_attendances">Attendance</string>
+    <string name="title_attendancesearch">Search</string>
 
     <!--
     Employee layout.

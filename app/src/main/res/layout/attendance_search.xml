@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="deploy"
+            type="com.pbasolutions.android.model.MResourceAlloc" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_top">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_taskprojloc"
+                        />
+                    <com.pbasolutions.android.control.SearchableSpinner
+                        style="@style/SpinnerTableValue"
+                        android:id="@+id/attsrchProjLocation"/>
+                </LinearLayout>
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_date"
+                        />
+                    <TextView
+                        android:id="@+id/attsrchDeployDate"
+                        style="@style/TableValueDate"
+                        android:hint="Press to Select Date"
+                        android:text="@{deploy.Deployment_Date}"
+                        android:layout_marginBottom="@dimen/margin_bottom" />
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_shift"
+                        android:editable="false"
+                        android:textSize="15sp"/>
+                    <Spinner
+                        style="@style/TableValue"
+                        android:id="@+id/attsrchShiftSpinner"/>
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <Button
+                        android:id="@+id/atsrchSearch"
+                        style="@style/PLargeButton"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/action_search" />
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="end">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/table_margin_left"
+                android:layout_marginTop="@dimen/margin_top">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="@string/label_lines"
+                />
+            </TableRow>
+        </TableLayout>
+        <TableLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/attendancesrch_rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+            </android.support.v7.widget.RecyclerView>
+        </TableLayout>
+    </LinearLayout>
+</layout>

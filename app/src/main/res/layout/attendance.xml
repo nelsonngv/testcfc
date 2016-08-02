@@ -1,100 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <data>
-        <variable
-            name="deploy"
-            type="com.pbasolutions.android.model.MResourceAlloc" />
-    </data>
-    <LinearLayout
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/attendance_tablayout"/>
+    </android.support.design.widget.AppBarLayout>
+    <android.support.v4.view.ViewPager
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_top">
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <LinearLayout style="@style/PTableVirtRowW">
-                    <TextView
-                        style="@style/TableInfoLabel"
-                        android:text="@string/label_taskprojloc"
-                        />
-                    <com.pbasolutions.android.control.SearchableSpinner
-                        style="@style/SpinnerTableValue"
-                        android:id="@+id/attProjLocation"/>
-                </LinearLayout>
-            </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <LinearLayout style="@style/PTableVirtRowW">
-                    <TextView
-                        style="@style/TableInfoLabel"
-                        android:text="@string/label_date"
-                        />
-                    <TextView
-                        android:id="@+id/attDeployDate"
-                        style="@style/TableValueDate"
-                        android:hint="Press to Select Date"
-                        android:text="@{deploy.Deployment_Date}"
-                        android:layout_marginBottom="@dimen/margin_bottom" />
-                </LinearLayout>
-            </TableRow>
-            <TableRow>
-                <LinearLayout style="@style/PTableVirtRowW">
-                    <TextView
-                        style="@style/TableInfoLabel"
-                        android:text="@string/label_shift"
-                        android:editable="false"
-                        android:textSize="15sp"/>
-                    <Spinner
-                        style="@style/TableValue"
-                        android:id="@+id/attShiftSpinner"/>
-                </LinearLayout>
-            </TableRow>
-        </TableLayout>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="?android:attr/dividerHorizontal"
-            android:showDividers="end">
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/table_margin_left"
-                android:layout_marginTop="@dimen/margin_top">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_lines"
-                />
-            </TableRow>
-        </TableLayout>
-        <TableLayout
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/attendance_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-            </android.support.v7.widget.RecyclerView>
-        </TableLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
-            android:orientation="horizontal"
-            >
-            <Button
-                android:id="@+id/atRequest"
-                style="@style/PLargeButton"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:text="@string/label_button_submit" />
-        </LinearLayout>
-    </LinearLayout>
-</layout>
+        android:id="@+id/attendance_pager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</android.support.design.widget.CoordinatorLayout>
