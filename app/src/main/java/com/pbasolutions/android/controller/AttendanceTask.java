@@ -163,7 +163,7 @@ public class AttendanceTask implements Callable<Bundle> {
 
         JsonObject object = new JsonObject();
         object.addProperty(MAttendance.C_PROJECTLOCATION_ID_COL, attendance.getC_ProjectLocation_ID());
-        object.addProperty(MAttendance.DEPLOYMENT_DATE_COL, "2016-08-02");//attendance.getDeploymentDate());
+        object.addProperty(MAttendance.DEPLOYMENT_DATE_COL, attendance.getDeploymentDate());
         object.addProperty(MAttendance.HR_SHIFT_ID_COL, attendance.getHR_Shift_ID());
 
         PBSIServerAPI serverAPI = new PBSServerAPI();
