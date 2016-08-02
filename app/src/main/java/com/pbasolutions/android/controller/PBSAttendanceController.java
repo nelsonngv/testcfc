@@ -46,6 +46,9 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
     public static final String ARG_ATTENDANCE_REQUEST = "ARG_ATTENDANCE_REQUEST";
     public static final String CREATE_ATTENDANCE_EVENT = "CREATE_ATTENDANCE_EVENT";
 
+    public static final String ARG_SEARCH_ATTENDANCE_REQUEST = "ARG_SEARCH_ATTENDANCE_REQUEST";
+    public static final String SEARCH_ATTENDANCE_EVENT = "SEARCH_ATTENDANCE_EVENT";
+
     public static final String INSERT_ATTENDANCE_REQ_EVENT = "INSERT_ATTENDANCE_REQ_EVENT";
 
     public static final String GET_PROJECTLOCATIONS_EVENT = "GET_PROJECTLOCATIONS_EVENT";
@@ -71,6 +74,10 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
         switch (eventName) {
             case GET_ATTENDANCES_EVENT: {
                 getAttendances(input, result, object);
+                break;
+            }
+            case SEARCH_ATTENDANCE_EVENT: {
+                searchAttendances(input, result, object);
                 break;
             }
             case GET_SHIFTS_EVENT: {
@@ -120,6 +127,23 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
         }
         return result;
     }
+
+    private Bundle searchAttendances(Bundle input, Bundle result, Object object) {
+        input.putString(ARG_TASK_EVENT, SEARCH_ATTENDANCE_EVENT);
+        attendanceTask.setInput(input);
+        attendanceTask.setOutput(result);
+        taskResult = new FutureTask (attendanceTask);
+        exec.execute(taskResult);
+        try {
+            result = taskResult.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 
     private Bundle getShifts(Bundle input, Bundle result, Object object) {
         input.putString(ARG_TASK_EVENT, GET_SHIFTS_EVENT);

@@ -3,6 +3,7 @@ package com.pbasolutions.android.fragment;
 
 import android.content.ContentResolver;
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,8 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.pbasolutions.android.PBSServerConst;
+import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
@@ -26,7 +29,9 @@ import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.AttendanceLineRVA;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSAttendanceController;
+import com.pbasolutions.android.model.MAttendance;
 import com.pbasolutions.android.model.MAttendanceLine;
+import com.pbasolutions.android.model.ModelConst;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,7 +60,7 @@ public class AttendanceSearchFragment extends Fragment {
 
     RecyclerView recyclerView;
     AttendanceLineRVA linesAdapter;
-    Button requestButton;
+    Button searchButton;
 
     private ObservableArrayList<MAttendanceLine> attendanceLines;
 
@@ -119,6 +124,11 @@ public class AttendanceSearchFragment extends Fragment {
         }
         shiftAdapter = PandoraHelper.addListToSpinner(getActivity(), shiftSpinner,
                 prefShiftList);
+
+        refreshAttendanceLines();
+    }
+
+    void refreshAttendanceLines() {
         linesAdapter = new AttendanceLineRVA(getActivity(), attendanceLines);
         recyclerView.setAdapter(linesAdapter);
     }
@@ -135,7 +145,7 @@ public class AttendanceSearchFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         deployDateView.setText(sdf.format(date));
 
-        requestButton = (Button) rootView.findViewById(R.id.atsrchSearch);
+        searchButton = (Button) rootView.findViewById(R.id.atsrchSearch);
     }
     void setUIListener() {
         projLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -187,7 +197,7 @@ public class AttendanceSearchFragment extends Fragment {
             }
         });
 
-        requestButton.setOnClickListener(new View.OnClickListener() {
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onSearchAttendance();
@@ -223,6 +233,67 @@ public class AttendanceSearchFragment extends Fragment {
      * Request Attendance will make call to Server API for processing the requisition/purchase request.
      */
     protected void onSearchAttendance() {
+        MAttendance attendance = new MAttendance();
+
+        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
+        if (spinnerPair.getKey() == null) {
+            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+                    R.string.no_shift_error, getString(R.string.proj_shift)));
+            return;
+        }
+
+        String deployDate = deployDateView.getText().toString();
+        if (deployDate == null || deployDate.length() == 0) {
+            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), "Please select deploy date.");
+            return;
+        }
+
+        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+        SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
+        String projLocId = projlocPair.getKey();
+        attendance.setC_ProjectLocation_ID(projLocId);
+
+        attendance.setDeploymentDate(deployDate);
+
+        String shiftId = ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_ID_COL, spinnerPair.getKey(), ModelConst.HR_SHIFT_UUID_COL, cr);
+        attendance.setHR_Shift_ID(shiftId);
+
+
+        Bundle input = new Bundle();
+        input.putSerializable(PBSAttendanceController.ARG_SEARCH_ATTENDANCE_REQUEST, attendance);
+        input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
+
+        new AsyncTask<Bundle, Void, Bundle>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.SEARCH_ATTENDANCE_EVENT, params[0], new Bundle(), null);
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+
+                searchButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
+
+                if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                    attendanceLines = (ObservableArrayList<MAttendanceLine>)result.get(PBSAttendanceController.ARG_ATTENDANCES);
+                    refreshAttendanceLines();
+                } else {
+                    PandoraHelper.showErrorMessage(getActivity(), result.getString(PandoraConstant.ERROR));
+                }
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
     }
 
     protected void shiftChanged(String shiftUUID) {

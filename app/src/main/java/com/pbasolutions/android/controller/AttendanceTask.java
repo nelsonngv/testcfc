@@ -69,6 +69,9 @@ public class AttendanceTask implements Callable<Bundle> {
             case PBSAttendanceController.GET_ATTENDANCES_EVENT: {
                 return getAttendanceLines();
             }
+            case PBSAttendanceController.SEARCH_ATTENDANCE_EVENT: {
+                return searchAttendances();
+            }
             case PBSAttendanceController.GET_SHIFTS_EVENT: {
                 return getHRShift();
             }
@@ -152,6 +155,43 @@ public class AttendanceTask implements Callable<Bundle> {
 
         output.putSerializable(PBSAttendanceController.ARG_ATTENDANCES, atlList);
 
+        return output;
+    }
+
+    private Bundle searchAttendances() {
+        MAttendance attendance = (MAttendance) input.get(PBSAttendanceController.ARG_SEARCH_ATTENDANCE_REQUEST);
+
+        JsonObject object = new JsonObject();
+        object.addProperty(MAttendance.C_PROJECTLOCATION_ID_COL, attendance.getC_ProjectLocation_ID());
+        object.addProperty(MAttendance.DEPLOYMENT_DATE_COL, "2016-08-02");//attendance.getDeploymentDate());
+        object.addProperty(MAttendance.HR_SHIFT_ID_COL, attendance.getHR_Shift_ID());
+
+        PBSIServerAPI serverAPI = new PBSServerAPI();
+        String json = serverAPI.searchAttendances(
+                object, input.getString(PBSServerConst.PARAM_URL)
+        );
+
+        Pair pair = PandoraHelper.parseJsonWithArraytoPair(json, "Success", "Deployments", MAttendanceLine[].class.getName());
+        MAttendanceLine deploy[] = (MAttendanceLine[])pair.second;
+
+        //convert from array to list
+        ObservableArrayList<MAttendanceLine> list = new ObservableArrayList<MAttendanceLine>();
+        for (int x=0; x<deploy.length; x++) {
+//            deploy[x].setEmployeesName(getEmployeesName(deploy[x].getC_BPartner_IDs()));
+//            deploy[x].setProjectLocationName(getProjectLocationName(
+//                    deploy[x].getC_ProjectLocation_ID()));
+//
+//            //get shift model.
+//            MShift shift = new MShift(deploy[x].getHR_Shift_ID());
+//            shift = shift.getShift(cr, false);
+//
+//            deploy[x].setHRShiftName(shift.getName());
+//            deploy[x].setHRShiftTimeFrom(shift.getTimeFrom().toString());
+//            deploy[x].setHRShiftTimeTo(shift.getTimeTo().toString());
+//
+//            list.add(deploy[x]);
+        }
+        output.putSerializable(PBSAttendanceController.ARG_ATTENDANCES,  list);
         return output;
     }
 

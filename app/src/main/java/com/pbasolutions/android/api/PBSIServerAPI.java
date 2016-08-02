@@ -33,5 +33,7 @@ public interface PBSIServerAPI {
 
     String getDeployments(JsonObject object, String serverURL);
 
+    String searchAttendances(JsonObject object, String serverURL);
+
     String createProjectTask(PBSJson json, String serverURL);
 }
