@@ -181,7 +181,6 @@
     <string name="reqdetails_label_projloc">Proj. Location </string>
     <string name="reqdetails_label_requested_date">Requested Date </string>
 
-
     <string name="label_comment">Comment</string>
     <string name="label_lines">Lines</string>
     <string name="label_line">Line </string>
@@ -267,4 +266,10 @@
 
     <string name="text_welcome_login">Welcome to Pandora!</string>
     <string name="text_prompt_login">Please Login to use this app.</string>
+
+    <!--
+    Attendance messages.
+    !-->
+    <string name="label_deploydate">Deploy Date</string>
+
 </resources>

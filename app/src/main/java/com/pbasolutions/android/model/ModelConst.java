@@ -44,6 +44,8 @@ public class ModelConst {
     public static final String HR_SETUP_JOB_UUID_COL = "HR_SETUP_JOB_UUID";
     public static final String HR_NATIONALITY_UUID_COL = "HR_NATIONALITY_UUID";
     public static final String IDNUMBER_COL = "IDNumber";
+    public static final String ICNO_COL = "ICNo";
+    public static final String WORKPERMIT_COL = "WorkPermit";
     public static final String PHONE_COL = "Phone" ;
     public static final String STATUS_COL = "Status";
     public static final String CREATED_COL = "Created";

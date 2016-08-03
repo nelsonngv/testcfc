@@ -384,12 +384,12 @@ public class NewAttendanceFragment extends Fragment {
         PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         String projLocId = projlocPair.getKey();
-        attendance.setC_ProjectLocation_ID(projLocId);
+        attendance.setC_ProjectLocation_ID(Integer.parseInt(projLocId));
 
         attendance.setDeploymentDate(deployDateView.getText().toString());
 
         String shiftId = ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_ID_COL, spinnerPair.getKey(), ModelConst.HR_SHIFT_UUID_COL, cr);
-        attendance.setHR_Shift_ID(shiftId);
+        attendance.setHR_Shift_ID(Integer.parseInt(shiftId));
 
         ObservableArrayList<MAttendanceLine> lines = linesAdapter.getLines();
         if (lines == null || lines.size() == 0) {

@@ -27,10 +27,10 @@ import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.AttendanceLineRVA;
+import com.pbasolutions.android.adapter.AttendanceRVA;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.model.MAttendance;
-import com.pbasolutions.android.model.MAttendanceLine;
 import com.pbasolutions.android.model.ModelConst;
 
 import java.text.SimpleDateFormat;
@@ -59,10 +59,10 @@ public class AttendanceSearchFragment extends Fragment {
     private ArrayAdapter projLocNameAdapter;
 
     RecyclerView recyclerView;
-    AttendanceLineRVA linesAdapter;
+    AttendanceRVA linesAdapter;
     Button searchButton;
 
-    private ObservableArrayList<MAttendanceLine> attendanceLines;
+    private ObservableArrayList<MAttendance> attendances;
 
     public AttendanceSearchFragment() {
     }
@@ -86,7 +86,7 @@ public class AttendanceSearchFragment extends Fragment {
         setUI(rootView);
         setUIListener();
 
-        attendanceLines = new ObservableArrayList<MAttendanceLine>();
+        attendances = new ObservableArrayList<MAttendance>();
         return rootView;
     }
 
@@ -129,7 +129,7 @@ public class AttendanceSearchFragment extends Fragment {
     }
 
     void refreshAttendanceLines() {
-        linesAdapter = new AttendanceLineRVA(getActivity(), attendanceLines);
+        linesAdapter = new AttendanceRVA(getActivity(), attendances);
         recyclerView.setAdapter(linesAdapter);
     }
 
@@ -251,12 +251,12 @@ public class AttendanceSearchFragment extends Fragment {
         PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         String projLocId = projlocPair.getKey();
-        attendance.setC_ProjectLocation_ID(projLocId);
+        attendance.setC_ProjectLocation_ID(Integer.parseInt(projLocId));
 
         attendance.setDeploymentDate(deployDate);
 
         String shiftId = ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_ID_COL, spinnerPair.getKey(), ModelConst.HR_SHIFT_UUID_COL, cr);
-        attendance.setHR_Shift_ID(shiftId);
+        attendance.setHR_Shift_ID(Integer.parseInt(shiftId));
 
 
         Bundle input = new Bundle();
@@ -285,7 +285,7 @@ public class AttendanceSearchFragment extends Fragment {
                 searchButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
 
                 if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-                    attendanceLines = (ObservableArrayList<MAttendanceLine>)result.get(PBSAttendanceController.ARG_ATTENDANCES);
+                    attendances = (ObservableArrayList<MAttendance>)result.get(PBSAttendanceController.ARG_ATTENDANCES);
                     refreshAttendanceLines();
                 } else {
                     PandoraHelper.showErrorMessage(getActivity(), result.getString(PandoraConstant.ERROR));

@@ -171,27 +171,38 @@ public class AttendanceTask implements Callable<Bundle> {
                 object, input.getString(PBSServerConst.PARAM_URL)
         );
 
-        Pair pair = PandoraHelper.parseJsonWithArraytoPair(json, "Success", "Deployments", MAttendanceLine[].class.getName());
-        MAttendanceLine deploy[] = (MAttendanceLine[])pair.second;
+        Pair pair = PandoraHelper.parseJsonWithArraytoPair(json, "Success", "Attendances", MAttendance[].class.getName());
+        String success = (String) pair.first;
+        if (success != null && success.equalsIgnoreCase(PandoraConstant.TRUE)) {
+            MAttendance attendances[] = (MAttendance[])pair.second;
 
-        //convert from array to list
-        ObservableArrayList<MAttendanceLine> list = new ObservableArrayList<MAttendanceLine>();
-//        for (int x=0; x<deploy.length; x++) {
-//            deploy[x].setEmployeesName(getEmployeesName(deploy[x].getC_BPartner_IDs()));
-//            deploy[x].setProjectLocationName(getProjectLocationName(
-//                    deploy[x].getC_ProjectLocation_ID()));
+            //convert from array to list
+            ObservableArrayList<MAttendance> list = new ObservableArrayList<MAttendance>();
+            if (attendances != null)
+            {
+                for (int x=0; x < attendances.length; x++) {
+//                attendances[x].setEmployeesName(getEmployeesName(attendances[x].getC_BPartner_IDs()));
+                    attendances[x].setProjectLocationName(getProjectLocationName(attendances[x].getC_ProjectLocation_ID()));
+                    attendances[x].setHrShiftName(getHRShiftName(attendances[x].getHR_Shift_ID()));
 //
-//            //get shift model.
-//            MShift shift = new MShift(deploy[x].getHR_Shift_ID());
-//            shift = shift.getShift(cr, false);
+//                //get shift model.
+                    MShift shift = new MShift(attendances[x].getHR_Shift_ID());
+                    shift = shift.getShift(cr, false);
 //
-//            deploy[x].setHRShiftName(shift.getName());
-//            deploy[x].setHRShiftTimeFrom(shift.getTimeFrom().toString());
-//            deploy[x].setHRShiftTimeTo(shift.getTimeTo().toString());
-//
-//            list.add(deploy[x]);
-//        }
-        output.putSerializable(PBSAttendanceController.ARG_ATTENDANCES,  list);
+//                attendances[x].setHRShiftName(shift.getName());
+//                attendances[x].setHRShiftTimeFrom(shift.getTimeFrom().toString());
+//                attendances[x].setHRShiftTimeTo(shift.getTimeTo().toString());
+
+                    list.add(attendances[x]);
+                }
+            }
+
+            output.putSerializable(PBSAttendanceController.ARG_ATTENDANCES, list);
+            output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+        } else {
+            output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+            output.putString(PandoraConstant.ERROR, "Fail to load attendances");
+        }
         return output;
     }
 

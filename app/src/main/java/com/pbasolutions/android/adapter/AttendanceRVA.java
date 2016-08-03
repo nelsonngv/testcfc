@@ -6,34 +6,35 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.pbasolutions.android.databinding.AttendanceItemBinding;
 import com.pbasolutions.android.databinding.RequisitionListItemBinding;
-import com.pbasolutions.android.model.MPurchaseRequest;
+import com.pbasolutions.android.model.MAttendance;
 
 /**
  * Created by pbadell on 10/13/15.
  */
 public class AttendanceRVA extends RecyclerView.Adapter<AttendanceRVA.AttendanceVH>{
     private Context mContext;
-    private ObservableArrayList<MPurchaseRequest> requisList;
+    private ObservableArrayList<MAttendance> attendanceList;
     private LayoutInflater inflater;
 
-    public AttendanceRVA(Context mContext, ObservableArrayList<MPurchaseRequest> requisList, LayoutInflater inflater) {
+    public AttendanceRVA(Context mContext, ObservableArrayList<MAttendance> requisList) {
         this.mContext = mContext;
-        this.requisList = requisList;
+        this.attendanceList = requisList;
         this.inflater = LayoutInflater.from(mContext);
     }
 
     @Override
     public AttendanceRVA.AttendanceVH onCreateViewHolder(ViewGroup parent, int viewType) {
-        RequisitionListItemBinding binding = RequisitionListItemBinding.inflate(inflater);
+        AttendanceItemBinding binding = AttendanceItemBinding.inflate(inflater);
         AttendanceVH viewHolder = new AttendanceVH(binding);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(AttendanceVH holder, int position) {
-        MPurchaseRequest requis = requisList.get(position);
-        holder.vBinding.setRequisition(requis);
+        MAttendance attendance = attendanceList.get(position);
+        holder.vBinding.setAttendance(attendance);
     }
 
     /**
@@ -43,14 +44,14 @@ public class AttendanceRVA extends RecyclerView.Adapter<AttendanceRVA.Attendance
      */
     @Override
     public int getItemCount() {
-        if (requisList != null)
-            return requisList.size();
+        if (attendanceList != null)
+            return attendanceList.size();
         else return 0;
     }
 
     public class AttendanceVH extends RecyclerView.ViewHolder {
-        RequisitionListItemBinding vBinding;
-        public AttendanceVH(RequisitionListItemBinding binding) {
+        AttendanceItemBinding vBinding;
+        public AttendanceVH(AttendanceItemBinding binding) {
             super(binding.getRoot());
             this.vBinding = binding;
         }

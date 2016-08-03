@@ -18,10 +18,13 @@ public class MAttendance extends PBSJson {
     private String DeploymentDate;
     private String M_Attendance_ID;
     private String M_Attendance_UUID;
-    private String C_ProjectLocation_ID;
+    private int C_ProjectLocation_ID;
     private String C_ProjectLocation_UUID;
-    private String HR_Shift_ID;
+    private int HR_Shift_ID;
     private String HR_Shift_UUID;
+
+    transient private String projectLocationName;
+    transient private String hrShiftName;
 
     MAttendanceLine[] Lines;
 
@@ -50,11 +53,11 @@ public class MAttendance extends PBSJson {
         M_Attendance_UUID = m_Attendance_UUID;
     }
 
-    public String getC_ProjectLocation_ID() {
+    public int getC_ProjectLocation_ID() {
         return C_ProjectLocation_ID;
     }
 
-    public void setC_ProjectLocation_ID(String c_ProjectLocation_ID) {
+    public void setC_ProjectLocation_ID(int c_ProjectLocation_ID) {
         C_ProjectLocation_ID = c_ProjectLocation_ID;
     }
 
@@ -66,11 +69,11 @@ public class MAttendance extends PBSJson {
         C_ProjectLocation_UUID = c_ProjectLocation_UUID;
     }
 
-    public String getHR_Shift_ID() {
+    public int getHR_Shift_ID() {
         return HR_Shift_ID;
     }
 
-    public void setHR_Shift_ID(String HR_Shift_ID) {
+    public void setHR_Shift_ID(int HR_Shift_ID) {
         this.HR_Shift_ID = HR_Shift_ID;
     }
 
@@ -88,5 +91,21 @@ public class MAttendance extends PBSJson {
 
     public void setDeploymentDate(String deploymentDate) {
         DeploymentDate = deploymentDate;
+    }
+
+    public String getProjectLocationName() {
+        return projectLocationName;
+    }
+
+    public void setProjectLocationName(String projectLocationName) {
+        this.projectLocationName = projectLocationName;
+    }
+
+    public String getHrShiftName() {
+        return hrShiftName;
+    }
+
+    public void setHrShiftName(String hrShiftName) {
+        this.hrShiftName = hrShiftName;
     }
 }
