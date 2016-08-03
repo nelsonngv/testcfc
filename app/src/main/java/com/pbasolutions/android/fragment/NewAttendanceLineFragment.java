@@ -201,9 +201,6 @@ public class NewAttendanceLineFragment extends Fragment {
             return;
         }
 
-        if (true)
-            return;
-
         tempATLine = new MAttendanceLine();
 
         tempATLine.setC_BPartner_ID(emplSpinner.getKey());
