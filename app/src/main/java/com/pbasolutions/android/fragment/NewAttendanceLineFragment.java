@@ -178,12 +178,14 @@ public class NewAttendanceLineFragment extends Fragment {
                 || emplSpinner.getValue().isEmpty()) isEmpty = true;
 
         boolean isAbsent = (switchAbsent.getVisibility() == View.VISIBLE) && switchAbsent.isChecked();
+        String checkinDate = textCheckinDate.getText().toString();
+        String checkoutDate = textCheckoutDate.getText().toString();
 
         if (isAbsent) {
             isEmpty |= leaveSpinner == null || leaveSpinner.getValue().isEmpty();
         } else {
-            isEmpty |= textCheckoutDate.getText().toString().isEmpty()
-                    || textCheckoutDate.getText().toString().isEmpty();
+            isEmpty |= checkinDate.isEmpty()
+                    || checkoutDate.isEmpty();
         }
 
         if (isEmpty)
@@ -191,6 +193,17 @@ public class NewAttendanceLineFragment extends Fragment {
             PandoraHelper.showWarningMessage(getActivity(), "Please fill up all fields");
             return;
         }
+        Date checkin = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkinDate);
+        Date checkout = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkoutDate);
+
+        if (!checkout.after(checkin)) {
+            PandoraHelper.showWarningMessage(getActivity(), "Check Out Date should be later than Check In Date.");
+            return;
+        }
+
+        if (true)
+            return;
+
         tempATLine = new MAttendanceLine();
 
         tempATLine.setC_BPartner_ID(emplSpinner.getKey());
@@ -199,8 +212,8 @@ public class NewAttendanceLineFragment extends Fragment {
                 tempATLine.setHR_LeaveType_ID(leaveSpinner.getKey());
                 tempATLine.setHR_LeaveType_Name(leaveSpinner.getValue());
         } else {
-            tempATLine.setCheckInDate(textCheckinDate.getText().toString());
-            tempATLine.setCheckOutDate(textCheckoutDate.getText().toString());
+            tempATLine.setCheckInDate(checkinDate);
+            tempATLine.setCheckOutDate(checkoutDate);
         }
         tempATLine.setComments(textComment.getText().toString());
 
@@ -218,8 +231,8 @@ public class NewAttendanceLineFragment extends Fragment {
         } else {
             cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, 0);
 
-            cv.put(MAttendanceLine.CHECKIN_COL, textCheckinDate.getText().toString());
-            cv.put(MAttendanceLine.CHECKOUT_COL, textCheckoutDate.getText().toString());
+            cv.put(MAttendanceLine.CHECKIN_COL, checkinDate);
+            cv.put(MAttendanceLine.CHECKOUT_COL, checkoutDate);
         }
         cv.put(ModelConst.C_PROJECTLOCATION_ID_COL, PBSAttendanceController.projectLocationId);
         cv.put(ModelConst.HR_SHIFT_UUID_COL, PBSAttendanceController.shiftUUID);
