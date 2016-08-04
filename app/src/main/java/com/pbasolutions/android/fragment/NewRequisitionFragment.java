@@ -286,14 +286,15 @@ public class NewRequisitionFragment extends Fragment {
 
                 if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentManager.popBackStack();
-                    fragmentManager.popBackStack();
-                    Fragment frag = new RequisitionFragment();
-                    frag.setRetainInstance(true);
-                    fragmentTransaction.replace(R.id.container_body, frag);
-                    fragmentTransaction.addToBackStack(frag.getClass().getName());
-                    fragmentTransaction.commit();
+//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                    fragmentManager.popBackStack();
+//                    fragmentManager.popBackStack();
+//                    Fragment frag = new RequisitionFragment();
+//                    frag.setRetainInstance(true);
+//                    fragmentTransaction.replace(R.id.container_body, frag);
+//                    fragmentTransaction.addToBackStack(frag.getClass().getName());
+//                    fragmentTransaction.commit();
                 } else {
                     PandoraHelper.showWarningMessage((PandoraMain) getActivity(), "Failed to request!");
                 }

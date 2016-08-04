@@ -51,17 +51,19 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
             input.putString(PBSServerConst.PARAM_URL, appContext.getServer_url());
             Bundle output = assetCont.triggerEvent(assetCont.SAVE_MOVEMENTLINE_EVENT, input, new Bundle(), null);
             if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
-                Fragment fragment = new AssetNewMovement();
-                ((AssetNewMovement) fragment).set_UUID(get_UUID());
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragment.setRetainInstance(true);
-                    fragmentTransaction.replace(R.id.container_body, fragment);
-                    fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                    fragmentTransaction.commit();
-                    ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_newmovementline));
-                }
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.popBackStack();
+//                Fragment fragment = new AssetNewMovement();
+//                ((AssetNewMovement) fragment).set_UUID(get_UUID());
+//                if (fragment != null) {
+//                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                    fragment.setRetainInstance(true);
+//                    fragmentTransaction.replace(R.id.container_body, fragment);
+//                    fragmentTransaction.addToBackStack(fragment.getClass().getName());
+//                    fragmentTransaction.commit();
+//                    ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_newmovementline));
+//                }
             } else  {
                 PandoraHelper.showMessage(context,
                         output.getString(output.getString(PandoraConstant.TITLE)));

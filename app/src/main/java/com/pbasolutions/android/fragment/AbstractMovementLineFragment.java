@@ -1,6 +1,7 @@
 package com.pbasolutions.android.fragment;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.pbasolutions.android.databinding.AssetMovementlineDetailsBinding;
 import com.pbasolutions.android.listener.SpinnerOnItemSelected;
 import com.pbasolutions.android.model.MMovementLine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,6 +56,8 @@ public abstract class AbstractMovementLineFragment extends PBSDetailsFragment{
     protected TextView uom;
     protected EditText movementQty;
 
+    protected View rootView ;
+
 
     private static final int SAVE_LINE_ID = 1;
     /**
@@ -74,26 +78,57 @@ public abstract class AbstractMovementLineFragment extends PBSDetailsFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.asset_new_movementline,
+        rootView = inflater.inflate(R.layout.asset_new_movementline,
                 container, false);
-        line = getMovementLine();
         setUI(rootView);
         setUIListener();
-        setOnItemSelectedListener();
-        setValues();
+
+        new AsyncTask<Void, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Void... params) {
+                Bundle result = new Bundle();
+                line = getMovementLine();
+                result.putParcelableArrayList("prodList0", (ArrayList<SpinnerPair>) getProdList(true));
+                result.putParcelableArrayList("prodList1", (ArrayList<SpinnerPair>)getProdList(false));
+                result.putParcelableArrayList("asi", (ArrayList<SpinnerPair>)getAsi());
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                Activity act = getActivity();
+                List<SpinnerPair> prodList0 = result.getParcelableArrayList("prodList0");
+                prodNameAdapter = PandoraHelper.addListToSpinner(act, prodName, prodList0);
+
+                List<SpinnerPair> prodList1 = result.getParcelableArrayList("prodList1");
+                prodValueAdapter = PandoraHelper.addListToSpinner(act, prodValue, prodList1);
+
+                List<SpinnerPair> asiList = result.getParcelableArrayList("asi");
+                asiAdapter = PandoraHelper.addListToSpinner(act, asi, asiList);
+
+                setOnItemSelectedListener();
+                setValues();
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute();
+
+
         return rootView;
     }
 
     public void setUI(View view) {
-        Activity act = getActivity();
         prodName = (Spinner) view.findViewById(R.id.prodName);
-        prodNameAdapter = PandoraHelper.addListToSpinner(act, prodName, getProdList(true));
         prodValue = (Spinner) view.findViewById(R.id.prodValue);
-        prodValueAdapter = PandoraHelper.addListToSpinner(act, prodValue, getProdList(false));
         asi = (Spinner) view.findViewById(R.id.asi);
         uom = (TextView) view.findViewById(R.id.uom);
         movementQty = (EditText) view.findViewById(R.id.movementQty);
-        asiAdapter = PandoraHelper.addListToSpinner(act, asi, getAsi());
 
         qtyOnHand = (TextView) view.findViewById(R.id.qtyOnHand);
     }

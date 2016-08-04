@@ -2,6 +2,7 @@ package com.pbasolutions.android.fragment;
 
 import android.content.ContentValues;
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -87,24 +88,45 @@ public class AssetNewMovement extends AbstractMovementFragment {
         Bundle input = new Bundle();
         input.putSerializable(PBSAssetController.ARG_MOVEMENT, movement);
         input.putString(PBSServerConst.PARAM_URL, appContext.getServer_url());
-        Bundle result = assetCont.triggerEvent(assetCont.MOVE_EVENT,
-                input, new Bundle(), null);
-        if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE)) &&
-                result.getString(PandoraConstant.TITLE) != null){
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentManager.popBackStack();
-            fragmentManager.popBackStack();
-            Fragment frag = new AssetFragment();
-            ((AssetFragment)frag).setIsMovementFrag(true);
-            frag.setRetainInstance(true);
-            fragmentTransaction.replace(R.id.container_body, frag);
-            fragmentTransaction.addToBackStack(frag.getClass().getName());
-            fragmentTransaction.commit();
-        } else {
-            PandoraHelper.showErrorMessage(context,
-                    result.getString(result.getString(PandoraConstant.TITLE)));
-        }
+
+        new AsyncTask<Bundle, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle result = assetCont.triggerEvent(assetCont.MOVE_EVENT,
+                        params[0], new Bundle(), null);
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE)) &&
+                        result.getString(PandoraConstant.TITLE) != null){
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    fragmentManager.popBackStack();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentManager.popBackStack();
+//            Fragment frag = new AssetFragment();
+//            ((AssetFragment)frag).setIsMovementFrag(true);
+//            frag.setRetainInstance(true);
+//            fragmentTransaction.replace(R.id.container_body, frag);
+//            fragmentTransaction.addToBackStack(frag.getClass().getName());
+//            fragmentTransaction.commit();
+                } else {
+                    PandoraHelper.showErrorMessage(context,
+                            result.getString(result.getString(PandoraConstant.TITLE)));
+                }
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
+
     }
 
     @Override
