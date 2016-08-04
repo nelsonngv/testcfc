@@ -193,12 +193,15 @@ public class NewAttendanceLineFragment extends Fragment {
             PandoraHelper.showWarningMessage(getActivity(), "Please fill up all fields");
             return;
         }
-        Date checkin = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkinDate);
-        Date checkout = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkoutDate);
 
-        if (!checkout.after(checkin)) {
-            PandoraHelper.showWarningMessage(getActivity(), "Check Out Date should be later than Check In Date.");
-            return;
+        if (!isAbsent) {
+            Date checkin = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkinDate);
+            Date checkout = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkoutDate);
+
+            if (!checkout.after(checkin)) {
+                PandoraHelper.showWarningMessage(getActivity(), "Check Out Date should be later than Check In Date.");
+                return;
+            }
         }
 
         tempATLine = new MAttendanceLine();

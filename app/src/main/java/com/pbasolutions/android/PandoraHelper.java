@@ -283,6 +283,9 @@ public class PandoraHelper  {
      * @param date
      */
     public static void promptDatePicker(final TextView date, Activity activity) {
+        promptDatePicker(date, activity, true);
+    }
+    public static void promptDatePicker(final TextView date, Activity activity, boolean hasMinDate) {
         final Calendar c = Calendar.getInstance();
         int  mYear = c.get(Calendar.YEAR);
         int  mMonth = c.get(Calendar.MONTH);
@@ -299,7 +302,8 @@ public class PandoraHelper  {
 
                     }
                 }, mYear, mMonth, mDay);
-        dpd.getDatePicker().setMinDate(c.getTimeInMillis());
+        if (hasMinDate)
+            dpd.getDatePicker().setMinDate(c.getTimeInMillis());
         dpd.show();
     }
 

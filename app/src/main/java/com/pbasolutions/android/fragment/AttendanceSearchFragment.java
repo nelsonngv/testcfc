@@ -176,7 +176,7 @@ public class AttendanceSearchFragment extends Fragment {
         deployDateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PandoraHelper.promptDatePicker(deployDateView, getActivity());
+                PandoraHelper.promptDatePicker(deployDateView, getActivity(), false);
             }
         });
 
