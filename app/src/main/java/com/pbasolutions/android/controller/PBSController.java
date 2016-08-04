@@ -38,6 +38,23 @@ public class PBSController extends ContextWrapper implements PBSIController{
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Bundle runTaskDirectly(Bundle input, Bundle result) {
+        task.setInput(input);
+        task.setOutput(result);
+        try {
+            result = task.call();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return result;
     }
@@ -47,6 +64,11 @@ public class PBSController extends ContextWrapper implements PBSIController{
     public Bundle triggerEvent(String eventName, Bundle input, Bundle output, Object object) {
         input.putString(ARG_TASK_EVENT, eventName);
         return runTask(input, output);
+    }
+
+    public Bundle callEventDirectly(String eventName, Bundle input, Bundle output, Object object) {
+        input.putString(ARG_TASK_EVENT, eventName);
+        return runTaskDirectly(input, output);
     }
 
 }

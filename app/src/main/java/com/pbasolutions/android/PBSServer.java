@@ -85,7 +85,7 @@ public class PBSServer {
             HttpResponse response = httpClient.execute(httpPost, localContext);
             return EntityUtils.toString(response.getEntity());
         }  catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

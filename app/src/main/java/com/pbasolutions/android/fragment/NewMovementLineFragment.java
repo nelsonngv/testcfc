@@ -2,6 +2,7 @@ package com.pbasolutions.android.fragment;
 
 import android.content.ContentValues;
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -132,21 +133,58 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
 
             input.putString(assetCont.ARG_PROJECTLOCATION_ID, appContext.getC_projectlocation_id());
             input.putString(PBSServerConst.PARAM_URL, appContext.getServer_url());
-            result = assetCont.triggerEvent(assetCont.GET_ASI_EVENT, input, new Bundle(), null);
-            storages = (ObservableArrayList<MStorage>)result.getSerializable(PBSAssetController.ARG_STORAGE);
-            List<SpinnerPair> asiPair = result.getParcelableArrayList(assetCont.ARG_ASI);
-            asiAdapter.clear();
-            //asiAdapter.addAll(asiPair);
-            asiAdapter = PandoraHelper.addListToSpinner(getActivity(), asi, asiPair);
-            asiAdapter.notifyDataSetChanged();
+
+            new AsyncTask<Bundle, Void, Bundle>() {
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+                }
+
+                @Override
+                protected Bundle doInBackground(Bundle... params) {
+                    Bundle result = assetCont.triggerEvent(assetCont.GET_ASI_EVENT, params[0], new Bundle(), null);
+                    return result;
+                }
+
+                @Override
+                protected void onPostExecute(Bundle result) {
+                    super.onPostExecute(result);
+                    storages = (ObservableArrayList<MStorage>)result.getSerializable(PBSAssetController.ARG_STORAGE);
+                    List<SpinnerPair> asiPair = result.getParcelableArrayList(assetCont.ARG_ASI);
+                    asiAdapter.clear();
+                    //asiAdapter.addAll(asiPair);
+                    asiAdapter = PandoraHelper.addListToSpinner(getActivity(), asi, asiPair);
+                    asiAdapter.notifyDataSetChanged();
+
+                    ((PandoraMain)getActivity()).dismissProgressDialog();
+                }
+            }.execute(input);
         } else if (R.id.asi == id){
             //get the QtyOnHand value
             Bundle input = new Bundle();
             input.putSerializable(PBSAssetController.ARG_STORAGE, storages);
             input.putString(PBSAssetController.ARG_M_ATTRIBUTESETINSTANCE_ID, pair.getKey());
-            Bundle result = assetCont.triggerEvent(assetCont.GET_QTYONHAND_EVENT, input, new Bundle(), null);
-            Number quantityOnHand = result.getDouble(assetCont.ARG_QTYONHAND);
-            qtyOnHand.setText(String.valueOf(quantityOnHand));
+            new AsyncTask<Bundle, Void, Bundle>() {
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+                }
+
+                @Override
+                protected Bundle doInBackground(Bundle... params) {
+                    Bundle result = assetCont.triggerEvent(assetCont.GET_QTYONHAND_EVENT, params[0], new Bundle(), null);
+                    return result;
+                }
+
+                @Override
+                protected void onPostExecute(Bundle result) {
+                    super.onPostExecute(result);
+                    Number quantityOnHand = result.getDouble(assetCont.ARG_QTYONHAND);
+                    qtyOnHand.setText(String.valueOf(quantityOnHand));
+
+                    ((PandoraMain)getActivity()).dismissProgressDialog();
+                }
+            }.execute(input);
         }
     }
 

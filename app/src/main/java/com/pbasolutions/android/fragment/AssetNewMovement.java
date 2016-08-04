@@ -130,10 +130,10 @@ public class AssetNewMovement extends AbstractMovementFragment {
         if (_UUID != null && !_UUID.isEmpty()) {
             Bundle input = new Bundle();
             input.putString(assetCont.ARG_M_MOVEMENT_UUID, get_UUID());
-            Bundle result = assetCont.triggerEvent(assetCont.GET_LINES_EVENT,
+            Bundle result = assetCont.callEventDirectly(assetCont.GET_LINES_EVENT,
                     input, new Bundle(), null);
             lines = (ObservableArrayList<MMovementLine>)result.getSerializable(assetCont.ARG_LINES);
-            if (lines != null)
+            if (lines != null && movement != null)
                 movement.setLines(lines.toArray(new MMovementLine[lines.size()]));
         }
     }
@@ -143,7 +143,7 @@ public class AssetNewMovement extends AbstractMovementFragment {
         if (_UUID != null && !_UUID.isEmpty()) {
             Bundle input = new Bundle();
             input.putString(assetCont.ARG_M_MOVEMENT_UUID, get_UUID());
-            Bundle result = assetCont.triggerEvent(assetCont.GET_MOVEMENT_EVENT,
+            Bundle result = assetCont.callEventDirectly(assetCont.GET_MOVEMENT_EVENT,
                     input, new Bundle(), null);
             movement = (MMovement) result.getSerializable(assetCont.ARG_MOVEMENT);
         }
