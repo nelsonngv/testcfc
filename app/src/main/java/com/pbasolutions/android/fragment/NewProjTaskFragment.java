@@ -220,7 +220,16 @@ public class NewProjTaskFragment extends Fragment {
             context.globalVariable.setAd_user_id(ad_user_id);
         }
 
-        pt.setCreatedBy(context.globalVariable.getAd_user_uuid());
+        String ad_user_uuid = context.globalVariable.getAd_user_uuid();
+        if (ad_user_uuid.isEmpty()) {
+            ad_user_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
+                    ModelConst.AD_USER_UUID_COL, context.globalVariable.getAd_user_id(),
+                    ModelConst.AD_USER_TABLE + ModelConst._ID, getActivity().getContentResolver());
+            //set the uuid.
+            context.globalVariable.setAd_user_uuid(ad_user_uuid);
+        }
+
+        pt.setCreatedBy(ad_user_uuid);
 
         pt.set_UUID(UUID.randomUUID().toString());
 
