@@ -103,6 +103,8 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
         Bundle input = new Bundle();
         input.putString(assetCont.ARG_M_PRODUCT_UUID, ((String) (prodName.getTag())));
         input.putBoolean(assetCont.ARG_IS_GET_ASI, true);
+        input.putString(assetCont.ARG_PROJECTLOCATION_ID, appContext.getC_projectlocation_id());
+        input.putString(PBSServerConst.PARAM_URL, appContext.getServer_url());
         Bundle result = assetCont.triggerEvent(assetCont.GET_ASI_EVENT,
                 input, new Bundle(), null);
         return result.getParcelableArrayList(assetCont.ARG_ASI);
@@ -159,7 +161,8 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
                     ((PandoraMain)getActivity()).dismissProgressDialog();
                 }
             }.execute(input);
-        } else if (R.id.asi == id){
+        } else if (R.id.asi == id && storages != null){
+
             //get the QtyOnHand value
             Bundle input = new Bundle();
             input.putSerializable(PBSAssetController.ARG_STORAGE, storages);
