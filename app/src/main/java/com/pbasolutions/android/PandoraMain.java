@@ -360,7 +360,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                             PandoraConstant.LOGIN, "Ok", null);
                 } else {
                     PandoraHelper.getProjLocAvailable(this, false);
-                    defaultFragment = FRAGMENT_RECRUIT;
+                    if (globalVariable.isInitialSynced())
+                        defaultFragment = FRAGMENT_RECRUIT;
+                    else
+                        defaultFragment = FRAGMENT_ACCOUNT;
                 }
 
                 if (PBSServerConst.cookieStore == null) {

@@ -25,6 +25,8 @@ public class MEmployee extends PBSJson{
     private String sex;
     private String jobTitle;
     private String _UUID;
+    private String ICNo;
+    private String WorkPermit;
 
     private String Name;
     private String Status;
@@ -112,5 +114,21 @@ public class MEmployee extends PBSJson{
     @Override
     public void set_UUID(String _UUID) {
         this._UUID = _UUID;
+    }
+
+    public String getICNo() {
+        return ICNo;
+    }
+
+    public void setICNo(String ICNo) {
+        this.ICNo = ICNo;
+    }
+
+    public String getWorkPermit() {
+        return WorkPermit;
+    }
+
+    public void setWorkPermit(String workPermit) {
+        WorkPermit = workPermit;
     }
 }

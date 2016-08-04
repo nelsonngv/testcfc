@@ -720,7 +720,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "ATTACHMENT_TASKPICTURE_4 VARCHAR2(100) , " +
                                 "ATTACHMENT_TASKPICTURE_5 VARCHAR2(100) , " +
                                 //--
-                                "CONSTRAINT PROJTASKID_UNIQCONS UNIQUE (C_PROJECTTASK_ID)," +
+//                                "CONSTRAINT PROJTASKID_UNIQCONS UNIQUE (C_PROJECTTASK_ID)," +
                                 "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
                                 "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                                 ");");
@@ -924,7 +924,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
 
                         db.execSQL("CREATE VIEW C_BPARTNER_VIEW AS" +
                                         " SELECT C_BPARTNER.C_BPARTNER_UUID, C_BPARTNER.NAME," +
-                                        " C_BPARTNER.VALUE AS IDNUMBER," +
+                                        " C_BPARTNER.ICNO AS IDNUMBER," +
+                                        " C_BPARTNER.WORKPERMIT AS WORKPERMIT," +
                                         " C_BPARTNER_LOCATION.PHONE, HR_JOBPOSITION.JOB_TITLE" +
                                         " FROM C_BPARTNER" +
                                         " LEFT JOIN C_BPARTNER_LOCATION ON (C_BPARTNER.C_BPARTNER_UUID = C_BPARTNER_LOCATION.C_BPARTNER_UUID)" +

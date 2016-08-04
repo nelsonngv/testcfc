@@ -238,7 +238,7 @@ public class RecruitTask extends Task {
         String projLocationUUID = input.getString(PBSRecruitController.ARG_PROJECT_LOCATION_UUID);
 
         String[] projection = { cbpartner + MEmployee.C_BPARTNER_UUID_COL, cbpartner + ModelConst.NAME_COL, cbpartner + ModelConst.IDNUMBER_COL,
-                cbpartner + ModelConst.PHONE_COL, cbpartner + MEmployee.JOB_TITLE_COL};
+                cbpartner + ModelConst.PHONE_COL, cbpartner + MEmployee.JOB_TITLE_COL, cbpartner + ModelConst.WORKPERMIT_COL};
 
         String[] selectionArg = { projLocationUUID };
 
@@ -264,6 +264,9 @@ public class RecruitTask extends Task {
                     } else if (ModelConst.IDNUMBER_COL
                             .equalsIgnoreCase(columnName)) {
                         employee.setIdNumber(rowValue);
+                    } else if (ModelConst.WORKPERMIT_COL
+                            .equalsIgnoreCase(columnName)) {
+                        employee.setWorkPermit(rowValue);
                     } else if (ModelConst.PHONE_COL
                             .equalsIgnoreCase(columnName)) {
                         employee.setPhone(rowValue);
@@ -272,6 +275,9 @@ public class RecruitTask extends Task {
                         employee.setJobTitle(rowValue);
                     }
                 }
+
+                if (employee.getIdNumber() == null || employee.getIdNumber().equalsIgnoreCase("null"))
+                    employee.setIdNumber(employee.getWorkPermit());
                 employeeList.add(employee);
             } while (cursor.moveToNext());
         }
