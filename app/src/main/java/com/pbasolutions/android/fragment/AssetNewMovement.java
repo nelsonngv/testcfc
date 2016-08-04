@@ -130,7 +130,7 @@ public class AssetNewMovement extends AbstractMovementFragment {
         if (_UUID != null && !_UUID.isEmpty()) {
             Bundle input = new Bundle();
             input.putString(assetCont.ARG_M_MOVEMENT_UUID, get_UUID());
-            Bundle result = assetCont.callEventDirectly(assetCont.GET_LINES_EVENT,
+            Bundle result = assetCont.triggerEvent(assetCont.GET_LINES_EVENT,
                     input, new Bundle(), null);
             lines = (ObservableArrayList<MMovementLine>)result.getSerializable(assetCont.ARG_LINES);
             if (lines != null && movement != null)

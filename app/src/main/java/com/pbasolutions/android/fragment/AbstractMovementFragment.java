@@ -2,6 +2,7 @@ package com.pbasolutions.android.fragment;
 
 import android.app.Activity;
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -94,13 +95,36 @@ public abstract class AbstractMovementFragment extends PBSDetailsFragment{
                 container, false);
         setUI(rootView);
         setUIListener();
-        populateMovement();
-        populateLines();
-        setValues();
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.movementline_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        viewAdapter = new MovementLineRVA(getActivity(), lines, inflater);
-        recyclerView.setAdapter(viewAdapter);
+
+        new AsyncTask<Void, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Void... params) {
+                Bundle input = new Bundle();
+                populateMovement();
+                populateLines();
+
+                return input;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                setValues();
+                viewAdapter = new MovementLineRVA(getActivity(), lines, LayoutInflater.from(getActivity()));
+                recyclerView.setAdapter(viewAdapter);
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute();
+
         return rootView;
     }
 
