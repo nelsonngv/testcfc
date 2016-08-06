@@ -40,15 +40,16 @@ public class AssetMovementDetails extends AbstractMovementFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (movement != null){
-            String currentProjLoc = ((PandoraMain) getActivity())
-                    .globalVariable.getC_projectlocation_name();
+            String currentProjLocId = ((PandoraMain) getActivity())
+                    .globalVariable.getC_projectlocation_id();
+            int nProjLocId = Integer.parseInt(currentProjLocId);
             if (!"DR".equalsIgnoreCase(movement.getDocStatus())
                     && !"RE".equalsIgnoreCase(movement.getDocStatus())
                     ) {
 
                 //  move.setEnabled(false);
-            } else if (movement.getProjectLocation()
-                    .equalsIgnoreCase(currentProjLoc)) {
+            } else if (movement.getC_ProjectLocation_ID() != null
+                    && movement.getC_ProjectLocation_ID().intValue() == nProjLocId) {
                 //  move.setEnabled(false);
             } else {
                 Toast.makeText(getContext(), "Please complete the movement.",

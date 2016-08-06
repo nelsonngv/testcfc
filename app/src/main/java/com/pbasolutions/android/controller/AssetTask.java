@@ -718,10 +718,12 @@ public class AssetTask extends Task {
         ObservableArrayList<MMovementLine> lines = new ObservableArrayList();
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(MMovementLine.TABLENAME),
                 mvlProjection, selection, selectArgs, null);
-        cursor.moveToFirst();
-        do {
-            lines.add(MMovementLine.populateMovementLine(cursor, cr));
-        } while (cursor.moveToNext());
+        if (cursor != null && cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            do {
+                lines.add(MMovementLine.populateMovementLine(cursor, cr));
+            } while (cursor.moveToNext());
+        }
         cursor.close();
         output.putSerializable(PBSAssetController.ARG_LINES, lines);
         return output;
