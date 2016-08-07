@@ -271,5 +271,8 @@
     Attendance messages.
     !-->
     <string name="label_deploydate">Deploy Date</string>
+    <string name="title_employee">Employee</string>
+    <string name="title_resourcealloc">Resource Alloc.</string>
+
 
 </resources>

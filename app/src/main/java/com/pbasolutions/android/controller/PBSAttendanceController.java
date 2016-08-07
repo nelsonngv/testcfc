@@ -24,6 +24,7 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
     public static final String ARG_PROJECTLOCATION_ID = "ARG_PROJECTLOCATION_ID ";
     public static final String ARG_PROJECTLOCATION_UUID = "ARG_PROJECTLOCATION_UUID ";
     public static final String ARG_DEPLOYMENTDATE = "ARG_DEPLOYMENTDATE";
+    public static final String ARG_ATTENDANCESEARCHRES = "ARG_ATTENDANCESEARCHRES";
 
     public static final String SHIFT_LIST = "SHIFT_LIST";
     public static final String GET_SHIFTS_EVENT = "GET_SHIFTS_EVENT";

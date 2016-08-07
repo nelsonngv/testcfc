@@ -26,11 +26,11 @@ import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
-import com.pbasolutions.android.adapter.AttendanceLineRVA;
-import com.pbasolutions.android.adapter.AttendanceRVA;
+import com.pbasolutions.android.adapter.AttendanceSearchLineRVA;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.model.MAttendance;
+import com.pbasolutions.android.model.MAttendanceSearchItem;
 import com.pbasolutions.android.model.ModelConst;
 
 import java.text.SimpleDateFormat;
@@ -59,10 +59,10 @@ public class AttendanceSearchFragment extends Fragment {
     private ArrayAdapter projLocNameAdapter;
 
     RecyclerView recyclerView;
-    AttendanceRVA linesAdapter;
+    AttendanceSearchLineRVA linesAdapter;
     Button searchButton;
 
-    private ObservableArrayList<MAttendance> attendances;
+    private ObservableArrayList<MAttendanceSearchItem> attendances;
 
     public AttendanceSearchFragment() {
     }
@@ -86,7 +86,7 @@ public class AttendanceSearchFragment extends Fragment {
         setUI(rootView);
         setUIListener();
 
-        attendances = new ObservableArrayList<MAttendance>();
+        attendances = new ObservableArrayList<MAttendanceSearchItem>();
         return rootView;
     }
 
@@ -129,7 +129,7 @@ public class AttendanceSearchFragment extends Fragment {
     }
 
     void refreshAttendanceLines() {
-        linesAdapter = new AttendanceRVA(getActivity(), attendances);
+        linesAdapter = new AttendanceSearchLineRVA(getActivity(), attendances);
         recyclerView.setAdapter(linesAdapter);
     }
 
@@ -285,7 +285,7 @@ public class AttendanceSearchFragment extends Fragment {
                 searchButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
 
                 if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-                    attendances = (ObservableArrayList<MAttendance>)result.get(PBSAttendanceController.ARG_ATTENDANCES);
+                    attendances = (ObservableArrayList<MAttendanceSearchItem>)result.get(PBSAttendanceController.ARG_ATTENDANCESEARCHRES);
                     refreshAttendanceLines();
                 } else {
                     PandoraHelper.showErrorMessage(getActivity(), result.getString(PandoraConstant.ERROR));

@@ -1,8 +1,8 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
-            name="attendance"
-            type="com.pbasolutions.android.model.MAttendance" />
+            name="attendancesearchitem"
+            type="com.pbasolutions.android.model.MAttendanceSearchItem" />
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,41 +16,63 @@
                 android:divider="?android:attr/dividerVertical"
                 android:showDividers="middle">
                 <TextView
-                    android:text="@string/label_projloc"
+                    android:text="@string/title_employee"
                     style="@style/TableLabel"/>
                 <TextView
-                    android:id="@+id/att_projectlocname"
-                    android:text="@{attendance.projectLocationName}"
+                    android:id="@+id/att_employeename"
+                    android:text="@{attendancesearchitem.C_BPartner_Name}"
                     style="@style/TableValue2"/>
             </TableRow>
             <TableRow
                 android:divider="?android:attr/dividerVertical"
                 android:showDividers="middle">
                 <TextView
-                    android:text="@string/label_deploydate"
+                    android:text="@string/label_checkindate"
                     style="@style/TableLabel"/>
                 <TextView
-                    android:id="@+id/att_deploy_date"
+                    android:id="@+id/att_checkin"
                     style="@style/TableValue2"
-                    android:text="@{attendance.DeploymentDate}"
+                    android:text="@{attendancesearchitem.CheckIn}"
                     />
             </TableRow>
             <TableRow
                 android:divider="?android:attr/dividerVertical"
                 android:showDividers="middle">
                 <TextView
-                    android:text="@string/label_shift"
+                    android:text="@string/label_checkoutdate"
                     style="@style/TableLabel"/>
                 <TextView
-                    android:id="@+id/att_shiftname"
-                    android:text="@{attendance.hrShiftName}"
+                    android:id="@+id/att_checkout"
+                    android:text="@{attendancesearchitem.CheckOut}"
+                    style="@style/TableValue2"/>
+            </TableRow>
+            <TableRow
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle">
+                <TextView
+                    android:text="@string/label_leavetype"
+                    style="@style/TableLabel"/>
+                <TextView
+                    android:id="@+id/att_leavetype"
+                    android:text="@{attendancesearchitem.HR_LeaveType_Name}"
+                    style="@style/TableValue2"/>
+            </TableRow>
+            <TableRow
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle">
+                <TextView
+                    android:text="@string/title_resourcealloc"
+                    style="@style/TableLabel"/>
+                <TextView
+                    android:id="@+id/att_resouecealloc"
+                    android:text="@{attendancesearchitem.HR_ResourceAllocation_ID}"
                     style="@style/TableValue2"/>
             </TableRow>
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:id="@+id/_UUID"
-                android:text="@{attendance._UUID}"
+                android:text="@{attendancesearchitem._UUID}"
                 android:visibility="invisible"/>
         </TableLayout>
         <View style="@style/Line" android:layout_width="match_parent" />

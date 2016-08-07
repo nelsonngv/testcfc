@@ -23,6 +23,7 @@ import com.pbasolutions.android.api.PBSIServerAPI;
 import com.pbasolutions.android.api.PBSServerAPI;
 import com.pbasolutions.android.model.MAttendance;
 import com.pbasolutions.android.model.MAttendanceLine;
+import com.pbasolutions.android.model.MAttendanceSearchItem;
 import com.pbasolutions.android.model.MDeploy;
 import com.pbasolutions.android.model.MEmployee;
 import com.pbasolutions.android.model.MShift;
@@ -171,33 +172,23 @@ public class AttendanceTask implements Callable<Bundle> {
                 object, input.getString(PBSServerConst.PARAM_URL)
         );
 
-        Pair pair = PandoraHelper.parseJsonWithArraytoPair(json, "Success", "Attendances", MAttendance[].class.getName());
+        Pair pair = PandoraHelper.parseJsonWithArraytoPair(json, "Success", "ResourceAllocations", MAttendanceSearchItem[].class.getName());
         String success = (String) pair.first;
         if (success != null && success.equalsIgnoreCase(PandoraConstant.TRUE)) {
-            MAttendance attendances[] = (MAttendance[])pair.second;
+            MAttendanceSearchItem attendancesSearchRes[] = (MAttendanceSearchItem[])pair.second;
 
             //convert from array to list
-            ObservableArrayList<MAttendance> list = new ObservableArrayList<MAttendance>();
-            if (attendances != null)
+            ObservableArrayList<MAttendanceSearchItem> list = new ObservableArrayList<MAttendanceSearchItem>();
+            if (attendancesSearchRes != null)
             {
-                for (int x=0; x < attendances.length; x++) {
-//                attendances[x].setEmployeesName(getEmployeesName(attendances[x].getC_BPartner_IDs()));
-                    attendances[x].setProjectLocationName(getProjectLocationName(attendances[x].getC_ProjectLocation_ID()));
-                    attendances[x].setHrShiftName(getHRShiftName(attendances[x].getHR_Shift_ID()));
-//
-//                //get shift model.
-                    MShift shift = new MShift(attendances[x].getHR_Shift_ID());
-                    shift = shift.getShift(cr, false);
-//
-//                attendances[x].setHRShiftName(shift.getName());
-//                attendances[x].setHRShiftTimeFrom(shift.getTimeFrom().toString());
-//                attendances[x].setHRShiftTimeTo(shift.getTimeTo().toString());
-
-                    list.add(attendances[x]);
+                for (int x=0; x < attendancesSearchRes.length; x++) {
+                    attendancesSearchRes[x].setC_BPartner_Name(getEmployeeName(attendancesSearchRes[x].getC_BPartner_ID()));
+                    attendancesSearchRes[x].setHR_LeaveType_Name(getHRLeaveTypeName(attendancesSearchRes[x].getHR_LeaveType_ID()));
+                    list.add(attendancesSearchRes[x]);
                 }
             }
 
-            output.putSerializable(PBSAttendanceController.ARG_ATTENDANCES, list);
+            output.putSerializable(PBSAttendanceController.ARG_ATTENDANCESEARCHRES, list);
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
         } else {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
@@ -260,6 +251,12 @@ public class AttendanceTask implements Callable<Bundle> {
                 ModelConst.C_BPARTNER_ID_COL, cr);
     }
 
+    private String getHRLeaveTypeName(int hr_leavetype_id) {
+        return ModelConst.mapIDtoColumn(ModelConst.HR_LEAVETYPE_TABLE,
+                ModelConst.NAME_COL, String.valueOf(hr_leavetype_id),
+                ModelConst.HR_LEAVETYPE_ID_COL, cr);
+    }
+
     private String getProjectLocationName(int c_projectLocation_id) {
         return ModelConst.mapIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE,
                 ModelConst.NAME_COL, String.valueOf(c_projectLocation_id),
@@ -280,6 +277,12 @@ public class AttendanceTask implements Callable<Bundle> {
 
         }
         return names.toString();
+    }
+
+    private String getEmployeeName(int C_BPartner_ID){
+            String name =ModelConst.mapIDtoColumn(ModelConst.C_BPARTNER_TABLE,
+                    ModelConst.NAME_COL, String.valueOf(C_BPartner_ID),ModelConst.C_BPARTNER_ID_COL, cr);
+        return name;
     }
 
     private Bundle getEmployees() {
