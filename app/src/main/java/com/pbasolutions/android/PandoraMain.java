@@ -459,10 +459,11 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     logOutResult = authenticatorController.triggerEvent(
                         PBSAuthenticatorController.LOG_OUT, inputBundle, new Bundle(), this);
 
-                globalVariable = null;
-                PBSServerConst.cookieStore = null;
                 authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
                         inputBundle, null, this);
+
+                globalVariable = null;
+                PBSServerConst.cookieStore = null;
 
                 return null;
             }
