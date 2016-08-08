@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * Created by tinker on 8/7/16.
  */
-public class MAttendanceSearchItem  implements IPBSJson, IModel, Serializable {
+public class MAttendanceSearchItem  extends PBSJson {
     public static final String TABLENAME = "M_AttendanceLine";
 
     public static final String M_ATTENDANCELINE_UUID_COL = "M_ATTENDANCELINE_UUID";

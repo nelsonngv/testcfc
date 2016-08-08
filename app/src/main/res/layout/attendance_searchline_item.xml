@@ -24,6 +24,7 @@
                     style="@style/TableValue2"/>
             </TableRow>
             <TableRow
+                android:id="@+id/ats_row_checkin"
                 android:divider="?android:attr/dividerVertical"
                 android:showDividers="middle">
                 <TextView
@@ -36,6 +37,7 @@
                     />
             </TableRow>
             <TableRow
+                android:id="@+id/ats_row_checkout"
                 android:divider="?android:attr/dividerVertical"
                 android:showDividers="middle">
                 <TextView
@@ -47,6 +49,7 @@
                     style="@style/TableValue2"/>
             </TableRow>
             <TableRow
+                android:id="@+id/ats_row_leavetype"
                 android:divider="?android:attr/dividerVertical"
                 android:showDividers="middle">
                 <TextView
@@ -58,6 +61,7 @@
                     style="@style/TableValue2"/>
             </TableRow>
             <TableRow
+                android:id="@+id/ats_row_resourcealloc"
                 android:divider="?android:attr/dividerVertical"
                 android:showDividers="middle">
                 <TextView

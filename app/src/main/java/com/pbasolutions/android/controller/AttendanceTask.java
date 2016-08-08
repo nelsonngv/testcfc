@@ -172,6 +172,8 @@ public class AttendanceTask implements Callable<Bundle> {
                 object, input.getString(PBSServerConst.PARAM_URL)
         );
 
+//        String json = "{\"ResourceAllocations\":[{\"Status\":\"Checked Out\",\"HR_LeaveType_ID\":0,\"CheckOut\":\"2016-07-10T20:00:00.000+0800\",\"C_BPartner_ID\":1003932,\"CheckIn\":\"2016-07-10T18:00:00.000+0800\",\"HR_ResourceAllocation_ID\":1006065},{\"Status\":\"Checked Out\",\"HR_LeaveType_ID\":0,\"CheckOut\":\"2016-07-10T20:00:00.000+0800\",\"C_BPartner_ID\":1003529,\"CheckIn\":\"2016-07-10T18:00:00.000+0800\",\"HR_ResourceAllocation_ID\":1006066}],\"Success\":\"TRUE\"}";
+
         Pair pair = PandoraHelper.parseJsonWithArraytoPair(json, "Success", "ResourceAllocations", MAttendanceSearchItem[].class.getName());
         String success = (String) pair.first;
         if (success != null && success.equalsIgnoreCase(PandoraConstant.TRUE)) {
@@ -182,9 +184,12 @@ public class AttendanceTask implements Callable<Bundle> {
             if (attendancesSearchRes != null)
             {
                 for (int x=0; x < attendancesSearchRes.length; x++) {
-                    attendancesSearchRes[x].setC_BPartner_Name(getEmployeeName(attendancesSearchRes[x].getC_BPartner_ID()));
-                    attendancesSearchRes[x].setHR_LeaveType_Name(getHRLeaveTypeName(attendancesSearchRes[x].getHR_LeaveType_ID()));
-                    list.add(attendancesSearchRes[x]);
+                    MAttendanceSearchItem item = attendancesSearchRes[x];
+                    item.setC_BPartner_Name(getEmployeeName(item.getC_BPartner_ID()));
+                    item.setHR_LeaveType_Name(getHRLeaveTypeName(item.getHR_LeaveType_ID()));
+                    item.setCheckIn(PandoraHelper.parseToDisplaySDate(item.getCheckIn(), "yyyy-MM-dd hh:mm", null));
+                    item.setCheckOut(PandoraHelper.parseToDisplaySDate(item.getCheckOut(), "yyyy-MM-dd hh:mm", null));
+                    list.add(item);
                 }
             }
 

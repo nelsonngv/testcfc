@@ -144,9 +144,9 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
             at_leavetype = (TextView) bindView.findViewById(R.id.att_leavetype);
             at_resourcealloc = (TextView) bindView.findViewById(R.id.att_resouecealloc);
 
-            at_rowCheckinDate = (TableRow) bindView.findViewById(R.id.at_row_checkindate);
-            at_rowCheckoutDate = (TableRow) bindView.findViewById(R.id.at_row_checkoutdate);
-            at_rowLeaveType = (TableRow) bindView.findViewById(R.id.at_row_leavetype);
+            at_rowCheckinDate = (TableRow) bindView.findViewById(R.id.ats_row_checkin);
+            at_rowCheckoutDate = (TableRow) bindView.findViewById(R.id.ats_row_checkout);
+            at_rowLeaveType = (TableRow) bindView.findViewById(R.id.ats_row_leavetype);
 
             at_checkindate.setOnClickListener(this);
             at_checkoutdate.setOnClickListener(this);
