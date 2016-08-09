@@ -89,7 +89,6 @@ public class PandoraTask implements Callable<Bundle> {
                 }
                 cursor.moveToNext();
             }
-            cursor.close();
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
             output.putString(PandoraConstant.ERROR, "Please select the project location in defaults setting tab.");
             output.putSerializable(PandoraController.ARG_PROJECT_LOCATION_JSON, projLocJSONs);
@@ -97,6 +96,7 @@ public class PandoraTask implements Callable<Bundle> {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
             output.putString(PandoraConstant.ERROR, "This app has not run initial sync yet. Please sync now.");
         }
+        cursor.close();
         return output;
     }
 }

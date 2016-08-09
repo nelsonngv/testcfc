@@ -438,6 +438,8 @@ public class ProjectTask implements Callable<Bundle> {
                                     projTask.setProjLocName(projLocCursor.getString(y));
                             }
                         }
+
+                        projLocCursor.close();
                     }
                 }
                 projTask.setProjLocUUID(rowValue);

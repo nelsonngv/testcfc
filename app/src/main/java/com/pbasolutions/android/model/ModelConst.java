@@ -251,8 +251,9 @@ public class ModelConst {
                 selectionCol + " = ?", selectionArg, null);
         if (cursor != null && cursor.getCount() > 0) {
             result =  true;
-            cursor.close();
         }
+        if (cursor != null)
+            cursor.close();
 
         return result;
     }
@@ -267,8 +268,10 @@ public class ModelConst {
         Cursor cursor = contentResolver.query(ModelConst.uriCustomBuilder(tableName), null,
                 selection, selectionArg, null);
         if (cursor.getCount() > 0) {
+            cursor.close();
             return true;
         }
+        cursor.close();
         return false;
     }
 
@@ -377,6 +380,7 @@ public class ModelConst {
 
             return value;
         } else {
+            cursor.close();
             return "null";
         }
     }
@@ -403,6 +407,8 @@ public class ModelConst {
 
             return value;
         } else {
+            if (cursor != null)
+                cursor.close();
             return "null";
         }
     }
@@ -429,6 +435,7 @@ public class ModelConst {
             cursorBP.close();
             return false;
         }
+        cursorBP.close();
         return true;
     }
 

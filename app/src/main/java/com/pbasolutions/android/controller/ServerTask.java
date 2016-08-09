@@ -130,6 +130,9 @@ public class ServerTask extends Task {
 
                 } while (tableCursor.moveToNext());
             }
+
+            if (tableCursor != null)
+                tableCursor.close();
         }
         return output;
     }

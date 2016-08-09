@@ -141,6 +141,9 @@ public class MShift extends PBSJson {
                 shift =  populateShift(cursor);
             } while (cursor.moveToNext());
         }
+
+        if (cursor != null)
+            cursor.close();
         return shift;
     }
 }

@@ -238,8 +238,8 @@ public class PBSCheckpointController extends ContextWrapper implements PBSIContr
                 }
             }
             resultBundle.putSerializable(ARG_CHECKPOINT_DETAILS, checkpointdetails);
-            cursor.close();
         }
+        cursor.close();
         return resultBundle;
     }
 

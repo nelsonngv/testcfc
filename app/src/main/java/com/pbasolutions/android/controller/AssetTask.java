@@ -595,6 +595,7 @@ public class AssetTask extends Task {
                 }
             } while (cursor.moveToNext());
 
+            cursor.close();
             if (!c_uom_uuid.isEmpty()) {
                 //get the uom info
                 String uomProjection[] = {MUOM.C_UOM_UUID_COL, MUOM.NAME_COL, MUOM.UOMSYMBOL_COL, MUOM.C_UOM_ID_COL};
@@ -897,6 +898,7 @@ public class AssetTask extends Task {
                 }
             } while (cursor.moveToNext());
 
+            cursor.close();
             List<Number> list = new ArrayList();
             if (!m_product_uuid_list.isEmpty()) {
                 for (String m_product_uuid : m_product_uuid_list) {

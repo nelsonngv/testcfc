@@ -86,7 +86,8 @@ public class BroadcastTask implements Callable<Bundle> {
                 output.putSerializable(PBSBroadcastController.ARG_NOTE, populateNote(cursor));
             } while (cursor.moveToNext());
         }
-        cursor.close();
+        if (cursor != null)
+            cursor.close();
         return output;
     }
 
@@ -185,7 +186,8 @@ public class BroadcastTask implements Callable<Bundle> {
                 noteList.add(populateNote(cursor));
             } while (cursor.moveToNext());
         }
-        cursor.close();
+        if (cursor != null)
+            cursor.close();
         output.putSerializable(PBSBroadcastController.NOTE_LIST, noteList);
         return output;
     }

@@ -203,8 +203,9 @@ public class RecruitTask extends Task {
                 }
                 applicantList.add(applicant);
             } while (cursor.moveToNext());
-            cursor.close();
         }
+        if (cursor != null)
+            cursor.close();
         output.putSerializable(PBSRecruitController.APPLICANT_LIST, applicantList);
         return output;
     }
@@ -312,8 +313,8 @@ public class RecruitTask extends Task {
                 }
                 identityList.add(pair);
             } while (cursor.moveToNext());
-            cursor.close();
         }
+        cursor.close();
         output.putParcelableArrayList(PBSRecruitController.IDTYPE_LIST, identityList);
         return output;
     }
@@ -345,8 +346,8 @@ public class RecruitTask extends Task {
                 }
                 shiftList.add(pair);
             } while (cursor.moveToNext());
-            cursor.close();
         }
+        cursor.close();
         output.putParcelableArrayList(PBSRecruitController.SHIFT_LIST, shiftList);
         return output;
     }
@@ -380,8 +381,8 @@ public class RecruitTask extends Task {
                 }
                 setupJobList.add(pair);
             } while (cursor.moveToNext());
-            cursor.close();
         }
+        cursor.close();
         output.putParcelableArrayList(PBSRecruitController.SETUPJOB_LIST, setupJobList);
         return output;
     }
@@ -412,8 +413,8 @@ public class RecruitTask extends Task {
                 }
                 nationalityList.add(pair);
             } while (cursor.moveToNext());
-            cursor.close();
         }
+        cursor.close();
         output.putParcelableArrayList(PBSRecruitController.NATIONALITY_LIST, nationalityList);
         return output;
     }

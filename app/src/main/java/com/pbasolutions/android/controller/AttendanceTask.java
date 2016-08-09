@@ -150,9 +150,9 @@ public class AttendanceTask implements Callable<Bundle> {
             do {
                 atlList.add(populateAttendanceLine(prlCursor));
             } while (prlCursor.moveToNext());
-
-            prlCursor.close();
         }
+        if (prlCursor != null)
+            prlCursor.close();
 
         output.putSerializable(PBSAttendanceController.ARG_ATTENDANCES, atlList);
 
@@ -357,8 +357,9 @@ public class AttendanceTask implements Callable<Bundle> {
                 }
                 shiftList.add(pair);
             } while (cursor.moveToNext());
-            cursor.close();
         }
+        if (cursor != null)
+            cursor.close();
         output.putParcelableArrayList(PBSRecruitController.SHIFT_LIST, shiftList);
         return output;
     }
@@ -383,7 +384,8 @@ public class AttendanceTask implements Callable<Bundle> {
                 employeeList.add(pair);
             } while (cursor.moveToNext());
         }
-        cursor.close();
+        if (cursor != null)
+            cursor.close();
         output.putSerializable(PBSAttendanceController.LEAVETYPE_LIST, employeeList);
         return output;
     }
@@ -530,7 +532,8 @@ public class AttendanceTask implements Callable<Bundle> {
                 projectLocations.add(getProjectLocation(cursor));
             } while (cursor.moveToNext());
         }
-        cursor.close();
+        if (cursor != null)
+            cursor.close();
         output.putParcelableArrayList(PBSTaskController.ARG_PROJECTLOCATIONS, projectLocations);
         return output;
     }
