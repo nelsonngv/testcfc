@@ -405,7 +405,7 @@ public class AssetTask extends Task {
             output = PandoraHelper.providerApplyBatch(output, cr, ops , "delete movement");
             output = new Bundle();
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-            output.putString(PandoraConstant.ERROR, "Unable to create movement");
+            output.putString(PandoraConstant.ERROR, "Failed to create movement");
         }
         return output;
     }
