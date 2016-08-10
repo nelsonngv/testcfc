@@ -92,6 +92,9 @@ public class AssetTask extends Task {
             case PBSAssetController.SAVE_MOVEMENTLINE_EVENT: {
                 return saveMovementLine();
             }
+            case PBSAssetController.UPDATE_MOVEMENTLINE_EVENT: {
+                return updateMovementLine();
+            }
             case PBSAssetController.GET_ASI_EVENT: {
                 return getAsi();
             }
@@ -573,6 +576,21 @@ public class AssetTask extends Task {
     private Bundle saveMovementLine() {
         ContentValues cv = input.getParcelable(PBSController.ARG_CONTENTVALUES);
         return ModelConst.insertData(cv, cr, MMovementLine.TABLENAME, output);
+    }
+
+    private Bundle updateMovementLine() {
+        ContentValues cv = input.getParcelable(PBSController.ARG_CONTENTVALUES);
+        String[] selectArg = {cv.getAsString(MMovementLine.M_MOVEMENTLINE_UUID_COL)};
+
+        boolean isSuccess = ModelConst.updateTableRow(cr, MMovementLine.TABLENAME, cv, MMovementLine.M_MOVEMENTLINE_UUID_COL, selectArg);
+
+        if (isSuccess) {
+            output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+        } else {
+            output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+            output.putString(PandoraConstant.ERROR, "Failed to update line");
+        }
+        return output;
     }
 
     private Bundle getUOM() {

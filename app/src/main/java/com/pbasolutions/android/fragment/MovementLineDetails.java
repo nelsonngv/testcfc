@@ -1,13 +1,18 @@
 package com.pbasolutions.android.fragment;
 
+import android.content.ContentValues;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 
 import com.pbasolutions.android.PBSServerConst;
+import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.adapter.SpinAdapter;
 import com.pbasolutions.android.adapter.SpinnerPair;
+import com.pbasolutions.android.controller.PBSAssetController;
 import com.pbasolutions.android.model.MMovementLine;
+import com.pbasolutions.android.model.MUOM;
 
 import java.util.List;
 
@@ -60,9 +65,41 @@ public class MovementLineDetails extends AbstractMovementLineFragment {
         }
         uom.setText(line.getUOMName());
         movementQty.setText(String.valueOf(line.getMovementQty()));
-        setHasOptionsMenu(false);
+
+        int lineId = 0;
+        if (line != null && line.getM_MovementLine_ID() != null)
+            lineId = line.getM_MovementLine_ID().intValue();
+
+        setHasOptionsMenu(lineId == 0);
+
         getActivity().invalidateOptionsMenu();
         qtyOnHand.setText(String.valueOf(line.getQtyOnHand()));
     }
 
+    @Override
+    public void save() {
+        if (line == null) return;
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(MMovementLine.M_MOVEMENTLINE_UUID_COL, line.getM_MovementLine_UUID());
+
+        MUOM muom = ((MUOM)uom.getTag());
+        cv.put(MMovementLine.C_UOM_UUID_COL, muom.get_UUID());
+        cv.put(MMovementLine.ASI_DESCRIPTION_COL, asiItem.getPair().getValue());
+        cv.put(MMovementLine.M_ATTRIBUTESETINSTANCE_ID_COL, asiItem.getPair().getKey());
+        cv.put(MMovementLine.M_PRODUCT_UUID_COL, prodNameItem.getPair().getKey());
+        cv.put(MMovementLine.MOVEMENTQTY_COL, movementQty.getText().toString());
+
+        Bundle input = new Bundle();
+        input.putParcelable(PBSAssetController.ARG_CONTENTVALUES, cv);
+        Bundle output = assetCont.triggerEvent(assetCont.UPDATE_MOVEMENTLINE_EVENT, input, new Bundle(), null);
+        if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.popBackStack();
+        } else  {
+            PandoraHelper.showMessage(context,
+                    output.getString(output.getString(PandoraConstant.TITLE)));
+        }
+    }
 }

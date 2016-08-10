@@ -32,6 +32,7 @@ public class PBSAssetController extends PBSController{
     public static final String ARG_UOM = "ARG_UOM";
     public static final String ARG_MOVEMENTLINE = "ARG_MOVEMENTLINE";
     public static final String SAVE_MOVEMENTLINE_EVENT = "SAVE_MOVEMENTLINE_EVENT";
+    public static final String UPDATE_MOVEMENTLINE_EVENT = "UPDATE_MOVEMENTLINE_EVENT";
     public static final String GET_ASI_EVENT = "GET_ASI_EVENT";
     public static final String ARG_ASI = "ARG_ASI";
     public static final String GET_QTYONHAND_EVENT = "GET_QTYONHAND_EVENT";
