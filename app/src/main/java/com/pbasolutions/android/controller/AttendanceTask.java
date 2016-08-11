@@ -449,15 +449,12 @@ public class AttendanceTask implements Callable<Bundle> {
         PBSIServerAPI serverAPI = new PBSServerAPI();
 
         MAttendance pr = (MAttendance) input.getSerializable(PBSAttendanceController.ARG_ATTENDANCE_REQUEST);
-        pr.setDeploymentDate(PandoraHelper.parseToDisplaySDate(pr.getDeploymentDate(), "yyyy-MM-dd", null));
+        pr.setDeploymentDate(PandoraHelper.parseToDisplaySDate(pr.getDeploymentDate(), "yyyy-MM-dd hh:mm", null));
         MAttendance resultAtt = serverAPI.createAttendance
                 (
                         pr,
                         input.getString(PBSServerConst.PARAM_URL)
                 );
-
-        String selection = MAttendance.M_ATTENDANCE_UUID_COL + "=?";
-        String selectionArgs[] = {pr.getM_Attendance_UUID()};
 
         Bundle dbout = new Bundle();
 
@@ -468,32 +465,22 @@ public class AttendanceTask implements Callable<Bundle> {
 
             ArrayList<ContentProviderOperation> ops =
                     new ArrayList<>();
-
-
-            ops.add(ContentProviderOperation
-                    .newUpdate(ModelConst.uriCustomBuilder(MAttendance.TABLENAME))
-                    .withValues(cv)
-                    .withSelection(selection, selectionArgs)
-                    .build());
-
             //update lines
             ContentValues rlcv = new ContentValues();
-            MAttendanceLine lines[] = resultAtt.getLines();
             MAttendanceLine originalLines[] = pr.getLines();
 
-            for (int i = 0; i < lines.length; i++) {
-                selection = MAttendanceLine.M_ATTENDANCELINE_UUID_COL + "=?";
+            for (int i = 0; i < originalLines.length; i++) {
+                String selection = MAttendanceLine.M_ATTENDANCELINE_UUID_COL + "=?";
                 String lineSelectionArgs[] = {originalLines[i].get_UUID()};
-                rlcv.put(MAttendanceLine.M_ATTENDANCELINE_UUID_COL, lines[i].get_UUID());
+                rlcv.put(MAttendanceLine.M_ATTENDANCELINE_UUID_COL, originalLines[i].get_UUID());
                 ops.add(ContentProviderOperation
-                        .newUpdate(ModelConst.uriCustomBuilder(MAttendanceLine.TABLENAME))
-                        .withValues(rlcv)
+                        .newDelete(ModelConst.uriCustomBuilder(MAttendanceLine.TABLENAME))
                         .withSelection(selection, lineSelectionArgs)
                         .build());
             }
             dbout = PandoraHelper.providerApplyBatch(dbout, cr, ops, "create attendance");
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-            output.putString(PandoraConstant.RESULT, "Successfully request");
+            output.putString(PandoraConstant.RESULT, "Successfully sent request");
 
         } else {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);

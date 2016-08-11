@@ -432,11 +432,13 @@ public class NewAttendanceFragment extends Fragment {
                 requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
 
                 if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentManager.popBackStack();
-                    fragmentManager.popBackStack();
-                    fragmentTransaction.commit();
+                    PandoraHelper.showMessage(getActivity(), result.getString(PandoraConstant.RESULT));
+                    refreshAttendances();
+//                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                    fragmentManager.popBackStack();
+//                    fragmentManager.popBackStack();
+//                    fragmentTransaction.commit();
                 } else {
                     PandoraHelper.showErrorMessage(getActivity(), result.getString(PandoraConstant.ERROR));
                 }
