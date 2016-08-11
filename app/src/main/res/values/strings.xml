@@ -274,5 +274,14 @@
     <string name="title_employee">Employee</string>
     <string name="title_resourcealloc">Resource Alloc.</string>
 
+    <!--
+    Spinner titles.
+    !-->
+    <string name="title_selectprojectloc">Select Project Location</string>
+    <string name="title_selectproduct">Select Product</string>
+    <string name="title_selectemployee">Select Employee</string>
+    <string name="title_projectloc3">Select Project Location</string>
+    <string name="title_projectloc4">Select Project Location</string>
+    <string name="title_projectloc5">Select Project Location</string>
 
 </resources>

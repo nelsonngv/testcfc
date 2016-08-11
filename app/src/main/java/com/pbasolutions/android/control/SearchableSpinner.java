@@ -29,6 +29,7 @@ public class SearchableSpinner extends Spinner implements View.OnTouchListener,
     private ArrayAdapter _arrayAdapter;
     private String _strHintText;
     private boolean _isFromInit;
+    private String _dlgtitle;
 
     public SearchableSpinner(Context context) {
         super(context);
@@ -45,8 +46,11 @@ public class SearchableSpinner extends Spinner implements View.OnTouchListener,
             int attr = a.getIndex(i);
             if (attr == R.styleable.SearchableSpinner_hintText) {
                 _strHintText = a.getString(attr);
+            } else if (attr == R.styleable.SearchableSpinner_dlgTitle) {
+                _dlgtitle = a.getString(attr);
             }
         }
+
         a.recycle();
         init();
     }
@@ -63,6 +67,7 @@ public class SearchableSpinner extends Spinner implements View.OnTouchListener,
                 (_items);
         _searchableListDialog.setOnSearchableItemClickListener(this);
         setOnTouchListener(this);
+        _searchableListDialog.setTitle(_dlgtitle);
 
         _arrayAdapter = (ArrayAdapter) getAdapter();
         if (!TextUtils.isEmpty(_strHintText)) {

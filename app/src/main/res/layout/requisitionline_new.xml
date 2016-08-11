@@ -1,4 +1,7 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
     <data>
         <variable
             name="prLine"
@@ -20,6 +23,7 @@
                         style="@style/TableInfoLabel"/>
                     <com.pbasolutions.android.control.SearchableSpinner
                         style="@style/SpinnerTableValue"
+                        app:dlgTitle="@string/title_selectproduct"
                         android:id="@+id/prlProdNameSpinner"/>
                 </LinearLayout>
             </TableRow>

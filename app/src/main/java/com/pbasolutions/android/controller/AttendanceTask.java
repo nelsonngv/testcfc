@@ -449,7 +449,7 @@ public class AttendanceTask implements Callable<Bundle> {
         PBSIServerAPI serverAPI = new PBSServerAPI();
 
         MAttendance pr = (MAttendance) input.getSerializable(PBSAttendanceController.ARG_ATTENDANCE_REQUEST);
-        pr.setDeploymentDate(PandoraHelper.parseToDisplaySDate(pr.getDeploymentDate(), "yyyy-MM-dd hh:mm", null));
+        pr.setDeploymentDate(PandoraHelper.parseToDisplaySDate(pr.getDeploymentDate(), "yyyy-MM-dd", null));
         MAttendance resultAtt = serverAPI.createAttendance
                 (
                         pr,
