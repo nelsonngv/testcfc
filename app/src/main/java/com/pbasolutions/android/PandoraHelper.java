@@ -80,16 +80,16 @@ public class PandoraHelper  {
     public static final String SERVER_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
     // 2001-07-04T12:08:56, assumed to be same time zone as server
-    public static final String SERVER_DATE_FORMAT2 = "yyyy-MM-DD'T'hh:mm:ss";
+    public static final String SERVER_DATE_FORMAT2 = "yyyy-MM-DD'T'HH:mm:ss";
 
     // 2001-07-04 12:08:56, assumed to be same time zone as server
-    public static final String SERVER_DATE_FORMAT3 = "yyyy-MM-DD hh:mm:ss";
+    public static final String SERVER_DATE_FORMAT3 = "yyyy-MM-DD HH:mm:ss";
 
     // 2001-07-04 12:08, assumed to be same time zone as server
-    public static final String SERVER_DATE_FORMAT4 = "yyyy-MM-DD hh:mm";
+    public static final String SERVER_DATE_FORMAT4 = "yyyy-MM-DD HH:mm";
 
     // 07-04-2001 12:08, assumed to be same time zone as server
-    public static final String SERVER_DATE_FORMAT5 = "DD-MM-yyyy hh:mm";
+    public static final String SERVER_DATE_FORMAT5 = "DD-MM-yyyy HH:mm";
 
     //29-12-2015 field date format
     public static final String FIELD_DATE_FORMAT = "dd-MM-yyyy";
