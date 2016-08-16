@@ -64,6 +64,7 @@ public class MovementLineDetails extends AbstractMovementLineFragment {
                     " table, product name,value and asi wont be able to display, please sync.");
         }
         uom.setText(line.getUOMName());
+        uom.setTag(line.getC_UOM_UUID());
         movementQty.setText(String.valueOf(line.getMovementQty()));
 
         int lineId = 0;
@@ -84,8 +85,8 @@ public class MovementLineDetails extends AbstractMovementLineFragment {
 
         cv.put(MMovementLine.M_MOVEMENTLINE_UUID_COL, line.getM_MovementLine_UUID());
 
-        MUOM muom = ((MUOM)uom.getTag());
-        cv.put(MMovementLine.C_UOM_UUID_COL, muom.get_UUID());
+        String uomUUID = (String) uom.getTag();
+        cv.put(MMovementLine.C_UOM_UUID_COL, uomUUID);
         cv.put(MMovementLine.ASI_DESCRIPTION_COL, asiItem.getPair().getValue());
         cv.put(MMovementLine.M_ATTRIBUTESETINSTANCE_ID_COL, asiItem.getPair().getKey());
         cv.put(MMovementLine.M_PRODUCT_UUID_COL, prodNameItem.getPair().getKey());
