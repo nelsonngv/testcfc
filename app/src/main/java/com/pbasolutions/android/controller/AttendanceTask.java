@@ -187,8 +187,8 @@ public class AttendanceTask implements Callable<Bundle> {
                     MAttendanceSearchItem item = attendancesSearchRes[x];
                     item.setC_BPartner_Name(getEmployeeName(item.getC_BPartner_ID()));
                     item.setHR_LeaveType_Name(getHRLeaveTypeName(item.getHR_LeaveType_ID()));
-                    item.setCheckIn(PandoraHelper.parseToDisplaySDate(item.getCheckIn(), "yyyy-MM-dd hh:mm", null));
-                    item.setCheckOut(PandoraHelper.parseToDisplaySDate(item.getCheckOut(), "yyyy-MM-dd hh:mm", null));
+                    item.setCheckIn(PandoraHelper.parseToDisplaySDate(item.getCheckIn(), "yyyy-MM-dd HH:mm", null));
+                    item.setCheckOut(PandoraHelper.parseToDisplaySDate(item.getCheckOut(), "yyyy-MM-dd HH:mm", null));
                     list.add(item);
                 }
             }

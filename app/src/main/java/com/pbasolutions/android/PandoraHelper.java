@@ -80,16 +80,16 @@ public class PandoraHelper  {
     public static final String SERVER_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
     // 2001-07-04T12:08:56, assumed to be same time zone as server
-    public static final String SERVER_DATE_FORMAT2 = "yyyy-MM-DD'T'HH:mm:ss";
+    public static final String SERVER_DATE_FORMAT2 = "yyyy-MM-dd'T'HH:mm:ss";
 
     // 2001-07-04 12:08:56, assumed to be same time zone as server
-    public static final String SERVER_DATE_FORMAT3 = "yyyy-MM-DD HH:mm:ss";
+    public static final String SERVER_DATE_FORMAT3 = "yyyy-MM-dd HH:mm:ss";
 
     // 2001-07-04 12:08, assumed to be same time zone as server
-    public static final String SERVER_DATE_FORMAT4 = "yyyy-MM-DD HH:mm";
+    public static final String SERVER_DATE_FORMAT4 = "yyyy-MM-dd HH:mm";
 
     // 07-04-2001 12:08, assumed to be same time zone as server
-    public static final String SERVER_DATE_FORMAT5 = "DD-MM-yyyy HH:mm";
+    public static final String SERVER_DATE_FORMAT5 = "dd-MM-yyyy HH:mm";
 
     //29-12-2015 field date format
     public static final String FIELD_DATE_FORMAT = "dd-MM-yyyy";
@@ -341,7 +341,7 @@ public class PandoraHelper  {
                         TimePickerDialog timedlg = new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                String timeStr = String.format("%d-%d-%d %02d:%02d", m_nDay, m_nMonth + 1, m_nYear, hourOfDay, minute);
+                                String timeStr = String.format("%02d-%02d-%04d %02d:%02d", m_nDay, m_nMonth + 1, m_nYear, hourOfDay, minute);
                                 date.setText(timeStr);
                             }
                         }, calTime.get(Calendar.HOUR_OF_DAY), calTime.get(Calendar.MINUTE), false);

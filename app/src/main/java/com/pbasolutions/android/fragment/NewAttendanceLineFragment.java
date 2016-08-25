@@ -194,9 +194,11 @@ public class NewAttendanceLineFragment extends Fragment {
             return;
         }
 
+        Date checkin = null, checkout = null;
+        SimpleDateFormat sdf = new SimpleDateFormat(PandoraHelper.SERVER_DATE_FORMAT4);
         if (!isAbsent) {
-            Date checkin = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkinDate);
-            Date checkout = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkoutDate);
+            checkin = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkinDate);
+            checkout = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkoutDate);
 
             if (!checkout.after(checkin)) {
                 PandoraHelper.showWarningMessage(getActivity(), "Check Out Date should be later than Check In Date.");
@@ -212,8 +214,8 @@ public class NewAttendanceLineFragment extends Fragment {
                 tempATLine.setHR_LeaveType_ID(leaveSpinner.getKey());
                 tempATLine.setHR_LeaveType_Name(leaveSpinner.getValue());
         } else {
-            tempATLine.setCheckInDate(checkinDate);
-            tempATLine.setCheckOutDate(checkoutDate);
+            tempATLine.setCheckInDate(sdf.format(checkin));
+            tempATLine.setCheckOutDate(sdf.format(checkout));
         }
         tempATLine.setComments(textComment.getText().toString());
 
@@ -231,8 +233,8 @@ public class NewAttendanceLineFragment extends Fragment {
         } else {
             cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, 0);
 
-            cv.put(MAttendanceLine.CHECKIN_COL, checkinDate);
-            cv.put(MAttendanceLine.CHECKOUT_COL, checkoutDate);
+            cv.put(MAttendanceLine.CHECKIN_COL, sdf.format(checkin));
+            cv.put(MAttendanceLine.CHECKOUT_COL, sdf.format(checkout));
         }
         cv.put(ModelConst.C_PROJECTLOCATION_ID_COL, PBSAttendanceController.projectLocationId);
         cv.put(ModelConst.HR_SHIFT_UUID_COL, PBSAttendanceController.shiftUUID);

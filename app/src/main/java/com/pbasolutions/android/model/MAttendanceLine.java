@@ -27,8 +27,8 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
 
     private String C_BPartner_ID; // C_BPartner_ID
     private transient String C_BPartner_Name;
-    private String CheckInDate;
-    private String CheckOutDate;
+    private String CheckIn;
+    private String CheckOut;
     private String IsAbsent;
     private String Comments;
     private String HR_LeaveType_ID;
@@ -71,19 +71,19 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
     }
 
     public String getCheckInDate() {
-        return CheckInDate;
+        return CheckIn;
     }
 
     public void setCheckInDate(String checkInDate) {
-        CheckInDate = checkInDate;
+        CheckIn = checkInDate;
     }
 
     public String getCheckOutDate() {
-        return CheckOutDate;
+        return CheckOut;
     }
 
     public void setCheckOutDate(String checkOutDate) {
-        CheckOutDate = checkOutDate;
+        CheckOut = checkOutDate;
     }
 
     public String getHR_LeaveType_Name() {
@@ -131,8 +131,8 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
 
     public void prepareForGson() {
         if (IsAbsent != null && IsAbsent.equalsIgnoreCase("Y")) {
-            CheckInDate = null;
-            CheckOutDate = null;
+            CheckIn = null;
+            CheckOut = null;
         }
         else {
             IsAbsent = null;
