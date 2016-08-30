@@ -303,7 +303,7 @@ public class PandoraHelper  {
                     }
                 }, mYear, mMonth, mDay);
         if (hasMinDate)
-            dpd.getDatePicker().setMinDate(c.getTimeInMillis());
+            dpd.getDatePicker().setMaxDate(c.getTimeInMillis());
         dpd.show();
     }
 
@@ -348,7 +348,7 @@ public class PandoraHelper  {
                         timedlg.show();
                     }
                 }, mYear, mMonth, mDay);
-        dpd.getDatePicker().setMinDate(calendar.getTimeInMillis());
+        dpd.getDatePicker().setMaxDate(calendar.getTimeInMillis());
         dpd.show();
     }
 

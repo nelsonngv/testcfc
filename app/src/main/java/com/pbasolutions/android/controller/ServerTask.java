@@ -407,12 +407,12 @@ public class ServerTask extends Task {
                 } else if (tableCursor.getColumnName(x).equalsIgnoreCase("Latitude") ||
                         tableCursor.getColumnName(x).equalsIgnoreCase("Longitude")) {
                     String value = String.valueOf(tableCursor.getDouble(x));
-                    if (value.isEmpty())
+                    if (value == null || value.isEmpty())
                         value = "null";
                     columns.add(new PBSColumnsJSON(tableCursor.getColumnName(x), value));
                 } else if (tableCursor.getColumnName(x).contains("ATTACHMENT_")){
                     String value = CameraUtil.imageToBase64(tableCursor.getString(x));
-                    if (value.isEmpty())
+                    if (value == null || value.isEmpty())
                         value = "null";
                     columns.add(new PBSColumnsJSON(tableCursor.getColumnName(x), value));
                 } else if (tableCursor.getColumnName(x).equalsIgnoreCase(tableName + "_ID")){
