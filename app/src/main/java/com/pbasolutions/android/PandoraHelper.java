@@ -348,7 +348,8 @@ public class PandoraHelper  {
                         timedlg.show();
                     }
                 }, mYear, mMonth, mDay);
-        dpd.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+        dpd.getDatePicker().setMaxDate(calendar.getTimeInMillis()+ 86400000);
+        dpd.getDatePicker().setMinDate(calendar.getTimeInMillis());
         dpd.show();
     }
 
