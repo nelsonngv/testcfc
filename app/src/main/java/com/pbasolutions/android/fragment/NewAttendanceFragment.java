@@ -152,7 +152,7 @@ public class NewAttendanceFragment extends Fragment {
 
         deployDateView = (TextView) rootView.findViewById(R.id.attDeployDate);
 
-        Date date= new Date();
+        Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         deployDateView.setText(sdf.format(date));
 
@@ -163,6 +163,20 @@ public class NewAttendanceFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 refreshAttendances();
+                Date date;
+                attendanceLines  = getAttendances();
+                PBSAttendanceController attendCont = new PBSAttendanceController(getActivity());
+                if(attendanceLines.size() > 0 && attendanceLines.get(0).getCheckInDate() != null && !attendanceLines.get(0).getCheckInDate().equals("")) {
+                    date = PandoraHelper.stringToDate("yyyy-MM-dd", attendanceLines.get(0).getCheckInDate());
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                    deployDateView.setText(sdf.format(date));
+                }
+                else if(PBSAttendanceController.deployDate != null && !PBSAttendanceController.deployDate.equals("")) {
+                    String deployDate = PBSAttendanceController.deployDate;
+                    date = PandoraHelper.stringToDate("dd-MM-yyyy", deployDate);
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                    deployDateView.setText(sdf.format(date));
+                }
             }
 
             @Override
@@ -204,7 +218,7 @@ public class NewAttendanceFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+//                removeLine();
             }
         });
 
