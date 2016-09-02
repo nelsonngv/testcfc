@@ -297,8 +297,8 @@ public class PandoraHelper  {
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
-                        date.setText(dayOfMonth + "-"
-                                + (monthOfYear + 1) + "-" + year);
+                        String timeStr = String.format("%02d-%02d-%04d", dayOfMonth, monthOfYear + 1, year);
+                        date.setText(timeStr);
 
                     }
                 }, mYear, mMonth, mDay);

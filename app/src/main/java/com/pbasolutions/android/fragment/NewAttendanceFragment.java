@@ -7,7 +7,6 @@ import android.databinding.ObservableArrayList;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -139,7 +138,7 @@ public class NewAttendanceFragment extends Fragment {
         }
         shiftAdapter = PandoraHelper.addListToSpinner(getActivity(), shiftSpinner,
                 prefShiftList);
-        attendanceLines  = getAttendances();
+        attendanceLines = getAttendances();
         linesAdapter = new AttendanceLineRVA(getActivity(), attendanceLines);
         recyclerView.setAdapter(linesAdapter);
     }
@@ -164,18 +163,27 @@ public class NewAttendanceFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 refreshAttendances();
                 Date date;
-                attendanceLines  = getAttendances();
+                attendanceLines = getAttendances();
                 PBSAttendanceController attendCont = new PBSAttendanceController(getActivity());
-                if(attendanceLines.size() > 0 && attendanceLines.get(0).getCheckInDate() != null && !attendanceLines.get(0).getCheckInDate().equals("")) {
-                    date = PandoraHelper.stringToDate("yyyy-MM-dd", attendanceLines.get(0).getCheckInDate());
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-                    deployDateView.setText(sdf.format(date));
-                }
-                else if(PBSAttendanceController.deployDate != null && !PBSAttendanceController.deployDate.equals("")) {
+                if(PBSAttendanceController.deployDate != null && !PBSAttendanceController.deployDate.equals("")) {
                     String deployDate = PBSAttendanceController.deployDate;
                     date = PandoraHelper.stringToDate("dd-MM-yyyy", deployDate);
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                     deployDateView.setText(sdf.format(date));
+                }
+
+                refreshAttendances();
+                SpinnerPair selectedPair = (SpinnerPair) shiftSpinner.getSelectedItem();
+                if(shiftAdapter.getCount() > 0 && PBSAttendanceController.shiftUUID != null) {
+                    if (!PBSAttendanceController.shiftUUID.equalsIgnoreCase(selectedPair.getKey())) {
+                        for (int j = 0; j < shiftAdapter.getCount(); j++) {
+                            SpinnerPair pair2 = (SpinnerPair) shiftAdapter.getItem(j);
+                            if (PBSAttendanceController.shiftUUID.equalsIgnoreCase(pair2.getKey())) {
+                                shiftSpinner.setSelection(j);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -188,8 +196,35 @@ public class NewAttendanceFragment extends Fragment {
         shiftSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SpinnerPair pair = (SpinnerPair) shiftAdapter.getItem(position);
-                shiftChanged(pair.getKey());
+                SpinnerPair newPair = (SpinnerPair) shiftAdapter.getItem(position);
+                shiftChanged(newPair.getKey());
+
+                if(PBSAttendanceController.shiftUUID == null) {
+                    attendanceLines = linesAdapter.getLines();
+                    for (int i = 0; i < attendanceLines.size(); i++)
+                        attendanceLines.get(i).setIsSelected(true);
+
+                    if (attendanceLines.size() > 0)
+                        removeLine();
+                }
+
+                if(shiftAdapter.getCount() > 0 && PBSAttendanceController.shiftUUID != null) {
+                    if (!PBSAttendanceController.shiftUUID.equalsIgnoreCase(newPair.getKey())) {
+                        for (int j = 0; j < shiftAdapter.getCount(); j++) {
+                            SpinnerPair pair2 = (SpinnerPair) shiftAdapter.getItem(j);
+                            if (PBSAttendanceController.shiftUUID.equalsIgnoreCase(pair2.getKey())) {
+                                attendanceLines = linesAdapter.getLines();
+                                for (int i = 0; i < attendanceLines.size(); i++)
+                                    attendanceLines.get(i).setIsSelected(true);
+
+                                if (attendanceLines.size() > 0)
+                                    removeLine();
+                                break;
+                            }
+                        }
+                    }
+                }
+                PBSAttendanceController.shiftUUID = newPair.getKey();
             }
 
             @Override
@@ -206,19 +241,31 @@ public class NewAttendanceFragment extends Fragment {
         });
 
         deployDateView.addTextChangedListener(new TextWatcher() {
+            String deployDate = "";
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                if(PBSAttendanceController.deployDate == null || PBSAttendanceController.deployDate.equals(""))
+                    deployDate = deployDateView.getText().toString();
+                else deployDate = PBSAttendanceController.deployDate;
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 dateChanged(s.toString());
+                if(!deployDate.equalsIgnoreCase(s.toString())) {
+                    PBSAttendanceController.deployDate = s.toString();
+                    attendanceLines = linesAdapter.getLines();
+                    for (int i = 0; i < attendanceLines.size(); i++)
+                        attendanceLines.get(i).setIsSelected(true);
+
+                    if (attendanceLines.size() > 0)
+                        removeLine();
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-//                removeLine();
+
             }
         });
 
