@@ -302,13 +302,14 @@ public class AttendanceTask implements Callable<Bundle> {
                 cbpartner + ModelConst.PHONE_COL,
                 cbpartner + MEmployee.JOB_TITLE_COL};
 
-        String[] selectionArg = { projLocationUUID };
+        String[] selectionArg = { projLocationUUID, PBSAttendanceController.shiftUUID };
 
-        String wherePhase = String.format("%s NOT IN (SELECT %s FROM %s) AND %s=?",
+        String wherePhase = String.format("%s NOT IN (SELECT %s FROM %s) AND %s=? AND %s=?",
                 cbpartner + MAttendanceLine.C_BPARTNER_UUID_COL,
-                cbpartner + MAttendanceLine.C_BPARTNER_UUID_COL,
+                MAttendanceLine.C_BPARTNER_UUID_COL,
                 ModelConst.M_ATTENDANCELINE_TABLE,
-                ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_PROJECTLOCATION_UUID_COL
+                ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_PROJECTLOCATION_UUID_COL,
+                ModelConst.HR_SHIFT_UUID_COL
                 );
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TABLE),
                 projection, wherePhase, selectionArg, "LOWER(" + cbpartner + ModelConst.NAME_COL + ") ASC");

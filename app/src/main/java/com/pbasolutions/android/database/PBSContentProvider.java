@@ -458,7 +458,7 @@ public class PBSContentProvider extends ContentProvider {
             }
             case ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TOKEN: {
                 SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-                builder.setTables(ModelConst.C_BPARTNER_VIEW + " left join " + ModelConst.HR_PROJECTASSIGNMENT_TABLE +
+                builder.setTables(ModelConst.C_BPARTNER_VIEW + " inner join " + ModelConst.HR_PROJECTASSIGNMENT_TABLE +
                         " on (" + ModelConst.C_BPARTNER_VIEW + "." + ModelConst.C_BPARTNER_TABLE + "_uuid = "
                         + ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_BPARTNER_TABLE + "_uuid)");
                 return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
