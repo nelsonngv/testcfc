@@ -192,6 +192,12 @@ public class ServerTask extends Task {
                         ContentValues cv = ModelConst.mapDataToContentValues(insertTable,
                                 cr);
                         String tableName = insertTable.getTableName();
+                        String updateTableNames[] = ModelConst.localUpdateTables;
+                        for(int i = 0; i < updateTableNames.length; i++)
+                            if(tableName.equalsIgnoreCase(updateTableNames[i])) {
+                                cv.put(ModelConst.IS_SYNCED_COL, "Y");
+                                break;
+                            }
 
                         String selection = ModelConst.getTableColumnIdName(tableName, cv);
                         String[] arg = {cv.getAsString(selection)};
