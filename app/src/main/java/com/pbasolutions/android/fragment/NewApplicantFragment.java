@@ -45,6 +45,9 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
     @Override
     protected void applyUpdate() {
         boolean isValid = true;
+
+        if(name.getText().toString().equals(""))
+            isValid = false;
         if(date.getText().toString().equals(""))
             isValid = false;
         if((genderSpinner.getSelectedItem()) == null || ((SpinnerPair)genderSpinner.getSelectedItem()).getValue().equals(""))
@@ -61,24 +64,30 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
             isValid = false;
         if(age.getText().toString().equals(""))
             isValid = false;
+        else {
+            String idNoRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{2,}$";
+            if (!idno.getText().toString().matches(idNoRegex)) {
+                Toast.makeText(getActivity(), "Please make sure ID Number consists of at least 1 alphabet and 1 number. No special character allowed.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
         if(expSalary.getText().toString().equals(""))
-            isValid = false;
-//        if(profileImage == null)
-//            isValid = false;
-        if(name.getText().toString().equals(""))
             isValid = false;
         if(idno.getText().toString().equals(""))
             isValid = false;
         else {
             String idNoRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{2,}$";
             if (!idno.getText().toString().matches(idNoRegex)) {
-//                isValid = false;
                 Toast.makeText(getActivity(), "Please make sure ID Number consists of at least 1 alphabet and 1 number. No special character allowed.", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
         if(phone.getText().toString().equals(""))
             isValid = false;
+        if(yearsOfExp.getText().toString().equals(""))
+            isValid = false;
+//        if(profileImage == null)
+//            isValid = false;
 //        if(qualHigh.getText().toString().equals(""))
 //            isValid = false;
 //        if(qualOther.getText().toString().equals(""))
@@ -103,10 +112,8 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
 //            isValid = false;
 //        if(cert10Pic == null)
 //            isValid = false;
-        if(yearsOfExp.getText().toString().equals(""))
-            isValid = false;
-        if(status.getText().toString().equals(""))
-            isValid = false;
+//        if(status.getText().toString().equals(""))
+//            isValid = false;
 
         if(!isValid) {
             Toast.makeText(getActivity(), "Please fill in all the fields.", Toast.LENGTH_SHORT).show();
