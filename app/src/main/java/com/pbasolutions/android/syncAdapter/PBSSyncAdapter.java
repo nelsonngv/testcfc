@@ -14,10 +14,12 @@ import android.util.Log;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 
+import com.pbasolutions.android.PandoraController;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
 import com.pbasolutions.android.controller.PBSServerController;
+import com.pbasolutions.android.json.PBSProjLocJSON;
 
 import java.io.IOException;
 
@@ -145,8 +147,15 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 }
 
                 boolean isSyncCompleted = syncResultBundle.getInt(PandoraConstant.SYNC_COUNT) == 0;
-                    if (PandoraMain.instance != null)
-                        PandoraMain.instance.updateInitialSyncState(isSyncCompleted);
+                if (PandoraMain.instance != null) {
+                    if(isSyncCompleted) {
+                        PandoraController cont = new PandoraController(PandoraMain.instance);
+                        Bundle result = cont.triggerEvent(cont.GET_PROJLOC_EVENT, new Bundle(), new Bundle(), null);
+                        PBSProjLocJSON[] projLoc = (PBSProjLocJSON[]) result.getSerializable(cont.ARG_PROJECT_LOCATION_JSON);
+                        isSyncCompleted = projLoc != null;
+                    }
+                    PandoraMain.instance.updateInitialSyncState(isSyncCompleted);
+                }
             } else{
                 syncResult.hasError();
             }

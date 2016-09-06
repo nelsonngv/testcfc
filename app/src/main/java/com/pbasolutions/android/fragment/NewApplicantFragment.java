@@ -203,7 +203,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
 
             cv.put(MApplicant.YEARSOFEXPERIENCED_COL, yearsOfExp.getText().toString());
             cv.put(MApplicant.EXPECTEDSALARY_COL, expSalary.getText().toString());
-            cv.put(MApplicant.NAME_COL, name.getText().toString());
+            cv.put(MApplicant.NAME_COL, name.getText().toString().trim());
             cv.put(MApplicant.IDNUMBER_COL, idno.getText().toString());
 
             cv.put(MApplicant.PHONE_COL, phone.getText().toString());

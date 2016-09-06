@@ -364,6 +364,7 @@ public class ServerTask extends Task {
                                Bundle inputBundle) {
         //set all values to be updated by table.
         PBSTableJSON data = new PBSTableJSON();
+        Log.d("......tableName......:", ""+tableName);
         data.setTableName(tableName);
         String uuid = "";
         List<PBSColumnsJSON> columns = new ArrayList<>();
@@ -439,6 +440,9 @@ public class ServerTask extends Task {
         }
         PBSColumnsJSON[] array = columns.toArray(new PBSColumnsJSON[columns.size()]);
         data.setColumns(array);
+        Log.d("......column.......:", ""+array);
+        if(array != null)
+            Log.d("....columnCount....:", ""+array.length);
         return updateResult(data, resultBundle, contentResolver, tableName,
                 uuid, inputBundle.getString(PBSAuthenticatorController.USER_PASS_ARG),
                 inputBundle.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
