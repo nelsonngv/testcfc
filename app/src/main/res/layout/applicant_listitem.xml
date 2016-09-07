@@ -8,24 +8,36 @@
             type="com.pbasolutions.android.model.MApplicant" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="1">
 
+        <TextView
+            android:id="@+id/icon_applicant_text"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/circular_textview"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:text="@{applicant.name}"
+            android:textAllCaps="true"
+            android:textColor="#FFF"
+            android:textSize="38sp"
+            />
+
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="?android:attr/dividerHorizontal"
-            android:showDividers="middle"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             >
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="?android:attr/dividerVertical"
-                android:showDividers="middle"
                 >
 
                 <TextView
@@ -42,8 +54,6 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="?android:attr/dividerVertical"
-                android:showDividers="middle"
                 >
 
                 <TextView
@@ -60,8 +70,6 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="?android:attr/dividerVertical"
-                android:showDividers="middle"
                 >
 
                 <TextView
@@ -78,8 +86,6 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="?android:attr/dividerVertical"
-                android:showDividers="middle"
                 >
 
                 <TextView
@@ -101,5 +107,5 @@
         </TableLayout>
 
         <View style="@style/Line" android:layout_width="match_parent" />
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

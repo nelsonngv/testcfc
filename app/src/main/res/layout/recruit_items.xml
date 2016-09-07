@@ -5,16 +5,32 @@
             type="com.pbasolutions.android.model.MEmployee"
             />
     </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/icon_employee_text"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/circular_textview"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:text="@{employee.name}"
+            android:textAllCaps="true"
+            android:textColor="#FFF"
+            android:textSize="33sp" />
+
+
     <TableLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="?android:attr/dividerHorizontal"
-        android:showDividers="middle"
         >
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="?android:attr/dividerVertical"
-            android:showDividers="middle"
             >
             <TextView
                 android:text="@string/label_name"
@@ -27,8 +43,6 @@
         </TableRow>
         <TableRow android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="?android:attr/dividerVertical"
-            android:showDividers="middle"
             >
             <TextView
                 android:text="@string/label_idnumber"
@@ -41,8 +55,6 @@
         </TableRow>
         <TableRow android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="?android:attr/dividerVertical"
-            android:showDividers="middle"
             >
             <TextView
                 android:text="@string/label_phone"
@@ -60,4 +72,5 @@
             android:text="@{employee._UUID}"
             android:visibility="invisible"/>
     </TableLayout>
+    </RelativeLayout>
 </layout>
