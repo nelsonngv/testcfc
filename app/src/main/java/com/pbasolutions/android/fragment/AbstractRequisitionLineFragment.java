@@ -78,7 +78,7 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
             public void onClick(View v) {
                 switch (event) {
                     case EVENT_DATE: {
-                        PandoraHelper.promptDatePicker((TextView) object, getActivity());
+                        PandoraHelper.promptFutureDatePicker((TextView) object, getActivity());
                         break;
                     }
                     case EVENT_SAVE_PRLINE: {

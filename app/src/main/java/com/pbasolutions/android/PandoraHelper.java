@@ -285,7 +285,36 @@ public class PandoraHelper  {
     public static void promptDatePicker(final TextView date, Activity activity) {
         promptDatePicker(date, activity, true);
     }
-    public static void promptDatePicker(final TextView date, Activity activity, boolean hasMinDate) {
+    public static void promptDatePicker(final TextView date, Activity activity, boolean hasMaxDate) {
+        final Calendar c = Calendar.getInstance();
+        int  mYear = c.get(Calendar.YEAR);
+        int  mMonth = c.get(Calendar.MONTH);
+        int  mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dpd = new DatePickerDialog(activity,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        String timeStr = String.format("%02d-%02d-%04d", dayOfMonth, monthOfYear + 1, year);
+                        date.setText(timeStr);
+
+                    }
+                }, mYear, mMonth, mDay);
+        if (hasMaxDate)
+            dpd.getDatePicker().setMaxDate(c.getTimeInMillis());
+        dpd.show();
+    }
+
+    /**
+     *
+     * @param date
+     */
+    public static void promptFutureDatePicker(final TextView date, Activity activity) {
+        promptFutureDatePicker(date, activity, true);
+    }
+    public static void promptFutureDatePicker(final TextView date, Activity activity, boolean hasMinDate) {
         final Calendar c = Calendar.getInstance();
         int  mYear = c.get(Calendar.YEAR);
         int  mMonth = c.get(Calendar.MONTH);
@@ -303,7 +332,7 @@ public class PandoraHelper  {
                     }
                 }, mYear, mMonth, mDay);
         if (hasMinDate)
-            dpd.getDatePicker().setMaxDate(c.getTimeInMillis());
+            dpd.getDatePicker().setMinDate(c.getTimeInMillis());
         dpd.show();
     }
 

@@ -391,74 +391,76 @@ public class RequisitionTask implements Callable<Bundle> {
                 new ArrayList<>();
         if (pair != null){
             if ("TRUE".equalsIgnoreCase(success)) {
-                for (MPurchaseRequest purchaseReq : purchaseReqs) {
-                    ContentValues rcv = new ContentValues();
-                    rcv.put(MPurchaseRequest.M_PURCHASEREQUEST_ID_COL, purchaseReq.getM_PurchaseRequest_ID());
-                    rcv.put(MPurchaseRequest.REQUESTDATE_COL, purchaseReq.getRequestDate());
-                    String projLocUUID = ModelConst.mapIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_UUID_COL,
-                            purchaseReq.getC_ProjectLocation_ID(), ModelConst.C_PROJECTLOCATION_ID_COL, cr);
-                    rcv.put(ModelConst.C_PROJECTLOCATION_UUID_COL, projLocUUID);
-                    String userUUID = ModelConst.mapIDtoColumn(
-                            ModelConst.AD_USER_TABLE, ModelConst.AD_USER_UUID_COL,
-                            purchaseReq.getAD_User_ID(), ModelConst.AD_USER_ID_COL, cr);
-                    rcv.put(ModelConst.AD_USER_UUID_COL, userUUID);
-                    rcv.put(MPurchaseRequest.ISAPPROVED_COL, purchaseReq.getIsApproved());
-                    rcv.put(MPurchaseRequest.DOCUMENTNO_COL, purchaseReq.getDocumentNo());
-                    String selection = ModelConst.M_PURCHASEREQUEST_TABLE + ModelConst._ID;
+                if(purchaseReqs != null) {
+                    for (MPurchaseRequest purchaseReq : purchaseReqs) {
+                        ContentValues rcv = new ContentValues();
+                        rcv.put(MPurchaseRequest.M_PURCHASEREQUEST_ID_COL, purchaseReq.getM_PurchaseRequest_ID());
+                        rcv.put(MPurchaseRequest.REQUESTDATE_COL, purchaseReq.getRequestDate());
+                        String projLocUUID = ModelConst.mapIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_UUID_COL,
+                                purchaseReq.getC_ProjectLocation_ID(), ModelConst.C_PROJECTLOCATION_ID_COL, cr);
+                        rcv.put(ModelConst.C_PROJECTLOCATION_UUID_COL, projLocUUID);
+                        String userUUID = ModelConst.mapIDtoColumn(
+                                ModelConst.AD_USER_TABLE, ModelConst.AD_USER_UUID_COL,
+                                purchaseReq.getAD_User_ID(), ModelConst.AD_USER_ID_COL, cr);
+                        rcv.put(ModelConst.AD_USER_UUID_COL, userUUID);
+                        rcv.put(MPurchaseRequest.ISAPPROVED_COL, purchaseReq.getIsApproved());
+                        rcv.put(MPurchaseRequest.DOCUMENTNO_COL, purchaseReq.getDocumentNo());
+                        String selection = ModelConst.M_PURCHASEREQUEST_TABLE + ModelConst._ID;
 
-                    String[] arg = {purchaseReq.getM_PurchaseRequest_ID()};
-                    String tableName = ModelConst.M_PURCHASEREQUEST_TABLE;
-                    if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
-                        purchaseReq.setM_PurchaseRequest_UUID(UUID.randomUUID().toString());
-                        rcv.put(MPurchaseRequest.M_PURCHASEREQUEST_UUID_COL, purchaseReq.getM_PurchaseRequest_UUID());
-                        ops.add(ContentProviderOperation
-                                .newInsert(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUEST_TABLE))
-                                .withValues(rcv)
-                                .build());
-                    } else {
-                        selection = selection + "=?";
-                        ops.add(ContentProviderOperation
-                                .newUpdate(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUEST_TABLE))
-                                .withValues(rcv)
-                                .withSelection(selection, arg)
-                                .build());
-                    }
-
-                    //Requisition line insertions:
-                    for (MPurchaseRequestLine prLine : purchaseReq.getLines()) {
-                        ContentValues rlcv = new ContentValues();
-                        rlcv.put(MPurchaseRequestLine.M_PURCHASEREQUESTLINE_ID_COL, prLine.getM_PurchaseRequestLine_ID());
-
-                        rlcv.put(MPurchaseRequestLine.M_PURCHASEREQUEST_UUID_COL, purchaseReq.getM_PurchaseRequest_UUID());
-
-                        rlcv.put(MPurchaseRequestLine.QTYREQUESTED_COL, prLine.getQtyRequested());
-
-                        String prodUUID = ModelConst.mapIDtoColumn(
-                                ModelConst.M_PRODUCT_TABLE, MPurchaseRequestLine.M_PRODUCT_UUID_COL,
-                                prLine.getM_Product_ID(), MPurchaseRequestLine.M_PRODUCT_ID_COL, cr);
-                        rlcv.put(MPurchaseRequestLine.M_PRODUCT_UUID_COL, prodUUID);
-
-                        rlcv.put(MPurchaseRequestLine.DATEREQUIRED_COL, prLine.getDateRequired());
-
-                        String rlSelection = ModelConst.M_PURCHASEREQUESTLINE_TABLE + ModelConst._ID;
-                        String rlArg[] = {prLine.getM_PurchaseRequestLine_ID()};
-                        tableName = ModelConst.M_PURCHASEREQUESTLINE_TABLE;
-                        if (!ModelConst.isInsertedRow(cr, tableName, rlSelection, rlArg)) {
-                            rlcv.put(MPurchaseRequestLine.M_PURCHASEREQUESTLINE_UUID_COL, UUID.randomUUID().toString());
+                        String[] arg = {purchaseReq.getM_PurchaseRequest_ID()};
+                        String tableName = ModelConst.M_PURCHASEREQUEST_TABLE;
+                        if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
+                            purchaseReq.setM_PurchaseRequest_UUID(UUID.randomUUID().toString());
+                            rcv.put(MPurchaseRequest.M_PURCHASEREQUEST_UUID_COL, purchaseReq.getM_PurchaseRequest_UUID());
                             ops.add(ContentProviderOperation
-                                    .newInsert(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUESTLINE_TABLE))
-                                    .withValues(rlcv)
+                                    .newInsert(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUEST_TABLE))
+                                    .withValues(rcv)
                                     .build());
                         } else {
-                            rlSelection = rlSelection + "=?";
+                            selection = selection + "=?";
                             ops.add(ContentProviderOperation
-                                    .newUpdate(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUESTLINE_TABLE))
-                                    .withValues(rlcv)
-                                    .withSelection(rlSelection, arg)
+                                    .newUpdate(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUEST_TABLE))
+                                    .withValues(rcv)
+                                    .withSelection(selection, arg)
                                     .build());
                         }
-                    }
 
+                        //Requisition line insertions:
+                        for (MPurchaseRequestLine prLine : purchaseReq.getLines()) {
+                            ContentValues rlcv = new ContentValues();
+                            rlcv.put(MPurchaseRequestLine.M_PURCHASEREQUESTLINE_ID_COL, prLine.getM_PurchaseRequestLine_ID());
+
+                            rlcv.put(MPurchaseRequestLine.M_PURCHASEREQUEST_UUID_COL, purchaseReq.getM_PurchaseRequest_UUID());
+
+                            rlcv.put(MPurchaseRequestLine.QTYREQUESTED_COL, prLine.getQtyRequested());
+
+                            String prodUUID = ModelConst.mapIDtoColumn(
+                                    ModelConst.M_PRODUCT_TABLE, MPurchaseRequestLine.M_PRODUCT_UUID_COL,
+                                    prLine.getM_Product_ID(), MPurchaseRequestLine.M_PRODUCT_ID_COL, cr);
+                            rlcv.put(MPurchaseRequestLine.M_PRODUCT_UUID_COL, prodUUID);
+
+                            rlcv.put(MPurchaseRequestLine.DATEREQUIRED_COL, prLine.getDateRequired());
+
+                            String rlSelection = ModelConst.M_PURCHASEREQUESTLINE_TABLE + ModelConst._ID;
+                            String rlArg[] = {prLine.getM_PurchaseRequestLine_ID()};
+                            tableName = ModelConst.M_PURCHASEREQUESTLINE_TABLE;
+                            if (!ModelConst.isInsertedRow(cr, tableName, rlSelection, rlArg)) {
+                                rlcv.put(MPurchaseRequestLine.M_PURCHASEREQUESTLINE_UUID_COL, UUID.randomUUID().toString());
+                                ops.add(ContentProviderOperation
+                                        .newInsert(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUESTLINE_TABLE))
+                                        .withValues(rlcv)
+                                        .build());
+                            } else {
+                                rlSelection = rlSelection + "=?";
+                                ops.add(ContentProviderOperation
+                                        .newUpdate(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUESTLINE_TABLE))
+                                        .withValues(rlcv)
+                                        .withSelection(rlSelection, arg)
+                                        .build());
+                            }
+                        }
+
+                    }
                 }
 
                 output = PandoraHelper.providerApplyBatch(output, cr, ops, "sync requisition(s).");

@@ -174,7 +174,7 @@ public class NewRequisitionFragment extends Fragment {
             public void onClick(View v) {
                 switch (event) {
                     case EVENT_DATE: {
-                        PandoraHelper.promptDatePicker((TextView) object, getActivity());
+                        PandoraHelper.promptFutureDatePicker((TextView) object, getActivity());
                         break;
                     }
                     case EVENT_ADD_LINE: {
@@ -187,7 +187,7 @@ public class NewRequisitionFragment extends Fragment {
                         break;
                     }
                     case EVENT_REQUEST: {
-                        savePR(true);
+//                        savePR(true);
                         requestPR();
                         break;
                     }
@@ -218,6 +218,7 @@ public class NewRequisitionFragment extends Fragment {
                     R.string.no_line_error,getString(R.string.request)));
             return;
         }
+        savePR(true);
 
         MPurchaseRequest pr = new MPurchaseRequest();
 
