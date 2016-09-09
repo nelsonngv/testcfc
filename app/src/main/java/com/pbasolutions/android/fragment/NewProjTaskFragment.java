@@ -156,10 +156,20 @@ public class NewProjTaskFragment extends Fragment {
     }
 
     private List<SpinnerPair> getUserList() {
-        Bundle input = new Bundle();
-        Bundle result = taskCont.triggerEvent(taskCont.GET_USERS_EVENT,
-                input, new Bundle(), null);
-        return result.getParcelableArrayList(taskCont.ARG_USERS);
+        PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
+        if (globalVar != null) {
+            Bundle input = new Bundle();
+            String projectLocationUUID = globalVar.getC_projectlocation_uuid();
+            if (projectLocationUUID != null) {
+                input.putString(PBSTaskController.ARG_PROJLOC_UUID, projectLocationUUID);
+                Bundle result = taskCont.triggerEvent(taskCont.GET_USERS_EVENT,
+                        input, new Bundle(), null);
+                return result.getParcelableArrayList(taskCont.ARG_USERS);
+            } else {
+                PandoraHelper.showErrorMessage((PandoraMain) getActivity(), getString(R.string.text_projectloc_na));
+            }
+        }
+        return null;
     }
 
     public List<SpinnerPair> getProjLocList() {
