@@ -24,6 +24,7 @@ import com.pbasolutions.android.api.PBSIServerAPI;
 import com.pbasolutions.android.api.PBSServerAPI;
 import com.pbasolutions.android.json.PBSProjTaskJSON;
 import com.pbasolutions.android.json.PBSProjTasksJSON;
+import com.pbasolutions.android.model.MEmployee;
 import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
@@ -84,22 +85,40 @@ public class ProjectTask implements Callable<Bundle> {
     }
 
     private Bundle getUsers() {
-        String projection[] = {ModelConst.AD_USER_ID_COL,
-                ModelConst.NAME_COL};
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.AD_USER_TABLE),
-                projection, null,
-                null, "LOWER(" + ModelConst.NAME_COL + ") ASC");
+        String cbpartner = ModelConst.C_BPARTNER_VIEW + ".";
 
-        //get the projectLocations list.
-        ArrayList<SpinnerPair> users = new ArrayList<>();
+        String projLocationUUID = input.getString(PBSTaskController.ARG_PROJLOC_UUID);
+        String[] selectionArg = {projLocationUUID};
+        String[] projection = {cbpartner + MEmployee.C_BPARTNER_UUID_COL,
+                cbpartner + ModelConst.NAME_COL};
+
+        String wherePhase = String.format("%s=? ",
+                ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_PROJECTLOCATION_UUID_COL
+        );
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TABLE),
+                projection, wherePhase, selectionArg, "LOWER(" + cbpartner + ModelConst.NAME_COL + ") ASC");
+        ObservableArrayList<SpinnerPair> employeeList = new ObservableArrayList();
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
             do {
-                users.add(getUser(cursor));
+                SpinnerPair pair = new SpinnerPair();
+                for (int x = 0; x < cursor.getColumnNames().length; x++) {
+                    if (MEmployee.C_BPARTNER_UUID_COL.equalsIgnoreCase(cursor.getColumnName(x))) {
+                        Log.i(TAG, "getUsers: "+cursor.getString(x));
+                        String getid = ModelConst.mapUUIDtoColumn(ModelConst.C_BPARTNER_TABLE,
+                                ModelConst.C_BPARTNER_UUID_COL, cursor.getString(x), ModelConst.C_BPARTNER_ID_COL, cr);
+                        pair.setKey(getid);
+                        Log.i(TAG, "getUsers: "+getid);
+                    } else if (ModelConst.NAME_COL
+                            .equalsIgnoreCase(cursor.getColumnName(x))) {
+                        pair.setValue(cursor.getString(x));
+                    }
+                }
+                employeeList.add(pair);
             } while (cursor.moveToNext());
         }
         cursor.close();
-        output.putParcelableArrayList(PBSTaskController.ARG_USERS, users);
+        output.putSerializable(PBSTaskController.ARG_USERS, employeeList);
         return output;
     }
 
@@ -461,8 +480,8 @@ public class ProjectTask implements Callable<Bundle> {
                     .equalsIgnoreCase(columnName)) {
                 if (rowValue == null) rowValue = "0";
                 projTask.setAssignedTo(Integer.parseInt(rowValue));
-                String assignedToName = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.NAME_COL,
-                        rowValue, ModelConst.AD_USER_ID_COL, cr);
+                String assignedToName = ModelConst.mapIDtoColumn(ModelConst.C_BPARTNER_TABLE, ModelConst.NAME_COL,
+                        rowValue, ModelConst.C_BPARTNER_ID_COL, cr);
                 projTask.setAssignedToName(assignedToName);
             } else if (MProjectTask.DESCRIPTION_COL
                     .equalsIgnoreCase(columnName)) {
