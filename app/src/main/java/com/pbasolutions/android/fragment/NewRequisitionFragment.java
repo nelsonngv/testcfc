@@ -260,7 +260,7 @@ public class NewRequisitionFragment extends Fragment {
 
         pr.setLines(lines.toArray(lines.toArray(new MPurchaseRequestLine[lines.size()])));
 
-        Bundle input = new Bundle();
+        final Bundle input = new Bundle();
         input.putSerializable(reqCont.ARG_PURCHASEREQUEST, pr);
         input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
 
@@ -286,8 +286,6 @@ public class NewRequisitionFragment extends Fragment {
                 requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
 
                 if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    fragmentManager.popBackStack();
 //                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //                    fragmentManager.popBackStack();
 //                    fragmentManager.popBackStack();
@@ -297,11 +295,20 @@ public class NewRequisitionFragment extends Fragment {
 //                    fragmentTransaction.addToBackStack(frag.getClass().getName());
 //                    fragmentTransaction.commit();
                 } else {
+                    new AsyncTask<Bundle, Void, Bundle>() {
+                        @Override
+                        protected Bundle doInBackground(Bundle... params) {
+                            Bundle result = reqCont.triggerEvent(reqCont.REMOVE_REQ_EVENT, params[0], new Bundle(), null);
+                            return result;
+                        }
+                    }.execute(input);
+
                     PandoraHelper.showWarningMessage((PandoraMain) getActivity(), "Failed to request!");
                 }
 
-
                 ((PandoraMain)getActivity()).dismissProgressDialog();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.popBackStack();
             }
         }.execute(input);
 

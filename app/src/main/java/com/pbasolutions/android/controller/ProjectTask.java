@@ -183,7 +183,6 @@ public class ProjectTask implements Callable<Bundle> {
     private Bundle createTask() {
         MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
         ContentValues cv = getContentValuesFromTask(task);
-        Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv);
 //        boolean result = ModelConst.getURIResult(uri);
 //
 //        if (result) {
@@ -202,9 +201,12 @@ public class ProjectTask implements Callable<Bundle> {
                 input.getString(PBSServerConst.PARAM_URL));
         if (result != null && !result.isEmpty()) {
             JsonParser p = new JsonParser();
-            JsonObject jsonObj = p.parse(result).getAsJsonObject();
+            JsonObject jsonObj = p.parse(result).getAsJsonObject(); // get project task id and update local
+            String projTaskId = jsonObj.get(MProjectTask.C_PROJECTTASK_ID_COL).getAsString();
             String success = jsonObj.get(PBSServerConst.SUCCESS).getAsString();
             if (PBSServerConst.TRUE.equalsIgnoreCase(success)){
+                cv.put(MProjectTask.C_PROJECTTASK_ID_COL, projTaskId);
+                Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv);
                 output.putBoolean(PandoraConstant.RESULT, true);
                 output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
                 output.putString(PandoraConstant.RESULT, "Successfuly insert new task.");
@@ -345,6 +347,7 @@ public class ProjectTask implements Callable<Bundle> {
                 cv.put(MProjectTask.PRIORITY_COL, projTask.getSeqNo());
                 cv.put(MProjectTask.NAME_COL, projTask.getName());
                 cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
+                cv.put(MProjectTask.ASSIGNEDTO_COL, projTask.getAssignedTo());
                 String isDone = (projTask.getIsDone()) ? "Y":"N";
                 cv.put(MProjectTask.ISDONE_COL, isDone);
                 String selection = MProjectTask.C_PROJECTTASK_ID_COL;

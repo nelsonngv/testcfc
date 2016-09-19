@@ -9,14 +9,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,11 +25,14 @@ import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
+import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSTaskController;
 import com.pbasolutions.android.databinding.TaskDetailsBinding;
 import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.utils.CameraUtil;
+
+import java.util.List;
 
 /**
  * Created by pbadell on 10/13/15.
@@ -293,7 +294,16 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         PandoraContext globalVar = ((PandoraMain) getActivity()).globalVariable;
         Bundle input = new Bundle();
         input.putString(PBSServerConst.PARAM_URL, globalVar.getServer_url());
-        input.putString(taskCont.ARG_PROJLOC_ID, globalVar.getC_projectlocation_id());
+//        input.putString(taskCont.ARG_PROJLOC_ID, globalVar.getC_projectlocation_id());
+
+        Bundle locResult = taskCont.triggerEvent(taskCont.GET_PROJECTLOCATIONS_EVENT,
+                input, new Bundle(), null);
+        List<SpinnerPair> projLoc = locResult.getParcelableArrayList(taskCont.ARG_PROJECTLOCATIONS);
+        for(int i = 0; i < projLoc.size(); i++) {
+            if(projLoc.get(i).getValue().equalsIgnoreCase(projTask.getProjLocName()))
+                input.putString(taskCont.ARG_PROJLOC_ID, projLoc.get(i).getKey());
+        }
+
         input.putString(taskCont.ARG_TASK_ID,String.valueOf(projTask.get_ID()));
         input.putString(taskCont.ARG_TASK_UUID, _UUID);
         input.putString(taskCont.ARG_COMMENTS, taskComments.getText().toString());

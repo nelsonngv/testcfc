@@ -32,7 +32,6 @@ public class PBSServerAccessor extends PBSServer implements PBSIServerAccessor {
         // convert java object to JSON format,
         // and returned as JSON formatted string
         String json = gson.toJson(jsonUpdate);
-        Log.d("......updateJson......:", ""+json);
 
         String url = getURL(serverURL, PBSServerConst.PATH, PBSServerConst.SYNC_JSP);
         String query = null;

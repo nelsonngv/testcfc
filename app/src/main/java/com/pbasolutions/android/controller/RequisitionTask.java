@@ -82,6 +82,10 @@ public class RequisitionTask implements Callable<Bundle> {
                 return insertReqLine();
             }
 
+            case PBSRequisitionController.REMOVE_REQ_EVENT: {
+                return removeRequisition();
+            }
+
             case PBSRequisitionController.REMOVE_REQLINES_EVENT: {
                 return removeLines();
             }
@@ -367,6 +371,32 @@ public class RequisitionTask implements Callable<Bundle> {
 //            output = PandoraHelper.providerApplyBatch(output, cr, ops, "delete requisition.");
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
         }
+        return output;
+    }
+
+    private Bundle removeRequisition() {
+        MPurchaseRequest pr = (MPurchaseRequest) input.getSerializable(PBSRequisitionController.ARG_PURCHASEREQUEST);
+        pr.setRequestDate(PandoraHelper.parseToDisplaySDate(pr.getRequestDate(), "yyyy-MM-dd hh:mm", null));
+
+        String selection = MPurchaseRequest.M_PURCHASEREQUEST_UUID_COL + "=?";
+        String selectionArgs[] = {pr.getM_PurchaseRequest_UUID()};
+
+        //delete the data
+        ArrayList<ContentProviderOperation> ops =
+                new ArrayList<>();
+
+        //delete line tables first. due to dependency
+        ops.add(ContentProviderOperation
+                .newDelete(ModelConst.uriCustomBuilder(MPurchaseRequestLine.TABLENAME))
+                .withSelection(selection, selectionArgs)
+                .build());
+
+        ops.add(ContentProviderOperation
+                .newDelete(ModelConst.uriCustomBuilder(MPurchaseRequest.TABLENAME))
+                .withSelection(selection, selectionArgs)
+                .build());
+
+        output = PandoraHelper.providerApplyBatch(output, cr, ops, "delete requisition.");
         return output;
     }
 

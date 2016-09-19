@@ -51,6 +51,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
     public static final String INSERT_REQ_EVENT = "INSERT_REQ_EVENT";
     public static final String ARG_REQUESTDATE = "ARG_REQUESTDATE";
     public static final String GET_DATE_EVENT = "ARG_GET_DATE";
+    public static final String REMOVE_REQ_EVENT = "REMOVE_REQ_EVENT";
     public static final String REMOVE_REQLINES_EVENT = "REMOVE_REQLINES_EVENT";
     public static final String DELETE_REQLINES_EVENT = "DELETE_REQLINES_EVENT";
     public static final String ARG_REQUISITIONLINE_LIST = "ARG_REQUISITIONLINE_LIST";
@@ -109,6 +110,10 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             }
             case GET_DATE_EVENT: {
                 getDate(input, result, object);
+                break;
+            }
+            case REMOVE_REQ_EVENT: {
+                removeReq(input, result, object);
                 break;
             }
             case REMOVE_REQLINES_EVENT: {
@@ -247,6 +252,23 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
 
     private Bundle insertReq(Bundle input, Bundle result, Object object) {
         input.putString(ARG_TASK_EVENT, INSERT_REQ_EVENT);
+
+        reqTask.setInput(input);
+        reqTask.setOutput(result);
+        taskResult = new FutureTask (reqTask);
+        exec.execute(taskResult);
+        try {
+            result = taskResult.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private Bundle removeReq(Bundle input, Bundle result, Object object) {
+        input.putString(ARG_TASK_EVENT, REMOVE_REQ_EVENT);
 
         reqTask.setInput(input);
         reqTask.setOutput(result);
