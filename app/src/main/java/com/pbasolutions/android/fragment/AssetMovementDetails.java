@@ -81,17 +81,20 @@ public class AssetMovementDetails extends AbstractMovementFragment {
             PandoraHelper.showErrorMessage(context,
                     result.getString(result.getString(PandoraConstant.TITLE)));
         } else {
+//            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentManager.popBackStack();
+//            fragmentManager.popBackStack();
+//            Fragment frag = new AssetFragment();
+//            //TODO: change set to isMovementFrag?
+//            ((AssetFragment)frag).setIsMovementFrag(true);
+//            frag.setRetainInstance(true);
+//            fragmentTransaction.replace(R.id.container_body, frag);
+//            fragmentTransaction.addToBackStack(frag.getClass().getName());
+//            fragmentTransaction.commit();
+
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentManager.popBackStack();
-            fragmentManager.popBackStack();
-            Fragment frag = new AssetFragment();
-            //TODO: change set to isMovementFrag?
-            ((AssetFragment)frag).setIsMovementFrag(true);
-            frag.setRetainInstance(true);
-            fragmentTransaction.replace(R.id.container_body, frag);
-            fragmentTransaction.addToBackStack(frag.getClass().getName());
-            fragmentTransaction.commit();
         }
 
 

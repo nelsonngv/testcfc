@@ -287,7 +287,9 @@ public class AssetTask extends Task {
     private Bundle completeMovement() {
         JsonObject object = new JsonObject();
         int m_movement_id = input.getInt(PBSAssetController.ARG_M_MOVEMENT_ID);
-        String m_movement_uuid = input.getString(PBSAssetController.ARG_M_MOVEMENT_UUID);
+        //String m_movement_uuid_1 = input.getString(PBSAssetController.ARG_M_MOVEMENT_UUID);
+        String m_movementid= Integer.toString(m_movement_id);
+        String m_movement_uuid = ModelConst.mapIDtoColumn(ModelConst.M_MOVEMENT_TABLE,ModelConst.M_MOVEMENT_TABLE+ModelConst._UUID, m_movementid , ModelConst.M_MOVEMENT_TABLE+ModelConst._ID,cr);
         if (m_movement_id == 0 && (m_movement_uuid == null || m_movement_uuid.isEmpty())) {
             return output;
         }
