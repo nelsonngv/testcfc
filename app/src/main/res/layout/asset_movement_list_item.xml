@@ -48,7 +48,9 @@
                     style="@style/Value"
                     android:id="@+id/assetMovementStat"
                     android:text="@{movement.Status}"
-                    />
+                    android:textColor="@{movement.StatusColor}"
+                    android:textStyle="bold"
+                    /><!--Test-->
             </TableRow>
             <TableRow>
                 <TextView

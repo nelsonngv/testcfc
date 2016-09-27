@@ -4,6 +4,7 @@ import android.databinding.ObservableArrayList;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +28,9 @@ public class AssetListFragment extends Fragment {
     /**
      * Class tag name.
      */
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
+
     private static final String TAG = "AssetListFragment";
 
     private PBSAssetController assetCont;
@@ -39,10 +43,11 @@ public class AssetListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.asset_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.asset_rv);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.RefreshAsset);
+        final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.asset_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         new AsyncTask<Object, Void, Void>() {
@@ -82,6 +87,17 @@ public class AssetListFragment extends Fragment {
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }
         }.execute(inflater, recyclerView);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                assetList = getMStorage();
+                AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
+                recyclerView.setAdapter(viewAdapter);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         return rootView;
     }

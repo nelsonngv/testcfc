@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,6 +34,8 @@ public class EmployeeFragment extends Fragment {
      */
     private static final String TAG = "EmployeeFragment";
 
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
     /**
      * Recruitment controller.
      */
@@ -58,15 +61,27 @@ public class EmployeeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.employee, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.employee_rv);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.RefreshEmployee);
+        final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.employee_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         employees = getEmployeeList();
         EmployeeRVA viewAdapter = new EmployeeRVA(getActivity(),employees, inflater);
         addRecyclerViewListener(recyclerView);
         recyclerView.setAdapter(viewAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                employees = getEmployeeList();
+                EmployeeRVA viewAdapter = new EmployeeRVA(getActivity(),employees, inflater);
+                addRecyclerViewListener(recyclerView);
+                recyclerView.setAdapter(viewAdapter);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
         return rootView;
     }
 

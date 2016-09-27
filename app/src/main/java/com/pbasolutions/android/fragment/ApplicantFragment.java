@@ -4,6 +4,7 @@ package com.pbasolutions.android.fragment;
 import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,6 +30,9 @@ public class ApplicantFragment extends Fragment {
     /**
      * Class tag name.
      */
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
+
     private static final String TAG = "ApplicantFragment";
 
     /**
@@ -56,17 +60,36 @@ public class ApplicantFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.applicant, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.applicant_rv);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.applicant_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         applicantList = getApplicantList();
         ApplicantRVA viewAdapter = new ApplicantRVA(getActivity(), applicantList, inflater);
         addRecyclerViewListener(recyclerView);
         recyclerView.setAdapter(viewAdapter);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+
+                applicantList = getApplicantList();
+                ApplicantRVA viewAdapter = new ApplicantRVA(getActivity(), applicantList, inflater);
+                addRecyclerViewListener(recyclerView);
+                recyclerView.setAdapter(viewAdapter);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return rootView;
+
+
     }
+
+
 
     /**
      * Add click listener on the recycler view. when ever user clicks the list item. it will navigate them to the item details.
@@ -94,6 +117,7 @@ public class ApplicantFragment extends Fragment {
                 input.putString(recCont.ARG_PROJECT_LOCATION_UUID, projectLocationUUID);
                 Bundle result = recCont.triggerEvent(recCont.GET_APPLICANTS_EVENT, input, new Bundle(), null);
                 return (ObservableArrayList<MApplicant>) result.getSerializable(recCont.APPLICANT_LIST);
+
             } else {
                 PandoraHelper.showErrorMessage((PandoraMain) getActivity(), getString(R.string.text_projectloc_na));
             }

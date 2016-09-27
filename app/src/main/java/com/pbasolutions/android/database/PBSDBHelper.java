@@ -926,7 +926,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                         " SELECT C_BPARTNER.C_BPARTNER_UUID, C_BPARTNER.NAME," +
                                         " C_BPARTNER.ICNO AS IDNUMBER," +
                                         " C_BPARTNER.WORKPERMIT AS WORKPERMIT," +
-                                        " C_BPARTNER_LOCATION.PHONE, NVL(HR_JOBPOSITION.JOB_TITLE, '-') AS JOB_TITLE" +
+                                        " C_BPARTNER_LOCATION.PHONE, IFNULL(HR_JOBPOSITION.JOB_TITLE, '-') AS JOB_TITLE" +
                                         " FROM C_BPARTNER" +
                                         " LEFT JOIN C_BPARTNER_LOCATION ON (C_BPARTNER.C_BPARTNER_UUID = C_BPARTNER_LOCATION.C_BPARTNER_UUID)" +
                                         " LEFT JOIN HR_JOBPOSITION ON (HR_JOBPOSITION.C_BPARTNER_UUID = C_BPARTNER.C_BPARTNER_UUID)" +

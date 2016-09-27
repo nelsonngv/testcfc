@@ -1,5 +1,7 @@
 package com.pbasolutions.android.model;
 
+import android.graphics.Color;
+import android.widget.Switch;
 import com.pbasolutions.android.json.PBSJson;
 
 /**
@@ -69,6 +71,7 @@ public class MMovement extends PBSJson {
     private String ProjectLocationTo_UUID;
     private String AD_User_UUID;
     private Number AD_User_ID;
+    private int StatusColor;
 
     public Number getM_Movement_ID() {
         return M_Movement_ID;
@@ -100,6 +103,80 @@ public class MMovement extends PBSJson {
 
     public void setStatus(String status) {
         Status = status;
+
+        switch(Status){
+            case MMovement.STATUS_COMPLETED: {
+                setStatusColor(Color.GREEN);
+                break;
+            }
+
+            case MMovement.STATUS_INACTIVE: {
+                setStatusColor(Color.RED);
+                break;
+            }
+            case MMovement.STATUS_REVERSED: {
+                setStatusColor(Color.BLUE);
+                break;
+            }
+            case MMovement.STATUS_DRAFTED: {
+                setStatusColor(Color.DKGRAY);
+                break;
+            }
+            case MMovement.STATUS_VOIDED: {
+                setStatusColor(Color.GREEN);
+                break;
+            }
+            case MMovement.STATUS_APPROVED: {
+                setStatusColor(Color.GREEN);
+                break;
+            }
+            case MMovement.STATUS_CHANGED: {
+                setStatusColor(Color.BLUE);
+                break;
+            }
+            case MMovement.STATUS_CLOSED: {
+                setStatusColor(Color.RED);
+                break;
+            }
+            case MMovement.STATUS_NOT_APPROVED: {
+                setStatusColor(Color.RED);
+                break;
+            }
+            case MMovement.STATUS_POSTING_ERROR: {
+                setStatusColor(Color.RED);
+                break;
+            }
+            case MMovement.STATUS_POSTED: {
+                setStatusColor(Color.GREEN);
+                break;
+            }
+            case MMovement.STATUS_PRINTED: {
+                setStatusColor(Color.MAGENTA);
+                break;
+            }
+            case MMovement.STATUS_TRANSFER_ERROR: {
+                setStatusColor(Color.RED);
+                break;
+            }
+            case MMovement.STATUS_TRANSFERRED: {
+                setStatusColor(Color.GREEN);
+                break;
+            }
+            case MMovement.STATUS_BEING_PROCESSED: {
+                setStatusColor(Color.DKGRAY);
+                break;
+            }
+            default:
+
+        }
+    }
+
+    public int getStatusColor() {
+        return StatusColor;
+    }
+
+    public void setStatusColor(int statusColor) {
+        StatusColor = statusColor;
     }
 
     public Number getC_ProjectLocation_ID() {

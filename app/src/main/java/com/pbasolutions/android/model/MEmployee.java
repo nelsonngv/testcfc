@@ -18,6 +18,7 @@ public class MEmployee extends PBSJson{
     public static final String C_BPARTNER_UUID_COL = "C_BPartner_UUID";
     public static final String JOB_TITLE_COL = "Job_Title";
     private String name;
+    private String cname;
     private String idNumber;
     private String phone;
     private String profPic;
@@ -34,12 +35,21 @@ public class MEmployee extends PBSJson{
 
     private boolean isEditable;
 
+    public void setCname(String cname){
+        this.cname = cname;
+    }
+
+    public String getCname(){
+        return cname;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+        setCname(Character.toString(name.charAt(0)));
     }
 
     public String getIdNumber() {

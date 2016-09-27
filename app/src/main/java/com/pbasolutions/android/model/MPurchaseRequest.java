@@ -1,5 +1,7 @@
 package com.pbasolutions.android.model;
 
+import android.graphics.Color;
+
 import com.google.gson.annotations.Expose;
 import com.pbasolutions.android.json.PBSJson;
 
@@ -32,6 +34,7 @@ public class MPurchaseRequest extends PBSJson {
     String Status;
     MPurchaseRequestLine[] Lines;
     String ProjLocName;
+    private int StatusColor;
 
     public String getM_PurchaseRequest_ID() {
         return M_PurchaseRequest_ID;
@@ -136,5 +139,27 @@ public class MPurchaseRequest extends PBSJson {
 
     public void setStatus(String status) {
         Status = status;
+        switch(Status){
+            case "Waiting Approval": {
+                setStatusColor(Color.RED);
+                break;
+            }
+
+            case "Approved": {
+                setStatusColor(Color.GREEN);
+                break;
+            }
+            default:
+        }
     }
+
+
+    public int getStatusColor() {
+        return StatusColor;
+    }
+
+    public void setStatusColor(int statusColor) {
+        StatusColor = statusColor;
+    }
+
 }

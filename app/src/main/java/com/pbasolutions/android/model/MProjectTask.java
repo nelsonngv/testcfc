@@ -1,5 +1,7 @@
 package com.pbasolutions.android.model;
 
+import android.graphics.Color;
+
 import com.pbasolutions.android.json.PBSJson;
 
 /**
@@ -24,6 +26,7 @@ public class MProjectTask extends PBSJson {
     transient private String assignedToName;
     private int AssignedTo;
     private int C_ProjectLocation_ID;
+    private int StatusColor;
 
     public static final String C_PROJECTTASK_UUID_COL = "C_ProjectTask_UUID";
     public static final String C_PROJECTTASK_ID_COL = "C_ProjectTask_ID";
@@ -163,9 +166,32 @@ public class MProjectTask extends PBSJson {
         return Status;
     }
 
+
     public void setStatus(String status) {
         Status = status;
+        switch(Status){
+            case "Incomplete": {
+                setStatusColor(Color.RED);
+                break;
+            }
+
+            case "Completed": {
+                setStatusColor(Color.GREEN);
+                break;
+            }
+            default:
+        }
     }
+
+    public int getStatusColor() {
+        return StatusColor;
+    }
+
+    public void setStatusColor(int statusColor) {
+        StatusColor = statusColor;
+    }
+
+
 
     public int getAssignedTo() {
         return AssignedTo;

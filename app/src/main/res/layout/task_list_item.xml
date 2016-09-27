@@ -75,7 +75,9 @@
                         android:id="@+id/task_status"
                         style="@style/TableValue"
                         android:layout_marginLeft="@dimen/table_margin_middle"
-                        android:text="@{projTask.Status}" />
+                        android:text="@{projTask.Status}"
+                        android:textColor="@{projTask.StatusColor}"
+                        />
                 </TableRow>
             </TableLayout>
             <TextView

@@ -5,6 +5,10 @@
     android:divider="?android:attr/dividerHorizontal"
     android:showDividers="middle|end"
     >
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/RefreshMovement"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/asset_movement_rv"
         android:layout_width="match_parent"
@@ -12,4 +16,5 @@
         layout_marginBottom="?attr/actionBarSize"
         android:stackFromBottom="true">
     </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

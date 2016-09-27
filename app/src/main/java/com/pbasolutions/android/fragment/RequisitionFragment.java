@@ -5,6 +5,7 @@ import android.databinding.ObservableArrayList;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ public class RequisitionFragment extends Fragment{
 
     protected String requisitionDetailTitle;
 
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     Context context;
 
@@ -65,10 +67,11 @@ public class RequisitionFragment extends Fragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.requisition_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.requisition_rv);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.RefreshRequisition);
+        final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.requisition_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         setIsApprovedSpinner(rootView);
         setOnItemSelectedListener();
@@ -108,6 +111,19 @@ public class RequisitionFragment extends Fragment{
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }
         }.execute(inflater, recyclerView);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                requisitionList = getRequisitionList();
+                RequisitionRVA viewAdapter = new RequisitionRVA(getActivity(),requisitionList, inflater);
+                recyclerView.setAdapter(viewAdapter);
+                PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
+                        new RequisitionDetailFragment(), requisitionDetailTitle);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         return rootView;
     }

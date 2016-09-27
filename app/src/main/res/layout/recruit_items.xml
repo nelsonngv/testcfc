@@ -19,10 +19,12 @@
             android:background="@drawable/circular_textview"
             android:fontFamily="sans-serif-thin"
             android:gravity="center"
-            android:text="@{employee.name}"
+            android:text="@{employee.cname}"
             android:textAllCaps="true"
             android:textColor="#FFF"
-            android:textSize="33sp" />
+            android:textSize="32sp"
+            android:textStyle="normal|bold"
+            />
 
 
     <TableLayout android:layout_width="match_parent"
