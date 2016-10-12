@@ -56,6 +56,8 @@ public class AttendanceTask implements Callable<Bundle> {
 
             MAttendanceLine.CHECKIN_COL,
             MAttendanceLine.CHECKOUT_COL,
+
+            MAttendanceLine.HR_DAYS_COL,
     };
 
     /**
@@ -189,6 +191,8 @@ public class AttendanceTask implements Callable<Bundle> {
                     item.setHR_LeaveType_Name(getHRLeaveTypeName(item.getHR_LeaveType_ID()));
                     item.setCheckIn(PandoraHelper.parseToDisplaySDate(item.getCheckIn(), "yyyy-MM-dd HH:mm", null));
                     item.setCheckOut(PandoraHelper.parseToDisplaySDate(item.getCheckOut(), "yyyy-MM-dd HH:mm", null));
+                    item.setHR_DaysType(getHRDaysName(item.getHR_DaysType()));
+                    item.setComments(item.getComments());
                     list.add(item);
                 }
             }
@@ -235,6 +239,9 @@ public class AttendanceTask implements Callable<Bundle> {
                         ModelConst.NAME_COL, rowValue,
                         ModelConst.HR_LEAVETYPE_ID_COL, cr);
                 prl.setHR_LeaveType_Name(leaveTypeName);
+            } else if (MAttendanceLine.HR_DAYS_COL
+                    .equalsIgnoreCase(columnName)) {
+                prl.setHR_DaysType(rowValue);
             } else if (MAttendanceLine.COMMENT_COL
                     .equalsIgnoreCase(columnName)) {
                 prl.setComments(rowValue);
@@ -254,6 +261,14 @@ public class AttendanceTask implements Callable<Bundle> {
         return ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE,
                 ModelConst.NAME_COL, String.valueOf(hr_shift_id),
                 ModelConst.C_BPARTNER_ID_COL, cr);
+    }
+
+    private String getHRDaysName(String hr_days)
+    {
+        if(hr_days.equalsIgnoreCase("1"))
+            return "Full Day";
+        else
+            return "Half Day";
     }
 
     private String getHRLeaveTypeName(int hr_leavetype_id) {

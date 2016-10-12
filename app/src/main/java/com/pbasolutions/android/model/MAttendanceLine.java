@@ -19,6 +19,7 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
     public static final String C_BPARTNER_UUID_COL = "C_BPARTNER_UUID";
     public static final String ISABSENT_COL = "ISABSENT";
     public static final String HR_LEAVETYPE_ID_COL = "HR_LEAVETYPE_ID";
+    public static final String HR_DAYS_COL = "DAYS";
     public static final String COMMENT_COL = "COMMENT";
 
 //    public static final String ISNOSHOW_COL = "ISNOSHOW";
@@ -33,10 +34,22 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
     private String Comments;
     private String HR_LeaveType_ID;
     private transient String HR_LeaveType_Name;
+    private String Days;
 
     private transient boolean isSelected = false;
     transient String _UUID;
     transient int _ID;
+
+    public String getHR_DaysType() {
+        if(Days.equalsIgnoreCase("1.0"))
+            return "Full Day";
+        else
+        return "Half Day";
+    }
+
+    public void setHR_DaysType(String HR_Days) {
+        this.Days = HR_Days;
+    }
 
     public String getC_BPartner_ID() {
         return C_BPartner_ID;
@@ -137,6 +150,7 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
         else {
             IsAbsent = null;
             HR_LeaveType_ID = null;
+            Days = null;
         }
     }
 }

@@ -115,6 +115,9 @@ public class RequisitionFragment extends Fragment{
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if (PBSServerConst.cookieStore != null) {
+                    syncRequsitions();
+                }
                 // Refresh items
                 requisitionList = getRequisitionList();
                 RequisitionRVA viewAdapter = new RequisitionRVA(getActivity(),requisitionList, inflater);

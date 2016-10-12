@@ -1066,6 +1066,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                         db.execSQL(insertSQL);
                         insertSQL = "insert into HR_IDENTITY(hr_identity_uuid, ad_client_uuid, ad_org_uuid,  created, createdby, updated, updatedby, isactive, isupdated, issynced, isdeleted, name, value) values ('1002','400','300','11-FEB-06','100','11-FEB-06','100','Y','Y','Y','N', 'FIN','F')";
                         db.execSQL(insertSQL);
+                        String addCol = "ALTER TABLE M_ATTENDANCELINE ADD DAYS NUMBER(1,1) DEFAULT NULL";
+                        db.execSQL(addCol);
 
 //                        insertSQL = "insert into M_PRODUCT_CATEGORY(" +
 //                                "M_PRODUCT_CATEGORY_ID,AD_ORG_UUID,AD_CLIENT_UUID,CREATED,CREATEDBY,UPDATED,UPDATEDBY,ISACTIVE,ISUPDATED,ISSYNCED,ISDELETED,M_PRODUCT_CATEGORY_UUID,NAME,VALUE) " +

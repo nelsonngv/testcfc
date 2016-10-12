@@ -68,6 +68,21 @@
                 </LinearLayout>
             </TableRow>
             <TableRow
+                android:id="@+id/atDaytypeRow"
+                >
+                <LinearLayout style="@style/PTableVirtRowW"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    >
+                    <TextView
+                        android:text="@string/label_leavetype"
+                        style="@style/TableInfoLabel"/>
+                    <Spinner
+                        style="@style/TableValue"
+                        android:id="@+id/attDayTypeSpinner"/>
+                </LinearLayout>
+            </TableRow>
+            <TableRow
                 android:id="@+id/atCheckinRow"
                 >
                 <LinearLayout style="@style/PTableVirtRowW"

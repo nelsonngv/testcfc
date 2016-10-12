@@ -31,6 +31,7 @@ public class MAttendanceSearchItem  extends PBSJson {
     private int C_BPartner_ID;
     private String CheckIn;
     private String HR_ResourceAllocation_ID;
+    private String Comments;
 
     private transient String HR_LeaveType_Name;
     private transient String C_BPartner_Name;
@@ -39,7 +40,21 @@ public class MAttendanceSearchItem  extends PBSJson {
     transient String _UUID;
     transient int _ID;
 
+    private String Days;
 
+    public String getHR_DaysType() {
+        return Days;
+    }
+
+    public void setHR_DaysType(String HR_Days) {
+        this.Days = HR_Days;
+
+    }
+
+
+    public void setComments(String commments){ this.Comments = commments; }
+
+    public String getComments(){ return Comments;}
 
     public boolean isSelected() {
         return isSelected;

@@ -33,6 +33,7 @@ import com.pbasolutions.android.model.ModelConst;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +54,7 @@ public class NewAttendanceLineFragment extends Fragment {
     Fragment newAttendanceFragment;
 
     Spinner employSpinner;
+    Spinner daytypeSpinner;
     Switch  switchAbsent;
     Spinner leavetypeSpinner;
     TextView textCheckinDate;
@@ -67,6 +69,7 @@ public class NewAttendanceLineFragment extends Fragment {
 
     private ArrayAdapter employAdapter;
     private ArrayAdapter leaveTypeAdapter;
+    private ArrayAdapter dayTypeAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,7 @@ public class NewAttendanceLineFragment extends Fragment {
         employSpinner = (Spinner) rootView.findViewById(R.id.atEmplShiftSpinner);
         switchAbsent = (Switch) rootView.findViewById(R.id.atAbsentSwitch);
         leavetypeSpinner = (Spinner)rootView.findViewById(R.id.attLeaveTypeSpinner);
+        daytypeSpinner = (Spinner)rootView.findViewById(R.id.attDayTypeSpinner);
         textCheckinDate = (TextView)rootView.findViewById(R.id.atCheckinDate);
         textCheckoutDate = (TextView)rootView.findViewById(R.id.atCheckoutDate);
         textComment = (TextView)rootView.findViewById(R.id.atComment);
@@ -140,12 +144,15 @@ public class NewAttendanceLineFragment extends Fragment {
     protected void setValues() {
         employAdapter = PandoraHelper.addListToSpinner(getActivity(), employSpinner, getEmployeeList());
         leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
+        dayTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), daytypeSpinner, getDayTypeList());
         refreshUIState();
     }
 
     void refreshUIState() {
         boolean isLeaveTypeHidden = leavetypeSpinner.getVisibility() != View.VISIBLE;
+        boolean isDayTypeHidden = daytypeSpinner.getVisibility() != View.VISIBLE;
         View leavetypeRow = rootView.findViewById(R.id.atLeavetypeRow);
+        View daytypeRow = rootView.findViewById(R.id.atDaytypeRow);
         View checkinRow = rootView.findViewById(R.id.atCheckinRow);
         View checkoutRow = rootView.findViewById(R.id.atCheckoutRow);
         View absentSwitchRow = rootView.findViewById(R.id.atAbsentSwitchRow);
@@ -153,11 +160,14 @@ public class NewAttendanceLineFragment extends Fragment {
         boolean isAbsent = (switchAbsent.getVisibility() == View.VISIBLE) && switchAbsent.isChecked();
 
         PandoraHelper.setVisibleView(leavetypeRow, isAbsent);
+        PandoraHelper.setVisibleView(daytypeRow, isAbsent);
         PandoraHelper.setVisibleView(checkinRow, !isAbsent);
         PandoraHelper.setVisibleView(checkoutRow, !isAbsent);
 
         if (isLeaveTypeHidden && leavetypeSpinner.getVisibility() == View.VISIBLE)
             leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
+        if (isDayTypeHidden && daytypeSpinner.getVisibility() == View.VISIBLE)
+            dayTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), daytypeSpinner, getDayTypeList());
     }
 
     public Fragment getNewAttendanceFragment() {
@@ -172,6 +182,7 @@ public class NewAttendanceLineFragment extends Fragment {
         //check all value is not null.
         SpinnerPair emplSpinner = (SpinnerPair) employSpinner.getSelectedItem();
         SpinnerPair leaveSpinner = (SpinnerPair) leavetypeSpinner.getSelectedItem();
+        SpinnerPair daySpinner = (SpinnerPair) daytypeSpinner.getSelectedItem();
 
         boolean isEmpty = false;
         if (emplSpinner == null
@@ -183,10 +194,12 @@ public class NewAttendanceLineFragment extends Fragment {
 
         if (isAbsent) {
             isEmpty |= leaveSpinner == null || leaveSpinner.getValue().isEmpty();
+            isEmpty |= daySpinner == null || daySpinner.getValue().isEmpty();
         } else {
             isEmpty |= checkinDate.isEmpty()
                     || checkoutDate.isEmpty();
         }
+
 
         if (isEmpty)
         {
@@ -213,6 +226,7 @@ public class NewAttendanceLineFragment extends Fragment {
         if (isAbsent) {
                 tempATLine.setHR_LeaveType_ID(leaveSpinner.getKey());
                 tempATLine.setHR_LeaveType_Name(leaveSpinner.getValue());
+                tempATLine.setHR_DaysType(daySpinner.getValue());
         } else {
             tempATLine.setCheckInDate(sdf.format(checkin));
             tempATLine.setCheckOutDate(sdf.format(checkout));
@@ -227,11 +241,13 @@ public class NewAttendanceLineFragment extends Fragment {
         cv.put(MAttendanceLine.ISABSENT_COL, switchAbsent.isChecked() ? "Y" : "N");
         if (isAbsent) {
             cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, Integer.parseInt(leaveSpinner.getKey()));
+            cv.put(MAttendanceLine.HR_DAYS_COL, Double.parseDouble(daySpinner.getKey()));
 
             cv.put(MAttendanceLine.CHECKIN_COL, "");
             cv.put(MAttendanceLine.CHECKOUT_COL, "");
         } else {
             cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, 0);
+            cv.put(MAttendanceLine.HR_DAYS_COL, 0);
 
             cv.put(MAttendanceLine.CHECKIN_COL, sdf.format(checkin));
             cv.put(MAttendanceLine.CHECKOUT_COL, sdf.format(checkout));
@@ -280,6 +296,13 @@ public class NewAttendanceLineFragment extends Fragment {
         Bundle input = new Bundle();
         Bundle result = attendCont.triggerEvent(PBSAttendanceController.GET_LEAVETYPES_EVENT, input, new Bundle(),null);
         return result.getParcelableArrayList(PBSAttendanceController.LEAVETYPE_LIST);
+    }
+
+    public List<SpinnerPair> getDayTypeList(){
+        List<SpinnerPair> daytype = new ArrayList<SpinnerPair>();
+        daytype.add(new SpinnerPair("1", "Full Day "));
+        daytype.add(new SpinnerPair("0.5", "Half Day "));
+        return daytype;
     }
 
 
