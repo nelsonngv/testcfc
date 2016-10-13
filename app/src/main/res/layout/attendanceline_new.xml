@@ -75,7 +75,7 @@
                     android:layout_marginBottom="5dp"
                     >
                     <TextView
-                        android:text="@string/label_leavetype"
+                        android:text="@string/label_daytype"
                         style="@style/TableInfoLabel"/>
                     <Spinner
                         style="@style/TableValue"

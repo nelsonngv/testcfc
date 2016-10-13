@@ -71,7 +71,7 @@ public class PandoraTask implements Callable<Bundle> {
      */
     public Bundle getProjLoc() {
         String projection [] = {ModelConst.C_PROJECTLOCATION_UUID_COL, ModelConst.NAME_COL, ModelConst.C_PROJECTLOCATION_ID_COL};
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projection, null, null, null);
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projection, null, null, ModelConst.NAME_COL + " ASC");
         int numberOfRows = cursor.getCount();
         if (numberOfRows > 0) {
             PBSProjLocJSON[] projLocJSONs = new PBSProjLocJSON[numberOfRows];

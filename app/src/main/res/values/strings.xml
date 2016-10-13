@@ -28,8 +28,8 @@
 
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
-        <item>@string/nav_item_recruit</item>
         <item>@string/nav_item_attendance</item>
+        <item>@string/nav_item_recruit</item>
         <item>@string/nav_item_assets</item>
         <item>@string/nav_item_requisition</item>
         <item>@string/nav_item_task</item>
@@ -114,6 +114,7 @@
     <string name="label_checkindate">Check In Date</string>
     <string name="label_checkoutdate">Check Out Date</string>
     <string name="label_leavetype">Leave Type</string>
+    <string name="label_daytype">Day Type</string>
     <string name="label_ok">OK</string>
     <string name="label_sync">Initial Syncing. Please wait</string>
     <!--

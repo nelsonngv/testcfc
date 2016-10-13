@@ -145,9 +145,9 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * Fragment id.
      */
     public static final int FRAGMENT_DEFAULT = -1;
-    public static final int FRAGMENT_RECRUIT = 0;
+    public static final int FRAGMENT_ATTENDANCE = 0;
+    public static final int FRAGMENT_RECRUIT = 1;
 //    public static final int FRAGMENT_DEPLOY =1;
-    public static final int FRAGMENT_ATTENDANCE = 1;
     public static final int FRAGMENT_ASSET = 2;
     public static final int FRAGMENT_REQUISITION = 3;
     public static final int FRAGMENT_TASK = 4;
@@ -183,6 +183,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * Drawer layout.
      */
     public DrawerLayout mDrawerLayout;
+
+    /**
+     * Handler.
+     */
+    private Handler handler = new Handler();
+    private Runnable runnable;
+    private int delay = 600000; //10 mins
 
     // to check sync result
     public static final String GOTO_RECRUIT = "GotoRecruit";
@@ -231,7 +238,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
         setSupportActionBar(mToolbar);
         setDrawerFragment();
-        directToFragment();
+        checkLogin(false);
         //on add or remove back stack always update the fragment titles.
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
@@ -244,6 +251,17 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         });
 
         instance = this;
+
+        runnable = new Runnable(){
+            public void run(){
+                if(getSupportActionBar().isShowing() == true) {
+                    checkLogin(true);
+                }
+
+                handler.postDelayed(this, delay);
+            }
+        };
+        handler.postDelayed(runnable, delay);
     }
 
     /**
@@ -361,7 +379,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 } else {
                     PandoraHelper.getProjLocAvailable(this, false);
                     if (globalVariable.isInitialSynced())
-                        defaultFragment = FRAGMENT_RECRUIT;
+                        defaultFragment = FRAGMENT_ATTENDANCE;
                     else
                         defaultFragment = FRAGMENT_ACCOUNT;
                 }
@@ -475,6 +493,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 showLogOutDialog(PBSAuthenticatorController.SUCCESSFULLY_LOGGED_OUT_TXT);
 
                 dismissProgressDialog();
+                handler.removeCallbacks(runnable);
             }
         }.execute(inputBundle);
     }
@@ -627,10 +646,11 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(PandoraConstant.RESULT);
         dialog.setMessage(message);
+        dialog.setCancelable(false);
         dialog.setPositiveButton(PandoraConstant.OK_BUTTON, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                directToFragment();
+                checkLogin(false);
             }
         });
         dialog.show();
@@ -827,7 +847,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             if (intent.getAction() != null){
                 if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
                     if (globalVariable.getAd_user_name() == null) {
-                        directToFragment();
+                        checkLogin(false);
                     } else {
                         if (fragment != null) {
                             fragment = new NewCheckInFragment();
@@ -837,7 +857,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     }
                 }
             }else {
-                directToFragment();
+                checkLogin(false);
             }
         }
     }
@@ -964,5 +984,49 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         }
 
         return null;
+    }
+
+    public void checkLogin(final boolean isLoop) {
+        if(globalVariable != null) {
+            new AsyncTask<Void, Void, Bundle>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    if(!isLoop)
+                        directToFragment();
+                }
+
+                @Override
+                protected Bundle doInBackground(Void... params) {
+                    Bundle input = new Bundle();
+                    input.putString(authenticatorController.ROLE_ARG,
+                            globalVariable.getAd_role_id());
+                    input.putString(authenticatorController.ORG_ARG,
+                            globalVariable.getAd_org_id());
+                    input.putString(authenticatorController.CLIENT_ARG,
+                            globalVariable.getAd_client_id());
+                    input.putString(authenticatorController.SERVER_URL_ARG,
+                            globalVariable.getServer_url());
+                    Bundle result = new Bundle();
+                    result = authenticatorController.triggerEvent(
+                            authenticatorController.ROLE_SUBMIT_EVENT, input, result, null);
+
+                    return result;
+                }
+
+                @Override
+                protected void onPostExecute(Bundle result) {
+                    super.onPostExecute(result);
+                    if (!result.getBoolean(PBSServerConst.RESULT)) {
+                        globalVariable.setAuth_token("");
+                    }
+
+                    boolean isAuthToken = (!globalVariable.getAuth_token().isEmpty());
+                    if (!(isLoop && isAuthToken))
+                        directToFragment();
+                }
+            }.execute();
+        }
+        else directToFragment();
     }
 }
