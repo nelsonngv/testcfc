@@ -54,7 +54,7 @@ public class MAttendanceSearchItem  extends PBSJson {
 
     public void setComments(String commments){ this.Comments = commments; }
 
-    public String getComments(){ return Comments;}
+    public String getComments(){ return Comments.replace("\\n", " ");}
 
     public boolean isSelected() {
         return isSelected;

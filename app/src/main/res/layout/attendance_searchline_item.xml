@@ -113,6 +113,7 @@
                     style="@style/TableLabel"/>
                 <TextView
                     android:id="@+id/att_comments"
+                    android:layout_weight="1"
                     android:text="@{attendancesearchitem.Comments}"
                     style="@style/TableValue2"/>
             </TableRow>
