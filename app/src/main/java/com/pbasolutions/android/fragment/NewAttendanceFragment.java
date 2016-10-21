@@ -410,7 +410,7 @@ public class NewAttendanceFragment extends Fragment {
             @Override
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
-                if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE)) && getFragmentManager() != null) {
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.detach(NewAttendanceFragment.this).attach(NewAttendanceFragment.this).commit();
                 }

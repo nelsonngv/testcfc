@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:stretchColumns="*"
             >
-            <TableRow android:background="#dcdfe1" >
+            <TableRow android:background="@color/colorButtons" >
                 <TextView
                     android:padding="10dp"
                     android:layout_weight="1"
@@ -113,11 +113,13 @@
             android:id="@+id/RefreshRequisition"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <android.support.v7.widget.RecyclerView
+            <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
                 android:id="@+id/requisition_rv"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </android.support.v7.widget.RecyclerView>
+                android:layout_height="match_parent"
+                app:fastScrollThumbColor="@color/colorAccent"
+                app:fastScrollAutoHide="false">
+            </com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView>
         </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 </layout>

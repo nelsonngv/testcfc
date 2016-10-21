@@ -6,11 +6,13 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
+
 
 /**
  * Created by pbadell on 7/24/15.
  */
-public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+public class RecyclerItemClickListener implements FastScrollRecyclerView.OnItemTouchListener {
    private FragmentListOnItemClickListener mListener;
 
     GestureDetector mGestureDetector;
@@ -58,6 +60,11 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
      */
     @Override
     public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
     }
 }

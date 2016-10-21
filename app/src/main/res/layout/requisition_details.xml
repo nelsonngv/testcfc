@@ -100,7 +100,8 @@
             </TableRow>
         </TableLayout>
         <TableLayout
-            style="@style/LineRV">
+            style="@style/LineRV"
+            android:layout_weight="1">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/requisitionline_rv"
                 android:layout_width="match_parent"
@@ -115,6 +116,7 @@
                 android:id="@+id/prRequest"
                 style="@style/PLargeButton"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
                 android:text="@string/label_button_request" />
         </LinearLayout>
     </LinearLayout>

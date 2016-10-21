@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:divider="?android:attr/dividerHorizontal"
@@ -11,7 +12,7 @@
         android:layout_height="wrap_content"
         android:stretchColumns="*"
         >
-        <TableRow android:background="#dcdfe1" >
+        <TableRow android:background="@color/colorButtons" >
             <TextView
                 android:padding="10dp"
                 android:layout_weight="1"
@@ -94,12 +95,14 @@
         android:id="@+id/RefreshMovement"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/asset_movement_rv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout_marginBottom="?attr/actionBarSize"
-        android:stackFromBottom="true">
-    </android.support.v7.widget.RecyclerView>
+        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+            android:id="@+id/asset_movement_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout_marginBottom="?attr/actionBarSize"
+            android:stackFromBottom="true"
+            app:fastScrollThumbColor="@color/colorAccent"
+            app:fastScrollAutoHide="false">
+        </com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -18,11 +18,13 @@
             <TextView
                 style="@style/LineInfoD"
                 android:id="@+id/prlProdName"
-                android:text="@{prLine.ProductName}"/>
+                android:text="@{prLine.ProductName}"
+                android:gravity="center"/>
             <TextView
                 style="@style/LineQtyD"
                 android:id="@+id/prlQtyRequested"
                 android:text="@{prLine.QtyRequestedString}"
+                android:gravity="center"
                 />
             <TextView
                 android:layout_width="0dp"

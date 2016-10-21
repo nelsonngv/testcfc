@@ -71,6 +71,7 @@ public class EmployeeFragment extends Fragment {
         EmployeeRVA viewAdapter = new EmployeeRVA(getActivity(),employees, inflater);
         addRecyclerViewListener(recyclerView);
         recyclerView.setAdapter(viewAdapter);
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

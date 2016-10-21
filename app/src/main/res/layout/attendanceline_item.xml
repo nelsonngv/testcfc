@@ -35,7 +35,6 @@
                         <TextView
                             android:id="@+id/at_partner_id"
                             android:text="@{atLine.C_BPartner_Name}"
-                            android:layout_span="3"
                             style="@style/TableValue2"/>
                     </TableRow>
                     <TableRow
@@ -62,11 +61,11 @@
                                     <TextView
                                         android:id="@+id/at_isabsent"
                                         android:text="@{atLine.IsAbsent}"
-                                        android:layout_weight="0.2"
+                                        android:layout_weight="0.35"
                                         style="@style/TableValue2"/>
                                     <TextView
                                         android:text="Day"
-                                        android:layout_weight="0.3"
+                                        android:layout_weight="0.15"
                                         android:layout_width="wrap_content"
                                         style="@style/TableLabel"
                                         />
@@ -135,7 +134,7 @@
                 android:layout_height="0dp"
                 android:id="@+id/_UUID"
                 android:text="@{atLine._UUID}"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
         </TableRow>
         <View style="@style/Line" android:layout_width="match_parent"/>
     </TableLayout>

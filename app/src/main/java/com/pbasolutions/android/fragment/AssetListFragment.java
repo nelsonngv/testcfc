@@ -88,6 +88,7 @@ public class AssetListFragment extends Fragment {
             }
         }.execute(inflater, recyclerView);
 
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

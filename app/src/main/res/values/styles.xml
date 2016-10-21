@@ -141,9 +141,7 @@
     </style>
     <style name="LineRV">
         <item name="android:layout_width">match_parent</item>
-        <item name= "android:layout_height">200dp</item>
-        <item name="android:layout_marginLeft">@dimen/table_margin_left</item>
-        <item name="android:layout_marginRight">@dimen/table_margin_right</item>
+        <item name= "android:layout_height">fill_parent</item>
         <item name="android:layout_marginBottom">@dimen/margin_bottom</item>
         <item name="android:layout_marginTop">@dimen/margin_top</item>
     </style>
@@ -196,7 +194,8 @@
     <style name="LineCheckBoxD">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
     </style>
     <style name="LineInfoD">
         <item name="android:layout_width">match_parent</item>

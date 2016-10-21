@@ -2,17 +2,19 @@ package com.pbasolutions.android.adapter;
 
 import android.content.Context;
 import android.databinding.ObservableArrayList;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.pbasolutions.android.databinding.ApplicantListitemBinding;
 import com.pbasolutions.android.model.MApplicant;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 /**
  * Created by pbadell on 10/5/15.
  */
-public class ApplicantRVA extends RecyclerView.Adapter<ApplicantRVA.MApplicantVH>{
+public class ApplicantRVA extends RecyclerView.Adapter<ApplicantRVA.MApplicantVH> implements FastScrollRecyclerView.SectionedAdapter {
     private Context mContext;
     private ObservableArrayList<MApplicant> applicantList;
     private LayoutInflater inflater;
@@ -46,6 +48,12 @@ public class ApplicantRVA extends RecyclerView.Adapter<ApplicantRVA.MApplicantVH
         if (applicantList != null)
             return applicantList.size();
         else return 0;
+    }
+
+    @NonNull
+    @Override
+    public String getSectionName(int position) {
+        return applicantList.get(position).getName().substring(0, 1);
     }
 
     /**

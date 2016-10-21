@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.pbasolutions.android.adapter.MenuDrawerRVA;
 import com.pbasolutions.android.model.NavDrawerItem;
 import com.pbasolutions.android.R;
+import com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,7 +152,7 @@ public class FragmentDrawer extends Fragment {
     /**
      *
      */
-    static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+    static class RecyclerTouchListener implements FastScrollRecyclerView.OnItemTouchListener {
 
         private GestureDetector gestureDetector;
         private ClickListener clickListener;
@@ -186,6 +187,11 @@ public class FragmentDrawer extends Fragment {
 
         @Override
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
         }
     }
 
