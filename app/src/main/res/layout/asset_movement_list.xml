@@ -4,7 +4,92 @@
     android:layout_height="match_parent"
     android:divider="?android:attr/dividerHorizontal"
     android:showDividers="middle|end"
-    >
+    android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        >
+        <TableRow android:background="#dcdfe1" >
+            <TextView
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:id="@+id/DocSortDesc"
+                android:text="Doc No"
+                android:layout_width="0dp"
+                android:gravity="center_horizontal"
+                android:clickable="true"
+                android:background="@drawable/textline"
+                android:drawableLeft="@drawable/sortdescicon"
+
+                />
+            <TextView
+                android:padding="10dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/DocSortAcs"
+                android:text="Doc No"
+                android:clickable="true"
+                android:textAlignment="center"
+                android:gravity="center_horizontal"
+                android:background="@drawable/textline"
+                android:drawableLeft="@drawable/sortacsicon"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/DateSortDesc"
+                android:text="Date"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:background="@drawable/textline"
+                android:drawableLeft="@drawable/sortdescicon"
+                android:clickable="true"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/DateSortAcs"
+                android:text="Date"
+                android:textAlignment="center"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:background="@drawable/textline"
+                android:drawableLeft="@drawable/sortacsicon"
+                android:clickable="true"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/StatusSortDesc"
+                android:padding="10dp"
+                android:text="Status"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:drawableLeft="@drawable/sortdescicon"
+                android:clickable="true"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/StatusSortAcs"
+                android:padding="10dp"
+                android:text="Status"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:drawableLeft="@drawable/sortacsicon"
+                android:clickable="true"
+                />
+        </TableRow>
+    </TableLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/RefreshMovement"
         android:layout_width="match_parent"

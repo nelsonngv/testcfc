@@ -57,6 +57,7 @@
                     android:id="@+id/req_status"
                     android:text="@{requisition.Status}"
                     android:textColor="@{requisition.StatusColor}"
+                    android:textStyle="bold"
                     style="@style/TableValue2"/>
             </TableRow>
             <TextView

@@ -5,6 +5,10 @@ import android.graphics.Color;
 import com.google.gson.annotations.Expose;
 import com.pbasolutions.android.json.PBSJson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by pbadell on 10/12/15.
  */
@@ -32,6 +36,7 @@ public class MPurchaseRequest extends PBSJson {
     String DocumentNo;
     String UserName;
     String Status;
+    Date RequestDateFormat;
     MPurchaseRequestLine[] Lines;
     String ProjLocName;
     private int StatusColor;
@@ -131,6 +136,13 @@ public class MPurchaseRequest extends PBSJson {
 
     public void setRequestDate(String requestDate) {
         RequestDate = requestDate;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            Date date = formatter.parse(requestDate);
+            setRequestDateFormat(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getStatus() {
@@ -140,13 +152,13 @@ public class MPurchaseRequest extends PBSJson {
     public void setStatus(String status) {
         Status = status;
         switch(Status){
-            case "Waiting Approval": {
+            case "WAITING APPROVAL": {
                 setStatusColor(Color.RED);
                 break;
             }
 
-            case "Approved": {
-                setStatusColor(Color.GREEN);
+            case "APPROVED": {
+                setStatusColor(Color.parseColor("#32CD32"));
                 break;
             }
             default:
@@ -161,5 +173,9 @@ public class MPurchaseRequest extends PBSJson {
     public void setStatusColor(int statusColor) {
         StatusColor = statusColor;
     }
+
+    public void setRequestDateFormat(Date requestDateFormat){ RequestDateFormat = requestDateFormat;}
+
+    public Date getRequestDateFormat(){ return RequestDateFormat;}
 
 }

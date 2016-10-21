@@ -8,8 +8,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraContext;
@@ -19,6 +21,9 @@ import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.AssetMovementRVA;
 import com.pbasolutions.android.controller.PBSAssetController;
 import com.pbasolutions.android.model.MMovement;
+
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by pbadell on 10/8/15.
@@ -38,6 +43,12 @@ public class MovementListFragment extends Fragment {
     private ObservableArrayList<MMovement> movements;
 
     SwipeRefreshLayout mSwipeRefreshLayout;
+    private TextView sortDocDesc;
+    private TextView sortDocAcs;
+    private TextView sortDateDesc;
+    private TextView sortDateAcs;
+    private TextView sortStatusDesc;
+    private TextView sortStatusAcs;
 
     protected String movementDetailTitle;
 
@@ -101,6 +112,138 @@ public class MovementListFragment extends Fragment {
                 AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(), movements, inflater);
                 recyclerView.setAdapter(viewAdapter);
                 mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        sortDocDesc = (TextView) rootView.findViewById(R.id.DocSortDesc);
+        sortDocAcs = (TextView) rootView.findViewById(R.id.DocSortAcs);
+        sortDateDesc = (TextView) rootView.findViewById(R.id.DateSortDesc);
+        sortDateAcs = (TextView) rootView.findViewById(R.id.DateSortAcs);
+        sortStatusDesc = (TextView) rootView.findViewById(R.id.StatusSortDesc);
+        sortStatusAcs = (TextView) rootView.findViewById(R.id.StatusSortAcs);
+
+        sortDocAcs.setVisibility(View.GONE);
+        sortDateAcs.setVisibility(View.GONE);
+        sortStatusAcs.setVisibility(View.GONE);
+
+        sortDocDesc.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Collections.sort(movements, new Comparator<MMovement>(){
+                    @Override
+                    public int compare(MMovement lhs, MMovement rhs) {
+                        return lhs.getDocumentNo().compareTo(rhs.getDocumentNo());
+                    }
+                });
+                AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(),movements, inflater);
+                recyclerView.setAdapter(viewAdapter);
+                PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
+                        new AssetMovementDetails(), movementDetailTitle);
+                sortDocDesc.setVisibility(View.GONE);
+                sortDocAcs.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
+        sortDocAcs.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Collections.sort(movements, new Comparator<MMovement>(){
+                    @Override
+                    public int compare(MMovement lhs, MMovement rhs) {
+                        return rhs.getDocumentNo().compareTo(lhs.getDocumentNo());
+                    }
+                });
+                AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(),movements, inflater);
+                recyclerView.setAdapter(viewAdapter);
+                PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
+                        new AssetMovementDetails(), movementDetailTitle);
+                sortDocAcs.setVisibility(View.GONE);
+                sortDocDesc.setVisibility(View.VISIBLE);
+                return false;
+            }
+
+
+        });
+
+        sortDateDesc.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+//                for (int i = 0; i< movements.size(); i++){
+//                    movements.get(i).getRequestDate();
+//                    Log.i(TAG, "onTouch: " + movements.get(i).getRequestDate());
+//                }
+                Collections.sort(movements, new Comparator<MMovement>(){
+                    @Override
+                    public int compare(MMovement lhs, MMovement rhs) {
+
+                        return lhs.getMovementDateFormat().compareTo(rhs.getMovementDateFormat());
+                    }
+                });
+                AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(),movements, inflater);
+                recyclerView.setAdapter(viewAdapter);
+                PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
+                        new AssetMovementDetails(), movementDetailTitle);
+                sortDateDesc.setVisibility(View.GONE);
+                sortDateAcs.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
+        sortDateAcs.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Collections.sort(movements, new Comparator<MMovement>(){
+                    @Override
+                    public int compare(MMovement lhs, MMovement rhs) {
+                        return rhs.getMovementDateFormat().compareTo(lhs.getMovementDateFormat());
+                    }
+                });
+                AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(),movements, inflater);
+                recyclerView.setAdapter(viewAdapter);
+                PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
+                        new AssetMovementDetails(), movementDetailTitle);
+                sortDateDesc.setVisibility(View.VISIBLE);
+                sortDateAcs.setVisibility(View.GONE);
+                return false;
+            }
+        });
+
+        sortStatusDesc.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Collections.sort(movements, new Comparator<MMovement>(){
+                    @Override
+                    public int compare(MMovement lhs, MMovement rhs) {
+                        return rhs.getStatus().compareTo(lhs.getStatus());
+                    }
+                });
+                AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(),movements, inflater);
+                recyclerView.setAdapter(viewAdapter);
+                PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
+                        new AssetMovementDetails(), movementDetailTitle);
+                sortStatusDesc.setVisibility(View.GONE);
+                sortStatusAcs.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
+        sortStatusAcs.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Collections.sort(movements, new Comparator<MMovement>(){
+                    @Override
+                    public int compare(MMovement lhs, MMovement rhs) {
+                        return lhs.getStatus().compareTo(rhs.getStatus());
+                    }
+                });
+                AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(),movements, inflater);
+                recyclerView.setAdapter(viewAdapter);
+                PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
+                        new AssetMovementDetails(), movementDetailTitle);
+                sortStatusDesc.setVisibility(View.VISIBLE);
+                sortStatusAcs.setVisibility(View.GONE);
+                return false;
             }
         });
 

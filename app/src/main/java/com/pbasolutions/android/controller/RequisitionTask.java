@@ -634,11 +634,11 @@ public class RequisitionTask implements Callable<Bundle> {
     private String getStatus(String isApproved) {
         String status = "";
         if (PandoraConstant.FALSE.equalsIgnoreCase(isApproved)) {
-            status = "Waiting Approval";
+            status = "WAITING APPROVAL";
         } else if (PandoraConstant.TRUE.equalsIgnoreCase(isApproved)) {
             status = PandoraConstant.APPROVED;
         } else if (isApproved.equalsIgnoreCase("N"))
-            status = "Waiting Approval";
+            status = "WAITING APPROVAL";
         return status;
     }
 

@@ -4,6 +4,10 @@ import android.graphics.Color;
 import android.widget.Switch;
 import com.pbasolutions.android.json.PBSJson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by pbadell on 12/2/15.
  */
@@ -72,6 +76,7 @@ public class MMovement extends PBSJson {
     private String AD_User_UUID;
     private Number AD_User_ID;
     private int StatusColor;
+    Date MovementDateFormat;
 
     public Number getM_Movement_ID() {
         return M_Movement_ID;
@@ -87,6 +92,13 @@ public class MMovement extends PBSJson {
 
     public void setMovementDate(String movementDate) {
         MovementDate = movementDate;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        try {
+            Date date = formatter.parse(movementDate);
+            setMovementDateFormat(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getDocStatus() {
@@ -274,4 +286,8 @@ public class MMovement extends PBSJson {
     public void setAD_User_ID(Number AD_User_ID) {
         this.AD_User_ID = AD_User_ID;
     }
+
+    public void setMovementDateFormat(Date movementDateFormat){ MovementDateFormat = movementDateFormat;}
+
+    public Date getMovementDateFormat(){ return MovementDateFormat;}
 }

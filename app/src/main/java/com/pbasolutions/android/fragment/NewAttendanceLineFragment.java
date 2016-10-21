@@ -99,8 +99,9 @@ public class NewAttendanceLineFragment extends Fragment {
         textCheckinDate = (TextView)rootView.findViewById(R.id.atCheckinDate);
         textCheckoutDate = (TextView)rootView.findViewById(R.id.atCheckoutDate);
         textComment = (TextView)rootView.findViewById(R.id.atComment);
-
         saveButton = (Button)rootView.findViewById(R.id.saveATLine);
+        setDateTimeFromShift();
+        setDateTimeToShift();
     }
 
     protected void setUIListener() {
@@ -305,6 +306,46 @@ public class NewAttendanceLineFragment extends Fragment {
         return daytype;
     }
 
+    public void setDateTimeFromShift(){
+
+        String timefrom = ModelConst.mapUUIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_UUID_COL,
+                PBSAttendanceController.shiftUUID , "timefrom" ,getActivity().getContentResolver());
+
+        String getTimeFrom = "";
+
+        //To split the String and concatenate all
+        StringBuilder CharAddTimeFrom = new StringBuilder();
+        char[] splitStringTimeFrom  = timefrom.toCharArray();
+        for(int i=0;i<splitStringTimeFrom.length;i++){
+            if(i>10 && i <16){
+                CharAddTimeFrom.append(splitStringTimeFrom[i]);
+            }
+            getTimeFrom = CharAddTimeFrom.toString();
+        }
+
+        String timeFrom = PBSAttendanceController.deployDate + " " + getTimeFrom;
+        textCheckinDate.setText(timeFrom);
+
+    }
+
+    public void setDateTimeToShift(){
+        String timeto = ModelConst.mapUUIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_UUID_COL,
+                PBSAttendanceController.shiftUUID , "timeto" ,getActivity().getContentResolver());
+        String getTimeTo = "";
+
+        //To split the String and concatenate all
+        StringBuilder charAddTimeTo = new StringBuilder();
+        char[] splitStringTimeTo = timeto.toCharArray();
+        for(int i=0;i<splitStringTimeTo.length;i++){
+            if(i>10 && i <16){
+                charAddTimeTo.append(splitStringTimeTo[i]);
+            }
+            getTimeTo = charAddTimeTo.toString();
+        }
+
+        String timeTo = PBSAttendanceController.deployDate + " " + getTimeTo;
+        textCheckoutDate.setText(timeTo);
+    }
 
 
     public String getAtUUID() {
