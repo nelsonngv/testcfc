@@ -159,9 +159,10 @@ public class NewProjTaskFragment extends Fragment {
         PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
         if (globalVar != null) {
             Bundle input = new Bundle();
-            String projectLocationUUID = globalVar.getC_projectlocation_uuid();
-            if (projectLocationUUID != null) {
-                input.putString(PBSTaskController.ARG_PROJLOC_UUID, projectLocationUUID);
+//            String projectLocationUUID = globalVar.getC_projectlocation_uuid();
+            String adUserID = globalVar.getAd_user_id();
+            if (adUserID != null) {
+                input.putString(PBSTaskController.ARG_AD_USER_ID, adUserID);
                 Bundle result = taskCont.triggerEvent(taskCont.GET_USERS_EVENT,
                         input, new Bundle(), null);
                 return result.getParcelableArrayList(taskCont.ARG_USERS);

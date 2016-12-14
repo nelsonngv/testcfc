@@ -173,6 +173,8 @@ public class ProjTaskFragment extends Fragment {
      */
     private void populateProjTask() {
         Bundle input = new Bundle();
+        input.putString(PBSTaskController.ARG_PROJLOC_UUID, globalVar.getC_projectlocation_uuid());
+        input.putString(PBSTaskController.ARG_AD_USER_ID, globalVar.getAd_user_id());
         Bundle result = taskCont.triggerEvent(taskCont.GET_PROJTASKS_EVENT, input, new Bundle(), null);
         taskList = (ObservableArrayList<MProjectTask>) result.getSerializable(taskCont.ARG_TASK_LIST);
     }
@@ -184,6 +186,7 @@ public class ProjTaskFragment extends Fragment {
         if (PBSServerConst.cookieStore !=null){
             Bundle input = new Bundle();
             input.putString(PBSTaskController.ARG_PROJLOC_UUID, globalVar.getC_projectlocation_uuid());
+            input.putString(PBSTaskController.ARG_AD_USER_ID, globalVar.getAd_user_id());
             input.putString(PBSServerConst.PARAM_URL, globalVar.getServer_url());
             Bundle result = taskCont.triggerEvent(PBSTaskController.SYNC_PROJTASKS_EVENT, input, new Bundle(), null);
 

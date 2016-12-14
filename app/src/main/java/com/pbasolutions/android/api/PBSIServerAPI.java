@@ -19,7 +19,7 @@ import org.json.JSONObject;
  */
 public interface PBSIServerAPI {
     PBSNotesJSON getNoteByUser(String username, String projLocID, String serverURL);
-    PBSProjTasksJSON getProjTasks(String projLocID, String serverURL);
+    PBSProjTasksJSON getProjTasks(String projLocID, String userID, String serverURL);
     PBSProjTasksJSON completeProjTask(PBSJson json, String serverURL);
 
     MPurchaseRequest createRequisition(PBSJson json, String serverURL);

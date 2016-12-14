@@ -45,14 +45,15 @@ public class PBSServerAPI extends PBSServer implements PBSIServerAPI {
     }
 
     @Override
-    public PBSProjTasksJSON getProjTasks(String projLocID, String serverURL) {
+    public PBSProjTasksJSON getProjTasks(String projLocID, String userID, String serverURL) {
         //
         String url = getURL(serverURL, PBSServerConst.PATH, PBSServerConst.CFC_JSP);
         String query = null;
         try {
-            query = String.format("%s=%s&%s=%s", PBSServerConst.ACTION,
+            query = String.format("%s=%s&%s=%s&%s=%s", PBSServerConst.ACTION,
                     URLEncoder.encode(PBSServerConst.GET_PROJTASKS, PBSServerConst.UTF_8),
-                    PBSServerConst.PROJLOCID, URLEncoder.encode(projLocID, PBSServerConst.UTF_8));
+                    PBSServerConst.PROJLOCID, URLEncoder.encode(projLocID, PBSServerConst.UTF_8),
+                    PBSServerConst.USERID, URLEncoder.encode(userID, PBSServerConst.UTF_8));
         } catch (UnsupportedEncodingException e){
             Log.e(TAG, e.getMessage());
         }
