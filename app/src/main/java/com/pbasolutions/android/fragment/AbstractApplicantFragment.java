@@ -96,6 +96,7 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
     protected ImageView cert9Pic;
     protected ImageView cert10Pic;
     protected EditText status;
+    protected EditText interviewerNotes;
 
     protected PandoraMain context;
     protected PandoraContext appContext;
@@ -196,6 +197,8 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
         yearsOfExp = (EditText) rootView.findViewById(R.id.editTextNumOfExp);
 
         status = (EditText) rootView.findViewById(R.id.editTextStatus);
+
+        interviewerNotes = (EditText) rootView.findViewById(R.id.editTextInterviewerNotes);
     }
 
     /**

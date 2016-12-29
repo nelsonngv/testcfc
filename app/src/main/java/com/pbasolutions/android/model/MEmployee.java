@@ -32,6 +32,7 @@ public class MEmployee extends PBSJson{
     private String Name;
     private String Status;
     private String _ID;
+    private String defaultProjLoc;
 
     private boolean isEditable;
 
@@ -141,4 +142,8 @@ public class MEmployee extends PBSJson{
     public void setWorkPermit(String workPermit) {
         WorkPermit = workPermit;
     }
+
+    public String getDefaultProjLoc() { return defaultProjLoc; }
+
+    public void setDefaultProjLoc(String defaultProjLoc) { this.defaultProjLoc = defaultProjLoc; }
 }

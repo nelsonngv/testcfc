@@ -51,6 +51,7 @@ public class ModelConst {
     public static final String CREATED_COL = "Created";
     public static final String HR_LEAVETYPE_UUID_COL = "HR_LEAVETYPE_UUID";
     public static final String HR_LEAVETYPE_ID_COL = "HR_LEAVETYPE_ID";
+    public static final String INTERVIEWER_NOTES_COL = "INTERVIEWER_NOTES";
 
     /**
      * table names.

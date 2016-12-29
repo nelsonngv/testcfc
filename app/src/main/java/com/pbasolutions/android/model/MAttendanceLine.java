@@ -18,6 +18,8 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
     public static final String C_BPARTNER_ID_COL = "C_BPARTNER_ID";
     public static final String C_BPARTNER_UUID_COL = "C_BPARTNER_UUID";
     public static final String ISABSENT_COL = "ISABSENT";
+    public static final String ISOFF_COL = "ISOFF";
+    public static final String ISREST_COL = "ISREST";
     public static final String HR_LEAVETYPE_ID_COL = "HR_LEAVETYPE_ID";
     public static final String HR_DAYS_COL = "DAYS";
     public static final String COMMENT_COL = "COMMENT";
@@ -30,7 +32,9 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
     private transient String C_BPartner_Name;
     private String CheckIn;
     private String CheckOut;
-    private String IsAbsent;
+    private String IsAbsent = "N";
+    private String IsOff = "N";
+    private String IsRest = "N";
     private String Comments;
     private String HR_LeaveType_ID;
     private transient String HR_LeaveType_Name;
@@ -66,6 +70,14 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
     public void setIsAbsent(String isAbsent) {
         IsAbsent = isAbsent;
     }
+
+    public String getIsOff() { return IsOff; }
+
+    public void setIsOff(String isOff) { IsOff = isOff; }
+
+    public String getIsRest() { return IsRest; }
+
+    public void setIsRest(String isRest) { IsRest = isRest; }
 
     public String getComments() {
         return Comments;
@@ -148,7 +160,7 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
             CheckOut = null;
         }
         else {
-            IsAbsent = null;
+//            IsAbsent = null;
             HR_LeaveType_ID = null;
             Days = null;
         }

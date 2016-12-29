@@ -87,6 +87,7 @@ public class RecruitTask extends Task {
                 MApplicant.QUALIFICATION_HIGHEST_COL,
                 MApplicant.QUALIFICATION_OTHER_COL,
                 MApplicant.STATUS_COL,
+                MApplicant.INTERVIEWER_NOTES_COL,
                 MApplicant.APPLICATIONDATE_COL,
                 MApplicant.EXPECTEDSALARY_COL,
                 MApplicant.YEARSOFEXPERIENCED_COL,
@@ -157,6 +158,9 @@ public class RecruitTask extends Task {
                     } else if (MApplicant.STATUS_COL
                             .equalsIgnoreCase(columnName)) {
                         applicant.setStatus(rowValue);
+                    } else if (MApplicant.INTERVIEWER_NOTES_COL
+                            .equalsIgnoreCase(columnName)) {
+                        applicant.setInterviewerNotes(rowValue);
                     } else if (MApplicant.APPLICATIONDATE_COL
                             .equalsIgnoreCase(columnName)) {
                         applicant.setApplDate(rowValue);
@@ -237,9 +241,10 @@ public class RecruitTask extends Task {
         String cbpartner = ModelConst.C_BPARTNER_VIEW + ".";
 
         String projLocationUUID = input.getString(PBSRecruitController.ARG_PROJECT_LOCATION_UUID);
+        String projLocationName = input.getString(PBSRecruitController.ARG_PROJECT_LOCATION_NAME);
 
         String[] projection = { cbpartner + MEmployee.C_BPARTNER_UUID_COL, cbpartner + ModelConst.NAME_COL, cbpartner + ModelConst.IDNUMBER_COL,
-                cbpartner + ModelConst.PHONE_COL, cbpartner + MEmployee.JOB_TITLE_COL, cbpartner + ModelConst.WORKPERMIT_COL};
+                cbpartner + ModelConst.PHONE_COL, cbpartner + MEmployee.JOB_TITLE_COL, cbpartner + ModelConst.WORKPERMIT_COL, "ISDEFAULT"};
 
         String[] selectionArg = { projLocationUUID };
 
@@ -274,6 +279,11 @@ public class RecruitTask extends Task {
                     } else if (MEmployee.JOB_TITLE_COL
                             .equalsIgnoreCase(columnName)) {
                         employee.setJobTitle(rowValue);
+                    } else if ("ISDEFAULT"
+                            .equalsIgnoreCase(columnName)) {
+                        if (rowValue.equalsIgnoreCase("Y"))
+                            employee.setDefaultProjLoc(projLocationName);
+                        else employee.setDefaultProjLoc("-");
                     }
                 }
 

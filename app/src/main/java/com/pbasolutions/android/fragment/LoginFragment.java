@@ -190,6 +190,7 @@ public class LoginFragment extends Fragment {
                     {
                         context.globalVariable = new PandoraContext();
                     }
+                    ((PandoraMain)getActivity()).updateDrawer();
                     ((PandoraMain)getActivity()).drawerFragment.resetUsername(accountName);
                     ((PandoraMain)getActivity()).drawerFragment.invalidateView();
                     context.globalVariable.setAd_user_name(accountName);

@@ -62,4 +62,17 @@
             style="@style/TableValue"
             android:inputType="number"/>
     </LinearLayout>
+    <LinearLayout style="@style/PTableVirtRow">
+        <TextView
+            style="@style/TableInfoLabel"
+            android:text="@string/label_picture1" />
+
+        <ImageView
+            android:id="@+id/taskPicture1"
+            android:layout_width="@dimen/dimen_small_pic"
+            android:layout_height="@dimen/dimen_small_pic"
+            android:layout_column="1"
+            android:scaleType="fitXY"
+            android:src="@drawable/camera" />
+    </LinearLayout>
 </LinearLayout>

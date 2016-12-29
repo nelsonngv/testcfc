@@ -102,7 +102,7 @@ public class CheckPointFragment extends Fragment {
                     PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
                     if (globalVar != null && checkPoints == null)
                         PandoraHelper.showWarningMessage((PandoraMain)getActivity(),
-                                "Project Location is not selected. Please select the project location in defaults setting tab.");
+                                "No check point for the current Project Location. Please select another project location in defaults setting tab.");
                 }
 
                 CheckPointRVA viewAdapter = new CheckPointRVA(getActivity(), checkPoints, inflater);

@@ -72,6 +72,7 @@ import com.pbasolutions.android.fragment.RequisitionDetailFragment;
 import com.pbasolutions.android.fragment.RequisitionFragment;
 import com.pbasolutions.android.fragment.RequisitionLineDetailsFragment;
 import com.pbasolutions.android.json.PBSResultJSON;
+import com.pbasolutions.android.json.PBSTableJSON;
 import com.pbasolutions.android.utils.AlbumStorageDirFactory;
 import com.pbasolutions.android.utils.BaseAlbumDirFactory;
 import com.pbasolutions.android.utils.CameraUtil;
@@ -194,6 +195,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     // to check sync result
     public static final String GOTO_RECRUIT = "GotoRecruit";
 
+    //authorized menu
+    public String[] menuList = null;
+
+    //menu list constant
+    public static final String[] MENU_LIST = {"Attendance", "Recruit", "Asset", "Requisition", "Task",
+            "Check In", "Check Point", "Broadcast", "Setting"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -267,7 +275,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     /**
      * Set drawer fragment.
      */
-    private void setDrawerFragment() {
+    public void setDrawerFragment() {
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(
                 R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer,
@@ -275,6 +283,15 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         drawerFragment.setDrawerListener(this);
         drawerFragment.resetUsername(globalVariable.getAd_user_name());
         drawerFragment.invalidateView();
+    }
+
+    /**
+     * Update drawer fragment.
+     */
+    public void updateDrawer() {
+        drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(
+                R.id.fragment_navigation_drawer);
+        drawerFragment.updateDrawer();
     }
 
     /**
@@ -673,6 +690,18 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 Toast.makeText(this, "Please wait while initial syncing.",
                         Toast.LENGTH_SHORT).show();
                 return;
+            }
+        }
+
+        if (PandoraMain.instance != null && PandoraMain.instance.menuList != null && PandoraMain.instance.menuList.length > 0 && position < MENU_LIST.length) {
+            drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(
+                    R.id.fragment_navigation_drawer);
+            String[] titlesList = drawerFragment.titles;
+            for (int i = 0; i < MENU_LIST.length; i++) {
+                if (titlesList[position].contains(MENU_LIST[i])) {
+                    position = i;
+                    break;
+                }
             }
         }
 

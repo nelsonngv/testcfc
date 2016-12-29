@@ -27,6 +27,8 @@ import com.pbasolutions.android.json.PBSTableJSON;
 import com.pbasolutions.android.model.ModelConst;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -438,7 +440,25 @@ public class AuthenticatorTask extends Task {
             PBSLoginJSON user = sServerAuthenticate.userSignIn(userName, userPass, deviceID, serverURL);
             if (user != null) {
                 if (user.getSuccess().equals("TRUE")) {
-
+                    if (user.getForms().length > 0) {
+                        //sorting menu items
+                        ArrayList<String> oriMenuList = new ArrayList<String>(Arrays.asList(user.getForms()));
+                        ArrayList<String> tmpMenuList = new ArrayList<String>();
+                        String name = "";
+                        String[] MENU_LIST = PandoraMain.instance.MENU_LIST;
+                        for (int i = 0; i < MENU_LIST.length && oriMenuList.size() > 0; i++) {
+                            for (int j = 0; j < oriMenuList.size(); j++) {
+                                name = oriMenuList.get(j).substring("MOB_".length());
+                                if (name.contains(MENU_LIST[i])) {
+                                    tmpMenuList.add(name);
+                                    oriMenuList.remove(j);
+                                    break;
+                                }
+                            }
+                        }
+                        Object[] objectList = tmpMenuList.toArray();
+                        PandoraMain.instance.menuList = Arrays.copyOf(objectList, objectList.length, String[].class);
+                    }
                     Account arrayAccounts[] = getAccounts(accType);
                     //if account already created.
                     if (arrayAccounts.length > 0) {

@@ -15,6 +15,7 @@ public class MProjectTask extends PBSJson {
     private String Description;
     private String comments;
     transient private String projLocName;
+    private String ATTACHMENT_BEFORETASKPICTURE_1;
     private String ATTACHMENT_TASKPICTURE_1;
     private String ATTACHMENT_TASKPICTURE_2;
     private String ATTACHMENT_TASKPICTURE_3;
@@ -43,6 +44,7 @@ public class MProjectTask extends PBSJson {
     public static final String TABLENAME = "C_ProjectTask";
 
 
+    public static final String ATTACHMENT_BEFORETASKPICTURE_1_COL = "ATTACHMENT_BEFORETASKPICTURE_1";
     public static final String ATTACHMENT_TASKPICTURE_1_COL = "ATTACHMENT_TASKPICTURE_1";
     public static final String ATTACHMENT_TASKPICTURE_2_COL = "ATTACHMENT_TASKPICTURE_2";
     public static final String ATTACHMENT_TASKPICTURE_3_COL = "ATTACHMENT_TASKPICTURE_3";
@@ -96,6 +98,12 @@ public class MProjectTask extends PBSJson {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public String getATTACHMENT_BEFORETASKPICTURE_1() { return ATTACHMENT_BEFORETASKPICTURE_1; }
+
+    public void setATTACHMENT_BEFORETASKPICTURE_1(String ATTACHMENT_BEFORETASKPICTURE_1) {
+        this.ATTACHMENT_BEFORETASKPICTURE_1 = ATTACHMENT_BEFORETASKPICTURE_1;
     }
 
     public String getATTACHMENT_TASKPICTURE_1() {

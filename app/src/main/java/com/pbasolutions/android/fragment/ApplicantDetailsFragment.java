@@ -55,6 +55,7 @@ public class ApplicantDetailsFragment extends AbstractApplicantFragment {
     protected void setValues() {
         applicant = getApplicant();
         status.setText(applicant.getStatus());
+        interviewerNotes.setText(applicant.getInterviewerNotes());
         name.setText(applicant.getName());
         idno.setText(applicant.getIdNumber());
         phone.setText(applicant.getPhone());
@@ -110,6 +111,7 @@ public class ApplicantDetailsFragment extends AbstractApplicantFragment {
         qualHigh.setEnabled(false);
         qualOther.setEnabled(false);
         status.setEnabled(false);
+        interviewerNotes.setEnabled(false);
     }
 
     private MApplicant getApplicant(){

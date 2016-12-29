@@ -165,6 +165,18 @@
             <include layout="@layout/cert_attachments" />
             <TableRow>
                 <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_interviewernotes" />
+
+                    <EditText
+                        android:id="@+id/editTextInterviewerNotes"
+                        style="@style/TableValue"
+                        />
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
                     style="@style/TableInfoLabel"
                     android:text="@string/label_status" />

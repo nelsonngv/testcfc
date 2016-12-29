@@ -29,6 +29,7 @@ public class MApplicant extends MEmployee{
     private String expSal;
     private String isExp;
     private String status;
+    private String interviewerNotes;
     private String numOfExp;
     private String projLoc;
     private String prefShift;
@@ -58,6 +59,7 @@ public class MApplicant extends MEmployee{
     public static String QUALIFICATION_HIGHEST_COL = "Qualification_Highest";
     public static String QUALIFICATION_OTHER_COL = "Qualification_Other";
     public static String STATUS_COL = "Status";
+    public static String INTERVIEWER_NOTES_COL = "INTERVIEWER_NOTES";
     public static String APPLICATIONDATE_COL = "ApplicationDate";
     public static String EXPECTEDSALARY_COL = "ExpectedSalary";
     public static String ISEXPERIENCED_COL = "IsExperienced";
@@ -178,6 +180,9 @@ public class MApplicant extends MEmployee{
         this.status = status;
     }
 
+    public String getInterviewerNotes() { return interviewerNotes; }
+
+    public void setInterviewerNotes(String interviewerNotes) { this.interviewerNotes = interviewerNotes; }
 
     public String getCertPic1() {
         return certPic1;

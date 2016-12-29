@@ -59,6 +59,7 @@ public class PBSRecruitController extends PBSController {
      */
     public static final String EMPLOYEE_LIST = "EMPLOYEE_LIST";
     public static final String ARG_PROJECT_LOCATION_UUID = "ARG_PROJECT_LOCATION_UUID";
+    public static final String ARG_PROJECT_LOCATION_NAME = "ARG_PROJECT_LOCATION_NAME";
     public static final String SHIFT_LIST = "SHIFT_LIST";
     public static final String SETUPJOB_LIST = "SETUPJOB_LIST";
     public static final String NATIONALITY_LIST = "NATIONALITY_LIST";

@@ -51,6 +51,10 @@ public class PBSLoginJSON extends PBSJson {
      * Table array returned value.
      */
     private PBSTableJSON Tables[];
+    /**
+     * Forms array returned value.
+     */
+    private String Forms[];
 
     public PBSLoginJSON() {
     }
@@ -160,6 +164,22 @@ public class PBSLoginJSON extends PBSJson {
      */
     public void setTables(PBSTableJSON[] tables) {
         Tables = tables;
+    }
+
+    /**
+     * Get Forms array for specific user.
+     * @return forms
+     */
+    public String[] getForms() {
+        return Forms;
+    }
+
+    /**
+     * Set Forms array for specific user.
+     * @param forms
+     */
+    public void setForms(String[] forms) {
+        Forms = forms;
     }
 
 }

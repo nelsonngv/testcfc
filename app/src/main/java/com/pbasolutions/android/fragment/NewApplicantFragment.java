@@ -222,6 +222,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
             cv.put(MApplicant.ATTACHMENT_CERTPICTURE_8, (String) cert8Pic.getTag());
             cv.put(MApplicant.ATTACHMENT_CERTPICTURE_9, (String) cert9Pic.getTag());
             cv.put(MApplicant.ATTACHMENT_CERTPICTURE_10, (String) cert10Pic.getTag());
+            cv.put(ModelConst.INTERVIEWER_NOTES_COL, interviewerNotes.getText().toString());
             cv.put(ModelConst.IS_SYNCED_COL, PandoraConstant.NO);
             cv.put(ModelConst.IS_UPDATED_COL, PandoraConstant.NO);
 

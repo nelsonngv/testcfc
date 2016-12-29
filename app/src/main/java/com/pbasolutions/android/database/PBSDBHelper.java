@@ -168,6 +168,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "ISUPDATED BOOLEAN DEFAULT 'Y' NOT NULL," +
                                 "ISSYNCED BOOLEAN DEFAULT 'Y' NOT NULL," +
                                 "ISDELETED BOOLEAN DEFAULT 'N' NOT NULL," +
+//                                "HR_CLUSTER_ID NUMBER(10, 0) NULL," +
                                 //PK
                                 "C_PROJECTLOCATION_UUID TEXT PRIMARY KEY NOT NULL, " +
                                 //OTHERS
@@ -180,9 +181,33 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                                 ");");
 
-                        //create index for M_Checkpoint_ID
+                        //create index for C_PROJECTLOCATION_ID
                         db.execSQL("CREATE INDEX C_PROJECTLOCATION_INDEX ON" +
                                 " C_PROJECTLOCATION(C_PROJECTLOCATION_ID)");
+
+//                        db.execSQL("CREATE TABLE HR_CLUSTERMANAGEMENT(" +
+//                                //STANDARD
+//                                "HR_CLUSTERMANAGEMENT_ID NUMBER(10, 0)," +
+//                                "HR_CLUSTER_ID NUMBER(10, 0) NOT NULL," +
+//                                "AD_CLIENT_UUID TEXT NOT NULL," +
+//                                "AD_ORG_UUID TEXT NOT NULL," +
+//                                "AD_USER_ID NUMBER(10, 0) NOT NULL," +
+//                                "ISPRIMARY CHAR(1) DEFAULT 'Y' NOT NULL," +
+//                                "ISACTIVE CHAR(1) DEFAULT 'Y' NOT NULL," +
+//                                "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW'))," +
+//                                "CREATEDBY TEXT NOT NULL," +
+//                                "UPDATED DATETIME NOT NULL DEFAULT (DATETIME('NOW'))," +
+//                                "UPDATEDBY TEXT NOT NULL," +
+//                                //PK
+//                                "HR_CLUSTERMANAGEMENT_UUID TEXT PRIMARY KEY NOT NULL," +
+//                                //OTHERS
+//                                "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID), " +
+//                                "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)" +
+//                                ");");
+//
+//                        //create index for HR_CLUSTERMANAGEMENT_ID
+//                        db.execSQL("CREATE INDEX HR_CLUSTERMANAGEMENT_INDEX ON" +
+//                                " HR_CLUSTERMANAGEMENT(HR_CLUSTERMANAGEMENT_ID)");
 
                         //m_checkpoint --added latitude n long and tag
                         db.execSQL("CREATE TABLE M_CHECKPOINT(" +
@@ -472,6 +497,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "ATTACHMENT_CERTPICTURE_8 VARCHAR2(100)," +
                                 "ATTACHMENT_CERTPICTURE_9 VARCHAR2(100)," +
                                 "ATTACHMENT_CERTPICTURE_10 VARCHAR2(100)," +
+                                "INTERVIEWER_NOTES TEXT," +
                                 //--
                                 "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                                 "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
@@ -714,6 +740,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "ISDONE CHAR(1) DEFAULT 'N' NOT NULL, " +
                                 "DESCRIPTION NVARCHAR2(255), " +
                                 "COMMENTS NVARCHAR2(255)," +
+                                "ATTACHMENT_BEFORETASKPICTURE_1 VARCHAR2(100) , " +
                                 "ATTACHMENT_TASKPICTURE_1 VARCHAR2(100) , " +
                                 "ATTACHMENT_TASKPICTURE_2 VARCHAR2(100) , " +
                                 "ATTACHMENT_TASKPICTURE_3 VARCHAR2(100) , " +
@@ -962,6 +989,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                         "ATTACHMENT_CERTPICTURE_8, " +
                                         "ATTACHMENT_CERTPICTURE_9, " +
                                         "ATTACHMENT_CERTPICTURE_10, " +
+                                        "INTERVIEWER_NOTES," +
                                         "C_PROJECTLOCATION_UUID " +
                                         "FROM HR_JOBAPPLICATION " +
                                         "INNER JOIN HR_PROJLOCATION_SHIFT ON " +

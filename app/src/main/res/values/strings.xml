@@ -73,6 +73,7 @@
     <string name="label_idnumber">ID No</string>
     <string name="label_idtype">ID Type</string>
     <string name="label_phone">Phone</string>
+    <string name="label_default_projloc">Proj Loc</string>
     <string name="app_label_status">Status</string>
     <string name="label_sex">Gender</string>
     <string name="label_profpic">Profile Picture</string>
@@ -80,6 +81,7 @@
     <!--Applicants layout!-->
 
     <string name="label_status">Status</string>
+    <string name="label_interviewernotes">Interviewer Notes</string>
     <string name="label_nationality">Nationality</string>
     <string name="label_prefjobloc">Pref. Job Location</string>
     <string name="label_age">Age</string>
@@ -108,6 +110,7 @@
     <string name="label_filterby">Filter By </string>
     <string name="label_value">Value </string>
     <string name="label_shift">Shift </string>
+    <string name="label_dayType">Day Type </string>
     <string name="label_employees">Employees </string>
     <string name="label_isabsent">Absent</string>
     <string name="label_isnoshow">No Show</string>

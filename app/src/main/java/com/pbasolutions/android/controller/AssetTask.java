@@ -536,7 +536,7 @@ public class AssetTask extends Task {
         String json = serverAPI.getMStorage(object, input.getString(PBSServerConst.PARAM_URL));
         Pair pair = PandoraHelper.parseJsonWithArraytoPair(json, "Success", "Storage",
                 MStorage[].class.getName());
-        if (pair != null) {
+        if (pair != null && pair.second != null) {
             MStorage aMstorage[] = (MStorage[]) pair.second;
             return addValueToMStorage(aMstorage);
         }
@@ -810,10 +810,10 @@ public class AssetTask extends Task {
         PBSIServerAPI serverAPI = new PBSServerAPI();
         String json = serverAPI.getMovements(object, input.getString(PBSServerConst.PARAM_URL));
         Pair pair = PandoraHelper.parseJsonWithArraytoPair(json, "Success", "Movements", MMovement[].class.getName());
-        if (pair != null) {
+        ObservableArrayList<MMovement> list = new ObservableArrayList();
+        if (pair != null && pair.second != null) {
             MMovement aMovement[] = (MMovement[]) pair.second;
             //convert from array to list
-            ObservableArrayList<MMovement> list = new ObservableArrayList();
             for (int x = 0; x < aMovement.length; x++) {
                 aMovement[x].set_ID(aMovement[x].getM_Movement_ID().intValue());
                 String docStatus = aMovement[x].getDocStatus();
@@ -823,8 +823,8 @@ public class AssetTask extends Task {
                         TimeZone.getDefault()));
                 list.add(aMovement[x]);
             }
-            output.putSerializable(PBSAssetController.ARG_MOVEMENT, list);
         }
+        output.putSerializable(PBSAssetController.ARG_MOVEMENT, list);
         return output;
     }
 

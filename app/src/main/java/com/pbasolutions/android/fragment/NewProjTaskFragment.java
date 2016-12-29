@@ -1,12 +1,17 @@
 package com.pbasolutions.android.fragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.format.DateFormat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,8 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.pbasolutions.android.PBSServerConst;
@@ -27,21 +32,22 @@ import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSTaskController;
+import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.listener.SpinnerOnItemSelected;
 import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.model.ModelConst;
+import com.pbasolutions.android.utils.CameraUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 import java.util.UUID;
 
 /**
  * Created by pbadell on 1/12/16.
  */
-public class NewProjTaskFragment extends Fragment {
+public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKeyListener {
     /**
      * Class tag name.
      */
@@ -66,6 +72,7 @@ public class NewProjTaskFragment extends Fragment {
      *
      */
     private EditText sequenceNo;
+    private ImageView taskPicture1;
 
     /**
      *
@@ -97,8 +104,10 @@ public class NewProjTaskFragment extends Fragment {
      */
     private ArrayAdapter assignToAdapter;
     private List<SpinnerPair> projLocList;
+    PandoraMain context;
 
     private static final int ASSIGN_ID = 1;
+    protected static final String EVENT_PIC1 = "EVENT_PIC1";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +121,8 @@ public class NewProjTaskFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.new_projecttask, container, false);
         try {
+            context = (PandoraMain)getActivity();
+            context.fragment = this;
             setUI(rootView);
             setUIListener();
         } catch (Exception e) {
@@ -120,8 +131,9 @@ public class NewProjTaskFragment extends Fragment {
         return rootView;
     }
 
-    private void setUIListener() {
+    protected void setUIListener() {
         setOnItemSelectedListener();
+        setOnClickListener(taskPicture1, EVENT_PIC1);
     }
 
     @Override
@@ -141,7 +153,61 @@ public class NewProjTaskFragment extends Fragment {
         sequenceNo = (EditText)rootView.findViewById(R.id.newTaskSeqNo);
         projLocSpinner = (Spinner) rootView.findViewById(R.id.newTaskProjLoc);
         projLocNameAdapter = PandoraHelper.addListToSpinner(act, projLocSpinner, getProjLocList());
+        taskPicture1 = (ImageView) rootView.findViewById(R.id.taskPicture1);
     }
+
+    protected void setOnClickListener(final View object, final String event) {
+        object.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (event) {
+                    case EVENT_PIC1: {
+                        takePicture(CameraUtil.CAPTURE_ATTACH_1, object);
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    protected void setValues() {
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == context.RESULT_OK) {
+            String picturePath = null;
+            if (data != null) {
+                Uri curImage = data.getData();
+
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                Cursor cursor = getActivity().getContentResolver().query(curImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                picturePath = cursor.getString(columnIndex);
+                cursor.close();
+            } else {
+                picturePath = context.getmCurrentPhotoPath();
+            }
+
+            if (!picturePath.endsWith(".jpg") && !picturePath.endsWith(".jpg"))
+                picturePath += ".jpg";
+
+            switch (requestCode) {
+                case CameraUtil.CAPTURE_ATTACH_1: {
+                    CameraUtil.handleBigCameraPhoto(taskPicture1, picturePath, context);
+                    context.mCurrentPhotoPath = null;
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
+
     /**
      *
      */
@@ -153,6 +219,30 @@ public class NewProjTaskFragment extends Fragment {
         assignToItem = new SpinnerOnItemSelected(assignToSpinner,
                 new SpinnerPair());
         assignToSpinner.setOnItemSelectedListener(assignToItem);
+    }
+
+    @Override
+    public boolean onBackKeyPressed() {
+        boolean hasChanged = !(taskPicture1.getTag() == null || ((String)taskPicture1.getTag()).isEmpty());
+
+        if (hasChanged == false)
+            return false;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage("Changes will be lost. continue to leave?")
+                .setTitle(PandoraConstant.WARNING)
+                .setPositiveButton("Leave", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
+                })
+                .setNegativeButton("Close", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        return true;
     }
 
     private List<SpinnerPair> getUserList() {
@@ -218,6 +308,9 @@ public class NewProjTaskFragment extends Fragment {
         pt.setPriority(nSeqNo);
         // added by danny 1/29/2016
         pt.setIsDone("N");
+        String pic1 = CameraUtil
+                .imageToBase64(taskPicture1.getTag().toString());
+        pt.setATTACHMENT_BEFORETASKPICTURE_1(pic1);
 
         PandoraMain context = (PandoraMain) getActivity();
         String ad_user_id = context.globalVariable.getAd_user_id();

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.adapter.MenuDrawerRVA;
 import com.pbasolutions.android.model.NavDrawerItem;
 import com.pbasolutions.android.R;
@@ -32,7 +33,7 @@ public class FragmentDrawer extends Fragment {
     private DrawerLayout mDrawerLayout;
     private MenuDrawerRVA adapter;
     private View containerView;
-    private static String[] titles = null;
+    public static String[] titles = null;
     private TextView usernameTextView;
     private FragmentDrawerListener drawerListener;
 
@@ -220,5 +221,13 @@ public class FragmentDrawer extends Fragment {
                 getView().invalidate();
             }
         });
+    }
+
+    public void updateDrawer() {
+        if (PandoraMain.instance == null || PandoraMain.instance.menuList == null || PandoraMain.instance.menuList.length == 0)
+            titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
+        else titles = PandoraMain.instance.menuList;
+        adapter = new MenuDrawerRVA(getActivity(), getData());
+        recyclerView.setAdapter(adapter);
     }
 }
