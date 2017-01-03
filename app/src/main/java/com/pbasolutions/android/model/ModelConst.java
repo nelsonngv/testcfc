@@ -98,6 +98,7 @@ public class ModelConst {
     public static final String HR_LEAVETYPE_TABLE = "HR_LeaveType";
     public static final String M_ATTENDANCE_TABLE = "M_Attendance";
     public static final String M_ATTENDANCELINE_TABLE = "M_AttendanceLine";
+    public static final String HR_CLUSTERMANAGEMENT_TABLE = "HR_ClusterManagement";
 
 
 
@@ -140,6 +141,7 @@ public class ModelConst {
     public static final int HR_LEAVETYPE_TOKEN = 3200;
     public static final int M_ATTENDANCE_TOKEN = 3300;
     public static final int M_ATTENDANCELINE_TOKEN = 3400;
+    public static final int HR_CLUSTERMANAGEMENT_TOKEN = 3500;
 
     /**
      * TODO : Evaluate which table to be joined and provide table tokens for that.
@@ -189,7 +191,8 @@ public class ModelConst {
                     ModelConst.A_ASSET_TABLE,
                     ModelConst.HR_PROJECTASSIGNMENT_TABLE,
                     ModelConst.HR_JOBAPPLICATION_TABLE,
-                    ModelConst.HR_LEAVETYPE_TABLE
+                    ModelConst.HR_LEAVETYPE_TABLE,
+                    ModelConst.HR_CLUSTERMANAGEMENT_TABLE
             };
 
     //TODO : other table then master data is updateable by phone.
@@ -319,17 +322,18 @@ public class ModelConst {
                 String[] argument = {String.valueOf(column.getValue())};
                 Cursor dependencyCursor = contentResolver.query(ModelConst.uriCustomBuilder(parentTableName),
                         projection, column.getName() + " = ?", argument, null);
+                String idValue;
                 if (dependencyCursor != null)  {
                     dependencyCursor.moveToFirst();
-                    String idValue;
-                    if (dependencyCursor.getCount() >0) {
+                    if (dependencyCursor.getCount() > 0) {
                         idValue = dependencyCursor.getString(0);
                     } else {
                         idValue = String.valueOf(column.getValue());
                     }
-                    cv.put(parentTableName + ModelConst._UUID, idValue);
                     dependencyCursor.close();
                 }
+                else idValue = String.valueOf(column.getValue());
+                cv.put(parentTableName + ModelConst._UUID, idValue);
             } else if (column.getName().equalsIgnoreCase("CreatedBy") || column.getName().equalsIgnoreCase("UpdatedBy")){
                 //aduser table name.
                 String parentTableName = ModelConst.AD_USER_TABLE;

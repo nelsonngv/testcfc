@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import com.pbasolutions.android.controller.PBSAssetController;
 import com.pbasolutions.android.controller.PBSIController;
 import com.pbasolutions.android.json.PBSProjLocJSON;
 import com.pbasolutions.android.model.ModelConst;
@@ -70,8 +71,22 @@ public class PandoraTask implements Callable<Bundle> {
      * @return
      */
     public Bundle getProjLoc() {
+        String ad_user_uuid = "";
+        String ad_user_id = input.getString(PBSAssetController.ARG_AD_USER_ID);
+        String projection2 [] = {ModelConst.AD_USER_UUID_COL};
+        Cursor dependencyCursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.AD_USER_TABLE),
+                projection2, ModelConst.AD_USER_ID_COL + " = " + ad_user_id, null, null);
+        if (dependencyCursor != null)  {
+            dependencyCursor.moveToFirst();
+            if (dependencyCursor.getCount() > 0) {
+                ad_user_uuid = dependencyCursor.getString(0);
+            }
+            dependencyCursor.close();
+        }
         String projection [] = {ModelConst.C_PROJECTLOCATION_UUID_COL, ModelConst.NAME_COL, ModelConst.C_PROJECTLOCATION_ID_COL};
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projection, null, null, ModelConst.NAME_COL + " ASC");
+        String selection = "hr_cluster_uuid='null' or hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
+        String selectionArgs [] = {"Y", ad_user_uuid};
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projection, selection, selectionArgs, ModelConst.NAME_COL + " ASC");
         int numberOfRows = cursor.getCount();
         if (numberOfRows > 0) {
             PBSProjLocJSON[] projLocJSONs = new PBSProjLocJSON[numberOfRows];

@@ -62,7 +62,7 @@ public class PBSContentProvider extends ContentProvider {
             //AD_ROLE
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.AD_ROLE_TABLE, ModelConst.AD_ROLE_TOKEN);
 
-            //M_CHECKPOINT
+            //C_PROJECT_LOCATION
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_TOKEN);
 
             //M_CHECKPOINT
@@ -163,6 +163,9 @@ public class PBSContentProvider extends ContentProvider {
 
             // M_AttendanceLine
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.M_ATTENDANCELINE_TABLE, ModelConst.M_ATTENDANCELINE_TOKEN);
+
+            // HR_ClusterManagement
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.HR_CLUSTERMANAGEMENT_TABLE, ModelConst.HR_CLUSTERMANAGEMENT_TOKEN);
 
         } catch(Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
@@ -323,6 +326,7 @@ public class PBSContentProvider extends ContentProvider {
                 builder.setTables(ModelConst.C_PROJECT_LOCATION_TABLE);
                 return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
             }
+
             case ModelConst.CHECKIN_JOIN_CHECKPOINT_TOKEN:{
                 SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
                 builder.setTables(ModelConst.M_CHECKIN_TABLE + " inner join " + ModelConst.M_CHECKPOINT_TABLE + " on (" + ModelConst.M_CHECKIN_TABLE + "." + ModelConst.M_CHECKPOINT_TABLE + "_uuid = "
@@ -500,6 +504,12 @@ public class PBSContentProvider extends ContentProvider {
                 return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
             }
 
+            case ModelConst.HR_CLUSTERMANAGEMENT_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.HR_CLUSTERMANAGEMENT_TABLE);
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
             default:
                 return null;
         }
@@ -586,6 +596,8 @@ public class PBSContentProvider extends ContentProvider {
             case ModelConst.M_ATTENDANCE_TOKEN:
                 return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.M_ATTENDANCELINE_TOKEN:
+                return ModelConst.CONTENT_TYPE_DIR;
+            case ModelConst.HR_CLUSTERMANAGEMENT_TOKEN:
                 return ModelConst.CONTENT_TYPE_DIR;
             default: {
                 Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + "URI " + uri + " is not supported.");
@@ -813,6 +825,12 @@ public class PBSContentProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(uri, null);
                 return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
             }
+            case ModelConst.HR_CLUSTERMANAGEMENT_TOKEN: {
+                long id = db.insert(ModelConst.HR_CLUSTERMANAGEMENT_TABLE, null, values);
+                if (id != -1)
+                    getContext().getContentResolver().notifyChange(uri, null);
+                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+            }
             default: {
                 Log.e(TAG, PandoraConstant.ERROR +
                         PandoraConstant.SPACE + "URI " + uri + " is not supported.");
@@ -974,6 +992,10 @@ public class PBSContentProvider extends ContentProvider {
                 rowsDeleted = db.delete(ModelConst.M_ATTENDANCELINE_TABLE, selection, selectionArgs);
                 break;
             }
+            case ModelConst.HR_CLUSTERMANAGEMENT_TOKEN: {
+                rowsDeleted = db.delete(ModelConst.HR_CLUSTERMANAGEMENT_TABLE, selection, selectionArgs);
+                break;
+            }
 
             default:{
                 Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + "URI " + uri + " is not supported.");
@@ -1133,6 +1155,10 @@ public class PBSContentProvider extends ContentProvider {
             }
             case ModelConst.M_ATTENDANCELINE_TOKEN: {
                 rowsUpdated = db.update(ModelConst.M_ATTENDANCELINE_TABLE, values, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.HR_CLUSTERMANAGEMENT_TOKEN: {
+                rowsUpdated = db.update(ModelConst.HR_CLUSTERMANAGEMENT_TABLE, values, selection, selectionArgs);
                 break;
             }
             default:{

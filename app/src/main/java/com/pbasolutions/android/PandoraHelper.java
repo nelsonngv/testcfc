@@ -43,6 +43,7 @@ import com.google.gson.JsonParser;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.adapter.SpinAdapter;
 import com.pbasolutions.android.adapter.SpinnerPair;
+import com.pbasolutions.android.controller.PBSAssetController;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
 import com.pbasolutions.android.fragment.PBSDetailsFragment;
 import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
@@ -438,7 +439,9 @@ public class PandoraHelper  {
         PandoraContext globalVar = ((PandoraMain) activity).globalVariable;
         if (globalVar.getProjLocJSON() == null) {
             //find in database.
-            Bundle result = cont.triggerEvent(cont.GET_PROJLOC_EVENT, new Bundle(),
+            Bundle input = new Bundle();
+            input.putString(PBSAssetController.ARG_AD_USER_ID, globalVar.getAd_user_id());
+            Bundle result = cont.triggerEvent(cont.GET_PROJLOC_EVENT, input,
                     new Bundle(), null);
             PBSProjLocJSON[] projLocJSONs = (PBSProjLocJSON[]) result
                     .getSerializable(cont.ARG_PROJECT_LOCATION_JSON);

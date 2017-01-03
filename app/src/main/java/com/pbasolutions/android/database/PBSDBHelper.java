@@ -168,7 +168,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "ISUPDATED BOOLEAN DEFAULT 'Y' NOT NULL," +
                                 "ISSYNCED BOOLEAN DEFAULT 'Y' NOT NULL," +
                                 "ISDELETED BOOLEAN DEFAULT 'N' NOT NULL," +
-//                                "HR_CLUSTER_ID NUMBER(10, 0) NULL," +
+                                "HR_CLUSTER_UUID TEXT NULL," +
                                 //PK
                                 "C_PROJECTLOCATION_UUID TEXT PRIMARY KEY NOT NULL, " +
                                 //OTHERS
@@ -185,29 +185,42 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                         db.execSQL("CREATE INDEX C_PROJECTLOCATION_INDEX ON" +
                                 " C_PROJECTLOCATION(C_PROJECTLOCATION_ID)");
 
-//                        db.execSQL("CREATE TABLE HR_CLUSTERMANAGEMENT(" +
-//                                //STANDARD
-//                                "HR_CLUSTERMANAGEMENT_ID NUMBER(10, 0)," +
-//                                "HR_CLUSTER_ID NUMBER(10, 0) NOT NULL," +
-//                                "AD_CLIENT_UUID TEXT NOT NULL," +
-//                                "AD_ORG_UUID TEXT NOT NULL," +
-//                                "AD_USER_ID NUMBER(10, 0) NOT NULL," +
-//                                "ISPRIMARY CHAR(1) DEFAULT 'Y' NOT NULL," +
-//                                "ISACTIVE CHAR(1) DEFAULT 'Y' NOT NULL," +
-//                                "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW'))," +
-//                                "CREATEDBY TEXT NOT NULL," +
-//                                "UPDATED DATETIME NOT NULL DEFAULT (DATETIME('NOW'))," +
-//                                "UPDATEDBY TEXT NOT NULL," +
-//                                //PK
-//                                "HR_CLUSTERMANAGEMENT_UUID TEXT PRIMARY KEY NOT NULL," +
-//                                //OTHERS
-//                                "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID), " +
-//                                "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)" +
-//                                ");");
-//
-//                        //create index for HR_CLUSTERMANAGEMENT_ID
-//                        db.execSQL("CREATE INDEX HR_CLUSTERMANAGEMENT_INDEX ON" +
-//                                " HR_CLUSTERMANAGEMENT(HR_CLUSTERMANAGEMENT_ID)");
+                        db.execSQL("CREATE TABLE HR_CLUSTER(" +
+                                //STANDARD
+                                "HR_CLUSTER_ID NUMBER(10, 0)," +
+                                //PK
+                                "HR_CLUSTER_UUID TEXT PRIMARY KEY NOT NULL" +
+                                ");");
+
+                        //create index for HR_CLUSTER_ID
+                        db.execSQL("CREATE INDEX HR_CLUSTER_INDEX ON" +
+                                " HR_CLUSTER(HR_CLUSTER_ID)");
+
+                        db.execSQL("CREATE TABLE HR_CLUSTERMANAGEMENT(" +
+                                //STANDARD
+                                "HR_CLUSTERMANAGEMENT_ID NUMBER(10, 0)," +
+                                "HR_CLUSTER_UUID TEXT NULL," +
+                                "AD_CLIENT_UUID TEXT NOT NULL," +
+                                "AD_ORG_UUID TEXT NOT NULL," +
+                                "AD_USER_UUID TEXT NULL," +
+                                "ISPRIMARY CHAR(1) DEFAULT 'Y' NOT NULL," +
+                                "ISACTIVE CHAR(1) DEFAULT 'Y' NOT NULL," +
+                                "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW'))," +
+                                "CREATEDBY TEXT NOT NULL," +
+                                "UPDATED DATETIME NOT NULL DEFAULT (DATETIME('NOW'))," +
+                                "UPDATEDBY TEXT NOT NULL," +
+                                //PK
+                                "HR_CLUSTERMANAGEMENT_UUID TEXT PRIMARY KEY NOT NULL," +
+                                //OTHERS
+                                "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID), " +
+                                "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
+                                "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
+                                "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
+                                ");");
+
+                        //create index for HR_CLUSTERMANAGEMENT_ID
+                        db.execSQL("CREATE INDEX HR_CLUSTERMANAGEMENT_INDEX ON" +
+                                " HR_CLUSTERMANAGEMENT(HR_CLUSTERMANAGEMENT_ID)");
 
                         //m_checkpoint --added latitude n long and tag
                         db.execSQL("CREATE TABLE M_CHECKPOINT(" +
@@ -939,7 +952,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "ISMASTERDATA BOOLEAN," +
                                 "ISRETAIN BOOLEAN," +
                                 "RETENTIONPERIOD INT," +
-                                "AD_TABLE_ID TEXT," +
+                                "AD_TABLE_UUID TEXT," +
                                 "NAME" +
                                 ");");
 
