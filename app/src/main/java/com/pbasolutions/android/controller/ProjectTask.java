@@ -200,9 +200,9 @@ public class ProjectTask implements Callable<Bundle> {
         if (result != null && !result.isEmpty()) {
             JsonParser p = new JsonParser();
             JsonObject jsonObj = p.parse(result).getAsJsonObject(); // get project task id and update local
-            String projTaskId = jsonObj.get(MProjectTask.C_PROJECTTASK_ID_COL).getAsString();
             String success = jsonObj.get(PBSServerConst.SUCCESS).getAsString();
             if (PBSServerConst.TRUE.equalsIgnoreCase(success)){
+                String projTaskId = jsonObj.get(MProjectTask.C_PROJECTTASK_ID_COL).getAsString();
                 cv.put(MProjectTask.C_PROJECTTASK_ID_COL, projTaskId);
                 Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv);
                 output.putBoolean(PandoraConstant.RESULT, true);

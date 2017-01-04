@@ -308,9 +308,11 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         pt.setPriority(nSeqNo);
         // added by danny 1/29/2016
         pt.setIsDone("N");
-        String pic1 = CameraUtil
-                .imageToBase64(taskPicture1.getTag().toString());
-        pt.setATTACHMENT_BEFORETASKPICTURE_1(pic1);
+        if (taskPicture1.getTag() != null && !((String)taskPicture1.getTag()).isEmpty()) {
+            String pic1 = CameraUtil
+                    .imageToBase64(taskPicture1.getTag().toString());
+            pt.setATTACHMENT_BEFORETASKPICTURE_1(pic1);
+        }
 
         PandoraMain context = (PandoraMain) getActivity();
         String ad_user_id = context.globalVariable.getAd_user_id();
