@@ -316,7 +316,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         Bundle result = taskCont.triggerEvent(taskCont.COMPLETE_PROJTASK_EVENT, input, new Bundle(), null);
 
         if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-            PandoraHelper.redirectToFragment(new ProjTaskFragment(), getActivity());
+            PandoraMain.instance.getSupportFragmentManager().popBackStack();
+//            PandoraHelper.redirectToFragment(new ProjTaskFragment(), getActivity());
         } else {
             PandoraHelper.showMessage((PandoraMain)getActivity(),
                     result.getString(result.getString(PandoraConstant.TITLE)));

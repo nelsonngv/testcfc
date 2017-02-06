@@ -459,6 +459,7 @@ public class AuthenticatorTask extends Task {
                         Object[] objectList = tmpMenuList.toArray();
                         PandoraMain.instance.menuList = Arrays.copyOf(objectList, objectList.length, String[].class);
                     }
+                    else PandoraMain.instance.menuList = null;
                     Account arrayAccounts[] = getAccounts(accType);
                     //if account already created.
                     if (arrayAccounts.length > 0) {

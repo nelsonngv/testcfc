@@ -979,7 +979,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public void updateInitialSyncState(boolean isCompleted) {
         if (!isCompleted) return;
 
-        boolean prevSyncState = globalVariable.isInitialSynced();
+        boolean prevSyncState;
+        if(globalVariable == null)
+            prevSyncState = false;
+        else prevSyncState = globalVariable.isInitialSynced();
         globalVariable.setIsInitialSynced(true);
         PandoraHelper.setAccountData(this);
         new AsyncTask<Boolean, Void, Boolean>() {

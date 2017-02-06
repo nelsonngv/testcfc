@@ -173,10 +173,10 @@ public class LoginFragment extends Fragment {
         }
 
         protected void onPostExecute(Bundle resultBundle) {
+            context.dismissProgressDialog();
             if (resultBundle.getString(PandoraConstant.ERROR) != null) {
                 PandoraHelper.showMessage((PandoraMain)getActivity(),
                         resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)));
-                context.dismissProgressDialog();
                 return;
             }
 
@@ -221,11 +221,9 @@ public class LoginFragment extends Fragment {
                     fragmentTransaction.commit();
 
                     ((PandoraMain) getActivity()).getSupportActionBar().setTitle("Account");
-                    context.dismissProgressDialog();
                 } else {
                     PandoraHelper.showAlertMessage((PandoraMain) getActivity(),
                             "Invalid user name", PandoraConstant.ERROR, "Retry", "Ok");
-                    context.dismissProgressDialog();
                 }
 
             }

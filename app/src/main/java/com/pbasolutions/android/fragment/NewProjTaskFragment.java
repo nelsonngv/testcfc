@@ -376,19 +376,20 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 //                if (output.getBoolean(PandoraConstant.RESULT)){
 //
 //                } else {
-                    Fragment fragment = new ProjTaskFragment();
-                    if (fragment != null) {
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragment.setRetainInstance(true);
-                        fragmentTransaction.replace(R.id.container_body, fragment);
-                        fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                        fragmentTransaction.commit();
-                        ((PandoraMain) getActivity()).getSupportActionBar()
-                                .setTitle(getString(R.string.title_task));
-                    }
+//                    Fragment fragment = new ProjTaskFragment();
+//                    if (fragment != null) {
+//                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                        fragment.setRetainInstance(true);
+//                        fragmentTransaction.replace(R.id.container_body, fragment);
+//                        fragmentTransaction.addToBackStack(fragment.getClass().getName());
+//                        fragmentTransaction.commit();
+//                        ((PandoraMain) getActivity()).getSupportActionBar()
+//                                .setTitle(getString(R.string.title_task));
+//                    }
 //                }
                 ((PandoraMain)getActivity()).dismissProgressDialog();
+                PandoraMain.instance.getSupportFragmentManager().popBackStack();
             }
         }.execute(input);
     }

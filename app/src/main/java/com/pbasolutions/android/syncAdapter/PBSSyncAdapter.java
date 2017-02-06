@@ -6,10 +6,12 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
@@ -149,15 +151,24 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 boolean isSyncCompleted = syncResultBundle.getInt(PandoraConstant.SYNC_COUNT) == 0;
                 if (PandoraMain.instance != null) {
-                    if(isSyncCompleted) {
+                    PBSProjLocJSON[] projLoc = null;
+                    if (isSyncCompleted) {
                         PandoraController cont = new PandoraController(PandoraMain.instance);
                         Bundle input = new Bundle();
                         input.putString(PBSAssetController.ARG_AD_USER_ID, global.getAd_user_id());
                         Bundle result = cont.triggerEvent(cont.GET_PROJLOC_EVENT, input, new Bundle(), null);
-                        PBSProjLocJSON[] projLoc = (PBSProjLocJSON[]) result.getSerializable(cont.ARG_PROJECT_LOCATION_JSON);
-                        isSyncCompleted = projLoc != null;
+                        projLoc = (PBSProjLocJSON[]) result.getSerializable(cont.ARG_PROJECT_LOCATION_JSON);
+                        if (projLoc == null) {
+                            PandoraMain.instance.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(PandoraMain.instance.getBaseContext(), "Sync failed. No Project Location found.", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                     }
-                    PandoraMain.instance.updateInitialSyncState(isSyncCompleted);
+                    PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
+                    if (!isSyncCompleted)
+                        ContentResolver.requestSync(account, authority, extras);
                 }
             } else{
                 syncResult.hasError();

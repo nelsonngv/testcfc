@@ -494,8 +494,8 @@ public class ProjectTask implements Callable<Bundle> {
                     .equalsIgnoreCase(columnName)) {
                 if (rowValue == null) rowValue = "0";
                 projTask.setAssignedTo(Integer.parseInt(rowValue));
-                String assignedToName = ModelConst.mapIDtoColumn(ModelConst.C_BPARTNER_TABLE, ModelConst.NAME_COL,
-                        rowValue, ModelConst.C_BPARTNER_ID_COL, cr);
+                String assignedToName = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.NAME_COL,
+                        rowValue, ModelConst.AD_USER_ID_COL, cr);
                 projTask.setAssignedToName(assignedToName);
             } else if (MProjectTask.DESCRIPTION_COL
                     .equalsIgnoreCase(columnName)) {

@@ -142,7 +142,7 @@ public class NewAttendanceFragment extends Fragment {
                 prefShiftList);
 
         List<SpinnerPair> dayTypeList = new ArrayList<>();
-        String[] dayTypeKeys = {null, "O", "R"};
+        String[] dayTypeKeys = {"", "O", "R"};
         String[] dayTypeValues = {"Work Day", "Off Day", "Rest Day"};
         for(int i = 0; i < dayTypeKeys.length; i++) {
             SpinnerPair pair = new SpinnerPair();

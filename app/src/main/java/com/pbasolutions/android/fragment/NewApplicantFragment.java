@@ -246,16 +246,17 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
                 protected void onPostExecute(Bundle output) {
                     super.onPostExecute(output);
                     if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentManager.popBackStack();
-                        fragmentManager.popBackStack();
-                        Fragment frag = new RecruitFragment();
-                        frag.setRetainInstance(true);
-                        ((RecruitFragment) frag).setIsAddApplicant(true);
-                        fragmentTransaction.replace(R.id.container_body, frag);
-                        fragmentTransaction.addToBackStack(frag.getClass().getName());
-                        fragmentTransaction.commit();
+                        PandoraMain.instance.getSupportFragmentManager().popBackStack();
+//                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                        fragmentManager.popBackStack();
+//                        fragmentManager.popBackStack();
+//                        Fragment frag = new RecruitFragment();
+//                        frag.setRetainInstance(true);
+//                        ((RecruitFragment) frag).setIsAddApplicant(true);
+//                        fragmentTransaction.replace(R.id.container_body, frag);
+//                        fragmentTransaction.addToBackStack(frag.getClass().getName());
+//                        fragmentTransaction.commit();
                     } else {
                         PandoraHelper.showMessage(context, output.getString(output.getString(PandoraConstant.TITLE)));
                     }
