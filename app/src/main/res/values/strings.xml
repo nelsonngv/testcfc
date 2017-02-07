@@ -110,9 +110,10 @@
     <string name="label_filterby">Filter By </string>
     <string name="label_value">Value </string>
     <string name="label_shift">Shift </string>
-    <string name="label_dayType">Day Type </string>
+    <string name="label_attendancetype">Attendance Type </string>
     <string name="label_employees">Employees </string>
     <string name="label_isabsent">Absent</string>
+    <string name="label_iswork">Work</string>
     <string name="label_isnoshow">No Show</string>
     <string name="label_checkindate">Check In Date</string>
     <string name="label_checkoutdate">Check Out Date</string>

@@ -1083,6 +1083,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "CHECKINDATE DATETIME," +
                                 "CHECKOUTDATE DATETIME, " +
                                 "ISABSENT CHAR(1)," +
+                                "ISOFF CHAR(1)," +
+                                "ISREST CHAR(1)," +
                                 //OTHERS
                                 "COMMENT TEXT ," +
                                 "HR_LEAVETYPE_ID NUMBER(10,0) DEFAULT NULL" +

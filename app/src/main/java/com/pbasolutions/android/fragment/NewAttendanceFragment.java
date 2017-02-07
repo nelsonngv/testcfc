@@ -70,8 +70,6 @@ public class NewAttendanceFragment extends Fragment {
 
     protected Spinner projLocationSpinner;
     protected ArrayAdapter projLocNameAdapter;
-    protected Spinner dayTypeSpinner;
-    protected ArrayAdapter dayTypeAdapter;
 
     RecyclerView recyclerView;
     AttendanceLineRVA linesAdapter;
@@ -141,17 +139,6 @@ public class NewAttendanceFragment extends Fragment {
         shiftAdapter = PandoraHelper.addListToSpinner(getActivity(), shiftSpinner,
                 prefShiftList);
 
-        List<SpinnerPair> dayTypeList = new ArrayList<>();
-        String[] dayTypeKeys = {"", "O", "R"};
-        String[] dayTypeValues = {"Work Day", "Off Day", "Rest Day"};
-        for(int i = 0; i < dayTypeKeys.length; i++) {
-            SpinnerPair pair = new SpinnerPair();
-            pair.setKey(dayTypeKeys[i]);
-            pair.setValue(dayTypeValues[i]);
-            dayTypeList.add(pair);
-        }
-        dayTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), dayTypeSpinner,
-                dayTypeList);
         attendanceLines = getAttendances();
         linesAdapter = new AttendanceLineRVA(getActivity(), attendanceLines);
         recyclerView.setAdapter(linesAdapter);
@@ -159,7 +146,6 @@ public class NewAttendanceFragment extends Fragment {
 
     void setUI(View rootView) {
         shiftSpinner = (Spinner) rootView.findViewById(R.id.attShiftSpinner);
-        dayTypeSpinner = (Spinner) rootView.findViewById(R.id.attDayTypeSpinner);
 
         projLocationSpinner = (Spinner) rootView.findViewById(R.id.attProjLocation);
         projLocationSpinner.setEnabled(false);
@@ -195,19 +181,6 @@ public class NewAttendanceFragment extends Fragment {
                             SpinnerPair pair2 = (SpinnerPair) shiftAdapter.getItem(j);
                             if (PBSAttendanceController.shiftUUID.equalsIgnoreCase(pair2.getKey())) {
                                 shiftSpinner.setSelection(j);
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                selectedPair = (SpinnerPair) dayTypeSpinner.getSelectedItem();
-                if(dayTypeAdapter.getCount() > 0 && PBSAttendanceController.dayType != null) {
-                    if (!PBSAttendanceController.dayType.equalsIgnoreCase(selectedPair.getKey())) {
-                        for (int j = 0; j < dayTypeAdapter.getCount(); j++) {
-                            SpinnerPair pair2 = (SpinnerPair) dayTypeAdapter.getItem(j);
-                            if (PBSAttendanceController.dayType.equalsIgnoreCase(pair2.getKey())) {
-                                dayTypeSpinner.setSelection(j);
                                 break;
                             }
                         }
@@ -253,19 +226,6 @@ public class NewAttendanceFragment extends Fragment {
                     }
                 }
                 PBSAttendanceController.shiftUUID = newPair.getKey();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        dayTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SpinnerPair newPair = (SpinnerPair) dayTypeAdapter.getItem(position);
-                PBSAttendanceController.dayType = newPair.getKey();
             }
 
             @Override
@@ -456,6 +416,7 @@ public class NewAttendanceFragment extends Fragment {
                     ft.detach(NewAttendanceFragment.this).attach(NewAttendanceFragment.this).commit();
                 }
                 ((PandoraMain)getActivity()).dismissProgressDialog();
+                refreshAttendances();
             }
         }.execute();
     }
@@ -500,13 +461,8 @@ public class NewAttendanceFragment extends Fragment {
             return;
         }
 
-        String dayTypeOpt = ((SpinnerPair) dayTypeSpinner.getSelectedItem()).getKey();
         for (MAttendanceLine line: lines ) {
             line.prepareForGson();
-            if (dayTypeOpt.equalsIgnoreCase("O"))
-                line.setIsOff("Y");
-            else if (dayTypeOpt.equalsIgnoreCase("R"))
-                line.setIsRest("Y");
         }
 
         attendance.setLines(lines.toArray(new MAttendanceLine[lines.size()]));

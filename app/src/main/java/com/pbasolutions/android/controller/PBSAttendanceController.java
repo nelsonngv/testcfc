@@ -58,7 +58,7 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
     public static String deployDate;
     public static String projectLocationId;
     public static String shiftUUID;
-    public static String dayType;
+    public static String attType;
 
     ContentResolver cr;
     ExecutorService exec = Executors.newSingleThreadExecutor();

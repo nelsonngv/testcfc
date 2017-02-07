@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -55,7 +56,8 @@ public class NewAttendanceLineFragment extends Fragment {
 
     Spinner employSpinner;
     Spinner daytypeSpinner;
-    Switch  switchAbsent;
+    Spinner attTypeSpinner;
+    Switch  switchWork;
     Spinner leavetypeSpinner;
     TextView textCheckinDate;
     TextView textCheckoutDate;
@@ -70,6 +72,7 @@ public class NewAttendanceLineFragment extends Fragment {
     private ArrayAdapter employAdapter;
     private ArrayAdapter leaveTypeAdapter;
     private ArrayAdapter dayTypeAdapter;
+    private ArrayAdapter attTypeAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,8 +86,9 @@ public class NewAttendanceLineFragment extends Fragment {
         rootView = inflater.inflate(R.layout.attendanceline_new, container, false);
         try {
             setUI(rootView);
-            setUIListener();
             setValues();
+            setUIListener();
+            refreshUIState();
         } catch (Exception e) {
             Log.e("ttt", e.getMessage());
         }
@@ -93,7 +97,8 @@ public class NewAttendanceLineFragment extends Fragment {
 
     protected void setUI(View rootView) {
         employSpinner = (Spinner) rootView.findViewById(R.id.atEmplShiftSpinner);
-        switchAbsent = (Switch) rootView.findViewById(R.id.atAbsentSwitch);
+        switchWork = (Switch) rootView.findViewById(R.id.atWorkSwitch);
+        attTypeSpinner = (Spinner) rootView.findViewById(R.id.attAttTypeSpinner);
         leavetypeSpinner = (Spinner)rootView.findViewById(R.id.attLeaveTypeSpinner);
         daytypeSpinner = (Spinner)rootView.findViewById(R.id.attDayTypeSpinner);
         textCheckinDate = (TextView)rootView.findViewById(R.id.atCheckinDate);
@@ -127,7 +132,21 @@ public class NewAttendanceLineFragment extends Fragment {
             }
         });
 
-        switchAbsent.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        attTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                SpinnerPair newPair = (SpinnerPair) attTypeAdapter.getItem(position);
+                PBSAttendanceController.attType = newPair.getKey();
+                refreshUIState();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        switchWork.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 refreshUIState();
@@ -146,7 +165,18 @@ public class NewAttendanceLineFragment extends Fragment {
         employAdapter = PandoraHelper.addListToSpinner(getActivity(), employSpinner, getEmployeeList());
         leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
         dayTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), daytypeSpinner, getDayTypeList());
-        refreshUIState();
+
+        List<SpinnerPair> attTypeList = new ArrayList<>();
+        String[] dayTypeKeys = {"", "A", "O", "R"};
+        String[] dayTypeValues = {"Standard Work", "Absent", "Off Day/Work", "Rest Day/Work"};
+        for(int i = 0; i < dayTypeKeys.length; i++) {
+            SpinnerPair pair = new SpinnerPair();
+            pair.setKey(dayTypeKeys[i]);
+            pair.setValue(dayTypeValues[i]);
+            attTypeList.add(pair);
+        }
+        attTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), attTypeSpinner, attTypeList);
+
     }
 
     void refreshUIState() {
@@ -156,19 +186,42 @@ public class NewAttendanceLineFragment extends Fragment {
         View daytypeRow = rootView.findViewById(R.id.atDaytypeRow);
         View checkinRow = rootView.findViewById(R.id.atCheckinRow);
         View checkoutRow = rootView.findViewById(R.id.atCheckoutRow);
-        View absentSwitchRow = rootView.findViewById(R.id.atAbsentSwitchRow);
+        View workSwitchRow = rootView.findViewById(R.id.atWorkSwitchRow);
 
-        boolean isAbsent = (switchAbsent.getVisibility() == View.VISIBLE) && switchAbsent.isChecked();
+        String attTypeKey = ((SpinnerPair) attTypeSpinner.getSelectedItem()).getKey();
+        //absent
+        if(attTypeKey.equalsIgnoreCase("A")) {
+            PandoraHelper.setVisibleView(workSwitchRow, false);
+            PandoraHelper.setVisibleView(leavetypeRow, true);
+            PandoraHelper.setVisibleView(daytypeRow, true);
+            PandoraHelper.setVisibleView(checkinRow, false);
+            PandoraHelper.setVisibleView(checkoutRow, false);
+        }
+        //off day/work or rest day/work
+        else if(attTypeKey.equalsIgnoreCase("O") || attTypeKey.equalsIgnoreCase("R")) {
+            boolean isShow = false;
+            if(switchWork.isChecked())
+                isShow = true;
 
-        PandoraHelper.setVisibleView(leavetypeRow, isAbsent);
-        PandoraHelper.setVisibleView(daytypeRow, isAbsent);
-        PandoraHelper.setVisibleView(checkinRow, !isAbsent);
-        PandoraHelper.setVisibleView(checkoutRow, !isAbsent);
+            PandoraHelper.setVisibleView(workSwitchRow, true);
+            PandoraHelper.setVisibleView(leavetypeRow, false);
+            PandoraHelper.setVisibleView(daytypeRow, false);
+            PandoraHelper.setVisibleView(checkinRow, isShow);
+            PandoraHelper.setVisibleView(checkoutRow, isShow);
+        }
+        //normal work
+        else {
+            PandoraHelper.setVisibleView(workSwitchRow, false);
+            PandoraHelper.setVisibleView(leavetypeRow, false);
+            PandoraHelper.setVisibleView(daytypeRow, false);
+            PandoraHelper.setVisibleView(checkinRow, true);
+            PandoraHelper.setVisibleView(checkoutRow, true);
+        }
 
-        if (isLeaveTypeHidden && leavetypeSpinner.getVisibility() == View.VISIBLE)
-            leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
-        if (isDayTypeHidden && daytypeSpinner.getVisibility() == View.VISIBLE)
-            dayTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), daytypeSpinner, getDayTypeList());
+//        if (isLeaveTypeHidden && leavetypeSpinner.getVisibility() == View.VISIBLE)
+//            leaveTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), leavetypeSpinner, getLeaveTypeList());
+//        if (isDayTypeHidden && daytypeSpinner.getVisibility() == View.VISIBLE)
+//            dayTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), daytypeSpinner, getDayTypeList());
     }
 
     public Fragment getNewAttendanceFragment() {
@@ -184,12 +237,15 @@ public class NewAttendanceLineFragment extends Fragment {
         SpinnerPair emplSpinner = (SpinnerPair) employSpinner.getSelectedItem();
         SpinnerPair leaveSpinner = (SpinnerPair) leavetypeSpinner.getSelectedItem();
         SpinnerPair daySpinner = (SpinnerPair) daytypeSpinner.getSelectedItem();
+        String attTypeKey = ((SpinnerPair) attTypeSpinner.getSelectedItem()).getKey();
 
         boolean isEmpty = false;
         if (emplSpinner == null
                 || emplSpinner.getValue().isEmpty()) isEmpty = true;
 
-        boolean isAbsent = (switchAbsent.getVisibility() == View.VISIBLE) && switchAbsent.isChecked();
+        boolean isAbsent = attTypeKey.equalsIgnoreCase("A");
+        boolean isOff = attTypeKey.equalsIgnoreCase("O");
+        boolean isRest = attTypeKey.equalsIgnoreCase("R");
         String checkinDate = textCheckinDate.getText().toString();
         String checkoutDate = textCheckoutDate.getText().toString();
 
@@ -210,7 +266,7 @@ public class NewAttendanceLineFragment extends Fragment {
 
         Date checkin = null, checkout = null;
         SimpleDateFormat sdf = new SimpleDateFormat(PandoraHelper.SERVER_DATE_FORMAT4);
-        if (!isAbsent) {
+        if (!isAbsent && !((isOff || isRest) && !switchWork.isChecked())) {
             checkin = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkinDate);
             checkout = PandoraHelper.stringToDate(PandoraHelper.SERVER_DATE_FORMAT5, checkoutDate);
 
@@ -223,14 +279,18 @@ public class NewAttendanceLineFragment extends Fragment {
         tempATLine = new MAttendanceLine();
 
         tempATLine.setC_BPartner_ID(emplSpinner.getKey());
-        tempATLine.setIsAbsent(switchAbsent.isChecked() ? "Y" : "N");
+        tempATLine.setIsAbsent(isAbsent ? "Y" : "N");
+        tempATLine.setIsOff(isOff ? "Y" : "N");
+        tempATLine.setIsRest(isRest ? "Y" : "N");
         if (isAbsent) {
                 tempATLine.setHR_LeaveType_ID(leaveSpinner.getKey());
                 tempATLine.setHR_LeaveType_Name(leaveSpinner.getValue());
                 tempATLine.setHR_DaysType(daySpinner.getValue());
         } else {
-            tempATLine.setCheckInDate(sdf.format(checkin));
-            tempATLine.setCheckOutDate(sdf.format(checkout));
+            if (!((isOff || isRest) && !switchWork.isChecked())) {
+                tempATLine.setCheckInDate(sdf.format(checkin));
+                tempATLine.setCheckOutDate(sdf.format(checkout));
+            }
         }
         tempATLine.setComments(textComment.getText().toString());
 
@@ -239,7 +299,9 @@ public class NewAttendanceLineFragment extends Fragment {
 
         cv.put(MAttendanceLine.M_ATTENDANCELINE_UUID_COL, UUID.randomUUID().toString());
         cv.put(MAttendanceLine.C_BPARTNER_UUID_COL, emplSpinner.getKey());
-        cv.put(MAttendanceLine.ISABSENT_COL, switchAbsent.isChecked() ? "Y" : "N");
+        cv.put(MAttendanceLine.ISABSENT_COL, isAbsent ? "Y" : "N");
+        cv.put(MAttendanceLine.ISOFF_COL, isOff ? "Y" : "N");
+        cv.put(MAttendanceLine.ISREST_COL, isRest ? "Y" : "N");
         if (isAbsent) {
             cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, Integer.parseInt(leaveSpinner.getKey()));
             cv.put(MAttendanceLine.HR_DAYS_COL, Double.parseDouble(daySpinner.getKey()));
@@ -250,8 +312,13 @@ public class NewAttendanceLineFragment extends Fragment {
             cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, 0);
             cv.put(MAttendanceLine.HR_DAYS_COL, 0);
 
-            cv.put(MAttendanceLine.CHECKIN_COL, sdf.format(checkin));
-            cv.put(MAttendanceLine.CHECKOUT_COL, sdf.format(checkout));
+            if (!((isOff || isRest) && !switchWork.isChecked())) {
+                cv.put(MAttendanceLine.CHECKIN_COL, sdf.format(checkin));
+                cv.put(MAttendanceLine.CHECKOUT_COL, sdf.format(checkout));
+            } else {
+                cv.put(MAttendanceLine.CHECKIN_COL, "");
+                cv.put(MAttendanceLine.CHECKOUT_COL, "");
+            }
         }
         cv.put(ModelConst.C_PROJECTLOCATION_ID_COL, PBSAttendanceController.projectLocationId);
         cv.put(ModelConst.HR_SHIFT_UUID_COL, PBSAttendanceController.shiftUUID);

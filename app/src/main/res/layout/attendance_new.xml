@@ -59,18 +59,6 @@
                         <LinearLayout style="@style/PTableVirtRowW">
                             <TextView
                                 style="@style/TableInfoLabel"
-                                android:text="@string/label_dayType"
-                                android:editable="false"
-                                android:textSize="15sp"/>
-                            <Spinner
-                                style="@style/TableValue"
-                                android:id="@+id/attDayTypeSpinner"/>
-                        </LinearLayout>
-                    </TableRow>
-                    <TableRow>
-                        <LinearLayout style="@style/PTableVirtRowW">
-                            <TextView
-                                style="@style/TableInfoLabel"
                                 android:text="@string/label_shift"
                                 android:editable="false"
                                 android:textSize="15sp"/>

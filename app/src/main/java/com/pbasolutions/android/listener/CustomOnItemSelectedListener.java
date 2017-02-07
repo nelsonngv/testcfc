@@ -42,7 +42,10 @@ public class CustomOnItemSelectedListener implements AdapterView.OnItemSelectedL
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String selectedValue = adapterView.getItemAtPosition(i).toString();
-        final PandoraContext globalVariable = (PandoraContext) view.getContext().getApplicationContext();
+        final PandoraContext globalVariable;
+        if(view == null)
+            globalVariable = PandoraMain.instance.globalVariable;
+        else globalVariable = (PandoraContext) view.getContext().getApplicationContext();
         if (objectArray instanceof PBSRoleJSON[]) {
             for ( int x=0; x<objectArray.length; x++) {
                 PBSRoleJSON role = (PBSRoleJSON) objectArray[x] ;

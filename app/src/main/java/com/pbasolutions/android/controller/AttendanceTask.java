@@ -51,6 +51,8 @@ public class AttendanceTask implements Callable<Bundle> {
             MAttendanceLine.M_ATTENDANCELINE_UUID_COL,
             MAttendanceLine.C_BPARTNER_UUID_COL,
             MAttendanceLine.ISABSENT_COL,
+            MAttendanceLine.ISOFF_COL,
+            MAttendanceLine.ISREST_COL,
             MAttendanceLine.HR_LEAVETYPE_ID_COL,
             MAttendanceLine.COMMENT_COL,
 
@@ -231,6 +233,12 @@ public class AttendanceTask implements Callable<Bundle> {
             } else if (MAttendanceLine.ISABSENT_COL
                     .equalsIgnoreCase(columnName)) {
                 prl.setIsAbsent(rowValue);
+            } else if (MAttendanceLine.ISOFF_COL
+                    .equalsIgnoreCase(columnName)) {
+                prl.setIsOff(rowValue);
+            } else if (MAttendanceLine.ISREST_COL
+                    .equalsIgnoreCase(columnName)) {
+                prl.setIsRest(rowValue);
             } else if (MAttendanceLine.HR_LEAVETYPE_ID_COL
                     .equalsIgnoreCase(columnName)) {
                 prl.setHR_LeaveType_ID(rowValue);

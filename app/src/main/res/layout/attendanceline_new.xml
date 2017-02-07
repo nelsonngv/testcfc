@@ -30,7 +30,24 @@
                 </LinearLayout>
             </TableRow>
             <TableRow
-                android:id="@+id/atAbsentSwitchRow"
+                android:id="@+id/atWorkStatusRow"
+                >
+                <LinearLayout style="@style/PTableVirtRowW"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    >
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_attendancetype"
+                        android:editable="false"
+                        android:textSize="15sp"/>
+                    <Spinner
+                        style="@style/TableValue"
+                        android:id="@+id/attAttTypeSpinner"/>
+                </LinearLayout>
+            </TableRow>
+            <TableRow
+                android:id="@+id/atWorkSwitchRow"
                 >
                 <LinearLayout style="@style/PTableVirtRowW"
                     android:orientation="horizontal"
@@ -38,7 +55,7 @@
                     android:layout_marginBottom="5dp"
                     >
                     <TextView
-                        android:text="@string/label_isabsent"
+                        android:text="@string/label_iswork"
                         style="@style/TableLabelL"
                         android:layout_marginLeft="0dp"
                         android:layout_gravity="left|center_vertical"
@@ -48,7 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right|center_vertical"
-                        android:id="@+id/atAbsentSwitch"
+                        android:id="@+id/atWorkSwitch"
                         />
                 </LinearLayout>
             </TableRow>
