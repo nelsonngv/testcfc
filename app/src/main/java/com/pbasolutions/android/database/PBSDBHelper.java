@@ -741,6 +741,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 "ISUPDATED BOOLEAN DEFAULT 'Y'," +
                                 "ISSYNCED BOOLEAN DEFAULT 'Y'," +
                                 "ISDELETED BOOLEAN DEFAULT 'N'," +
+                                "DUEDATE DATETIME," +
                                 //PK
                                 "C_PROJECTTASK_UUID TEXT PRIMARY KEY NOT NULL," +
                                 //FK

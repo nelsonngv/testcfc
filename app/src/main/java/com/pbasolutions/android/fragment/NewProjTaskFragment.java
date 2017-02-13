@@ -23,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
@@ -57,56 +58,22 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
      * PBSRequisitionController.
      */
     private PBSTaskController taskCont ;
-
-    /**
-     *
-     */
     private EditText taskName;
-
-    /**
-     *
-     */
     private EditText description;
-
-    /**
-     *
-     */
     private EditText sequenceNo;
     private ImageView taskPicture1;
-
-    /**
-     *
-     */
     private Spinner assignToSpinner;
-
-    /**
-     *
-     */
     private Spinner projLocSpinner;
-
-    /**
-     *
-     */
     private SpinnerOnItemSelected projLocNameItem;
-
-    /**
-     *
-     */
     private ArrayAdapter projLocNameAdapter;
-
-    /**
-     *
-     */
     private SpinnerOnItemSelected assignToItem;
-
-    /**
-     *
-     */
     private ArrayAdapter assignToAdapter;
     private List<SpinnerPair> projLocList;
+    private TextView taskDueDate;
     PandoraMain context;
 
     private static final int ASSIGN_ID = 1;
+    protected static final String EVENT_DATE = "EVENT_DATE";
     protected static final String EVENT_PIC1 = "EVENT_PIC1";
 
     @Override
@@ -133,6 +100,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 
     protected void setUIListener() {
         setOnItemSelectedListener();
+        setOnClickListener(taskDueDate, EVENT_DATE);
         setOnClickListener(taskPicture1, EVENT_PIC1);
     }
 
@@ -154,6 +122,11 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         projLocSpinner = (Spinner) rootView.findViewById(R.id.newTaskProjLoc);
         projLocNameAdapter = PandoraHelper.addListToSpinner(act, projLocSpinner, getProjLocList());
         taskPicture1 = (ImageView) rootView.findViewById(R.id.taskPicture1);
+        taskDueDate = (TextView) rootView.findViewById(R.id.taskDueDate);
+
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        taskDueDate.setText(sdf.format(date));
     }
 
     protected void setOnClickListener(final View object, final String event) {
@@ -161,6 +134,10 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
             @Override
             public void onClick(View v) {
                 switch (event) {
+                    case EVENT_DATE: {
+                        PandoraHelper.promptFutureDatePicker((TextView) object, getActivity());
+                        break;
+                    }
                     case EVENT_PIC1: {
                         takePicture(CameraUtil.CAPTURE_ATTACH_1, object);
                         break;
@@ -279,6 +256,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         String desc = description.getText().toString();
         String assignedTo  = assignToItem.getPair().getKey();
         String seqNo  = sequenceNo.getText().toString();
+        String dueDate  = taskDueDate.getText().toString();
         if (locID.isEmpty()
                 || name.isEmpty()
                 || desc.isEmpty()
@@ -306,8 +284,8 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         pt.setDescription(desc);
         pt.setAssignedTo(Integer.parseInt(assignedTo));
         pt.setPriority(nSeqNo);
-        // added by danny 1/29/2016
         pt.setIsDone("N");
+        pt.setDueDate(dueDate);
         if (taskPicture1.getTag() != null && !((String)taskPicture1.getTag()).isEmpty()) {
             String pic1 = CameraUtil
                     .imageToBase64(taskPicture1.getTag().toString());
@@ -366,16 +344,17 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
             @Override
             protected Bundle doInBackground(Bundle... params) {
                 Bundle output = new Bundle();
-                taskCont.triggerEvent(taskCont.CREATE_TASK_EVENT, params[0], output, null);
+                output = taskCont.triggerEvent(taskCont.CREATE_TASK_EVENT, params[0], output, null);
                 return output;
             }
 
             @Override
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
-//                if (output.getBoolean(PandoraConstant.RESULT)){
-//
-//                } else {
+                if (result.getString(PandoraConstant.TITLE).equals(PandoraConstant.RESULT)) {
+                    PandoraHelper.showMessage(getActivity(), result.getString(PandoraConstant.RESULT));
+                } else {
+                    PandoraHelper.showMessage(getActivity(), result.getString(PandoraConstant.ERROR));
 //                    Fragment fragment = new ProjTaskFragment();
 //                    if (fragment != null) {
 //                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -387,8 +366,9 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 //                        ((PandoraMain) getActivity()).getSupportActionBar()
 //                                .setTitle(getString(R.string.title_task));
 //                    }
-//                }
+                }
                 ((PandoraMain)getActivity()).dismissProgressDialog();
+                PandoraHelper.hideSoftKeyboard();
                 PandoraMain.instance.getSupportFragmentManager().popBackStack();
             }
         }.execute(input);

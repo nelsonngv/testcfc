@@ -28,6 +28,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -145,8 +146,8 @@ public class PandoraHelper  {
         }
         // builder.but
         // 3. Get the AlertDialog from create()
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        context.dialog = builder.create();
+        context.dialog.show();
         return resultBundle;
     }
 
@@ -790,4 +791,10 @@ public class PandoraHelper  {
         return deviceId;
     }
 
+    public static void hideSoftKeyboard() {
+        if(PandoraMain.instance.getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) PandoraMain.instance.getSystemService(PandoraMain.instance.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(PandoraMain.instance.getCurrentFocus().getWindowToken(), 0);
+        }
+    }
 }

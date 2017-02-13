@@ -112,6 +112,7 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
         Bundle output = reqCont.triggerEvent(reqCont.INSERT_REQLINE_EVENT, input, new Bundle(), null);
         if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
 
+            PandoraHelper.hideSoftKeyboard();
             PandoraMain.instance.getSupportFragmentManager().popBackStack();
 //            Fragment fragment = new NewRequisitionFragment();
          //   if (get_UUID() != null){

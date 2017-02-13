@@ -13,6 +13,7 @@
         <TableRow>
             <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
+                    android:id="@+id/textViewEmpName"
                     style="@style/TableInfoLabel"
                     android:text="@string/label_name" />
                 <EditText
@@ -34,6 +35,7 @@
         <TableRow>
             <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
+                    android:id="@+id/textViewEmpIDNumber"
                     style="@style/TableInfoLabel"
                     android:text="@string/label_idnumber" />
                 <EditText
@@ -45,6 +47,7 @@
         <TableRow>
             <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
+                    android:id="@+id/textViewEmpPhone"
                     style="@style/TableInfoLabel"
                     android:text="@string/label_phone" />
                 <EditText

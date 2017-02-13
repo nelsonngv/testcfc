@@ -62,6 +62,16 @@
             style="@style/TableValue"
             android:inputType="number"/>
     </LinearLayout>
+    <LinearLayout style="@style/PTableVirtRowW">
+        <TextView
+            style="@style/TableInfoLabel"
+            android:text="@string/label_duedate"
+            />
+        <TextView
+            android:id="@+id/taskDueDate"
+            style="@style/TableValueDate"
+            android:hint="Press to Select Date" />
+    </LinearLayout>
     <LinearLayout style="@style/PTableVirtRow">
         <TextView
             style="@style/TableInfoLabel"

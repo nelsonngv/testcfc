@@ -202,6 +202,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public static final String[] MENU_LIST = {"Attendance", "Recruit", "Asset", "Requisition", "Task",
             "Check In", "Check Point", "Broadcast", "Setting"};
 
+    //welcome dialog indicator
+    private boolean isWelcomeDisplayed = false;
+
+    //dialog builder
+    android.support.v7.app.AlertDialog dialog = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -390,9 +396,20 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
                 if (!isAuthToken) {
                     defaultFragment = FRAGMENT_ACCOUNT;
-                    PandoraHelper.showAlertMessage(this, "Welcome to Pandora, " +
-                                    "Please Login to use this app.",
-                            PandoraConstant.LOGIN, "Ok", null);
+//                    if (dialog != null && !dialog.isShowing()) {
+                        if (!isWelcomeDisplayed) {
+                            PandoraHelper.showAlertMessage(this, "Welcome to Pandora, " +
+                                            "Please login to use this app.",
+                                    PandoraConstant.LOGIN, "Ok", null);
+                            isWelcomeDisplayed = true;
+                        } else {
+                            if (dialog != null && !dialog.isShowing()) {
+                                PandoraHelper.showAlertMessage(this, "Session timeout, " +
+                                                "Please login again to use this app.",
+                                        PandoraConstant.LOGIN, "Ok", null);
+                            }
+                        }
+//                    }
                 } else {
                     PandoraHelper.getProjLocAvailable(this, false);
                     if (globalVariable.isInitialSynced())
@@ -848,6 +865,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * @param isAddToStack
      */
     public void updateFragment(Fragment fragment, String title, boolean isAddToStack) {
+        PandoraHelper.hideSoftKeyboard();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragment.setRetainInstance(true);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -332,6 +332,7 @@ public class NewAttendanceLineFragment extends Fragment {
 
         if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
 
+            PandoraHelper.hideSoftKeyboard();
             PandoraMain.instance.getSupportFragmentManager().popBackStack();
 //            Fragment fragment = new NewRequisitionFragment();
 //         //   if (get_UUID() != null){

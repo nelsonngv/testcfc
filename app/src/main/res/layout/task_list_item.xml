@@ -70,6 +70,20 @@
                     android:showDividers="middle">
                     <TextView
                         style="@style/TableLabelWide"
+                        android:text="@string/label_duedate" />
+                    <TextView
+                        android:id="@+id/task_duedate"
+                        style="@style/TableValue"
+                        android:layout_marginLeft="@dimen/table_margin_middle"
+                        android:text="@{projTask.DueDate}"
+                        />
+                </TableRow>
+
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
+                    <TextView
+                        style="@style/TableLabelWide"
                         android:text="@string/label_status" />
                     <TextView
                         android:id="@+id/task_status"

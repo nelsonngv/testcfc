@@ -24,6 +24,7 @@ public class MProjectTask extends PBSJson {
     private String created;
     private String createdBy;
     private String Status;
+    private String DueDate;
     transient private String assignedToName;
     private int AssignedTo;
     private int C_ProjectLocation_ID;
@@ -41,6 +42,7 @@ public class MProjectTask extends PBSJson {
     public static final String COMMENTS_COL = "Comments";
     public static final String CREATED_COL = "Created";
     public static final String CREATEDBY_COL = "CreatedBy";
+    public static final String DUEDATE_COL = "DueDate";
     public static final String TABLENAME = "C_ProjectTask";
 
 
@@ -223,5 +225,13 @@ public class MProjectTask extends PBSJson {
 
     public void setAssignedToName(String assignedToName) {
         this.assignedToName = assignedToName;
+    }
+
+    public String getDueDate() {
+        return DueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.DueDate = dueDate;
     }
 }

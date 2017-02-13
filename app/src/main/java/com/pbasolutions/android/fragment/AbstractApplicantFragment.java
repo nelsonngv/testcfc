@@ -3,9 +3,12 @@ package com.pbasolutions.android.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -75,6 +78,13 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
     protected static final String EVENT_CERTPIC_9 = "EVENT_CERTPIC_9";
     protected static final String EVENT_CERTPIC_10 = "EVENT_CERTPIC_10";
 
+    protected TextView textViewEmpName;
+    protected TextView textViewEmpIDNumber;
+    protected TextView textViewEmpPhone;
+    protected TextView textViewApplAge;
+    protected TextView textViewApplDate;
+    protected TextView textViewApplNumOfExp;
+    protected TextView textViewApplExpSal;
     protected TextView date;
     protected EditText expSalary;
     protected ImageView profileImage;
@@ -132,6 +142,21 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
      */
     protected void setUI(View rootView) {
         Activity act = getActivity();
+
+        textViewEmpName = (TextView)rootView.findViewById(R.id.textViewEmpName);
+        textViewEmpIDNumber = (TextView)rootView.findViewById(R.id.textViewEmpIDNumber);
+        textViewEmpPhone = (TextView)rootView.findViewById(R.id.textViewEmpPhone);
+        textViewApplAge = (TextView)rootView.findViewById(R.id.textViewApplAge);
+        textViewApplDate = (TextView)rootView.findViewById(R.id.textViewApplDate);
+        textViewApplNumOfExp = (TextView)rootView.findViewById(R.id.textViewApplNumOfExp);
+        textViewApplExpSal = (TextView)rootView.findViewById(R.id.textViewApplExpSal);
+        setAsterisk(textViewEmpName);
+        setAsterisk(textViewEmpIDNumber);
+        setAsterisk(textViewEmpPhone);
+        setAsterisk(textViewApplAge);
+        setAsterisk(textViewApplDate);
+        setAsterisk(textViewApplNumOfExp);
+        setAsterisk(textViewApplExpSal);
 
         date = (TextView)rootView.findViewById(R.id.editTextApplDate);
         genderSpinner = (Spinner) rootView.findViewById(R.id.genderSpinner);
@@ -475,5 +500,12 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
             }
             default:return false;
         }
+    }
+
+    private void setAsterisk(TextView tv) {
+        String asterisk = " *";
+        SpannableString ss = new SpannableString(tv.getText() + asterisk);
+        ss.setSpan(new ForegroundColorSpan(Color.RED), tv.getText().length(), tv.getText().length()+2, 0);
+        tv.setText(ss);
     }
 }

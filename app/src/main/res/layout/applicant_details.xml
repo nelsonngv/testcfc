@@ -39,6 +39,7 @@
             <TableRow>
                 <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
+                    android:id="@+id/textViewApplAge"
                     style="@style/TableInfoLabel"
                     android:text="@string/label_age" />
 
@@ -65,6 +66,7 @@
             <TableRow>
                 <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
+                    android:id="@+id/textViewApplDate"
                     style="@style/TableInfoLabel"
                     android:text="@string/label_applicationdate"/>
                 <TextView
@@ -102,6 +104,7 @@
                 <LinearLayout style="@style/PTableVirtRowW">
 
                 <TextView
+                    android:id="@+id/textViewApplNumOfExp"
                     style="@style/TableInfoLabel"
                     android:text="@string/label_yearsofexp" />
 
@@ -116,6 +119,7 @@
             <TableRow>
                 <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
+                    android:id="@+id/textViewApplExpSal"
                     style="@style/TableInfoLabel"
                     android:text="@string/label_expectedsalary"/>
 

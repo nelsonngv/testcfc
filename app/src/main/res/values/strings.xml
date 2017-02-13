@@ -81,6 +81,7 @@
     <!--Applicants layout!-->
 
     <string name="label_status">Status</string>
+    <string name="label_duedate">Due Date</string>
     <string name="label_interviewernotes">Interviewer Notes</string>
     <string name="label_nationality">Nationality</string>
     <string name="label_prefjobloc">Pref. Job Location</string>

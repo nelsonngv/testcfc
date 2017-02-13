@@ -28,7 +28,10 @@ import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -226,12 +229,14 @@ public class ProjectTask implements Callable<Bundle> {
         String taskID = input.getString(PBSTaskController.ARG_TASK_ID);
         String comments = input.getString(PBSTaskController.ARG_COMMENTS);
         String assignedTo = input.getString(PBSTaskController.ARG_AD_USER_ID);
+        String dueDate = input.getString(PBSTaskController.ARG_DUEDATE);
 
         PBSProjTaskJSON projTask = new PBSProjTaskJSON();
         projTask.setC_ProjectLocation_ID(projLocId);
         projTask.setC_ProjectTask_ID(taskID);
         projTask.setComments(comments);
         projTask.setAssignedTo(assignedTo);
+        projTask.setDueDate(dueDate);
 
         String pic1 = CameraUtil
                 .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_1));
@@ -307,6 +312,7 @@ public class ProjectTask implements Callable<Bundle> {
         cv.put(MProjectTask.ISDONE_COL, projTask.isDone());
 
         cv.put(MProjectTask.COMMENTS_COL,projTask.getComments());
+        cv.put(MProjectTask.DUEDATE_COL,projTask.getDueDate());
 
         return cv;
     }
@@ -359,6 +365,7 @@ public class ProjectTask implements Callable<Bundle> {
                 cv.put(MProjectTask.ASSIGNEDTO_COL, projTask.getAssignedTo());
                 String isDone = (projTask.getIsDone()) ? "Y":"N";
                 cv.put(MProjectTask.ISDONE_COL, isDone);
+                cv.put(MProjectTask.DUEDATE_COL, projTask.getDueDate());
                 String selection = MProjectTask.C_PROJECTTASK_ID_COL;
                 String[] arg = {cv.getAsString(selection)};
                 String tableName = ModelConst.C_PROJECTTASK_TABLE;
@@ -423,7 +430,8 @@ public class ProjectTask implements Callable<Bundle> {
             MProjectTask.ATTACHMENT_TASKPICTURE_2_COL,
             MProjectTask.ATTACHMENT_TASKPICTURE_3_COL,
             MProjectTask.ATTACHMENT_TASKPICTURE_4_COL,
-            MProjectTask.ATTACHMENT_TASKPICTURE_5_COL
+            MProjectTask.ATTACHMENT_TASKPICTURE_5_COL,
+            MProjectTask.DUEDATE_COL
     };
 
     private Bundle getProjectTasks() {
@@ -444,6 +452,8 @@ public class ProjectTask implements Callable<Bundle> {
     }
 
     private MProjectTask populateProjectTask(Cursor cursor) {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         MProjectTask projTask = new MProjectTask();
         for (int x = 0; x < cursor.getColumnNames().length; x++) {
             String columnName = cursor.getColumnName(x);
@@ -524,6 +534,17 @@ public class ProjectTask implements Callable<Bundle> {
             } else if (MProjectTask.ATTACHMENT_TASKPICTURE_5_COL
                     .equalsIgnoreCase(columnName)) {
                 projTask.setATTACHMENT_TASKPICTURE_5(rowValue);
+            } else if (MProjectTask.DUEDATE_COL
+                    .equalsIgnoreCase(columnName)) {
+                if (rowValue != null) {
+                    try {
+                        Date date = df.parse(rowValue);
+                        projTask.setDueDate(sdf.format(date));
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                } else
+                    projTask.setDueDate(rowValue);
             }
         }
         return projTask;

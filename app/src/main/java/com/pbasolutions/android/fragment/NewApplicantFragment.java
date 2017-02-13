@@ -245,7 +245,9 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
                 @Override
                 protected void onPostExecute(Bundle output) {
                     super.onPostExecute(output);
+                    ((PandoraMain) getActivity()).dismissProgressDialog();
                     if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
+                        PandoraHelper.hideSoftKeyboard();
                         PandoraMain.instance.getSupportFragmentManager().popBackStack();
 //                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 //                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -260,7 +262,6 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
                     } else {
                         PandoraHelper.showMessage(context, output.getString(output.getString(PandoraConstant.TITLE)));
                     }
-                    ((PandoraMain) getActivity()).dismissProgressDialog();
                 }
             }.execute(input);
         }

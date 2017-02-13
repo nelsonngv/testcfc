@@ -76,6 +76,18 @@
                         style="@style/Value"
                         />
                 </TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle"
+                    >
+                    <TextView
+                        style="@style/TableLabel"
+                        android:text="@string/label_duedate"
+                        />
+                    <TextView
+                        android:id="@+id/taskDueDate"
+                        style="@style/Value" />
+                </TableRow>
                 <include layout="@layout/task_attachments" />
                 <TableRow>
                     <TextView

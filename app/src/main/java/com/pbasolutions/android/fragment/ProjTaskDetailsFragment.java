@@ -32,6 +32,8 @@ import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.utils.CameraUtil;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,6 +62,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
     TextView taskProjLoc;
     TextView taskStatus;
     TextView taskDesc;
+    TextView taskDueDate;
     ImageView taskPicture1;
     ImageView taskPicture2;
     ImageView taskPicture3;
@@ -111,6 +114,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             taskProjLoc.setText(projTask.getProjLocName());
             taskStatus.setText(projTask.getStatus());
             taskDesc.setText(projTask.getDescription());
+            taskDueDate.setText(projTask.getDueDate());
 
             CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_1(), taskPicture1);
             CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_2(), taskPicture2);
@@ -196,6 +200,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         taskProjLoc = (TextView) rootView.findViewById(R.id.taskProjLoc);
         taskStatus = (TextView) rootView.findViewById(R.id.taskStatus);
         taskDesc = (TextView) rootView.findViewById(R.id.taskDesc);
+        taskDueDate = (TextView) rootView.findViewById(R.id.taskDueDate);
         taskPicture1 = (ImageView) rootView.findViewById(R.id.taskPicture1);
         taskPicture2 = (ImageView) rootView.findViewById(R.id.taskPicture2);
         taskPicture3 = (ImageView) rootView.findViewById(R.id.taskPicture3);
@@ -203,6 +208,10 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         taskPicture5 = (ImageView) rootView.findViewById(R.id.taskPicture5);
         taskComments = (EditText) rootView.findViewById(R.id.taskComments);
      //   taskIsDoneButton = (Button) rootView.findViewById(R.id.buttonTaskStatus);
+
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        taskDueDate.setText(sdf.format(date));
     }
 
     protected void setUIListener() {
@@ -249,7 +258,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             public void onClick(View v) {
                 switch (event) {
                     case EVENT_DATE: {
-                        PandoraHelper.promptDatePicker((TextView) object, getActivity());
+                        PandoraHelper.promptFutureDatePicker((TextView) object, getActivity());
                         break;
                     }
 //                    case EVENT_COMPLETEPROJ: {
@@ -307,6 +316,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         input.putString(taskCont.ARG_TASK_ID,String.valueOf(projTask.get_ID()));
         input.putString(taskCont.ARG_TASK_UUID, _UUID);
         input.putString(taskCont.ARG_COMMENTS, taskComments.getText().toString());
+        input.putString(taskCont.ARG_DUEDATE, taskDueDate.getText().toString());
         input.putString(taskCont.ARG_TASKPIC_1, (String)taskPicture1.getTag());
         input.putString(taskCont.ARG_TASKPIC_2, (String)taskPicture2.getTag());
         input.putString(taskCont.ARG_TASKPIC_3, (String)taskPicture3.getTag());

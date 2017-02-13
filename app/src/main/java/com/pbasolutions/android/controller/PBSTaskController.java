@@ -38,6 +38,7 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
     public static final String ARG_COMMENTS = "ARG_COMMENTS";
     public static final String ARG_PROJLOC_UUID = "ARG_PROJLOC_UUID";
     public static final String ARG_PROJLOC_ID = "ARG_PROJLOC_ID";
+    public static final String ARG_DUEDATE = "ARG_DUEDATE";
 
 
     public static final String ARG_TASKPIC_1 = "ARG_TASKPIC_1";
