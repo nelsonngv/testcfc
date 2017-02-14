@@ -1049,17 +1049,19 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 @Override
                 protected Bundle doInBackground(Void... params) {
                     Bundle input = new Bundle();
-                    input.putString(authenticatorController.ROLE_ARG,
-                            globalVariable.getAd_role_id());
-                    input.putString(authenticatorController.ORG_ARG,
-                            globalVariable.getAd_org_id());
-                    input.putString(authenticatorController.CLIENT_ARG,
-                            globalVariable.getAd_client_id());
+                    Bundle result = new Bundle();
+
+                    input.putString(authenticatorController.USER_NAME_ARG,
+                            globalVariable.getAd_user_name());
+                    input.putString(authenticatorController.AUTH_TOKEN_ARG,
+                            globalVariable.getAuth_token());
                     input.putString(authenticatorController.SERVER_URL_ARG,
                             globalVariable.getServer_url());
-                    Bundle result = new Bundle();
-                    result = authenticatorController.triggerEvent(
-                            authenticatorController.ROLE_SUBMIT_EVENT, input, result, null);
+                    input.putString(authenticatorController.SERIAL_ARG,
+                            globalVariable.getSerial());
+                    result = authenticatorController
+                            .triggerEvent(PBSAuthenticatorController.AUTHENTICATE_TOKEN_SERVER,
+                                    input, result, null);
 
                     return result;
                 }
@@ -1067,7 +1069,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 @Override
                 protected void onPostExecute(Bundle result) {
                     super.onPostExecute(result);
-                    if (!result.getBoolean(PBSServerConst.RESULT)) {
+                    if (!result.getBoolean(PandoraConstant.RESULT)) {
                         globalVariable.setAuth_token("");
                     }
 

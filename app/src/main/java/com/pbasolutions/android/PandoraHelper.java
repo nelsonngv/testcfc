@@ -792,7 +792,7 @@ public class PandoraHelper  {
     }
 
     public static void hideSoftKeyboard() {
-        if(PandoraMain.instance.getCurrentFocus() != null) {
+        if(PandoraMain.instance != null && PandoraMain.instance.getCurrentFocus() != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) PandoraMain.instance.getSystemService(PandoraMain.instance.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(PandoraMain.instance.getCurrentFocus().getWindowToken(), 0);
         }

@@ -166,7 +166,8 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                             });
                         }
                     }
-                    PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
+                    if(!global.isInitialSynced())
+                        PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
                     if (!isSyncCompleted)
                         ContentResolver.requestSync(account, authority, extras);
                 }
