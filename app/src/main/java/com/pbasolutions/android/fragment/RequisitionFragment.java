@@ -30,6 +30,7 @@ import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSRequisitionController;
 import com.pbasolutions.android.listener.SpinnerOnItemSelected;
 import com.pbasolutions.android.model.MPurchaseRequest;
+import com.wnafee.vector.compat.ResourcesCompat;
 
 import org.w3c.dom.Text;
 
@@ -53,11 +54,11 @@ public class RequisitionFragment extends Fragment{
     private ArrayAdapter statusAdapter;
     private SpinnerOnItemSelected statusItem;
     private TextView sortDocDesc;
-    private TextView sortDocAcs;
+    private TextView sortDocAsc;
     private TextView sortDateDesc;
-    private TextView sortDateAcs;
+    private TextView sortDateAsc;
     private TextView sortStatusDesc;
-    private TextView sortStatusAcs;
+    private TextView sortStatusAsc;
 
     protected String requisitionDetailTitle;
 
@@ -146,15 +147,21 @@ public class RequisitionFragment extends Fragment{
         });
 
         sortDocDesc = (TextView) rootView.findViewById(R.id.DocSortDesc);
-        sortDocAcs = (TextView) rootView.findViewById(R.id.DocSortAcs);
+        sortDocAsc = (TextView) rootView.findViewById(R.id.DocSortAsc);
         sortDateDesc = (TextView) rootView.findViewById(R.id.DateSortDesc);
-        sortDateAcs = (TextView) rootView.findViewById(R.id.DateSortAcs);
+        sortDateAsc = (TextView) rootView.findViewById(R.id.DateSortAsc);
         sortStatusDesc = (TextView) rootView.findViewById(R.id.StatusSortDesc);
-        sortStatusAcs = (TextView) rootView.findViewById(R.id.StatusSortAcs);
+        sortStatusAsc = (TextView) rootView.findViewById(R.id.StatusSortAsc);
+        sortDocDesc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortdescicon), null, null, null);
+        sortDocAsc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortascicon), null, null, null);
+        sortDateDesc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortdescicon), null, null, null);
+        sortDateAsc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortascicon), null, null, null);
+        sortStatusDesc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortdescicon), null, null, null);
+        sortStatusAsc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortascicon), null, null, null);
 
-        sortDocAcs.setVisibility(View.GONE);
-        sortDateAcs.setVisibility(View.GONE);
-        sortStatusAcs.setVisibility(View.GONE);
+        sortDocAsc.setVisibility(View.GONE);
+        sortDateAsc.setVisibility(View.GONE);
+        sortStatusAsc.setVisibility(View.GONE);
 
         sortDocDesc.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -170,12 +177,12 @@ public class RequisitionFragment extends Fragment{
                 PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortDocDesc.setVisibility(View.GONE);
-                sortDocAcs.setVisibility(View.VISIBLE);
+                sortDocAsc.setVisibility(View.VISIBLE);
                 return false;
             }
         });
 
-        sortDocAcs.setOnTouchListener(new View.OnTouchListener() {
+        sortDocAsc.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Collections.sort(requisitionList, new Comparator<MPurchaseRequest>(){
@@ -188,7 +195,7 @@ public class RequisitionFragment extends Fragment{
                 recyclerView.setAdapter(viewAdapter);
                 PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
                         new RequisitionDetailFragment(), requisitionDetailTitle);
-                sortDocAcs.setVisibility(View.GONE);
+                sortDocAsc.setVisibility(View.GONE);
                 sortDocDesc.setVisibility(View.VISIBLE);
                 return false;
             }
@@ -213,12 +220,12 @@ public class RequisitionFragment extends Fragment{
                 PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortDateDesc.setVisibility(View.GONE);
-                sortDateAcs.setVisibility(View.VISIBLE);
+                sortDateAsc.setVisibility(View.VISIBLE);
                 return false;
             }
         });
 
-        sortDateAcs.setOnTouchListener(new View.OnTouchListener() {
+        sortDateAsc.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Collections.sort(requisitionList, new Comparator<MPurchaseRequest>(){
@@ -232,7 +239,7 @@ public class RequisitionFragment extends Fragment{
                 PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortDateDesc.setVisibility(View.VISIBLE);
-                sortDateAcs.setVisibility(View.GONE);
+                sortDateAsc.setVisibility(View.GONE);
                 return false;
             }
         });
@@ -251,12 +258,12 @@ public class RequisitionFragment extends Fragment{
                 PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortStatusDesc.setVisibility(View.GONE);
-                sortStatusAcs.setVisibility(View.VISIBLE);
+                sortStatusAsc.setVisibility(View.VISIBLE);
                 return false;
             }
         });
 
-        sortStatusAcs.setOnTouchListener(new View.OnTouchListener() {
+        sortStatusAsc.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Collections.sort(requisitionList, new Comparator<MPurchaseRequest>(){
@@ -270,7 +277,7 @@ public class RequisitionFragment extends Fragment{
                 PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortStatusDesc.setVisibility(View.VISIBLE);
-                sortStatusAcs.setVisibility(View.GONE);
+                sortStatusAsc.setVisibility(View.GONE);
                 return false;
             }
         });

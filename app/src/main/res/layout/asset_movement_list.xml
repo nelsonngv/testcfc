@@ -22,20 +22,18 @@
                 android:gravity="center"
                 android:clickable="true"
                 android:background="@drawable/textline"
-                android:drawableLeft="@drawable/sortdescicon"
 
                 />
             <TextView
                 android:padding="10dp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:id="@+id/DocSortAcs"
+                android:id="@+id/DocSortAsc"
                 android:text="Doc No"
                 android:clickable="true"
                 android:textAlignment="center"
                 android:gravity="center"
                 android:background="@drawable/textline"
-                android:drawableLeft="@drawable/sortacsicon"
                 />
             <TextView
                 android:layout_width="0dp"
@@ -47,20 +45,18 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:background="@drawable/textline"
-                android:drawableLeft="@drawable/sortdescicon"
                 android:clickable="true"
                 />
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:id="@+id/DateSortAcs"
+                android:id="@+id/DateSortAsc"
                 android:text="Date"
                 android:textAlignment="center"
                 android:padding="10dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:background="@drawable/textline"
-                android:drawableLeft="@drawable/sortacsicon"
                 android:clickable="true"
                 />
             <TextView
@@ -72,20 +68,18 @@
                 android:textAlignment="center"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:drawableLeft="@drawable/sortdescicon"
                 android:clickable="true"
                 />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:id="@+id/StatusSortAcs"
+                android:id="@+id/StatusSortAsc"
                 android:padding="10dp"
                 android:text="Status"
                 android:textAlignment="center"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:drawableLeft="@drawable/sortacsicon"
                 android:clickable="true"
                 />
         </TableRow>
