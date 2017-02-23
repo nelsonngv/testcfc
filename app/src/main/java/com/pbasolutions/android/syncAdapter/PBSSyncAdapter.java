@@ -161,12 +161,12 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                         if (projLoc == null) {
                             PandoraMain.instance.runOnUiThread(new Runnable() {
                                 public void run() {
-                                    Toast.makeText(PandoraMain.instance.getBaseContext(), "Sync failed. No Project Location found.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PandoraMain.instance.getBaseContext(), "Please login again. Connection disrupted.", Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
                     }
-                    if(!global.isInitialSynced())
+                    if(!global.isInitialSynced() || (global.isInitialSynced() && isSyncCompleted && projLoc != null))
                         PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
                     if (!isSyncCompleted)
                         ContentResolver.requestSync(account, authority, extras);

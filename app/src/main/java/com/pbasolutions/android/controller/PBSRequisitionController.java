@@ -63,6 +63,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
     ExecutorService exec = Executors.newSingleThreadExecutor();
     RequisitionTask reqTask;
     FutureTask<Bundle> taskResult;
+    public static String requestedDate;
     /**
      *
      * @param base

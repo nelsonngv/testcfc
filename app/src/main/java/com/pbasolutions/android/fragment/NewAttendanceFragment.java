@@ -113,7 +113,7 @@ public class NewAttendanceFragment extends Fragment {
         if (projLocNameAdapter.getCount() > 0)
         {
             PandoraMain pandoraMain = PandoraMain.instance;
-            String projLocID = pandoraMain.globalVariable.getC_projectlocation_id();
+            String projLocID = pandoraMain.getGlobalVariable().getC_projectlocation_id();
 
             for (int i = 0; i < projLocNameAdapter.getCount(); i++)
             {
@@ -165,8 +165,7 @@ public class NewAttendanceFragment extends Fragment {
                 refreshAttendances();
                 Date date;
                 attendanceLines = getAttendances();
-                PBSAttendanceController attendCont = new PBSAttendanceController(getActivity());
-                if(PBSAttendanceController.deployDate != null && !PBSAttendanceController.deployDate.equals("")) {
+                if(PBSAttendanceController.deployDate != null && !PBSAttendanceController.deployDate.equals("") && linesAdapter.getLines() != null && linesAdapter.getLines().size() > 0) {
                     String deployDate = PBSAttendanceController.deployDate;
                     date = PandoraHelper.stringToDate("dd-MM-yyyy", deployDate);
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -290,7 +289,7 @@ public class NewAttendanceFragment extends Fragment {
 
         String projLocId = projlocPair.getKey();
 
-        PandoraContext pc = pandoraMain.globalVariable;
+        PandoraContext pc = pandoraMain.getGlobalVariable();
 
         input.putString(PBSDeployController.ARG_PROJECTLOCATION_ID, projLocId);
         input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
@@ -375,7 +374,7 @@ public class NewAttendanceFragment extends Fragment {
     }
 
     public List<SpinnerPair> getPrefShiftList() {
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext pc = ((PandoraMain)getActivity()).getGlobalVariable();
 
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         if (projlocPair == null) { // when no selected
@@ -444,7 +443,7 @@ public class NewAttendanceFragment extends Fragment {
             return;
         }
 
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext pc = ((PandoraMain)getActivity()).getGlobalVariable();
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         String projLocId = projlocPair.getKey();
         attendance.setC_ProjectLocation_ID(Integer.parseInt(projLocId));
@@ -519,7 +518,7 @@ public class NewAttendanceFragment extends Fragment {
             set_UUID(UUID.randomUUID().toString());
         cv.put(MAttendance.M_ATTENDANCE_UUID_COL, get_UUID());
         cv.put(MAttendance.DEPLOYMENT_DATE_COL, deployDateView.getText().toString());
-        PandoraContext cont = PandoraMain.instance.globalVariable;
+        PandoraContext cont = PandoraMain.instance.getGlobalVariable();
 
         cv.put(ModelConst.C_PROJECTLOCATION_UUID_COL, cont.getC_projectlocation_uuid());
 

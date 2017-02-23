@@ -73,7 +73,7 @@ public class BroadcastFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         broadCont = new PBSBroadcastController(getActivity());
-        context = ((PandoraMain) getActivity()).globalVariable;
+        context = ((PandoraMain) getActivity()).getGlobalVariable();
         ((PandoraMain) getActivity()).fragment = this;
         setHasOptionsMenu(true);
     }

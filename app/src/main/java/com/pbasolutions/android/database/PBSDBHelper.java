@@ -146,6 +146,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                                 //OTHERS
                                 "NAME NVARCHAR2(300) NOT NULL," +
                                 "TITLE NVARCHAR(40)," +
+                                "C_BPARTNER_UUID NUMBER(10, 0)," +
                                 //--
                                 "CONSTRAINT USERID_UNIQCONS UNIQUE (AD_USER_ID)," +
                                 "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +

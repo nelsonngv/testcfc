@@ -35,6 +35,8 @@ import com.pbasolutions.android.model.MPurchaseRequest;
 import com.pbasolutions.android.model.MPurchaseRequestLine;
 import com.pbasolutions.android.model.ModelConst;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -145,7 +147,7 @@ public class NewRequisitionFragment extends Fragment {
         documentNo.setEnabled(false);
         documentNo.setVisibility(View.INVISIBLE);
         isApproved.setText("Not Approved");
-        PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
         String projLocUUID = globalVar.getC_projectlocation_uuid();
         String locName = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE,
                 ModelConst.C_PROJECTLOCATION_UUID_COL,
@@ -153,11 +155,18 @@ public class NewRequisitionFragment extends Fragment {
                 ModelConst.NAME_COL, cr);
         projLoc.setText(locName);
         projLoc.setTag(projLocUUID);
+        if(PBSRequisitionController.requestedDate != null && !PBSRequisitionController.requestedDate.equals("") && lines != null && lines.size() > 0) {
+            String deployDate = PBSRequisitionController.requestedDate;
+            Date date = PandoraHelper.stringToDate("dd-MM-yyyy", deployDate);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            requestDate.setText(sdf.format(date));
+        }
 //        if (pr != null && ! pr.getRequestDate().isEmpty()) {
 //           requestDate.setText(pr.getRequestDate());
-//        } else {
-            requestDate.setText(PandoraHelper.getTodayDate("dd-MM-yyyy"));
 //        }
+        else {
+            requestDate.setText(PandoraHelper.getTodayDate("dd-MM-yyyy"));
+        }
     }
 
     private void addListener(){
@@ -225,7 +234,7 @@ public class NewRequisitionFragment extends Fragment {
         pr.set_UUID(get_UUID());
         pr.setM_PurchaseRequest_UUID(get_UUID());
 
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext pc = ((PandoraMain)getActivity()).getGlobalVariable();
 
         pr.setC_ProjectLocation_ID(pc.getC_projectlocation_id());
         pr.setC_ProjectLocation_UUID(pc.getC_projectlocation_uuid());
@@ -324,7 +333,7 @@ public class NewRequisitionFragment extends Fragment {
         ContentValues cv= new ContentValues();
         cv.put(MPurchaseRequest.M_PURCHASEREQUEST_UUID_COL, get_UUID());
         cv.put(MPurchaseRequest.REQUESTDATE_COL, requestDate.getText().toString());
-        PandoraContext cont = ((PandoraMain) activity).globalVariable;
+        PandoraContext cont = ((PandoraMain) activity).getGlobalVariable();
         cv.put(ModelConst.C_PROJECTLOCATION_UUID_COL, cont.getC_projectlocation_uuid());
 
         String ad_user_uuid = cont.getAd_user_uuid();
@@ -395,6 +404,7 @@ public class NewRequisitionFragment extends Fragment {
         if (get_UUID() != null){
             ((NewRequisitionLineFragment) fragment).setPrUUID(_UUID);
             if (fragment != null) {
+                PBSRequisitionController.requestedDate = requestDate.getText().toString();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragment.setRetainInstance(true);

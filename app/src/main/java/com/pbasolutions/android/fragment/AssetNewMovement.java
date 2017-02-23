@@ -23,6 +23,8 @@ import com.pbasolutions.android.model.MMovement;
 import com.pbasolutions.android.model.MMovementLine;
 import com.pbasolutions.android.model.ModelConst;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -136,6 +138,7 @@ public class AssetNewMovement extends AbstractMovementFragment {
             ((NewMovementLineFragment) fragment).set_UUID(_UUID);
         }
         if (fragment != null) {
+            PBSAssetController.movementDate = movementDate.getText().toString();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragment.setRetainInstance(true);
@@ -179,10 +182,12 @@ public class AssetNewMovement extends AbstractMovementFragment {
                 ModelConst.NAME_COL, getActivity().getContentResolver());
         projectLocation.setText(locName);
 //        projectLocation.setText(appContext.getC_projectlocation_name());
-        projectLocation.
-                setTag(appContext.getC_projectlocation_uuid().toString());
-        if (movement != null && ! movement.getMovementDate().isEmpty()) {
-            movementDate.setText(movement.getMovementDate());
+        projectLocation.setTag(appContext.getC_projectlocation_uuid().toString());
+        if(PBSAssetController.movementDate != null && !PBSAssetController.movementDate.equals("") && lines != null && lines.size() > 0) {
+            String deployDate = PBSAssetController.movementDate;
+            Date date = PandoraHelper.stringToDate("dd-MM-yyyy", deployDate);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            movementDate.setText(sdf.format(date));
         } else {
             movementDate.setText(PandoraHelper.getTodayDate("dd-MM-yyyy"));
         }

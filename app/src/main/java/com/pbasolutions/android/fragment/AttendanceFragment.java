@@ -44,10 +44,10 @@ public class AttendanceFragment  extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        userName = ((PandoraMain)getActivity()).globalVariable.getAd_user_name();
+        userName = ((PandoraMain)getActivity()).getGlobalVariable().getAd_user_name();
         attendanceCont = new PBSAttendanceController(getActivity());
         PandoraHelper.setAutoSync(getActivity(), userName, PBSAccountInfo.ACCOUNT_TYPE);
-        PandoraContext context = ((PandoraMain) getActivity()).globalVariable;
+        PandoraContext context = ((PandoraMain) getActivity()).getGlobalVariable();
         //TODO: check why the projectlocation uuid is not saved.
         if (context.getC_projectlocation_uuid() == null
                 || context.getC_projectlocation_uuid().isEmpty()) {

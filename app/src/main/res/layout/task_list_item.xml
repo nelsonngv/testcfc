@@ -36,7 +36,8 @@
                         android:text="@{projTask.name}"
                         android:textStyle="bold"
                         android:editable="false"
-                        android:textSize="@dimen/abc_text_size_subhead_material"/>
+                        android:textSize="@dimen/abc_text_size_subhead_material"
+                        android:layout_span="2"/>
                 </TableRow>
                 <TableRow
                     android:divider="?android:attr/dividerVertical"

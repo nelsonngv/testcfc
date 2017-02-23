@@ -81,17 +81,17 @@ public class LoginFragment extends Fragment {
 
     public void onStart() {
         super.onStart();
-        if ( context.globalVariable != null) {
-            if (context.globalVariable.getAd_user_name()!=null)
+        if ( context.getGlobalVariable() != null) {
+            if (context.getGlobalVariable().getAd_user_name()!=null)
                 ((TextView) getView().findViewById(R.id.accountName))
-                        .setText(context.globalVariable.getAd_user_name());
-            if (context.globalVariable.getAd_user_password() != null) {
+                        .setText(context.getGlobalVariable().getAd_user_name());
+            if (context.getGlobalVariable().getAd_user_password() != null) {
                 ((TextView) getView().findViewById(R.id.accountPassword))
-                        .setText(context.globalVariable.getAd_user_password());
+                        .setText(context.getGlobalVariable().getAd_user_password());
             }
-            if (context.globalVariable.getServer_url() != null) {
+            if (context.getGlobalVariable().getServer_url() != null) {
                 ((TextView) getView().findViewById(R.id.serverURL))
-                        .setText(context.globalVariable.getServer_url());
+                        .setText(context.getGlobalVariable().getServer_url());
             }
         }
     }
@@ -185,28 +185,28 @@ public class LoginFragment extends Fragment {
             if (loginJSON != null) {
                 if (loginJSON.getSuccess().equals("TRUE")) {
                     // final PandoraContext globalVariable = ((PandoraMain)getActivity())
-                    // .globalVariable;
+                    // .getGlobalVariable();
                     if (context.globalVariable == null)
                     {
-                        context.globalVariable = new PandoraContext();
+                        context.setGlobalVariable(new PandoraContext());
                     }
                     ((PandoraMain)getActivity()).updateDrawer();
                     ((PandoraMain)getActivity()).drawerFragment.resetUsername(accountName);
                     ((PandoraMain)getActivity()).drawerFragment.invalidateView();
-                    context.globalVariable.setAd_user_name(accountName);
-                    context.globalVariable.setAd_user_id(loginJSON.getUserID());
-                    context.globalVariable.setAd_user_password(accountPassword);
-                    context.globalVariable.setSerial(deviceID);
-                    context.globalVariable.setRoleJSON(loginJSON.getRoles());
-                    context.globalVariable.setIsAuth(true);
-                    context.globalVariable.setServer_url(serverURL);
-                    context.globalVariable.setAuth_token(loginJSON.getToken());
+                    context.getGlobalVariable().setAd_user_name(accountName);
+                    context.getGlobalVariable().setAd_user_id(loginJSON.getUserID());
+                    context.getGlobalVariable().setAd_user_password(accountPassword);
+                    context.getGlobalVariable().setSerial(deviceID);
+                    context.getGlobalVariable().setRoleJSON(loginJSON.getRoles());
+                    context.getGlobalVariable().setIsAuth(true);
+                    context.getGlobalVariable().setServer_url(serverURL);
+                    context.getGlobalVariable().setAuth_token(loginJSON.getToken());
 
                     PandoraHelper.getProjLocAvailable(PandoraMain.instance, false);
 
                     PandoraHelper.setAccountData(getActivity());
                     //set the apps to only start auto sync after successfully send the role to Server.
-                    PandoraHelper.setAutoSync(getActivity(), context.globalVariable.getAd_user_name(),
+                    PandoraHelper.setAutoSync(getActivity(), context.getGlobalVariable().getAd_user_name(),
                             PBSAccountInfo.ACCOUNT_TYPE);
 
                     Fragment accountFrag = new AccountFragment();

@@ -117,10 +117,10 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         // if it is .. we have to search the uuid in database
         if (ad_org_uuid.isEmpty()) {
             ad_org_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_ORG_TABLE,
-                    ModelConst.AD_ORG_UUID_COL, context.globalVariable.getAd_org_id(),
+                    ModelConst.AD_ORG_UUID_COL, context.getGlobalVariable().getAd_org_id(),
                     ModelConst.AD_ORG_TABLE + ModelConst._ID, getActivity().getContentResolver());
             //set the uuid.
-            context.globalVariable.setAd_org_uuid(ad_org_uuid);
+            context.getGlobalVariable().setAd_org_uuid(ad_org_uuid);
         }
         cv.put(ModelConst.AD_ORG_UUID_COL, ad_org_uuid);
 
@@ -129,10 +129,10 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         // if it is .. we have to search the uuid in database
         if (ad_client_uuid.isEmpty()) {
             ad_client_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_CLIENT_TABLE,
-                    ModelConst.AD_CLIENT_UUID_COL, context.globalVariable.getAd_client_id(),
+                    ModelConst.AD_CLIENT_UUID_COL, context.getGlobalVariable().getAd_client_id(),
                     ModelConst.AD_CLIENT_TABLE + ModelConst._ID, getActivity().getContentResolver());
             //set the uuid.
-            context.globalVariable.setAd_client_uuid(ad_client_uuid);
+            context.getGlobalVariable().setAd_client_uuid(ad_client_uuid);
         }
         cv.put(ModelConst.AD_CLIENT_UUID_COL, ad_client_uuid);
 
@@ -141,10 +141,10 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         // if it is .. we have to search the uuid in database
         if (ad_user_uuid.isEmpty()) {
             ad_user_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
-                    ModelConst.AD_USER_UUID_COL, context.globalVariable.getAd_user_id(),
+                    ModelConst.AD_USER_UUID_COL, context.getGlobalVariable().getAd_user_id(),
                     ModelConst.AD_USER_TABLE + ModelConst._ID, getActivity().getContentResolver());
             //set the uuid.
-            context.globalVariable.setAd_user_uuid(ad_user_uuid);
+            context.getGlobalVariable().setAd_user_uuid(ad_user_uuid);
         }
 
         //Validate new application ensure that all foreign key are and non null columns

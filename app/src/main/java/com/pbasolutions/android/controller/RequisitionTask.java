@@ -443,13 +443,13 @@ public class RequisitionTask implements Callable<Bundle> {
                             purchaseReq.setM_PurchaseRequest_UUID(UUID.randomUUID().toString());
                             rcv.put(MPurchaseRequest.M_PURCHASEREQUEST_UUID_COL, purchaseReq.getM_PurchaseRequest_UUID());
                             ops.add(ContentProviderOperation
-                                    .newInsert(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUEST_TABLE))
+                                    .newInsert(ModelConst.uriCustomBuilder(tableName))
                                     .withValues(rcv)
                                     .build());
                         } else {
                             selection = selection + "=?";
                             ops.add(ContentProviderOperation
-                                    .newUpdate(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUEST_TABLE))
+                                    .newUpdate(ModelConst.uriCustomBuilder(tableName))
                                     .withValues(rcv)
                                     .withSelection(selection, arg)
                                     .build());
@@ -472,20 +472,22 @@ public class RequisitionTask implements Callable<Bundle> {
                             rlcv.put(MPurchaseRequestLine.DATEREQUIRED_COL, prLine.getDateRequired());
 
                             String rlSelection = ModelConst.M_PURCHASEREQUESTLINE_TABLE + ModelConst._ID;
-                            String rlArg[] = {prLine.getM_PurchaseRequestLine_ID()};
+                            String[] rlArg = {prLine.getM_PurchaseRequestLine_ID()};
                             tableName = ModelConst.M_PURCHASEREQUESTLINE_TABLE;
                             if (!ModelConst.isInsertedRow(cr, tableName, rlSelection, rlArg)) {
                                 rlcv.put(MPurchaseRequestLine.M_PURCHASEREQUESTLINE_UUID_COL, UUID.randomUUID().toString());
                                 ops.add(ContentProviderOperation
-                                        .newInsert(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUESTLINE_TABLE))
+                                        .newInsert(ModelConst.uriCustomBuilder(tableName))
                                         .withValues(rlcv)
                                         .build());
                             } else {
                                 rlSelection = rlSelection + "=?";
+                                String purcReqUUID = ModelConst.mapIDtoColumn(ModelConst.M_PURCHASEREQUEST_TABLE, MPurchaseRequest.M_PURCHASEREQUEST_UUID_COL, purchaseReq.getM_PurchaseRequest_ID(), MPurchaseRequest.M_PURCHASEREQUEST_ID_COL, cr);
+                                rlcv.put(MPurchaseRequestLine.M_PURCHASEREQUEST_UUID_COL, purcReqUUID);
                                 ops.add(ContentProviderOperation
-                                        .newUpdate(ModelConst.uriCustomBuilder(ModelConst.M_PURCHASEREQUESTLINE_TABLE))
+                                        .newUpdate(ModelConst.uriCustomBuilder(tableName))
                                         .withValues(rlcv)
-                                        .withSelection(rlSelection, arg)
+                                        .withSelection(rlSelection, rlArg)
                                         .build());
                             }
                         }
@@ -496,7 +498,7 @@ public class RequisitionTask implements Callable<Bundle> {
                 output = PandoraHelper.providerApplyBatch(output, cr, ops, "sync requisition(s).");
             } else {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-                output.putString(PandoraConstant.ERROR, "Fail to sync Project Tasks.");
+                output.putString(PandoraConstant.ERROR, "Fail to sync requisition(s).");
             }
         }
 
@@ -505,6 +507,7 @@ public class RequisitionTask implements Callable<Bundle> {
 
     public Bundle getRequisitions() {
         String orderBy = input.getString(PBSRequisitionController.ARG_ORDERBY);
+        String projLocationUUID = input.getString(PBSRequisitionController.ARG_PROJECT_LOCATION_UUID);
 
         if ("Approved".equalsIgnoreCase(orderBy)) {
             orderBy = "IsApproved desc";
@@ -512,7 +515,9 @@ public class RequisitionTask implements Callable<Bundle> {
             orderBy = "IsApproved asc";
         }
 
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(MPurchaseRequest.TABLENAME), prProjection, null, null, orderBy);
+        String selection = MPurchaseRequest.C_PROJECTLOCATION_UUID_COL + "=?";
+        String[] selectionArgs = {projLocationUUID};
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(MPurchaseRequest.TABLENAME), prProjection, selection, selectionArgs, orderBy);
 
         //get the purchase request list.
         ObservableArrayList<MPurchaseRequest> prList = new ObservableArrayList();

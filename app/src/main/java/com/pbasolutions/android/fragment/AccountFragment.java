@@ -57,16 +57,16 @@ public class AccountFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("Connection"));
         Bundle inputBundle = new Bundle();
         inputBundle.putString(authenticatorController.ARG_AUTH_TYPE, PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
-        if (context.globalVariable != null){
-            if (!context.globalVariable.getAd_user_name().isEmpty()) {
-                inputBundle.putString(authenticatorController.USER_NAME_ARG, context.globalVariable.getAd_user_name());
+        if (context.getGlobalVariable() != null){
+            if (!context.getGlobalVariable().getAd_user_name().isEmpty()) {
+                inputBundle.putString(authenticatorController.USER_NAME_ARG, context.getGlobalVariable().getAd_user_name());
             }
 
         }
         // Bundle authenticateToken = authenticatorController.triggerEvent(PBSAuthenticatorController.AUTHENTICATE_TOKEN, inputBundle, new Bundle(), getActivity());
         boolean isAuthToken = false;
-        if (context.globalVariable != null)
-        isAuthToken = (!context.globalVariable.getAuth_token().isEmpty());
+        if (context.getGlobalVariable() != null)
+        isAuthToken = (!context.getGlobalVariable().getAuth_token().isEmpty());
         //|| (authenticateToken !=null);
 
         if (!isAuthToken) {
@@ -110,9 +110,9 @@ public class AccountFragment extends Fragment {
 
     public void onStart() {
         super.onStart();
-        if(context.globalVariable != null){
+        if(context.getGlobalVariable() != null){
             viewPager.setCurrentItem(1);
-//            if (context.globalVariable.isAuth()){
+//            if (context.getGlobalVariable().isAuth()){
 //            }
         }
     }

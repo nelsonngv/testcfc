@@ -259,7 +259,7 @@ public class MovementListFragment extends Fragment {
     }
 
     private ObservableArrayList<MMovement> getMovements() {
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext pc = ((PandoraMain)getActivity()).getGlobalVariable();
         Bundle input = new Bundle();
         input.putInt(assetCont.ARG_PROJECTLOCATION_ID, Integer.parseInt(pc.getC_projectlocation_id()));
         input.putInt(assetCont.ARG_AD_USER_ID, Integer.parseInt(pc.getAd_user_id()));

@@ -91,9 +91,10 @@ public class ProjectTask implements Callable<Bundle> {
 
 //        String projLocationUUID = input.getString(PBSTaskController.ARG_PROJLOC_UUID);
         String adUserID = input.getString(PBSTaskController.ARG_AD_USER_ID);
-        String selection = aduser + ModelConst.AD_USER_ID_COL + "!= ?";
-        String[] selectionArg = {adUserID};
-        String[] projection = {aduser + ModelConst.AD_USER_UUID_COL,
+        String selection = aduser + ModelConst.AD_USER_ID_COL + "!= ? AND " +
+                "EXISTS (SELECT C_BPartner_UUID FROM C_BPartner WHERE C_BPartner.C_BPartner_ID = AD_User.C_BPartner_UUID AND C_BPartner.IsEmployee = ?)";
+        String[] selectionArg = {adUserID, "Y"};
+        String[] projection = {aduser + ModelConst.AD_USER_ID_COL,
                 aduser + ModelConst.NAME_COL};
 
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.AD_USER_TABLE),
@@ -104,12 +105,12 @@ public class ProjectTask implements Callable<Bundle> {
             do {
                 SpinnerPair pair = new SpinnerPair();
                 for (int x = 0; x < cursor.getColumnNames().length; x++) {
-                    if (ModelConst.AD_USER_UUID_COL.equalsIgnoreCase(cursor.getColumnName(x))) {
+                    if (ModelConst.AD_USER_ID_COL.equalsIgnoreCase(cursor.getColumnName(x))) {
                         Log.i(TAG, "getUsers: "+cursor.getString(x));
-                        String getid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE,
-                                ModelConst.AD_USER_UUID_COL, cursor.getString(x), ModelConst.AD_USER_ID_COL, cr);
-                        pair.setKey(getid);
-                        Log.i(TAG, "getUsers: "+getid);
+//                        String getid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE,
+//                                ModelConst.AD_USER_UUID_COL, cursor.getString(x), ModelConst.AD_USER_ID_COL, cr);
+                        pair.setKey(cursor.getString(x));
+//                        Log.i(TAG, "getUsers: "+getid);
                     } else if (ModelConst.NAME_COL
                             .equalsIgnoreCase(cursor.getColumnName(x))) {
                         pair.setValue(cursor.getString(x));

@@ -324,7 +324,7 @@ public class RequisitionFragment extends Fragment{
     }
 
     public void syncRequsitions(){
-        PandoraContext globalVar = ((PandoraMain)context).globalVariable;
+        PandoraContext globalVar = ((PandoraMain)context).getGlobalVariable();
         Bundle input = new Bundle();
         input.putString(requisCont.ARG_USER_ID, globalVar.getAd_user_id());
         input.putString(requisCont.ARG_PROJECT_LOCATION_ID, globalVar.getC_projectlocation_id());
@@ -339,6 +339,7 @@ public class RequisitionFragment extends Fragment{
               input.putString(requisCont.ARG_ORDERBY, orderBy);
         }
 
+        input.putString(requisCont.ARG_PROJECT_LOCATION_UUID, ((PandoraMain)context).getGlobalVariable().getC_projectlocation_uuid());
         Bundle result = requisCont.triggerEvent(requisCont.GET_REQUISITIONS_EVENT, input, new Bundle(), null);
         return (ObservableArrayList<MPurchaseRequest>)result.get(requisCont.ARG_REQUISITION_LIST);
     }

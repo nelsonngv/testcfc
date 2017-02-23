@@ -159,13 +159,13 @@ public class NewCheckInFragment extends Fragment {
 
     public void checkin() throws Exception {
         try {
-            String orgUUID = ModelConst.mapIDtoColumn(ModelConst.AD_ORG_TABLE, ModelConst.AD_ORG_UUID_COL, context.globalVariable.getAd_org_id(),
+            String orgUUID = ModelConst.mapIDtoColumn(ModelConst.AD_ORG_TABLE, ModelConst.AD_ORG_UUID_COL, context.getGlobalVariable().getAd_org_id(),
                     ModelConst.AD_ORG_TABLE + ModelConst._ID, getActivity().getContentResolver());
             contentValues.put("ad_org_uuid", orgUUID);
-            String clientUUID = ModelConst.mapIDtoColumn(ModelConst.AD_CLIENT_TABLE, ModelConst.AD_CLIENT_UUID_COL, context.globalVariable.getAd_client_id(),
+            String clientUUID = ModelConst.mapIDtoColumn(ModelConst.AD_CLIENT_TABLE, ModelConst.AD_CLIENT_UUID_COL, context.getGlobalVariable().getAd_client_id(),
                     ModelConst.AD_CLIENT_TABLE + ModelConst._ID, getActivity().getContentResolver());
             contentValues.put("ad_client_uuid", clientUUID);
-            String userUUID = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_UUID_COL, context.globalVariable.getAd_user_id(),
+            String userUUID = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_UUID_COL, context.getGlobalVariable().getAd_user_id(),
                     ModelConst.AD_USER_TABLE + ModelConst._ID, getActivity().getContentResolver());
             contentValues.put("ad_user_uuid", userUUID);
             contentValues.put("createdBy",userUUID);
@@ -188,14 +188,14 @@ public class NewCheckInFragment extends Fragment {
                 PandoraHelper.showMessage((PandoraMain)getActivity(), resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)));
                 else {
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentManager.popBackStack();
-                    fragmentManager.popBackStack();
-                    Fragment frag = new CheckInFragment();
-                    frag.setRetainInstance(true);
-                    fragmentTransaction.replace(R.id.container_body, frag);
-                    fragmentTransaction.addToBackStack(frag.getClass().getName());
-                    fragmentTransaction.commit();
+//                    fragmentManager.popBackStack();
+//                    Fragment frag = new CheckInFragment();
+//                    frag.setRetainInstance(true);
+//                    fragmentTransaction.replace(R.id.container_body, frag);
+//                    fragmentTransaction.addToBackStack(frag.getClass().getName());
+//                    fragmentTransaction.commit();
                 }
             }
         } catch (Exception e) {

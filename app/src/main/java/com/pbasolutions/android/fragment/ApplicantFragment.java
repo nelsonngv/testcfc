@@ -110,7 +110,7 @@ public class ApplicantFragment extends Fragment {
      * @return
      */
     private ObservableArrayList<MApplicant> getApplicantList() {
-        PandoraContext globalVar = ((PandoraMain) getActivity()).globalVariable;
+        PandoraContext globalVar = ((PandoraMain) getActivity()).getGlobalVariable();
         if (globalVar != null) {
             String projectLocationUUID = globalVar.getC_projectlocation_uuid();
             if (projectLocationUUID != null) {

@@ -437,7 +437,7 @@ public class PandoraHelper  {
 
     public static void getProjLocAvailable(Activity activity, boolean showResult) {
         PandoraController cont = new PandoraController(activity);
-        PandoraContext globalVar = ((PandoraMain) activity).globalVariable;
+        PandoraContext globalVar = ((PandoraMain) activity).getGlobalVariable();
         if (globalVar.getProjLocJSON() == null) {
             //find in database.
             Bundle input = new Bundle();
@@ -478,7 +478,7 @@ public class PandoraHelper  {
 
         PBSAuthenticatorController authController = new PBSAuthenticatorController(activity);
 
-        PandoraContext pandoraContext = ((PandoraMain) activity).globalVariable;
+        PandoraContext pandoraContext = ((PandoraMain) activity).getGlobalVariable();
         Bundle inputAccount = new Bundle();
         inputAccount.putString(authController.USER_NAME_ARG, pandoraContext.getAd_user_name());
         inputAccount.putString(authController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
@@ -513,10 +513,12 @@ public class PandoraHelper  {
         Bundle input = new Bundle();
         input.putString(authCont.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
         input.putString(authCont.ARG_AUTH_TYPE, PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
-        //input.putSerializable(authenticatorController.GET_ACCOUNT_DATA_EVENT, globalVariable);
+        //input.putSerializable(authenticatorController.GET_ACCOUNT_DATA_EVENT, getGlobalVariable());
         Bundle result = authCont.triggerEvent(authCont.GET_ACCOUNT_DATA_EVENT, input, new Bundle(), null);
 
-        PandoraContext var = ((PandoraMain)activity).globalVariable;
+        if(((PandoraMain)activity).getGlobalVariable() == null)
+            ((PandoraMain)activity).setGlobalVariable((PandoraContext) activity.getApplicationContext());
+        PandoraContext var = ((PandoraMain)activity).getGlobalVariable();
         if (result.getString(authCont.USER_NAME_ARG) != null){
             var.setAd_user_name(result.getString(authCont.USER_NAME_ARG));
             var.setAd_user_password(

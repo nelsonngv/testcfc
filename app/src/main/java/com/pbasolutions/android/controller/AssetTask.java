@@ -663,8 +663,7 @@ public class AssetTask extends Task {
         //first try to get the M_Product_ID/UUID from asset table.
         String projection[] = {MProduct.M_PRODUCT_UUID_COL};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(MAsset.TABLENAME),
-                projection, null,
-                null, null);
+                projection, null, null, null);
         if (cursor != null) {
             ArrayList<String> m_product_uuids = new ArrayList();
             if (cursor.getCount() > 0) {
@@ -690,11 +689,13 @@ public class AssetTask extends Task {
                     String selectionArg[] = m_product_uuids.toArray(new String[m_product_uuids.size()]);
                     Cursor pCursor = cr.query(ModelConst.uriCustomBuilder(MProduct.TABLENAME), pProjection, selection, selectionArg, null);
                     ArrayList<SpinnerPair> productList = new ArrayList<>();
-                    boolean isName = input.getBoolean(PBSAssetController.ARG_ISNAME);
-                    pCursor.moveToFirst();
-                    do {
-                        productList.add(ModelConst.getProductPair(pCursor, isName));
-                    } while (pCursor.moveToNext());
+                    if (pCursor.getCount() > 0) {
+                        boolean isName = input.getBoolean(PBSAssetController.ARG_ISNAME);
+                        pCursor.moveToFirst();
+                        do {
+                            productList.add(ModelConst.getProductPair(pCursor, isName));
+                        } while (pCursor.moveToNext());
+                    }
                     pCursor.close();
                     output.putParcelableArrayList(PBSAssetController.ARG_ASSET_PRODUCTS, productList);
                 }

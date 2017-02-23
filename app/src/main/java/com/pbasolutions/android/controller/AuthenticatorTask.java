@@ -18,6 +18,7 @@ import android.util.Log;
 
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
+import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.authentication.PBSIServerAuthenticate;
@@ -439,6 +440,9 @@ public class AuthenticatorTask extends Task {
             PBSIServerAuthenticate sServerAuthenticate = new PBSServerAuthenticate();
             PBSLoginJSON user = sServerAuthenticate.userSignIn(userName, userPass, deviceID, serverURL);
             if (user != null) {
+                if (PBSServerConst.cookieStore == null) {
+                    PBSServerConst.instantiateCookie();
+                }
                 if (user.getSuccess().equals("TRUE")) {
                     if (user.getForms().length > 0) {
                         //sorting menu items
@@ -464,6 +468,14 @@ public class AuthenticatorTask extends Task {
                     //if account already created.
                     if (arrayAccounts.length > 0) {
                         Account userAccount = getAccount(userName, accType);
+//                        Account userAccount2;
+//                        // allow only 1 account to be stored on the phone
+//                        for (int i = 0; i < arrayAccounts.length; i++) {
+//                            if (!arrayAccounts[i].name.equals(userName)) {
+//                                userAccount2 = getAccount(arrayAccounts[i].name, accType);
+//                                am.removeAccount(userAccount2, null, null);
+//                            }
+//                        }
                         if (userAccount != null) {
                             //work around: delete account and recreate new.
                             //   accountManager.removeAccount(userAccount, null, null);
@@ -491,6 +503,10 @@ public class AuthenticatorTask extends Task {
                             ModelConst.updateTableRow(cr, tableName, cv, selection, arg);
                         }
                     }
+                    Bundle extras = new Bundle();
+                    Account userAccount = getAccount(userName, accType);
+                    ContentResolver.requestSync(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
+
                     output.putSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON, user);
                     output.putBoolean(PBSServerConst.RESULT, true);
                 } else {
@@ -499,7 +515,6 @@ public class AuthenticatorTask extends Task {
                     output.putString(PandoraConstant.ERROR, "Invalid username and password." +
                             " Please re-enter.");
                 }}
-
 
             return  output;
         } catch (Exception e) {

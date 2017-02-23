@@ -99,7 +99,7 @@ public class AttendanceSearchFragment extends Fragment {
         if (projLocNameAdapter.getCount() > 0)
         {
             PandoraMain pandoraMain = PandoraMain.instance;
-            String projLocID = pandoraMain.globalVariable.getC_projectlocation_id();
+            String projLocID = pandoraMain.getGlobalVariable().getC_projectlocation_id();
 
             for (int i = 0; i < projLocNameAdapter.getCount(); i++)
             {
@@ -215,7 +215,7 @@ public class AttendanceSearchFragment extends Fragment {
     }
 
     public List<SpinnerPair> getPrefShiftList() {
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext pc = ((PandoraMain)getActivity()).getGlobalVariable();
 
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         if (projlocPair == null) { // when no selected
@@ -248,7 +248,7 @@ public class AttendanceSearchFragment extends Fragment {
             return;
         }
 
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext pc = ((PandoraMain)getActivity()).getGlobalVariable();
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         String projLocId = projlocPair.getKey();
         attendance.setC_ProjectLocation_ID(Integer.parseInt(projLocId));

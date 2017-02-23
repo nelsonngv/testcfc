@@ -42,10 +42,10 @@ public class RecruitFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        userName = ((PandoraMain)getActivity()).globalVariable.getAd_user_name();
+        userName = ((PandoraMain)getActivity()).getGlobalVariable().getAd_user_name();
         authCont = new PBSAuthenticatorController(getActivity());
         PandoraHelper.setAutoSync(getActivity(), userName, PBSAccountInfo.ACCOUNT_TYPE);
-        PandoraContext context = ((PandoraMain) getActivity()).globalVariable;
+        PandoraContext context = ((PandoraMain) getActivity()).getGlobalVariable();
         //TODO: check why the projectlocation uuid is not saved.
         if (context.getC_projectlocation_uuid() == null
                 || context.getC_projectlocation_uuid().isEmpty()) {
@@ -65,7 +65,7 @@ public class RecruitFragment extends Fragment {
                     public void run() {
                         Bundle input = new Bundle();
                         input.putString(authCont.USER_NAME_ARG,
-                                ((PandoraMain)getActivity()).globalVariable.getAd_user_name());
+                                ((PandoraMain)getActivity()).getGlobalVariable().getAd_user_name());
                         input.putString(authCont.ARG_ACCOUNT_TYPE,
                                 PBSAccountInfo.ACCOUNT_TYPE);
                         Bundle accountBundle = authCont.triggerEvent(authCont.GET_USER_ACCOUNT_EVENT, input, new Bundle(), null);

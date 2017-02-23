@@ -65,7 +65,7 @@ public class CheckPointFragment extends Fragment {
                 inflater = (LayoutInflater) params[0];
                 recyclerView = (RecyclerView) params[1];
 
-                PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
+                PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
 
                 Bundle result = null;
                 //check the global varialble is null or not.
@@ -99,7 +99,7 @@ public class CheckPointFragment extends Fragment {
                     PandoraHelper.showMessage((PandoraMain) getActivity(),
                             result.getString(result.getString(PandoraConstant.TITLE)));
                 } else {
-                    PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
+                    PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
                     if (globalVar != null && checkPoints == null)
                         PandoraHelper.showWarningMessage((PandoraMain)getActivity(),
                                 "No check point for the current Project Location. Please select another project location in defaults setting tab.");
@@ -115,7 +115,7 @@ public class CheckPointFragment extends Fragment {
     }
 
     private ObservableArrayList<MCheckPoint> getCheckPointSeqList() {
-        PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
         if (globalVar != null) {
             String projectLocationUUID = globalVar.getC_projectlocation_uuid();
             if (projectLocationUUID != null) {

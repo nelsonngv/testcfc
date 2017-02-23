@@ -324,7 +324,7 @@ public class NewAttendanceLineFragment extends Fragment {
         cv.put(ModelConst.HR_SHIFT_UUID_COL, PBSAttendanceController.shiftUUID);
         cv.put(MAttendanceLine.COMMENT_COL, textComment.getText().toString());
 
-        PandoraContext appContext = PandoraMain.instance.globalVariable;
+        PandoraContext appContext = PandoraMain.instance.getGlobalVariable();
 
         Bundle input = new Bundle();
         input.putParcelable(PBSAttendanceController.ARG_CONTENTVALUES, cv);

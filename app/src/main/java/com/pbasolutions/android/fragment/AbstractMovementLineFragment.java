@@ -71,7 +71,7 @@ public abstract class AbstractMovementLineFragment extends PBSDetailsFragment{
         super.onCreate(savedInstanceState);
         assetCont = new PBSAssetController(getActivity());
         context = (PandoraMain)getActivity();
-        appContext = context.globalVariable;
+        appContext = context.getGlobalVariable();
         setHasOptionsMenu(true);
     }
 

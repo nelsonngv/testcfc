@@ -70,7 +70,7 @@ public class ProjTaskFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         taskCont = new PBSTaskController(getActivity());
-        globalVar = ((PandoraMain) getActivity()).globalVariable;
+        globalVar = ((PandoraMain) getActivity()).getGlobalVariable();
         setHasOptionsMenu(true);
         taskDetailTitle = getString(R.string.title_projtaskdetails);
     }

@@ -64,7 +64,7 @@ public class PreferencesFragment extends Fragment {
         rootView.findViewById(R.id.displayFullCommentRB).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.globalVariable.setIsFullComment(isFullComment.isChecked());
+                context.getGlobalVariable().setIsFullComment(isFullComment.isChecked());
             }
         });
 

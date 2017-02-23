@@ -50,6 +50,7 @@ public class PBSAssetController extends PBSController{
     public static final String UPDATE_MOVEMENT_INFO_EVENT = "UPDATE_MOVEMENT_INFO_EVENT";
     public static final String ARG_IS_GET_ASI = "ARG_IS_GET_ASI";
 
+    public static String movementDate;
 
     public PBSAssetController(Context base) {
         super(base);

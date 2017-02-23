@@ -300,7 +300,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             return;
         }
 
-        PandoraContext globalVar = ((PandoraMain) getActivity()).globalVariable;
+        PandoraContext globalVar = ((PandoraMain) getActivity()).getGlobalVariable();
         Bundle input = new Bundle();
         input.putString(PBSServerConst.PARAM_URL, globalVar.getServer_url());
 //        input.putString(taskCont.ARG_PROJLOC_ID, globalVar.getC_projectlocation_id());

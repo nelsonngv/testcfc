@@ -108,7 +108,7 @@ public class AssetListFragment extends Fragment {
      * @return
      */
     private ObservableArrayList<MStorage> getMStorage() {
-        PandoraContext pc = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext pc = ((PandoraMain)getActivity()).getGlobalVariable();
         Bundle input = new Bundle();
         input.putString(assetCont.ARG_PROJECTLOCATION_ID, pc.getC_projectlocation_id());
         input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());

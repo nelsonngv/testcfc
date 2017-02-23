@@ -70,7 +70,7 @@ public class CheckInVH extends RecyclerView.ViewHolder {
         this.imageStatusView = (ImageView) view.findViewById(R.id.image);
         this.textDateView = (TextView) view.findViewById(R.id.date);
         this.textCommentView = (TextView) view.findViewById(R.id.comment);
-        if (!mainContext.globalVariable.isFullComment()){
+        if (!mainContext.getGlobalVariable().isFullComment()){
             this.textCommentView.setFilters(new InputFilter[] { new InputFilter.LengthFilter(20) });
         }
         this.textCheckinView = (TextView) view.findViewById(R.id.checkinuuid);

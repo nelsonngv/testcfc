@@ -223,7 +223,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
     }
 
     private List<SpinnerPair> getUserList() {
-        PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
         if (globalVar != null) {
             Bundle input = new Bundle();
 //            String projectLocationUUID = globalVar.getC_projectlocation_uuid();
@@ -293,24 +293,24 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         }
 
         PandoraMain context = (PandoraMain) getActivity();
-        String ad_user_id = context.globalVariable.getAd_user_id();
+        String ad_user_id = context.getGlobalVariable().getAd_user_id();
         //as we dont know when does the initial sync completed. we try check if the uuid isEmpty.
         // if it is .. we have to search the uuid in database
         if (ad_user_id.isEmpty()) {
             ad_user_id = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE,
-                    ModelConst.AD_USER_ID_COL, context.globalVariable.getAd_user_uuid(),
+                    ModelConst.AD_USER_ID_COL, context.getGlobalVariable().getAd_user_uuid(),
                     ModelConst.AD_USER_TABLE + ModelConst._UUID, getActivity().getContentResolver());
             //set the uuid.
-            context.globalVariable.setAd_user_id(ad_user_id);
+            context.getGlobalVariable().setAd_user_id(ad_user_id);
         }
 
-        String ad_user_uuid = context.globalVariable.getAd_user_uuid();
+        String ad_user_uuid = context.getGlobalVariable().getAd_user_uuid();
         if (ad_user_uuid.isEmpty()) {
             ad_user_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
-                    ModelConst.AD_USER_UUID_COL, context.globalVariable.getAd_user_id(),
+                    ModelConst.AD_USER_UUID_COL, context.getGlobalVariable().getAd_user_id(),
                     ModelConst.AD_USER_TABLE + ModelConst._ID, getActivity().getContentResolver());
             //set the uuid.
-            context.globalVariable.setAd_user_uuid(ad_user_uuid);
+            context.getGlobalVariable().setAd_user_uuid(ad_user_uuid);
         }
 
         pt.setCreatedBy(ad_user_uuid);
@@ -330,7 +330,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         pt.setCreated(now);
 
         Bundle input = new Bundle();
-        PandoraContext cont = ((PandoraMain) getActivity()).globalVariable;
+        PandoraContext cont = ((PandoraMain) getActivity()).getGlobalVariable();
         input.putSerializable(PBSServerConst.PARAM_URL, cont.getServer_url());
         input.putSerializable(taskCont.ARG_PROJTASK, pt);
 

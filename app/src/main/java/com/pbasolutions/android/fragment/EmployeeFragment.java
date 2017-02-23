@@ -91,7 +91,7 @@ public class EmployeeFragment extends Fragment {
      * @return
      */
     private ObservableArrayList<MEmployee> getEmployeeList() {
-        PandoraContext globalVar = ((PandoraMain)getActivity()).globalVariable;
+        PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
         if (globalVar != null) {
             String projectLocationUUID = globalVar.getC_projectlocation_uuid();
             String projectLocationName = globalVar.getC_projectlocation_name();

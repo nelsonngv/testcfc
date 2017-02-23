@@ -41,7 +41,7 @@ public class AssetMovementDetails extends AbstractMovementFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (movement != null){
             String currentProjLocId = ((PandoraMain) getActivity())
-                    .globalVariable.getC_projectlocation_id();
+                    .getGlobalVariable().getC_projectlocation_id();
             int nProjLocId = Integer.parseInt(currentProjLocId);
             if (!"DR".equalsIgnoreCase(movement.getDocStatus())
                     && !"RE".equalsIgnoreCase(movement.getDocStatus())

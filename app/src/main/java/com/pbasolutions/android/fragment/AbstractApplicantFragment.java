@@ -132,7 +132,7 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
         super.onCreate(savedInstanceState);
         recCont = new PBSRecruitController(getActivity());
         context = (PandoraMain)getActivity();
-        appContext = context.globalVariable;
+        appContext = context.getGlobalVariable();
         setHasOptionsMenu(true);
     }
 

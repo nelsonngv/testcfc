@@ -45,7 +45,7 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
         super.onCreate(savedInstanceState);
         reqCont = new PBSRequisitionController(getActivity());
         context = (PandoraMain)getActivity();
-        appContext = context.globalVariable;
+        appContext = context.getGlobalVariable();
     }
 
     protected void setUI(View rootView) {
