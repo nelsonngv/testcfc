@@ -10,8 +10,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -51,7 +53,8 @@ public class AttendanceSearchFragment extends Fragment {
 
 
     PBSAttendanceController attendanceCont;
-    TextView deployDateView;
+    TextView deployDateFromView;
+    TextView deployDateToView;
     protected Spinner shiftSpinner;
     protected ArrayAdapter shiftAdapter;
 
@@ -61,6 +64,8 @@ public class AttendanceSearchFragment extends Fragment {
     RecyclerView recyclerView;
     AttendanceSearchLineRVA linesAdapter;
     Button searchButton;
+    int screenHeight = 0;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
     private ObservableArrayList<MAttendanceSearchItem> attendances;
 
@@ -82,6 +87,20 @@ public class AttendanceSearchFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.attendance_search, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.attendancesrch_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenHeight = displayMetrics.heightPixels;
+        screenHeight = (screenHeight/3) * 2;
 
         setUI(rootView);
         setUIListener();
@@ -131,6 +150,13 @@ public class AttendanceSearchFragment extends Fragment {
     void refreshAttendanceLines() {
         linesAdapter = new AttendanceSearchLineRVA(getActivity(), attendances);
         recyclerView.setAdapter(linesAdapter);
+
+        recyclerView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
+        if (recyclerView.getMeasuredHeight() > screenHeight)
+            params.height = screenHeight;
+        else params.height = recyclerView.getMeasuredHeight();
+        recyclerView.setLayoutParams(params);
     }
 
     void setUI(View rootView) {
@@ -139,11 +165,13 @@ public class AttendanceSearchFragment extends Fragment {
         projLocationSpinner = (Spinner) rootView.findViewById(R.id.attsrchProjLocation);
         projLocationSpinner.setEnabled(false);
 
-        deployDateView = (TextView) rootView.findViewById(R.id.attsrchDeployDate);
+        deployDateFromView = (TextView) rootView.findViewById(R.id.attsrchDeployDateFrom);
+        deployDateToView = (TextView) rootView.findViewById(R.id.attsrchDeployDateTo);
 
         Date date= new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        deployDateView.setText(sdf.format(date));
+        deployDateFromView.setText(sdf.format(date));
+        deployDateToView.setText(sdf.format(date));
 
         searchButton = (Button) rootView.findViewById(R.id.atsrchSearch);
     }
@@ -173,14 +201,20 @@ public class AttendanceSearchFragment extends Fragment {
             }
         });
 
-        deployDateView.setOnClickListener(new View.OnClickListener() {
+        deployDateFromView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PandoraHelper.promptDatePicker(deployDateView, getActivity(), false);
+                PandoraHelper.promptDatePicker(deployDateFromView, getActivity());
+            }
+        });
+        deployDateToView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PandoraHelper.promptDatePicker(deployDateToView, getActivity());
             }
         });
 
-        deployDateView.addTextChangedListener(new TextWatcher() {
+        TextWatcher tw = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -195,7 +229,9 @@ public class AttendanceSearchFragment extends Fragment {
             public void afterTextChanged(Editable s) {
 
             }
-        });
+        };
+        deployDateFromView.addTextChangedListener(tw);
+        deployDateToView.addTextChangedListener(tw);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,10 +278,20 @@ public class AttendanceSearchFragment extends Fragment {
             return;
         }
 
-        String deployDate = deployDateView.getText().toString();
-        if (deployDate == null || deployDate.length() == 0) {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), "Please select deploy date.");
+        String deployDateFrom = deployDateFromView.getText().toString();
+        String deployDateTo = deployDateToView.getText().toString();
+        if (deployDateFrom == null || deployDateFrom.length() == 0 || deployDateTo == null || deployDateTo.length() == 0) {
+            PandoraHelper.showWarningMessage(getActivity(), "Please select deploy date.");
             return;
+        }
+
+        try {
+            if (sdf.parse(deployDateFrom).after(sdf.parse(deployDateTo))) {
+                PandoraHelper.showWarningMessage(getActivity(), "Invalid deploy date range.");
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         PandoraContext pc = ((PandoraMain)getActivity()).getGlobalVariable();
@@ -253,7 +299,8 @@ public class AttendanceSearchFragment extends Fragment {
         String projLocId = projlocPair.getKey();
         attendance.setC_ProjectLocation_ID(Integer.parseInt(projLocId));
 
-        attendance.setDeploymentDate(deployDate);
+        attendance.setDeploymentDateFrom(deployDateFrom);
+        attendance.setDeploymentDateTo(deployDateTo);
 
         String shiftId = ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_ID_COL, spinnerPair.getKey(), ModelConst.HR_SHIFT_UUID_COL, cr);
         attendance.setHR_Shift_ID(Integer.parseInt(shiftId));

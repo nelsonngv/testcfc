@@ -60,5 +60,17 @@
                     android:text="@{employee.jobTitle}" />
             </LinearLayout>
         </TableRow>
+        <TableRow>
+            <LinearLayout style="@style/PTableVirtRowW">
+                <TextView
+                    style="@style/TableInfoLabel"
+                    android:text="@string/label_shift" />
+                <EditText
+                    style="@style/TableValue"
+                    android:id="@+id/editTextShift"
+                    android:editable="false"
+                    android:text="@{employee.shiftName}" />
+            </LinearLayout>
+        </TableRow>
     </TableLayout>
 </layout>

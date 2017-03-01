@@ -244,7 +244,7 @@ public class RecruitTask extends Task {
         String projLocationName = input.getString(PBSRecruitController.ARG_PROJECT_LOCATION_NAME);
 
         String[] projection = { cbpartner + MEmployee.C_BPARTNER_UUID_COL, cbpartner + ModelConst.NAME_COL, cbpartner + ModelConst.IDNUMBER_COL,
-                cbpartner + ModelConst.PHONE_COL, cbpartner + MEmployee.JOB_TITLE_COL, cbpartner + ModelConst.WORKPERMIT_COL, "ISDEFAULT"};
+                cbpartner + ModelConst.PHONE_COL, cbpartner + MEmployee.JOB_TITLE_COL, cbpartner + ModelConst.WORKPERMIT_COL, "ISDEFAULT", ModelConst.HR_SHIFT_TABLE + "." + ModelConst.NAME_COL + " AS SHIFTNAME"};
 
         String[] selectionArg = { projLocationUUID };
 
@@ -284,6 +284,9 @@ public class RecruitTask extends Task {
                         if (rowValue.equalsIgnoreCase("Y"))
                             employee.setDefaultProjLoc(projLocationName);
                         else employee.setDefaultProjLoc("-");
+                    } else if ("SHIFTNAME"
+                            .equalsIgnoreCase(columnName)) {
+                        employee.setShiftName(rowValue);
                     }
                 }
 

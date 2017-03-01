@@ -108,6 +108,8 @@
     <string name="label_certpic10">Image [10]</string>
     <string name="label_sender">Sender</string>
     <string name="label_date">Date</string>
+    <string name="label_datefrom">Date From</string>
+    <string name="label_dateto">Date To</string>
     <string name="label_filterby">Filter By </string>
     <string name="label_value">Value </string>
     <string name="label_shift">Shift </string>
@@ -116,8 +118,8 @@
     <string name="label_isabsent">Absent</string>
     <string name="label_iswork">Work</string>
     <string name="label_isnoshow">No Show</string>
-    <string name="label_checkindate">Check In Date</string>
-    <string name="label_checkoutdate">Check Out Date</string>
+    <string name="label_checkindate">Check In</string>
+    <string name="label_checkoutdate">Check Out</string>
     <string name="label_leavetype">Leave Type</string>
     <string name="label_daytype">Day Type</string>
     <string name="label_ok">OK</string>

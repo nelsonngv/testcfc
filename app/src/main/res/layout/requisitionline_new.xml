@@ -21,7 +21,7 @@
                     <TextView
                         android:text="@string/label_productname"
                         style="@style/TableInfoLabel"/>
-                    <com.pbasolutions.android.control.SearchableSpinner
+                    <com.pbasolutions.android.control.SearchableSpinnerForRequisition
                         style="@style/SpinnerTableValue"
                         app:dlgTitle="@string/title_selectproduct"
                         android:id="@+id/prlProdNameSpinner"/>
@@ -39,6 +39,19 @@
                     android:inputType="number"
                     android:text="@{prLine.QtyRequestedString}"
                     />
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/mvl_label_uom"
+                        />
+                    <TextView
+                        style="@style/TableValue"
+                        android:text="@string/title_selectproduct"
+                        android:id="@+id/uom">
+                    </TextView>
                 </LinearLayout>
             </TableRow>
             <TableRow>

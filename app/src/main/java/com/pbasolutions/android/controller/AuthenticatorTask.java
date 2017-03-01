@@ -321,12 +321,13 @@ public class AuthenticatorTask extends Task {
 
     private Bundle submitRole() {
         PBSIServerAuthenticate sServerAuthenticate = new PBSServerAuthenticate();
-        boolean status = sServerAuthenticate.submitRole(
+        PBSLoginJSON status = sServerAuthenticate.submitRole(
                 input.getString(PBSAuthenticatorController.ROLE_ARG),
                 input.getString(PBSAuthenticatorController.ORG_ARG),
                 input.getString(PBSAuthenticatorController.CLIENT_ARG),
                 input.getString(PBSAuthenticatorController.SERVER_URL_ARG));
-        if (status) {
+        if (status != null && status.getSuccess().equals("TRUE")) {
+            PandoraHelper.populateMenuForms(status.getForms());
             output.putBoolean(PBSServerConst.RESULT, true);
         } else {
             output.putBoolean(PBSServerConst.RESULT, false);
@@ -444,26 +445,7 @@ public class AuthenticatorTask extends Task {
                     PBSServerConst.instantiateCookie();
                 }
                 if (user.getSuccess().equals("TRUE")) {
-                    if (user.getForms().length > 0) {
-                        //sorting menu items
-                        ArrayList<String> oriMenuList = new ArrayList<String>(Arrays.asList(user.getForms()));
-                        ArrayList<String> tmpMenuList = new ArrayList<String>();
-                        String name = "";
-                        String[] MENU_LIST = PandoraMain.instance.MENU_LIST;
-                        for (int i = 0; i < MENU_LIST.length && oriMenuList.size() > 0; i++) {
-                            for (int j = 0; j < oriMenuList.size(); j++) {
-                                name = oriMenuList.get(j).substring("MOB_".length());
-                                if (name.contains(MENU_LIST[i])) {
-                                    tmpMenuList.add(name);
-                                    oriMenuList.remove(j);
-                                    break;
-                                }
-                            }
-                        }
-                        Object[] objectList = tmpMenuList.toArray();
-                        PandoraMain.instance.menuList = Arrays.copyOf(objectList, objectList.length, String[].class);
-                    }
-                    else PandoraMain.instance.menuList = null;
+//                    PandoraHelper.populateMenuForms(user.getForms());
                     Account arrayAccounts[] = getAccounts(accType);
                     //if account already created.
                     if (arrayAccounts.length > 0) {
@@ -514,7 +496,8 @@ public class AuthenticatorTask extends Task {
                     output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
                     output.putString(PandoraConstant.ERROR, "Invalid username and password." +
                             " Please re-enter.");
-                }}
+                }
+            }
 
             return  output;
         } catch (Exception e) {

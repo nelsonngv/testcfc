@@ -38,6 +38,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
     public static final String GET_REQUISITIONLINES_EVENT = "GET_REQUISITIONLINES_EVENT";
     public static final String ARG_PURCHASEREQUESTLINE_LIST = "ARG_PURCHASEREQUESTLINE_LIST";
     public static final String GET_PRODUCT_LIST_EVENT = "GET_PRODUCT_LIST_EVENT";
+    public static final String GET_PRODUCT_LIST_WITH_VALUE_EVENT = "GET_PRODUCT_LIST_WITH_VALUE_EVENT";
     public static final String ARG_PRODUCT_LIST = "ARG_PRODUCT_LIST";
     public static final String ARG_PURCHASEREQUESTLINE_UUID = "ARG_PURCHASEREQUESTLINE_UUID";
     public static final String ARG_PURCHASEREQUESTLINE = "ARG_PURCHASEREQUESTLINE";

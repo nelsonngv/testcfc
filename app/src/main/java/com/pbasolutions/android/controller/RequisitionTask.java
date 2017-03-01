@@ -12,6 +12,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.util.Pair;
 
+import com.google.gson.Gson;
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
@@ -67,7 +68,8 @@ public class RequisitionTask implements Callable<Bundle> {
                 return getRequisition();
             }
             case PBSRequisitionController.GET_PRODUCT_LIST_EVENT: {
-                return getProductList();
+//                return getProductList();
+                return getProductListWithValue();
             }
             case PBSRequisitionController.GET_REQUISITIONLINES_EVENT: {
                 return getRequisitionLines();
@@ -299,6 +301,55 @@ public class RequisitionTask implements Callable<Bundle> {
             cursor.moveToFirst();
             do {
                 productList.add(getProduct(cursor));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        output.putParcelableArrayList(PBSRequisitionController.ARG_PRODUCT_LIST, productList);
+        return output;
+    }
+
+    private Bundle getProductListWithValue() {
+        String projection[] = {MProduct.M_PRODUCT_UUID_COL, MProduct.NAME_COL, MProduct.VALUE_COL};
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.M_PRODUCT_TABLE), projection, null, null, null);
+
+        //get the purchase request list.
+        ArrayList<SpinnerPair> productList = new ArrayList<>();
+        if (cursor != null && cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            SpinnerPair pair = new SpinnerPair();
+            ArrayList<String> list = new ArrayList();
+            Gson gson = new Gson();
+            do {
+                for (int x = 0; x < cursor.getColumnNames().length; x++) {
+                    String columnName = cursor.getColumnName(x);
+                    String rowValue = cursor.getString(x);
+                    if (MProduct.M_PRODUCT_UUID_COL
+                            .equalsIgnoreCase(columnName)) {
+                        pair.setKey(rowValue);
+                    } else if (MProduct.NAME_COL.equalsIgnoreCase(columnName) ||
+                            MProduct.VALUE_COL.equalsIgnoreCase(columnName)) {
+                        if (MProduct.NAME_COL
+                                .equalsIgnoreCase(columnName)) {
+                            //check wether the product value contains /"
+                            String parsedEscape = PandoraHelper.parseEscapedChar(rowValue);
+                            if (parsedEscape != null)
+                                list.add(rowValue);
+                            else
+                                list.add(rowValue);
+                        } else if (MProduct.VALUE_COL
+                                .equalsIgnoreCase(columnName)) {
+                            list.add(rowValue);
+                        }
+                        if (list.size() == 2) {
+                            pair.setValue(gson.toJson(list));
+                            list = new ArrayList();
+                            if (!cursor.isLast())
+                                pair = new SpinnerPair();
+                        }
+                    }
+                }
+                if (!cursor.isLast())
+                    productList.add(pair);
             } while (cursor.moveToNext());
         }
         cursor.close();

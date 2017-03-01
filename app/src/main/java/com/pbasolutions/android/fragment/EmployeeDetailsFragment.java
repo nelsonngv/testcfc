@@ -38,8 +38,8 @@ public class EmployeeDetailsFragment extends PBSDetailsFragment {
         inputBundle.putSerializable(recCont.EMPLOYEE_LIST, modelList);
         Bundle resultBundle = new Bundle();
         resultBundle = recCont.triggerEvent(recCont.GET_EMPLOYEE_EVENT, inputBundle, resultBundle, null);
-        final MEmployee employee= (MEmployee)resultBundle.getSerializable(recCont.ARG_EMPLOYEE);
-        binding =  EmployeeDetailsBinding.bind(rootView);
+        final MEmployee employee = (MEmployee) resultBundle.getSerializable(recCont.ARG_EMPLOYEE);
+        binding = EmployeeDetailsBinding.bind(rootView);
         binding.setEmployee(employee);
         return rootView;
     }

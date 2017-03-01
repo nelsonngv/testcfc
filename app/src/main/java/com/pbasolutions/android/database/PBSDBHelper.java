@@ -1152,41 +1152,41 @@ public class PBSDBHelper extends SQLiteOpenHelper {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             if (oldVersion < DATABASE_VERSION) {
                     try {
-                    db.execSQL("insert into m_checkin(m_checkin_id, ad_org_uuid, ad_client_uuid," +
-                            "ad_user_uuid,created, createdby, updated, updatedby, isactive, " +
-                            "isupdated, issynced, isdeleted, m_checkin_uuid,  m_checkpoint_uuid," +
-                            " datetrx, latitude, longitude, description, attachment_tourpicture)" +
-                            " values ('333331','300','400','500', datetime('now','-8 days'),'500', " +
-                            "datetime('now','-8 days'),'500','Y','Y','Y','N','444441'," +
-                            "'e7dfd4b9-4937-4751-9860-ff8df204ff3c', datetime('now','-8 days'), " +
-                            "'000.000', '000000','loitering around', 'null');");
-
-                            db.execSQL("insert into m_checkin(m_checkin_id, ad_org_uuid, ad_client_uuid," +
-                                    "ad_user_uuid,created, createdby, updated, updatedby, isactive, " +
-                                    "isupdated, issynced, isdeleted, m_checkin_uuid,  m_checkpoint_uuid," +
-                                    " datetrx, latitude, longitude, description, attachment_tourpicture)" +
-                                    " values ('333332','300','400','500', datetime('now'),'500', " +
-                                    "datetime('now'),'500','Y','Y','Y','N','444442'," +
-                                    "'e7dfd4b9-4937-4751-9860-ff8df204ff3c', datetime('now'), " +
-                                    "'000.000', '000000','loitering around', 'null');");
-
-                            db.execSQL("insert into m_checkin(m_checkin_id, ad_org_uuid, ad_client_uuid," +
-                                    "ad_user_uuid,created, createdby, updated, updatedby, isactive, " +
-                                    "isupdated, issynced, isdeleted, m_checkin_uuid,  m_checkpoint_uuid," +
-                                    " datetrx, latitude, longitude, description, attachment_tourpicture)" +
-                                    " values ('333333','300','400','500', datetime('now'),'500', " +
-                                    "datetime('now'),'500','Y','Y','Y','N','444443'," +
-                                    "'e7dfd4b9-4937-4751-9860-ff8df204ff3c', datetime('now'), " +
-                                    "'000.000', '000000','loitering around', 'null');");
-
-                            db.execSQL("insert into m_checkin(m_checkin_id, ad_org_uuid, ad_client_uuid," +
-                                    "ad_user_uuid,created, createdby, updated, updatedby, isactive, " +
-                                    "isupdated, issynced, isdeleted, m_checkin_uuid,  m_checkpoint_uuid," +
-                                    " datetrx, latitude, longitude, description, attachment_tourpicture)" +
-                                    " values ('333337','300','400','500', datetime('now','-8 days'),'500', " +
-                                    "datetime('now','-8 days'),'500','Y','Y','Y','N','444447'," +
-                                    "'e7dfd4b9-4937-4751-9860-ff8df204ff3c', datetime('now','-8 days'), " +
-                                    "'000.000', '000000','loitering around', 'null');");
+//                    db.execSQL("insert into m_checkin(m_checkin_id, ad_org_uuid, ad_client_uuid," +
+//                            "ad_user_uuid,created, createdby, updated, updatedby, isactive, " +
+//                            "isupdated, issynced, isdeleted, m_checkin_uuid,  m_checkpoint_uuid," +
+//                            " datetrx, latitude, longitude, description, attachment_tourpicture)" +
+//                            " values ('333331','300','400','500', datetime('now','-8 days'),'500', " +
+//                            "datetime('now','-8 days'),'500','Y','Y','Y','N','444441'," +
+//                            "'e7dfd4b9-4937-4751-9860-ff8df204ff3c', datetime('now','-8 days'), " +
+//                            "'000.000', '000000','loitering around', 'null');");
+//
+//                            db.execSQL("insert into m_checkin(m_checkin_id, ad_org_uuid, ad_client_uuid," +
+//                                    "ad_user_uuid,created, createdby, updated, updatedby, isactive, " +
+//                                    "isupdated, issynced, isdeleted, m_checkin_uuid,  m_checkpoint_uuid," +
+//                                    " datetrx, latitude, longitude, description, attachment_tourpicture)" +
+//                                    " values ('333332','300','400','500', datetime('now'),'500', " +
+//                                    "datetime('now'),'500','Y','Y','Y','N','444442'," +
+//                                    "'e7dfd4b9-4937-4751-9860-ff8df204ff3c', datetime('now'), " +
+//                                    "'000.000', '000000','loitering around', 'null');");
+//
+//                            db.execSQL("insert into m_checkin(m_checkin_id, ad_org_uuid, ad_client_uuid," +
+//                                    "ad_user_uuid,created, createdby, updated, updatedby, isactive, " +
+//                                    "isupdated, issynced, isdeleted, m_checkin_uuid,  m_checkpoint_uuid," +
+//                                    " datetrx, latitude, longitude, description, attachment_tourpicture)" +
+//                                    " values ('333333','300','400','500', datetime('now'),'500', " +
+//                                    "datetime('now'),'500','Y','Y','Y','N','444443'," +
+//                                    "'e7dfd4b9-4937-4751-9860-ff8df204ff3c', datetime('now'), " +
+//                                    "'000.000', '000000','loitering around', 'null');");
+//
+//                            db.execSQL("insert into m_checkin(m_checkin_id, ad_org_uuid, ad_client_uuid," +
+//                                    "ad_user_uuid,created, createdby, updated, updatedby, isactive, " +
+//                                    "isupdated, issynced, isdeleted, m_checkin_uuid,  m_checkpoint_uuid," +
+//                                    " datetrx, latitude, longitude, description, attachment_tourpicture)" +
+//                                    " values ('333337','300','400','500', datetime('now','-8 days'),'500', " +
+//                                    "datetime('now','-8 days'),'500','Y','Y','Y','N','444447'," +
+//                                    "'e7dfd4b9-4937-4751-9860-ff8df204ff3c', datetime('now','-8 days'), " +
+//                                    "'000.000', '000000','loitering around', 'null');");
                     } catch (SQLException e) {
                             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE
                                     + e.getMessage());

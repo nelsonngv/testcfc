@@ -14,10 +14,10 @@ import android.content.OperationApplicationException;
 import android.content.SyncInfo;
 import android.databinding.ObservableArrayList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.annotation.DimenRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -25,13 +25,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -44,25 +45,32 @@ import com.google.gson.JsonParser;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.adapter.SpinAdapter;
 import com.pbasolutions.android.adapter.SpinnerPair;
+import com.pbasolutions.android.control.SearchableSpinnerForRequisition;
+import com.pbasolutions.android.control.SimpleAdapter;
 import com.pbasolutions.android.controller.PBSAssetController;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
 import com.pbasolutions.android.fragment.PBSDetailsFragment;
-import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
 import com.pbasolutions.android.json.PBSJson;
 import com.pbasolutions.android.json.PBSProjLocJSON;
 import com.pbasolutions.android.json.PBSRoleJSON;
 import com.pbasolutions.android.listener.FragmentListOnItemClickListener;
 import com.pbasolutions.android.listener.RecyclerItemClickListener;
 import com.pbasolutions.android.model.IModel;
-import com.pbasolutions.android.model.MPurchaseRequest;
+import com.pbasolutions.android.model.MProduct;
 import com.pbasolutions.android.model.ModelConst;
+
+import org.json.JSONArray;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -280,6 +288,36 @@ public class PandoraHelper  {
         return adapter;
     }
 
+    public static ArrayAdapter addTwoItemListToSpinner(Activity activity, SearchableSpinnerForRequisition spinner, List<SpinnerPair> productList) {
+        List<Map<String, String>> prodList = new ArrayList<>();
+        HashMap temp;
+        for (int i = 0; i < productList.size(); i++) {
+            SpinnerPair sp = productList.get(i);
+            temp = new HashMap<>(2);
+            try {
+                JSONArray jsonArray = new JSONArray(sp.getValue());
+                temp.put(MProduct.NAME_COL, jsonArray.get(0).toString());
+                temp.put(MProduct.VALUE_COL, jsonArray.get(1).toString());
+                prodList.add(temp);
+                productList.get(i).value = jsonArray.get(0).toString();
+            } catch (Exception e) {
+                Log.e("PandoraHelper", Log.getStackTraceString(e));
+            }
+        }
+
+        ArrayAdapter adapter;
+        if (productList == null) {
+            adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item);
+        } else {
+            adapter = new SpinAdapter(activity, android.R.layout.simple_spinner_item, productList);
+        }
+
+        SimpleAdapter simpleAdapter = new SimpleAdapter(activity, prodList, android.R.layout.simple_list_item_2,
+                new String[] {MProduct.NAME_COL, MProduct.VALUE_COL}, new int[] {android.R.id.text1, android.R.id.text2});
+        spinner.setAdapter(simpleAdapter);
+        return adapter;
+    }
+
     /**
      *
      * @param date
@@ -289,6 +327,14 @@ public class PandoraHelper  {
     }
     public static void promptDatePicker(final TextView date, Activity activity, boolean hasMaxDate) {
         final Calendar c = Calendar.getInstance();
+        if (date != null && date.getText() != null && !date.getText().toString().isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            try {
+                c.setTime(sdf.parse(date.getText().toString()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         int  mYear = c.get(Calendar.YEAR);
         int  mMonth = c.get(Calendar.MONTH);
         int  mDay = c.get(Calendar.DAY_OF_MONTH);
@@ -305,7 +351,7 @@ public class PandoraHelper  {
                     }
                 }, mYear, mMonth, mDay);
         if (hasMaxDate)
-            dpd.getDatePicker().setMaxDate(c.getTimeInMillis());
+            dpd.getDatePicker().setMaxDate(Calendar.getInstance().getTimeInMillis());
         dpd.show();
     }
 
@@ -318,6 +364,14 @@ public class PandoraHelper  {
     }
     public static void promptFutureDatePicker(final TextView date, Activity activity, boolean hasMinDate) {
         final Calendar c = Calendar.getInstance();
+        if (date != null && date.getText() != null && !date.getText().toString().isEmpty()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            try {
+                c.setTime(sdf.parse(date.getText().toString()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         int  mYear = c.get(Calendar.YEAR);
         int  mMonth = c.get(Calendar.MONTH);
         int  mDay = c.get(Calendar.DAY_OF_MONTH);
@@ -334,7 +388,7 @@ public class PandoraHelper  {
                     }
                 }, mYear, mMonth, mDay);
         if (hasMinDate)
-            dpd.getDatePicker().setMinDate(c.getTimeInMillis());
+            dpd.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
         dpd.show();
     }
 
@@ -798,5 +852,39 @@ public class PandoraHelper  {
             InputMethodManager inputMethodManager = (InputMethodManager) PandoraMain.instance.getSystemService(PandoraMain.instance.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(PandoraMain.instance.getCurrentFocus().getWindowToken(), 0);
         }
+    }
+
+    public static void populateMenuForms(String[] forms) {
+        if (forms != null && forms.length > 0) {
+            //sorting menu items
+            ArrayList<String> oriMenuList = new ArrayList<>(Arrays.asList(forms));
+            ArrayList<String> tmpMenuList = new ArrayList<>();
+            String name;
+            String[] MENU_LIST = PandoraMain.instance.MENU_LIST;
+            for (int i = 0; i < MENU_LIST.length && oriMenuList.size() > 0; i++) {
+                for (int j = 0; j < oriMenuList.size(); j++) {
+                    name = oriMenuList.get(j).substring("MOB_".length());
+                    if (name.contains(MENU_LIST[i])) {
+                        tmpMenuList.add(name);
+                        oriMenuList.remove(j);
+                        break;
+                    }
+                }
+            }
+            Object[] objectList = tmpMenuList.toArray();
+            PandoraMain.instance.menuList = Arrays.copyOf(objectList, objectList.length, String[].class);
+        } else PandoraMain.instance.menuList = null;
+        PandoraMain.instance.runOnUiThread(new Runnable() {
+            public void run() {
+                PandoraMain.instance.updateDrawer();
+            }
+        });
+    }
+
+    public static void setAsterisk(TextView tv) {
+        String asterisk = " *";
+        SpannableString ss = new SpannableString(tv.getText() + asterisk);
+        ss.setSpan(new ForegroundColorSpan(Color.RED), tv.getText().length(), tv.getText().length()+2, 0);
+        tv.setText(ss);
     }
 }

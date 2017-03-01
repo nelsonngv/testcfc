@@ -55,6 +55,7 @@ public abstract class AbstractMovementLineFragment extends PBSDetailsFragment{
 
     protected TextView uom;
     protected EditText movementQty;
+    protected TextView textViewMovementQty;
 
     protected View rootView ;
 
@@ -129,8 +130,9 @@ public abstract class AbstractMovementLineFragment extends PBSDetailsFragment{
         asi = (Spinner) view.findViewById(R.id.asi);
         uom = (TextView) view.findViewById(R.id.uom);
         movementQty = (EditText) view.findViewById(R.id.movementQty);
-
         qtyOnHand = (TextView) view.findViewById(R.id.qtyOnHand);
+        textViewMovementQty = (TextView) view.findViewById(R.id.textViewMovementQty);
+        PandoraHelper.setAsterisk(textViewMovementQty);
     }
 
     protected abstract List<SpinnerPair> getAsi();

@@ -120,7 +120,7 @@ public class PBSServerAuthenticate extends PBSServer implements PBSIServerAuthen
     }
 
     @Override
-    public boolean submitRole(final String roleID, final String orgID, final String clientID, final String serverURL) {
+    public PBSLoginJSON submitRole(final String roleID, final String orgID, final String clientID, final String serverURL) {
         //  http://server:port/API/Auth.jsp?action=SetRoleOrg&role=1000001&org=1000000
         String url = getURL(serverURL, PBSServerConst.PATH, PBSServerConst.AUTH_JSP);
         String query = null;
@@ -133,19 +133,20 @@ public class PBSServerAuthenticate extends PBSServer implements PBSIServerAuthen
         }
         url += query;
         //String url = serverURL + "/wstore/Auth.jsp?action=Login&username=" + username + "&token=" + token + "&serial=" + serial;
-        PBSResultJSON resultJSON;
-        boolean result;
-        resultJSON = (PBSResultJSON)callServer(url, PBSResultJSON.class.getName());
-        if (resultJSON != null){
-            if (resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT)) {
-                result = false;
-            } else {
-                result = true;
-            }
-        } else {
-            result = false;
-        }
+        PBSLoginJSON resultJSON;
+//        boolean result;
+        resultJSON = (PBSLoginJSON) callServer(url, PBSLoginJSON.class.getName());
+//        resultJSON = (PBSResultJSON) callServer(url, PBSResultJSON.class.getName());
+//        if (resultJSON != null){
+//            if (resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT)) {
+//                result = false;
+//            } else {
+//                result = true;
+//            }
+//        } else {
+//            result = false;
+//        }
 
-        return result;
+        return resultJSON;
     }
 }

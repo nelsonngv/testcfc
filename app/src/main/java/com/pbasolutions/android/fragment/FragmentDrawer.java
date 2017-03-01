@@ -36,6 +36,7 @@ public class FragmentDrawer extends Fragment {
     public static String[] titles = null;
     private TextView usernameTextView;
     private FragmentDrawerListener drawerListener;
+    private static final String[] EMPTY_ARRAY = new String[0];
 
     /**
      *
@@ -71,9 +72,14 @@ public class FragmentDrawer extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (PandoraMain.instance != null) {
+            if (PandoraMain.instance.menuList == null)
+                titles = EMPTY_ARRAY;
+            else titles = PandoraMain.instance.menuList;
+        }
+        else titles = EMPTY_ARRAY;
         // drawer labels
-        titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
+//        titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
     }
 
     @Override
@@ -224,9 +230,15 @@ public class FragmentDrawer extends Fragment {
     }
 
     public void updateDrawer() {
-        if (PandoraMain.instance == null || PandoraMain.instance.menuList == null || PandoraMain.instance.menuList.length == 0)
-            titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
-        else titles = PandoraMain.instance.menuList;
+        if (PandoraMain.instance != null) {
+//            if (PandoraMain.instance == null || PandoraMain.instance.menuList == null || PandoraMain.instance.menuList.length == 0)
+//                titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
+//            else titles = PandoraMain.instance.menuList;
+            if (PandoraMain.instance.menuList == null)
+                titles = EMPTY_ARRAY;
+            else titles = PandoraMain.instance.menuList;
+        }
+        else titles = EMPTY_ARRAY;
         adapter = new MenuDrawerRVA(getActivity(), getData());
         recyclerView.setAdapter(adapter);
     }

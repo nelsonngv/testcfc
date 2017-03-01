@@ -33,6 +33,7 @@ public class MEmployee extends PBSJson{
     private String Status;
     private String _ID;
     private String defaultProjLoc;
+    private String shiftName;
 
     private boolean isEditable;
 
@@ -146,4 +147,12 @@ public class MEmployee extends PBSJson{
     public String getDefaultProjLoc() { return defaultProjLoc; }
 
     public void setDefaultProjLoc(String defaultProjLoc) { this.defaultProjLoc = defaultProjLoc; }
+
+    public String getShiftName() {
+        return shiftName;
+    }
+
+    public void setShiftName(String shiftName) {
+        this.shiftName = shiftName;
+    }
 }

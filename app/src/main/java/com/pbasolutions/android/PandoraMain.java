@@ -256,7 +256,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
         setSupportActionBar(mToolbar);
         setDrawerFragment();
-        displayView(FRAGMENT_ATTENDANCE, true);
+        displayView(FRAGMENT_ACCOUNT, true);
         checkLogin(false);
         //on add or remove back stack always update the fragment titles.
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
@@ -722,16 +722,18 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             }
         }
 
-        if (PandoraMain.instance != null && PandoraMain.instance.menuList != null && PandoraMain.instance.menuList.length > 0 && position < MENU_LIST.length) {
+        if (position < MENU_LIST.length) {
             drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(
                     R.id.fragment_navigation_drawer);
             String[] titlesList = drawerFragment.titles;
-            for (int i = 0; i < MENU_LIST.length; i++) {
-                if (titlesList[position].contains(MENU_LIST[i])) {
-                    position = i;
-                    break;
+            if (titlesList.length > 0)
+                for (int i = 0; i < MENU_LIST.length; i++) {
+                    if (titlesList[position].contains(MENU_LIST[i])) {
+                        position = i;
+                        break;
+                    }
                 }
-            }
+            else position = FRAGMENT_ACCOUNT;
         }
 
         String title = getString(R.string.app_name);

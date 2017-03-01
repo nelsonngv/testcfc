@@ -168,7 +168,8 @@ public class AttendanceTask implements Callable<Bundle> {
 
         JsonObject object = new JsonObject();
         object.addProperty(MAttendance.C_PROJECTLOCATION_ID_COL, attendance.getC_ProjectLocation_ID());
-        object.addProperty(MAttendance.DEPLOYMENT_DATE_COL,     attendance.getDeploymentDate());
+        object.addProperty(MAttendance.DEPLOYMENT_DATE_FROM_COL, attendance.getDeploymentDateFrom());
+        object.addProperty(MAttendance.DEPLOYMENT_DATE_TO_COL, attendance.getDeploymentDateTo());
         object.addProperty(MAttendance.HR_SHIFT_ID_COL, attendance.getHR_Shift_ID());
 
         PBSIServerAPI serverAPI = new PBSServerAPI();
@@ -332,7 +333,7 @@ public class AttendanceTask implements Callable<Bundle> {
                 MAttendanceLine.C_BPARTNER_UUID_COL,
                 ModelConst.M_ATTENDANCELINE_TABLE,
                 ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_PROJECTLOCATION_UUID_COL,
-                ModelConst.HR_SHIFT_UUID_COL
+                ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.HR_SHIFT_UUID_COL
                 );
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TABLE),
                 projection, wherePhase, selectionArg, "LOWER(" + cbpartner + ModelConst.NAME_COL + ") ASC");

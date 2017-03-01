@@ -188,7 +188,7 @@ public class RoleFragment extends Fragment {
                     PandoraHelper.setAutoSync(getActivity(), context.getGlobalVariable().getAd_user_name(),
                             PBSAccountInfo.ACCOUNT_TYPE);
                     //todo . set flag as already sent role to server.
-                    context.displayView(PandoraMain.FRAGMENT_ATTENDANCE, false);
+                    context.displayView(0, false);
                 } else {
                     PandoraHelper.showMessage(context, result.getString(
                                     result.getString(PandoraConstant.TITLE)));

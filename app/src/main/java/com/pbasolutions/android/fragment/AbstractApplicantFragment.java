@@ -150,13 +150,13 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
         textViewApplDate = (TextView)rootView.findViewById(R.id.textViewApplDate);
         textViewApplNumOfExp = (TextView)rootView.findViewById(R.id.textViewApplNumOfExp);
         textViewApplExpSal = (TextView)rootView.findViewById(R.id.textViewApplExpSal);
-        setAsterisk(textViewEmpName);
-        setAsterisk(textViewEmpIDNumber);
-        setAsterisk(textViewEmpPhone);
-        setAsterisk(textViewApplAge);
-        setAsterisk(textViewApplDate);
-        setAsterisk(textViewApplNumOfExp);
-        setAsterisk(textViewApplExpSal);
+        PandoraHelper.setAsterisk(textViewEmpName);
+        PandoraHelper.setAsterisk(textViewEmpIDNumber);
+        PandoraHelper.setAsterisk(textViewEmpPhone);
+        PandoraHelper.setAsterisk(textViewApplAge);
+        PandoraHelper.setAsterisk(textViewApplDate);
+        PandoraHelper.setAsterisk(textViewApplNumOfExp);
+        PandoraHelper.setAsterisk(textViewApplExpSal);
 
         date = (TextView)rootView.findViewById(R.id.editTextApplDate);
         genderSpinner = (Spinner) rootView.findViewById(R.id.genderSpinner);
@@ -500,12 +500,5 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
             }
             default:return false;
         }
-    }
-
-    private void setAsterisk(TextView tv) {
-        String asterisk = " *";
-        SpannableString ss = new SpannableString(tv.getText() + asterisk);
-        ss.setSpan(new ForegroundColorSpan(Color.RED), tv.getText().length(), tv.getText().length()+2, 0);
-        tv.setText(ss);
     }
 }

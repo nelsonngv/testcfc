@@ -50,5 +50,5 @@ public interface PBSIServerAuthenticate {
      * @param serverURL
      * @return
      */
-    public boolean submitRole(final String roleID, final String orgID, final String clientID, final String serverURL);
+    public PBSLoginJSON submitRole(final String roleID, final String orgID, final String clientID, final String serverURL);
 }

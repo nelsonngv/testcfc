@@ -14,8 +14,12 @@ public class MAttendance extends PBSJson {
     public static final String HR_SHIFT_ID_COL = "HR_Shift_ID";
     public static final String HR_SHIFT_UUID_COL = "HR_Shift_UUID";
     public static final String DEPLOYMENT_DATE_COL = "DeploymentDate";
+    public static final String DEPLOYMENT_DATE_FROM_COL = "DeploymentDateFrom";
+    public static final String DEPLOYMENT_DATE_TO_COL = "DeploymentDateTo";
 
     private String DeploymentDate;
+    private String DeploymentDateFrom;
+    private String DeploymentDateTo;
     private String M_Attendance_ID;
     private String M_Attendance_UUID;
     private int C_ProjectLocation_ID;
@@ -107,5 +111,21 @@ public class MAttendance extends PBSJson {
 
     public void setHrShiftName(String hrShiftName) {
         this.hrShiftName = hrShiftName;
+    }
+
+    public String getDeploymentDateFrom() {
+        return DeploymentDateFrom;
+    }
+
+    public void setDeploymentDateFrom(String deploymentDateFrom) {
+        DeploymentDateFrom = deploymentDateFrom;
+    }
+
+    public String getDeploymentDateTo() {
+        return DeploymentDateTo;
+    }
+
+    public void setDeploymentDateTo(String deploymentDateTo) {
+        DeploymentDateTo = deploymentDateTo;
     }
 }

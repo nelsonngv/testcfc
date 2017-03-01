@@ -439,7 +439,7 @@ public class ProjectTask implements Callable<Bundle> {
         String selection = ModelConst.C_PROJECTLOCATION_UUID_COL + "=? OR ASSIGNEDTO=?";
         String[] selectionArgs = {input.getString(PBSTaskController.ARG_PROJLOC_UUID), input.getString(PBSTaskController.ARG_AD_USER_ID)};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE),
-                projection, selection, selectionArgs, MProjectTask.PRIORITY_COL + " ASC");
+                projection, selection, selectionArgs, MProjectTask.ISDONE_COL + " ASC, " + MProjectTask.PRIORITY_COL + " ASC");
         ObservableArrayList<MProjectTask> projectTaskList = new ObservableArrayList();
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();

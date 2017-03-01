@@ -92,6 +92,7 @@
             <TableRow>
                 <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
+                    android:id="@+id/textViewMovementQty"
                     style="@style/TableInfoLabel"
                     android:editable="false"
                     android:text="@string/label_movementqty"
