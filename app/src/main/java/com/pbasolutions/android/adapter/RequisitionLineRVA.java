@@ -31,7 +31,7 @@ public class RequisitionLineRVA extends RecyclerView.Adapter<RequisitionLineRVA.
     private ObservableArrayList<MPurchaseRequestLine> reqLineList;
     private LayoutInflater inflater;
 
-    public RequisitionLineRVA(Context mContext, ObservableArrayList<MPurchaseRequestLine> reqLineList, LayoutInflater inflater) {
+    public RequisitionLineRVA(Context mContext, ObservableArrayList<MPurchaseRequestLine> reqLineList) {
         this.mContext = mContext;
         this.reqLineList = reqLineList;
         this.inflater = LayoutInflater.from(mContext);

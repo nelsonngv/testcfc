@@ -59,7 +59,7 @@ public class RequisitionDetailFragment extends PBSDetailsFragment {
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.requisitionline_rv);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             purchaseRequestLineList = getRequisitionLines();
-            RequisitionLineRVA viewAdapter = new RequisitionLineRVA(getActivity(),purchaseRequestLineList, inflater);
+            RequisitionLineRVA viewAdapter = new RequisitionLineRVA(getActivity(),purchaseRequestLineList);
             recyclerView.setAdapter(viewAdapter);
 
 

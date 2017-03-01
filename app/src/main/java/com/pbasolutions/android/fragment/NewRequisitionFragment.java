@@ -102,10 +102,6 @@ public class NewRequisitionFragment extends Fragment {
         populatePRLines();
         setValues();
         addListener();
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.requisitionline_rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        viewAdapter = new RequisitionLineRVA(getActivity(),lines, inflater);
-        recyclerView.setAdapter(viewAdapter);
         return rootView;
     }
 
@@ -117,6 +113,9 @@ public class NewRequisitionFragment extends Fragment {
                     input, new Bundle(), null);
             lines = (ObservableArrayList<MPurchaseRequestLine>)result
                     .getSerializable(reqCont.ARG_PURCHASEREQUESTLINE_LIST);
+            recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+            viewAdapter = new RequisitionLineRVA(getActivity(), lines);
+            recyclerView.setAdapter(viewAdapter);
 //            if (pr != null && lines != null)
 //                pr.setLines(lines.toArray(new MPurchaseRequestLine[lines.size()]));
         }
@@ -140,6 +139,7 @@ public class NewRequisitionFragment extends Fragment {
 //        addButton = (ImageButton)view.findViewById(R.id.addPrLine);
 //        removeButton = (ImageButton) view.findViewById(R.id.removePrLine);
         requestButton = (Button) view.findViewById(R.id.prRequest);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.requisitionline_rv);
     }
 
     private void setValues() {
@@ -395,6 +395,7 @@ public class NewRequisitionFragment extends Fragment {
                     ft.detach(NewRequisitionFragment.this).attach(NewRequisitionFragment.this).commit();
                 }
                 ((PandoraMain)getActivity()).dismissProgressDialog();
+                populatePRLines();
             }
         }.execute();
     }
