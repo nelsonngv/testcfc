@@ -150,6 +150,8 @@
                 <EditText
                     android:id="@+id/editTextQualHi"
                     style="@style/TableValue"
+                    android:maxLines="1"
+                    android:inputType="text"
                     />
                 </LinearLayout>
             </TableRow>
@@ -163,6 +165,8 @@
                 <EditText
                     android:id="@+id/editTextQualOther"
                     style="@style/TableValue"
+                    android:maxLines="1"
+                    android:inputType="text"
                     />
                 </LinearLayout>
             </TableRow>

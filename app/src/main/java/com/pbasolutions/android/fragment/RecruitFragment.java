@@ -51,7 +51,7 @@ public class RecruitFragment extends Fragment {
                 || context.getC_projectlocation_uuid().isEmpty()) {
             PandoraHelper.getProjLocAvailable(getActivity(), true);
         }
-        syncListener();
+//        syncListener();
     }
 
     private void syncListener() {
@@ -145,12 +145,12 @@ public class RecruitFragment extends Fragment {
         super.onResume();
 
         // Refresh synchronization status
-        observer.onStatusChanged(0);
+//        observer.onStatusChanged(0);
 
         // Watch for synchronization status changes
-        final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING |
-                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
-        syncHandle = ContentResolver.addStatusChangeListener(mask, observer);
+//        final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING |
+//                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
+//        syncHandle = ContentResolver.addStatusChangeListener(mask, observer);
     }
 
     @Override

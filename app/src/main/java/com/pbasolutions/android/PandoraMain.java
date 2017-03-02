@@ -258,6 +258,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         setDrawerFragment();
         displayView(FRAGMENT_ACCOUNT, true);
         checkLogin(false);
+        ContentResolver.setMasterSyncAutomatically(true);
         //on add or remove back stack always update the fragment titles.
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
@@ -898,6 +899,27 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     public void onAccount(View view) {
         displayView(PandoraMain.FRAGMENT_ACCOUNT, false);
+        mDrawerLayout.closeDrawers();
+    }
+
+    /**
+     * On click icon_profile show account fragment.
+     *
+     * @param view
+     */
+    public void onSync(View view) {
+        Bundle extras = new Bundle();
+        Bundle input = new Bundle();
+        PBSAuthenticatorController authController = new PBSAuthenticatorController(this);
+        input.putString(authController.USER_NAME_ARG, getGlobalVariable().getAd_user_name());
+        input.putString(authController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
+        Bundle accountBundle = authController.triggerEvent(authController.GET_USER_ACCOUNT_EVENT,
+                input, new Bundle(), null);
+        if (accountBundle != null) {
+            Account acc = accountBundle.getParcelable(authController.USER_ACC_ARG);
+            ContentResolver.requestSync(acc, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
+            Toast.makeText(this, "Synced", Toast.LENGTH_SHORT).show();
+        }
         mDrawerLayout.closeDrawers();
     }
 

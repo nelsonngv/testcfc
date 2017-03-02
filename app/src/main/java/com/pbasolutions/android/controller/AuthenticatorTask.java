@@ -487,7 +487,10 @@ public class AuthenticatorTask extends Task {
                     }
                     Bundle extras = new Bundle();
                     Account userAccount = getAccount(userName, accType);
+                    ContentResolver.setIsSyncable(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, 1);
+                    ContentResolver.setSyncAutomatically(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, true);
                     ContentResolver.requestSync(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
+                    ContentResolver.addPeriodicSync(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, extras, user.getSyncInterval());
 
                     output.putSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON, user);
                     output.putBoolean(PBSServerConst.RESULT, true);

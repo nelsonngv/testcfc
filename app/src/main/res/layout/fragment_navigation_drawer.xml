@@ -17,6 +17,7 @@
             android:scaleType="fitCenter"
             android:id="@+id/login"
             android:onClick="onAccount"
+            android:layout_above="@+id/username_text"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_centerVertical="true"
@@ -29,10 +30,33 @@
             android:text="user@pandora"
             android:textColor="#FFFFFF"
             android:id="@+id/username_text"
-            android:layout_below="@+id/login"
             android:layout_alignLeft="@+id/login"
-            android:layout_alignStart="@+id/login" />
+            android:layout_alignStart="@+id/login"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp" />
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/refresh"
+            android:scaleType="fitCenter"
+            android:id="@+id/sync"
+            android:onClick="onSync"
+            android:layout_above="@+id/sync_text"
+            android:layout_marginRight="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/sync_text"
+            android:text="Sync"
+            android:textColor="#FFFFFF"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            android:layout_alignLeft="@+id/sync"
+            android:gravity="center_horizontal" />
 
     </RelativeLayout>
 

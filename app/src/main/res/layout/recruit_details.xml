@@ -19,6 +19,8 @@
                 <EditText
                     android:id="@+id/editTextEmpName"
                     style="@style/TableValue"
+                    android:maxLines="1"
+                    android:inputType="text"
                     android:text="@{employee.name}" />
             </LinearLayout>>
         </TableRow>
@@ -41,6 +43,8 @@
                 <EditText
                     android:id="@+id/editTextEmpIDNumber"
                     style="@style/TableValue"
+                    android:maxLines="1"
+                    android:inputType="text"
                     android:text="@{employee.idNumber}" />
             </LinearLayout>>
         </TableRow>
