@@ -349,14 +349,14 @@ public class NewAttendanceFragment extends Fragment {
         String deployDate = deployDateView.getText().toString();
         if (deployDate == null || deployDate.length() == 0)
         {
-            PandoraHelper.showMessage(getContext(), "Please select Deployment Date.");
+            PandoraHelper.showMessage(PandoraMain.instance, "Please select Deployment Date.");
             return false;
         }
 
         SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
         if (spinnerPair.getKey() == null)
         {
-            PandoraHelper.showMessage(getContext(), getString(
+            PandoraHelper.showMessage(PandoraMain.instance, getString(
                     R.string.no_shift_error, getString(R.string.proj_shift)));
             return false;
         }

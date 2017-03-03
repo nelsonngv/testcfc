@@ -7,7 +7,6 @@ import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.databinding.ObservableArrayList;
-import android.graphics.AvoidXfermode;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;

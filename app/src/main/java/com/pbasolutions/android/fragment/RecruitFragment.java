@@ -75,7 +75,7 @@ public class RecruitFragment extends Fragment {
                             boolean isSynchronizing =
                                     PandoraHelper.isSyncActive(acc, PBSAccountInfo.ACCOUNT_AUTHORITY);
                             if (isSynchronizing)
-                            Toast.makeText( getContext(), "Syncing data",
+                            Toast.makeText(PandoraMain.instance, "Syncing data",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
