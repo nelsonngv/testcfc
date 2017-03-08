@@ -20,10 +20,10 @@ android {
     buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.pbasolutions.android.syncAdapter"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 21
-        versionCode 1
-        versionName "2.0.1"
+        versionCode 3
+        versionName "2.0.3"
     }
     buildTypes {
         release {

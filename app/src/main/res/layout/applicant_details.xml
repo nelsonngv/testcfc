@@ -179,6 +179,7 @@
 
                     <EditText
                         android:id="@+id/editTextInterviewerNotes"
+                        android:inputType="textCapSentences"
                         style="@style/TableValue"
                         />
                 </LinearLayout>

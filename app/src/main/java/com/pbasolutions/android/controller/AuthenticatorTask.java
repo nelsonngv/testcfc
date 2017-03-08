@@ -7,7 +7,7 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,21 +15,25 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
+import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
+import com.pbasolutions.android.R;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.authentication.PBSIServerAuthenticate;
 import com.pbasolutions.android.authentication.PBSServerAuthenticate;
 import com.pbasolutions.android.json.PBSLoginJSON;
+import com.pbasolutions.android.json.PBSProjLocJSON;
+import com.pbasolutions.android.json.PBSRoleJSON;
 import com.pbasolutions.android.json.PBSTableJSON;
 import com.pbasolutions.android.model.ModelConst;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 
 /**
@@ -185,16 +189,22 @@ public class AuthenticatorTask extends Task {
             for (int x = 0; x < userAccount.length; x++) {
                 names[x] = userAccount[x].name;
             }
-            AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
             builder.setTitle("Select Account")
                     .setItems(names, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             // The 'which' argument contains the index position
                             // of the selected item
-                           populateUserAccountData(userAccount[which]);
+                            populateUserAccountData(userAccount[which]);
+                            restoreGlobalVariables();
                         }
                     });
-            builder.create();
+
+            ((PandoraMain)ctx).runOnUiThread(new Runnable() {
+                public void run() {
+                    builder.create().show();
+                }
+            });
         } else if (userAccount.length == 1) {
            populateUserAccountData(userAccount[SINGLE_ACCOUNT]);
         }
@@ -355,9 +365,14 @@ public class AuthenticatorTask extends Task {
         boolean logOutResult = sServerAuthenticate.userLogOut(input.getString(
                         PBSAuthenticatorController.USER_NAME_ARG),
                 input.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
-                input.getString(PBSAuthenticatorController.SERVER_URL_ARG)
-                        + "/wstore/Auth.jsp?action=Logout");
+                input.getString(PBSAuthenticatorController.SERVER_URL_ARG));
         if (logOutResult == true) {
+            // remove account
+//            String userName = ((PandoraMain) ctx).globalVariable.getAd_user_name();
+//            String accType = PBSAccountInfo.ACCOUNT_TYPE;
+//            Account userAccount = getAccount(userName, accType);
+//            am.removeAccount(userAccount, null, null);
+
             ((PandoraMain) ctx).globalVariable = null;
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully logged out");
@@ -549,6 +564,94 @@ public class AuthenticatorTask extends Task {
                     "invalid/expired. Please re-login.");
         }
         return output;
+    }
+
+    private void restoreGlobalVariables() {
+        if(((PandoraMain)ctx).getGlobalVariable() == null)
+            ((PandoraMain)ctx).setGlobalVariable((PandoraContext) ctx.getApplicationContext());
+        PandoraContext var = ((PandoraMain)ctx).getGlobalVariable();
+        if (output.getString(PBSAuthenticatorController.USER_NAME_ARG) != null){
+            var.setAd_user_name(output.getString(PBSAuthenticatorController.USER_NAME_ARG));
+            var.setAd_user_password(
+                    output.getString(PBSAuthenticatorController.USER_PASS_ARG));
+            var.setServer_url(
+                    output.getString(PBSAuthenticatorController.SERVER_URL_ARG));
+
+            String synced = output.getString(PBSAuthenticatorController.INITIALSYNC_ARG);
+            if (synced != null)
+                var.setIsInitialSynced(Integer.parseInt(synced) != 0);
+        }
+
+        if (output.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG) != null) {
+            //   resultBundle.putString(AUTH_TOKEN_ARG, getAuthToken(userAccount[which], inputBundle.getString(ARG_AUTH_TYPE)));
+            var.setAd_user_password(
+                    output.getString(PBSAuthenticatorController.USER_PASS_ARG));
+            var.setServer_url(
+                    output.getString(PBSAuthenticatorController.SERVER_URL_ARG));
+            var.setSerial(
+                    output.getString(PBSAuthenticatorController.SERIAL_ARG));
+            var.setAuth_token(
+                    output.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG));
+            var.setAd_role_id(
+                    output.getString(PBSAuthenticatorController.ROLE_ARG));
+            var.setAd_org_id(
+                    output.getString(PBSAuthenticatorController.ORG_ARG));
+            var.setAd_client_id(
+                    output.getString(PBSAuthenticatorController.CLIENT_ARG));
+            var.setAd_user_id(
+                    output.getString(PBSAuthenticatorController.AD_USER_ARG));
+            var.setC_projectlocation_uuid(
+                    output.getString(PBSAuthenticatorController.PROJLOC_ARG));
+            var.setC_projectlocation_id(
+                    output.getString(PBSAuthenticatorController.PROJLOC_ID_ARG));
+            var.setC_projectlocation_name(
+                    output.getString(PBSAuthenticatorController.PROJLOC_NAME_ARG)
+            );
+
+            String projLoc = output.getString(PBSAuthenticatorController.PROJLOCS_ARG);
+            if(projLoc != null && !projLoc.equalsIgnoreCase("null")) {
+                PBSProjLocJSON projLocs[] = new Gson().fromJson(projLoc, PBSProjLocJSON [].class);
+                var.setProjLocJSON(projLocs);
+            }
+            //Convert the role json to string.
+            PBSRoleJSON role[] = (PBSRoleJSON[]) new Gson().fromJson(output.getString(PBSAuthenticatorController.ROLES_ARG), PBSRoleJSON[].class);
+            var.setRoleJSON(role);
+            if (output.getString(PBSAuthenticatorController.ROLE_INDEX_ARG) != null) {
+                var.setAd_role_spinner_index(Integer.parseInt(output.getString(PBSAuthenticatorController.ROLE_INDEX_ARG)));
+            }
+
+            if (output.getString(PBSAuthenticatorController.ORG_INDEX_ARG) != null) {
+                var.setAd_org_spinner_index(Integer.parseInt(output.getString(PBSAuthenticatorController.ORG_INDEX_ARG)));
+            }
+
+            if (output.getString(PBSAuthenticatorController.CLIENT_INDEX_ARG) != null) {
+                var.setAd_client_spinner_index(Integer.parseInt(output.getString(PBSAuthenticatorController.CLIENT_INDEX_ARG)));
+            }
+
+            String projLocIndex = output.getString(PBSAuthenticatorController.PROJLOC_INDEX_ARG);
+            if (projLocIndex != null)
+                var.setC_ProjectLocation_Spinner_Index(Integer.parseInt(projLocIndex));
+
+        }
+
+        ((PandoraMain)ctx).runOnUiThread(new Runnable() {
+            public void run() {
+                if (((PandoraMain)ctx).getGlobalVariable() != null) {
+                    if (((PandoraMain)ctx).getGlobalVariable().getAd_user_name() != null) {
+                        ((TextView) ((PandoraMain) ctx).findViewById(R.id.accountName))
+                                .setText(((PandoraMain) ctx).getGlobalVariable().getAd_user_name());
+                    }
+                    if (((PandoraMain)ctx).getGlobalVariable().getAd_user_password() != null) {
+                        ((TextView) ((PandoraMain)ctx).findViewById(R.id.accountPassword))
+                                .setText(((PandoraMain)ctx).getGlobalVariable().getAd_user_password());
+                    }
+                    if (((PandoraMain)ctx).getGlobalVariable().getServer_url() != null) {
+                        ((TextView) ((PandoraMain)ctx).findViewById(R.id.serverURL))
+                                .setText(((PandoraMain)ctx).getGlobalVariable().getServer_url());
+                    }
+                }
+            }
+        });
     }
 
 }

@@ -150,7 +150,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 }
 
                 boolean isSyncCompleted = syncResultBundle.getInt(PandoraConstant.SYNC_COUNT) == 0;
-                if (PandoraMain.instance != null) {
+                if (PandoraMain.instance != null && PandoraMain.instance.getSupportActionBar().isShowing() == true) {
                     PBSProjLocJSON[] projLoc = null;
                     if (isSyncCompleted) {
                         PandoraController cont = new PandoraController(PandoraMain.instance);
@@ -168,8 +168,14 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                     }
                     if(!global.isInitialSynced() || (global.isInitialSynced() && isSyncCompleted && projLoc != null))
                         PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
-                    if (!isSyncCompleted)
+                    if (!isSyncCompleted) {
                         ContentResolver.requestSync(account, authority, extras);
+                        PandoraMain.instance.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(PandoraMain.instance.getBaseContext(), "Initial syncing...", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
             } else{
                 syncResult.hasError();

@@ -24,6 +24,7 @@ public class PBSJson
      * Success returned value.
      */
     private String Success;
+    private String ErrorMessage;
     private String InvalidSession;
 
     public String getSuccess() {
@@ -32,6 +33,14 @@ public class PBSJson
 
     public void setSuccess(String success) {
         Success = success;
+    }
+
+    public String getErrorMessage() {
+        return ErrorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        ErrorMessage = errorMessage;
     }
 
     public String getInvalidSession() {

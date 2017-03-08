@@ -85,18 +85,23 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
         boolean result = false;
         String qtyOnHd = qtyOnHand.getText().toString();
         String movementQuantity = movementQty.getText().toString();
-        if (!qtyOnHd.isEmpty() && !movementQuantity.isEmpty()) {
-            BigDecimal quantityOnHand =  new BigDecimal(qtyOnHd);
-            BigDecimal moveQty = new BigDecimal(movementQuantity);
-            if (moveQty.compareTo(quantityOnHand) == 1) {
-                PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
-                        getString(R.string.movement_greater_than));
+        if (prodNameItem.getPair().getKey() != null) {
+            if (!qtyOnHd.isEmpty() && !movementQuantity.isEmpty()) {
+                BigDecimal quantityOnHand = new BigDecimal(qtyOnHd);
+                BigDecimal moveQty = new BigDecimal(movementQuantity);
+                if (moveQty.compareTo(quantityOnHand) == 1) {
+                    PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
+                            getString(R.string.movement_greater_than));
+                } else {
+                    result = true;
+                }
             } else {
-                result = true;
+                PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
+                        getString(R.string.no_value_movement_qty));
             }
         } else {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
-                    getString(R.string.no_value_movement_qty));
+            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+                    R.string.no_shift_error, "Product"));
         }
         return result;
     }

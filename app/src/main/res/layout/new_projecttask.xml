@@ -11,11 +11,13 @@
 
     <LinearLayout style="@style/PTableVirtRow">
         <TextView
+            android:id="@+id/textViewTaskName"
             style="@style/TableInfoLabel"
             android:text="@string/label_taskname" />
 
         <EditText
             android:id="@+id/newTaskName"
+            android:inputType="textCapWords"
             style="@style/TableValue" />
     </LinearLayout>
     <LinearLayout style="@style/PTableVirtRow">
@@ -44,15 +46,18 @@
     </LinearLayout>
     <LinearLayout style="@style/PTableVirtRow">
         <TextView
+            android:id="@+id/textViewTaskDescription"
             style="@style/TableInfoLabel"
             android:text="@string/label_taskdesc" />
 
         <EditText
             android:id="@+id/newTaskDescription"
+            android:inputType="textCapSentences"
             style="@style/TableValue" />
     </LinearLayout>
     <LinearLayout style="@style/PTableVirtRow">
         <TextView
+            android:id="@+id/textViewTaskSeqNo"
             style="@style/TableInfoLabel"
             android:text="@string/label_taskSeqNo"
             />
@@ -62,7 +67,7 @@
             style="@style/TableValue"
             android:inputType="number"/>
     </LinearLayout>
-    <LinearLayout style="@style/PTableVirtRowW">
+    <LinearLayout style="@style/PTableVirtRow">
         <TextView
             style="@style/TableInfoLabel"
             android:text="@string/label_duedate"

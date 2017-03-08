@@ -509,6 +509,8 @@ public class AttendanceTask implements Callable<Bundle> {
         } else {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
             output.putString(PandoraConstant.ERROR, "Fail to request attendance");
+//            this is for displaying error msg received directly from api
+//            output.putString(PandoraConstant.ERROR, resultAtt.getErrorMessage());
 
             //delete the data
             ArrayList<ContentProviderOperation> ops =

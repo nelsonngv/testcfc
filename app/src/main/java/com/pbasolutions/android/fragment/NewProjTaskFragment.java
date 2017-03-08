@@ -123,6 +123,12 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         projLocNameAdapter = PandoraHelper.addListToSpinner(act, projLocSpinner, getProjLocList());
         taskPicture1 = (ImageView) rootView.findViewById(R.id.taskPicture1);
         taskDueDate = (TextView) rootView.findViewById(R.id.taskDueDate);
+        TextView textViewTaskName = (TextView)rootView.findViewById(R.id.textViewTaskName);
+        TextView textViewTaskDescription = (TextView)rootView.findViewById(R.id.textViewTaskDescription);
+        TextView textViewTaskSeqNo = (TextView)rootView.findViewById(R.id.textViewTaskSeqNo);
+        PandoraHelper.setAsterisk(textViewTaskName);
+        PandoraHelper.setAsterisk(textViewTaskDescription);
+        PandoraHelper.setAsterisk(textViewTaskSeqNo);
 
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -251,15 +257,22 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 
     public void createProjTask(){
         //check all value is not null.
+        if (projLocNameItem.getPair().getKey() == null || assignToItem.getPair().getKey() == null)
+        {
+            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Incomplete info");
+            return;
+        }
         String name = taskName.getText().toString();
         String locID = projLocNameItem.getPair().getKey();
         String desc = description.getText().toString();
         String assignedTo  = assignToItem.getPair().getKey();
         String seqNo  = sequenceNo.getText().toString();
         String dueDate  = taskDueDate.getText().toString();
-        if (locID.isEmpty()
+        if (locID == null
+                || locID.isEmpty()
                 || name.isEmpty()
                 || desc.isEmpty()
+                || assignedTo == null
                 || assignedTo.isEmpty()
                 || seqNo.isEmpty())
         {

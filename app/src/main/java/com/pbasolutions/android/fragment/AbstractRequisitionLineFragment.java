@@ -72,6 +72,10 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
         saveButton = (Button) rootView.findViewById(R.id.savePRLine);
         qtyRequested = (EditText) rootView.findViewById(R.id.prlQty);
         uom = (TextView) rootView.findViewById(R.id.uom);
+        TextView textViewName = (TextView) rootView.findViewById(R.id.textViewName);
+        TextView textViewQty = (TextView) rootView.findViewById(R.id.textViewQty);
+        PandoraHelper.setAsterisk(textViewName);
+        PandoraHelper.setAsterisk(textViewQty);
     }
 
     public List<SpinnerPair> getProdList() {

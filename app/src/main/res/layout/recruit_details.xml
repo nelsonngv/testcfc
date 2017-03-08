@@ -20,7 +20,7 @@
                     android:id="@+id/editTextEmpName"
                     style="@style/TableValue"
                     android:maxLines="1"
-                    android:inputType="text"
+                    android:inputType="textCapWords"
                     android:text="@{employee.name}" />
             </LinearLayout>>
         </TableRow>

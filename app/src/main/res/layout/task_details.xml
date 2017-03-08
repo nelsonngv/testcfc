@@ -98,6 +98,7 @@
                     <EditText
                         android:id="@+id/taskComments"
                         style="@style/Value"
+                        android:inputType="textCapSentences"
                         android:editable="true"
                         android:hint="Sweep floor, ..."
                         />

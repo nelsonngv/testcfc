@@ -71,7 +71,7 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
     @Override
     public void savePRLine(){
         //check all value is not null.
-        if (prodName.isEmpty()
+        if (prodName == null || prodName.isEmpty()
                 || qtyRequested.getText().toString().isEmpty()
                 || requiredDate.getText().toString().isEmpty())
         {

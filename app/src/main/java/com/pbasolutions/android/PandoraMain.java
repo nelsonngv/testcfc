@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -682,7 +681,11 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     private void clearAllFragmentStack() {
         FragmentManager fm = getSupportFragmentManager();
-        fm.popBackStackImmediate(0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        try {
+            fm.popBackStackImmediate(0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        } catch (NullPointerException e) {
+            Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
+        }
     }
 
     /**

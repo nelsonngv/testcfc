@@ -19,6 +19,7 @@
                 android:layout_marginTop="10dp">
                 <LinearLayout style="@style/PTableVirtRowW">
                     <TextView
+                        android:id="@+id/textViewName"
                         android:text="@string/label_productname"
                         style="@style/TableInfoLabel"/>
                     <com.pbasolutions.android.control.SearchableSpinnerForRequisition
@@ -30,6 +31,7 @@
             <TableRow>
                 <LinearLayout style="@style/PTableVirtRowW">
                 <TextView
+                    android:id="@+id/textViewQty"
                     android:text="@string/label_qty"
                     style="@style/TableInfoLabel"
                     android:inputType="number"/>

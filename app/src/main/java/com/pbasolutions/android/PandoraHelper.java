@@ -634,9 +634,7 @@ public class PandoraHelper  {
             String projLocIndex = result.getString(authCont.PROJLOC_INDEX_ARG);
             if (projLocIndex != null)
                 var.setC_ProjectLocation_Spinner_Index(Integer.parseInt(projLocIndex));
-
         }
-
     }
 
     /**

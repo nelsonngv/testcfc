@@ -107,16 +107,6 @@ public class ProjTaskFragment extends Fragment {
                 PandoraMain pandoraMain = PandoraMain.instance;
                 pandoraMain.dismissProgressDialog();
 
-                String resultTitle = result.getString(PandoraConstant.TITLE);
-                String text;
-                if (resultTitle != null && !result.isEmpty()) {
-                    text = result.getString(resultTitle);
-                } else {
-                    text = "Project Task is up to date";
-                }
-
-                PandoraHelper.showMessage(pandoraMain, text);
-
                 TaskRVA viewAdapter = new TaskRVA(pandoraMain, taskList, inflater);
                 recyclerView.setAdapter(viewAdapter);
                 addRecyclerViewListener(recyclerView);
@@ -143,7 +133,15 @@ public class ProjTaskFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case SYNC_PROJTASK_ID: {
-                syncProjTasks();
+                Bundle result = syncProjTasks();
+                String resultTitle = result.getString(PandoraConstant.TITLE);
+                String text;
+                if (resultTitle != null && !result.isEmpty()) {
+                    text = result.getString(resultTitle);
+                } else {
+                    text = "Project Task is up to date";
+                }
+                PandoraHelper.showMessage(PandoraMain.instance, text);
                 populateProjTask();
                 return true;
             }
