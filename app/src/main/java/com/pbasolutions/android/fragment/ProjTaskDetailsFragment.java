@@ -208,6 +208,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         taskPicture5 = (ImageView) rootView.findViewById(R.id.taskPicture5);
         taskComments = (EditText) rootView.findViewById(R.id.taskComments);
      //   taskIsDoneButton = (Button) rootView.findViewById(R.id.buttonTaskStatus);
+        TextView textViewTaskComments = (TextView) rootView.findViewById(R.id.textViewTaskComments);
+        PandoraHelper.setAsterisk(textViewTaskComments);
 
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");

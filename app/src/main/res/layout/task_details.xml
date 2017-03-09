@@ -91,6 +91,7 @@
                 <include layout="@layout/task_attachments" />
                 <TableRow>
                     <TextView
+                        android:id="@+id/textViewTaskComments"
                         style="@style/TableLabel"
                         android:text="@string/taskdetails_label_comment"
                         />
