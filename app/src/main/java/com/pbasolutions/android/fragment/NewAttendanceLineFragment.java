@@ -206,6 +206,7 @@ public class NewAttendanceLineFragment extends Fragment {
             PandoraHelper.setVisibleView(workSwitchRow, true);
             PandoraHelper.setVisibleView(leavetypeRow, false);
             PandoraHelper.setVisibleView(daytypeRow, false);
+//            PandoraHelper.setVisibleView(daytypeRow, !isShow);
             PandoraHelper.setVisibleView(checkinRow, isShow);
             PandoraHelper.setVisibleView(checkoutRow, isShow);
         }
@@ -286,11 +287,16 @@ public class NewAttendanceLineFragment extends Fragment {
                 tempATLine.setHR_LeaveType_ID(leaveSpinner.getKey());
                 tempATLine.setHR_LeaveType_Name(leaveSpinner.getValue());
                 tempATLine.setHR_DaysType(daySpinner.getValue());
-        } else {
-            if (!((isOff || isRest) && !switchWork.isChecked())) {
+        } else if (isOff || isRest) {
+            if (switchWork.isChecked()) {
                 tempATLine.setCheckInDate(sdf.format(checkin));
                 tempATLine.setCheckOutDate(sdf.format(checkout));
             }
+//                else
+//                    tempATLine.setHR_DaysType(daySpinner.getValue());
+        } else {
+            tempATLine.setCheckInDate(sdf.format(checkin));
+            tempATLine.setCheckOutDate(sdf.format(checkout));
         }
         tempATLine.setComments(textComment.getText().toString());
 

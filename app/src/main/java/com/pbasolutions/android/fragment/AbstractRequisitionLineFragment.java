@@ -159,9 +159,9 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
 
         ArrayAdapter adapter;
         if (productList == null) {
-            adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item);
+            adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item);
         } else {
-            adapter = new SpinAdapter(activity, android.R.layout.simple_spinner_item, productList);
+            adapter = new SpinAdapter(activity, android.R.layout.simple_spinner_dropdown_item, productList);
         }
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 

@@ -2,6 +2,12 @@ package com.pbasolutions.android;
 
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.pbasolutions.android.json.PBSJson;
 
@@ -20,9 +26,17 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by pbadell on 8/21/15.
@@ -41,7 +55,6 @@ public class PBSServer {
      */
     protected PBSJson callServer(final String url, final String classname) {
         try {
-
             // HttpClient.set
             HttpGet httpGet = new HttpGet(url);
             // Create local HTTP context
@@ -57,6 +70,40 @@ public class PBSServer {
             HttpResponse response = httpClient.execute(httpGet, localContext);
             responseString = EntityUtils.toString(response.getEntity());
             return (PBSJson) new Gson().fromJson(responseString, cls);
+
+//            PBSHttpsTrustManager.allowAllSSL();
+//            Class cls = Class.forName(classname);
+//            RequestFuture<String> future = RequestFuture.newFuture();
+//            StringRequest stringReq = new StringRequest(Request.Method.POST, url, future, future) {
+//                @Override
+//                public Map<String, String> getHeaders() throws AuthFailureError {
+//                    Map<String, String> headers = new HashMap<>();
+//                    headers.put(ClientContext.COOKIE_STORE, PBSServerConst.cookieStore.toString());
+//                    return headers;
+//                }
+//            };
+//            stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//
+//            // Adding string request to request queue
+//            AppSingleton appSingleton = AppSingleton.getInstance(PandoraMain.instance.getApplicationContext());
+//            appSingleton.getRequestQueue().add(stringReq);
+//            try {
+//                String response = null;
+//                while (response == null) {
+//                    try {
+//                        response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 30 seconds
+//                    } catch (InterruptedException e) {
+//                        // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
+//                        Thread.currentThread().interrupt();
+//                    }
+//                }
+//                return (PBSJson) new Gson().fromJson(response.toString(), cls);
+//
+//            } catch (ExecutionException e) {
+//                VolleyLog.d(TAG, "Error: " + e.getMessage());
+//            } catch (TimeoutException e) {
+//                VolleyLog.d(TAG, "Error: " + e.getMessage());
+//            }
         } catch (Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
         }
@@ -84,6 +131,46 @@ public class PBSServer {
             DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
             HttpResponse response = httpClient.execute(httpPost, localContext);
             return EntityUtils.toString(response.getEntity());
+
+//            PBSHttpsTrustManager.allowAllSSL();
+//            RequestFuture<String> future = RequestFuture.newFuture();
+//            StringRequest stringReq = new StringRequest(Request.Method.POST, url, future, future) {
+//                @Override
+//                public Map<String, String> getHeaders() throws AuthFailureError {
+//                    Map<String, String> headers = new HashMap<>();
+//                    headers.put(ClientContext.COOKIE_STORE, PBSServerConst.cookieStore.toString());
+//                    return headers;
+//                }
+//
+//                @Override
+//                protected Map<String, String> getParams() {
+//                    Map<String, String> params = new HashMap<>();
+//                    params.put("json", json);
+//                    return params;
+//                }
+//            };
+//            stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//
+//            // Adding string request to request queue
+//            AppSingleton appSingleton = AppSingleton.getInstance(PandoraMain.instance.getApplicationContext());
+//            appSingleton.getRequestQueue().add(stringReq);
+//            try {
+//                String response = null;
+//                while (response == null) {
+//                    try {
+//                        response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 30 seconds
+//                    } catch (InterruptedException e) {
+//                        // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
+//                        Thread.currentThread().interrupt();
+//                    }
+//                }
+//                return response.toString();
+//
+//            } catch (ExecutionException e) {
+//                VolleyLog.d(TAG, "Error: " + e.getMessage());
+//            } catch (TimeoutException e) {
+//                VolleyLog.d(TAG, "Error: " + e.getMessage());
+//            }
         }  catch (Exception e) {
             e.printStackTrace();
         }

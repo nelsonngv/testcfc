@@ -278,10 +278,10 @@ public class PandoraHelper  {
     public static ArrayAdapter addListToSpinner(Activity activity, Spinner spinner, List<SpinnerPair> list) {
         ArrayAdapter adapter;
         if (list == null) {
-            adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item);
+            adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_dropdown_item);
         } else {
             adapter = new SpinAdapter(activity,
-                    android.R.layout.simple_spinner_item, list);
+                    android.R.layout.simple_spinner_dropdown_item, list);
         }
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -307,9 +307,9 @@ public class PandoraHelper  {
 
         ArrayAdapter adapter;
         if (productList == null) {
-            adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item);
+            adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item);
         } else {
-            adapter = new SpinAdapter(activity, android.R.layout.simple_spinner_item, productList);
+            adapter = new SpinAdapter(activity, android.R.layout.simple_spinner_dropdown_item, productList);
         }
 
         SimpleAdapter simpleAdapter = new SimpleAdapter(activity, prodList, android.R.layout.simple_list_item_2,

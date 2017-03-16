@@ -120,7 +120,7 @@ public class RoleFragment extends Fragment {
      */
     public void addItemsOnSpinner(Spinner spinner, List list, String spinnerName) {
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, list);
+                android.R.layout.simple_spinner_dropdown_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         if (context.getGlobalVariable() != null) {

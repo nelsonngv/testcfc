@@ -37,6 +37,10 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
     private ObservableArrayList<MAttendanceSearchItem> attLineList;
     private LayoutInflater inflater;
 
+    private final String ABSENT = "On Leave";
+    private final String OFFDAY = "Off Day";
+    private final String RESTDAY = "Rest Day";
+
     public AttendanceSearchLineRVA(Context mContext, ObservableArrayList<MAttendanceSearchItem> attLineList) {
         this.mContext = mContext;
         this.attLineList = attLineList;
@@ -99,11 +103,24 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
 
         holder.vBinding.setAttendancesearchitem(atLine);
 
-        boolean isAbsent = atLine.getHR_LeaveType_ID() != 0;
+        boolean isAbsent = atLine.getStatus().contains(ABSENT);
+        boolean isOff = atLine.getStatus().contains(OFFDAY);
+        boolean isRest = atLine.getStatus().contains(RESTDAY);
+        boolean isWork = !(atLine.getCheckIn() == null || atLine.getCheckIn().equalsIgnoreCase("")
+                || atLine.getCheckOut() == null || atLine.getCheckOut().equalsIgnoreCase("")) && !isAbsent;
 
+//        if (isOff || isRest) {
+            if (isOff)
+                holder.at_type.setText(OFFDAY);
+            else if (isRest)
+                holder.at_type.setText(RESTDAY);
+//            PandoraHelper.setVisibleView(holder.at_offrestdaydesc, !isWork);
+//            PandoraHelper.setVisibleView(holder.at_offrestday, !isWork);
+//        }
+        PandoraHelper.setVisibleView(holder.at_rowType, isOff || isRest);
         PandoraHelper.setVisibleView(holder.at_rowLeaveType, isAbsent);
-        PandoraHelper.setVisibleView(holder.at_rowCheckinDate, !isAbsent);
-        PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, !isAbsent);
+        PandoraHelper.setVisibleView(holder.at_rowCheckinDate, isWork);
+        PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, isWork);
     }
 
     /**
@@ -125,10 +142,14 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
         TextView at_checkoutdate;
         TextView at_leavetype;
         TextView at_resourcealloc;
+        TextView at_type;
+        TextView at_offrestdaydesc;
+        TextView at_offrestday;
 
         TableRow at_rowCheckinDate;
         TableRow at_rowCheckoutDate;
         TableRow at_rowLeaveType;
+        TableRow at_rowType;
 
         private BroadcastRVA.IViewHolderOnClicks listeners;
 
@@ -143,10 +164,14 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
             at_checkoutdate = (TextView) bindView.findViewById(R.id.att_checkout);
             at_leavetype = (TextView) bindView.findViewById(R.id.att_leavetype);
             at_resourcealloc = (TextView) bindView.findViewById(R.id.att_resouecealloc);
+            at_type = (TextView) bindView.findViewById(R.id.att_type);
+//            at_offrestdaydesc = (TextView) bindView.findViewById(R.id.att_offrestdaydesc);
+//            at_offrestday = (TextView) bindView.findViewById(R.id.att_offrestday);
 
             at_rowCheckinDate = (TableRow) bindView.findViewById(R.id.ats_row_checkin);
             at_rowCheckoutDate = (TableRow) bindView.findViewById(R.id.ats_row_checkout);
             at_rowLeaveType = (TableRow) bindView.findViewById(R.id.ats_row_leavetype);
+            at_rowType = (TableRow) bindView.findViewById(R.id.ats_row_type);
 
             at_checkindate.setOnClickListener(this);
             at_checkoutdate.setOnClickListener(this);

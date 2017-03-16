@@ -465,10 +465,10 @@ public class PBSContentProvider extends ContentProvider {
                 SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
                 builder.setTables(ModelConst.C_BPARTNER_VIEW + " inner join " + ModelConst.HR_PROJECTASSIGNMENT_TABLE +
                         " on (" + ModelConst.C_BPARTNER_VIEW + "." + ModelConst.C_BPARTNER_TABLE + "_uuid = "
-                        + ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_BPARTNER_TABLE + "_uuid)"
-                        + " inner join " + ModelConst.HR_SHIFT_TABLE +
-                        " on (" + ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.HR_SHIFT_TABLE + "_uuid = "
-                        + ModelConst.HR_SHIFT_TABLE + "." + ModelConst.HR_SHIFT_TABLE + "_uuid)");
+                        + ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_BPARTNER_TABLE + "_uuid)");
+//                        + " inner join " + ModelConst.HR_SHIFT_TABLE +
+//                        " on (" + ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.HR_SHIFT_TABLE + "_uuid = "
+//                        + ModelConst.HR_SHIFT_TABLE + "." + ModelConst.HR_SHIFT_TABLE + "_uuid)");
                 return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
 
             }

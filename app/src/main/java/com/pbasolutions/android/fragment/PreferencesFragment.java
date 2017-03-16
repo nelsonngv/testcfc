@@ -1,5 +1,7 @@
 package com.pbasolutions.android.fragment;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -57,10 +59,10 @@ public class PreferencesFragment extends Fragment {
 //            }
 //        });
 
-        TextView phoneID = (TextView)rootView.findViewById(R.id.phoneID);
+        TextView phoneID = (TextView) rootView.findViewById(R.id.phoneID);
         phoneID.setText(PandoraHelper.getDeviceID(context));
 
-        final CheckBox isFullComment = (CheckBox)rootView.findViewById(R.id.displayFullCommentRB);
+        final CheckBox isFullComment = (CheckBox) rootView.findViewById(R.id.displayFullCommentRB);
         rootView.findViewById(R.id.displayFullCommentRB).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +70,13 @@ public class PreferencesFragment extends Fragment {
             }
         });
 
+        TextView version = (TextView) rootView.findViewById(R.id.version);
+        try {
+            PackageInfo pInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+            version.setText(pInfo.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return rootView;
     }

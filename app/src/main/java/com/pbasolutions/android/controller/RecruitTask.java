@@ -3,16 +3,20 @@ package com.pbasolutions.android.controller;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.databinding.ObservableArrayList;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
+import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.adapter.SpinnerPair;
+import com.pbasolutions.android.database.PBSDBHelper;
 import com.pbasolutions.android.model.IModel;
 import com.pbasolutions.android.model.MApplicant;
 import com.pbasolutions.android.model.MEmployee;
+import com.pbasolutions.android.model.MShift;
 import com.pbasolutions.android.model.ModelConst;
 
 import java.util.ArrayList;
@@ -244,59 +248,75 @@ public class RecruitTask extends Task {
         String projLocationName = input.getString(PBSRecruitController.ARG_PROJECT_LOCATION_NAME);
 
         String[] projection = { cbpartner + MEmployee.C_BPARTNER_UUID_COL, cbpartner + ModelConst.NAME_COL, cbpartner + ModelConst.IDNUMBER_COL,
-                cbpartner + ModelConst.PHONE_COL, cbpartner + MEmployee.JOB_TITLE_COL, cbpartner + ModelConst.WORKPERMIT_COL, "ISDEFAULT", ModelConst.HR_SHIFT_TABLE + "." + ModelConst.NAME_COL + " AS SHIFTNAME"};
-
-        String[] selectionArg = { projLocationUUID };
+                cbpartner + ModelConst.PHONE_COL, cbpartner + MEmployee.JOB_TITLE_COL, cbpartner + ModelConst.WORKPERMIT_COL, "ISDEFAULT"/*, ModelConst.HR_SHIFT_TABLE + "." + ModelConst.NAME_COL + " AS SHIFTNAME"*/};
 
         String wherePhase = String.format("%s=?",
                 ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_PROJECTLOCATION_UUID_COL
         );
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TABLE),
-                projection, wherePhase, selectionArg, "LOWER(" + cbpartner + ModelConst.NAME_COL + ") ASC");
+        String[] selectionArg = { projLocationUUID };
 
-        ObservableArrayList<MEmployee> employeeList = new ObservableArrayList();
-        if (cursor != null && cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            do {
-                MEmployee employee = new MEmployee();
-                for (int x = 0; x < cursor.getColumnNames().length; x++) {
-                    String columnName = cursor.getColumnName(x);
-                    String rowValue =  cursor.getString(x);
-                    if (MEmployee.C_BPARTNER_UUID_COL.equalsIgnoreCase(columnName)){
-                        employee.set_UUID(rowValue);
-                    } else if (ModelConst.NAME_COL
-                            .equalsIgnoreCase(columnName)) {
-                        employee.setName(rowValue);
-                    } else if (ModelConst.IDNUMBER_COL
-                            .equalsIgnoreCase(columnName)) {
-                        employee.setIdNumber(rowValue);
-                    } else if (ModelConst.WORKPERMIT_COL
-                            .equalsIgnoreCase(columnName)) {
-                        employee.setWorkPermit(rowValue);
-                    } else if (ModelConst.PHONE_COL
-                            .equalsIgnoreCase(columnName)) {
-                        employee.setPhone(rowValue);
-                    } else if (MEmployee.JOB_TITLE_COL
-                            .equalsIgnoreCase(columnName)) {
-                        employee.setJobTitle(rowValue);
-                    } else if ("ISDEFAULT"
-                            .equalsIgnoreCase(columnName)) {
-                        if (rowValue.equalsIgnoreCase("Y"))
-                            employee.setDefaultProjLoc(projLocationName);
-                        else employee.setDefaultProjLoc("-");
-                    } else if ("SHIFTNAME"
-                            .equalsIgnoreCase(columnName)) {
-                        employee.setShiftName(rowValue);
+        String groupBy = cbpartner + MEmployee.C_BPARTNER_UUID_COL + ", " + cbpartner + ModelConst.NAME_COL + ", " + cbpartner + ModelConst.IDNUMBER_COL + ", " +
+                cbpartner + ModelConst.PHONE_COL + ", " + cbpartner + MEmployee.JOB_TITLE_COL + ", " + cbpartner + ModelConst.WORKPERMIT_COL + ", " + "ISDEFAULT";
+
+        try {
+            PBSDBHelper dbHelper = new PBSDBHelper(PandoraMain.instance);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cursor = db.query(ModelConst.C_BPARTNER_VIEW + " inner join " + ModelConst.HR_PROJECTASSIGNMENT_TABLE +
+                            " on (" + ModelConst.C_BPARTNER_VIEW + "." + ModelConst.C_BPARTNER_TABLE + "_uuid = "
+                            + ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_BPARTNER_TABLE + "_uuid)",
+                    projection, wherePhase, selectionArg, groupBy, null,
+                    "LOWER(" + cbpartner + ModelConst.NAME_COL + ") ASC");
+
+//        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TABLE),
+//                projection, wherePhase, selectionArg, "LOWER(" + cbpartner + ModelConst.NAME_COL + ") ASC");
+
+            ObservableArrayList<MEmployee> employeeList = new ObservableArrayList();
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                do {
+                    MEmployee employee = new MEmployee();
+                    for (int x = 0; x < cursor.getColumnNames().length; x++) {
+                        String columnName = cursor.getColumnName(x);
+                        String rowValue = cursor.getString(x);
+                        if (MEmployee.C_BPARTNER_UUID_COL.equalsIgnoreCase(columnName)) {
+                            employee.set_UUID(rowValue);
+                        } else if (ModelConst.NAME_COL
+                                .equalsIgnoreCase(columnName)) {
+                            employee.setName(rowValue);
+                        } else if (ModelConst.IDNUMBER_COL
+                                .equalsIgnoreCase(columnName)) {
+                            employee.setIdNumber(rowValue);
+                        } else if (ModelConst.WORKPERMIT_COL
+                                .equalsIgnoreCase(columnName)) {
+                            employee.setWorkPermit(rowValue);
+                        } else if (ModelConst.PHONE_COL
+                                .equalsIgnoreCase(columnName)) {
+                            employee.setPhone(rowValue);
+                        } else if (MEmployee.JOB_TITLE_COL
+                                .equalsIgnoreCase(columnName)) {
+                            employee.setJobTitle(rowValue);
+                        } else if ("ISDEFAULT"
+                                .equalsIgnoreCase(columnName)) {
+                            if (rowValue.equalsIgnoreCase("Y"))
+                                employee.setDefaultProjLoc(projLocationName);
+                            else employee.setDefaultProjLoc("-");
+                        } else if ("SHIFTNAME"
+                                .equalsIgnoreCase(columnName)) {
+                            employee.setShiftName(rowValue);
+                        }
                     }
-                }
 
-                if (employee.getIdNumber() == null || employee.getIdNumber().equalsIgnoreCase("null"))
-                    employee.setIdNumber(employee.getWorkPermit());
-                employeeList.add(employee);
-            } while (cursor.moveToNext());
+                    if (employee.getIdNumber() == null || employee.getIdNumber().equalsIgnoreCase("null"))
+                        employee.setIdNumber(employee.getWorkPermit());
+                    employeeList.add(employee);
+                } while (cursor.moveToNext());
+            }
+            db.close();
+            cursor.close();
+            output.putSerializable(PBSRecruitController.EMPLOYEE_LIST, employeeList);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        cursor.close();
-        output.putSerializable(PBSRecruitController.EMPLOYEE_LIST, employeeList);
         return output;
     }
 
@@ -454,7 +474,41 @@ public class RecruitTask extends Task {
                 .getSerializable(PBSRecruitController.EMPLOYEE_LIST);
         String inputUUID = input.getString(PBSRecruitController.ARG_EMP_UUID);
         MEmployee emp = (MEmployee)PandoraHelper.getModel(employeeList, inputUUID);
-        output.putSerializable(PBSRecruitController.ARG_EMPLOYEE, emp);
+
+        String[] projection = { ModelConst.HR_SHIFT_TABLE + "." + ModelConst.NAME_COL};
+        String wherePhase = String.format("%s=?",
+                ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_BPARTNER_UUID_COL);
+        String[] selectionArg = { emp.get_UUID() };
+        String groupBy = ModelConst.HR_SHIFT_TABLE + "." + ModelConst.HR_SHIFT_TABLE + "_UUID";
+
+        try {
+            PBSDBHelper dbHelper = new PBSDBHelper(PandoraMain.instance);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cursor = db.query(ModelConst.HR_SHIFT_TABLE + " inner join " + ModelConst.HR_PROJECTASSIGNMENT_TABLE + " on (" + ModelConst.HR_SHIFT_TABLE + "." + ModelConst.HR_SHIFT_TABLE + "_uuid = "
+                            + ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.HR_SHIFT_TABLE + "_uuid)",
+                    projection, wherePhase, selectionArg, groupBy, null, null);
+//            Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.HR_SHIFT_TABLE_JOIN_HR_PROJECTASSIGNMENT_TABLE),
+//                    projection, wherePhase, selectionArg, null);
+
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                String shiftName = "";
+                do {
+                    for (int x = 0; x < cursor.getColumnNames().length; x++) {
+                        String columnName = cursor.getColumnName(x);
+                        String rowValue = cursor.getString(x);
+                        if (ModelConst.NAME_COL.equalsIgnoreCase(columnName)) {
+                            shiftName += rowValue + ", ";
+                        }
+                    }
+                } while (cursor.moveToNext());
+                emp.setShiftName(shiftName.substring(0, shiftName.length() - 2));
+            }
+            cursor.close();
+            output.putSerializable(PBSRecruitController.ARG_EMPLOYEE, emp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return output;
     }
 

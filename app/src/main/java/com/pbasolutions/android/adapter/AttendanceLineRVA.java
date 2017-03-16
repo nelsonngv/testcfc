@@ -100,11 +100,23 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         holder.vBinding.setAtLine(atLine);
 
         boolean isAbsent = atLine.getIsAbsent().equalsIgnoreCase("Y") || atLine.getIsAbsent().equalsIgnoreCase("1");
+        boolean isOff = atLine.getIsOff().equalsIgnoreCase("Y") || atLine.getIsOff().equalsIgnoreCase("1");
+        boolean isRest = atLine.getIsRest().equalsIgnoreCase("Y") || atLine.getIsRest().equalsIgnoreCase("1");
+        boolean isWork = !(atLine.getCheckInDate() == null || atLine.getCheckInDate().equalsIgnoreCase("")
+                        || atLine.getCheckOutDate() == null || atLine.getCheckOutDate().equalsIgnoreCase(""));
 
         PandoraHelper.setVisibleView(holder.at_rowIsabsent, isAbsent);
+        PandoraHelper.setVisibleView(holder.at_rowIsoff, isOff);
+        PandoraHelper.setVisibleView(holder.at_rowIsrest, isRest);
         PandoraHelper.setVisibleView(holder.at_rowLeaveType, isAbsent);
-        PandoraHelper.setVisibleView(holder.at_rowCheckinDate, !isAbsent);
-        PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, !isAbsent);
+        PandoraHelper.setVisibleView(holder.at_absentdaydesc, isAbsent);
+        PandoraHelper.setVisibleView(holder.at_absentday, isAbsent);
+//        PandoraHelper.setVisibleView(holder.at_offdaydesc, !isWork);
+//        PandoraHelper.setVisibleView(holder.at_offday, !isWork);
+//        PandoraHelper.setVisibleView(holder.at_restdaydesc, !isWork);
+//        PandoraHelper.setVisibleView(holder.at_restday, !isWork);
+        PandoraHelper.setVisibleView(holder.at_rowCheckinDate, isWork);
+        PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, isWork);
     }
 
     /**
@@ -123,6 +135,12 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         AttendancelineItemBinding vBinding;
         CheckBox cbox;
         TextView at_isabsent;
+        TextView at_absentdaydesc;
+        TextView at_absentday;
+        TextView at_offdaydesc;
+        TextView at_offday;
+        TextView at_restdaydesc;
+        TextView at_restday;
         TextView at_checkindate;
         TextView at_checkoutdate;
         TextView at_leavetype;
@@ -132,6 +150,8 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         TableRow at_rowCheckoutDate;
         TableRow at_rowLeaveType;
         TableRow at_rowIsabsent;
+        TableRow at_rowIsoff;
+        TableRow at_rowIsrest;
 
         private BroadcastRVA.IViewHolderOnClicks listeners;
 
@@ -143,6 +163,12 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
             this.cbox = (CheckBox) bindView.findViewById(R.id.removePrl);
 
             at_isabsent = (TextView) bindView.findViewById(R.id.at_isabsent);
+            at_absentdaydesc = (TextView) bindView.findViewById(R.id.at_absentdaydesc);
+            at_absentday = (TextView) bindView.findViewById(R.id.at_absentday);
+//            at_offdaydesc = (TextView) bindView.findViewById(R.id.at_offdaydesc);
+//            at_offday = (TextView) bindView.findViewById(R.id.at_offday);
+//            at_restdaydesc = (TextView) bindView.findViewById(R.id.at_restdaydesc);
+//            at_restday = (TextView) bindView.findViewById(R.id.at_restday);
             at_checkindate = (TextView) bindView.findViewById(R.id.at_checkindate);
             at_checkoutdate = (TextView) bindView.findViewById(R.id.at_checkoutdate);
             at_leavetype = (TextView) bindView.findViewById(R.id.at_leavetype);
@@ -152,6 +178,8 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
             at_rowCheckoutDate = (TableRow) bindView.findViewById(R.id.at_row_checkoutdate);
             at_rowLeaveType = (TableRow) bindView.findViewById(R.id.at_row_leavetype);
             at_rowIsabsent = (TableRow) bindView.findViewById(R.id.at_row_isabsent);
+            at_rowIsoff = (TableRow) bindView.findViewById(R.id.at_row_isoff);
+            at_rowIsrest = (TableRow) bindView.findViewById(R.id.at_row_isrest);
 
             cbox.setOnClickListener(this);
 

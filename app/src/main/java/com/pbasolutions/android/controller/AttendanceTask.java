@@ -320,10 +320,7 @@ public class AttendanceTask implements Callable<Bundle> {
         String projLocationUUID = ModelConst.getProjLocationUUID(projLocationId, cr);
 
         String[] projection = {cbpartner + MAttendanceLine.C_BPARTNER_UUID_COL,
-                cbpartner + ModelConst.NAME_COL,
-                cbpartner + ModelConst.IDNUMBER_COL,
-                cbpartner + ModelConst.PHONE_COL,
-                cbpartner + MEmployee.JOB_TITLE_COL};
+                cbpartner + ModelConst.NAME_COL};
 
         String[] selectionArg = { projLocationUUID, PBSAttendanceController.shiftUUID };
 

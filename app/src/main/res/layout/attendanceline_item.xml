@@ -40,7 +40,8 @@
                     <TableRow
                         android:id="@+id/at_row_isabsent"
                         android:divider="?android:attr/dividerVertical"
-                        android:showDividers="middle">
+                        android:showDividers="middle"
+                        android:visibility="gone">
                         <TextView
                             android:text="Absent"
                             style="@style/TableLabel"/>
@@ -64,16 +65,103 @@
                                         android:layout_weight="0.35"
                                         style="@style/TableValue2"/>
                                     <TextView
+                                        android:id="@+id/at_absentdaydesc"
                                         android:text="Day"
                                         android:layout_weight="0.15"
                                         android:layout_width="wrap_content"
                                         style="@style/TableLabel"
                                         />
                                     <TextView
-                                        android:id="@+id/at_isday"
+                                        android:id="@+id/at_absentday"
                                         android:layout_weight="0.5"
                                         android:text="@{atLine.HR_DaysType}"
                                         style="@style/TableValue2"/>
+                                </TableRow>
+                            </TableLayout>
+                        </LinearLayout>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/at_row_isoff"
+                        android:divider="?android:attr/dividerVertical"
+                        android:showDividers="middle"
+                        android:visibility="gone">
+                        <TextView
+                            android:text="Off Day"
+                            style="@style/TableLabel"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="10"
+                            android:orientation="vertical"
+                            >
+                            <TableLayout android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="?android:attr/dividerHorizontal"
+                                android:showDividers="middle">
+                                <TableRow
+                                    android:divider="?android:attr/dividerVertical"
+                                    android:showDividers="middle">
+                                    <TextView
+                                        android:id="@+id/at_isoff"
+                                        android:text="@{atLine.IsOff}"
+                                        android:layout_weight="0.35"
+                                        style="@style/TableValue2"/>
+                                    <!--<TextView
+                                        android:id="@+id/at_offdaydesc"
+                                        android:text="Day"
+                                        android:layout_weight="0.15"
+                                        android:layout_width="wrap_content"
+                                        style="@style/TableLabel"
+                                        />
+                                    <TextView
+                                        android:id="@+id/at_offday"
+                                        android:layout_weight="0.5"
+                                        android:text="@{atLine.HR_DaysType}"
+                                        style="@style/TableValue2"/>-->
+                                </TableRow>
+                            </TableLayout>
+                        </LinearLayout>
+                    </TableRow>
+                    <TableRow
+                        android:id="@+id/at_row_isrest"
+                        android:divider="?android:attr/dividerVertical"
+                        android:showDividers="middle"
+                        android:visibility="gone">
+                        <TextView
+                            android:text="Rest Day"
+                            style="@style/TableLabel"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="10"
+                            android:orientation="vertical"
+                            >
+                            <TableLayout android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="?android:attr/dividerHorizontal"
+                                android:showDividers="middle">
+                                <TableRow
+                                    android:divider="?android:attr/dividerVertical"
+                                    android:showDividers="middle">
+                                    <TextView
+                                        android:id="@+id/at_isrest"
+                                        android:text="@{atLine.IsRest}"
+                                        android:layout_weight="0.35"
+                                        style="@style/TableValue2"/>
+                                    <!--<TextView
+                                        android:id="@+id/at_restdaydesc"
+                                        android:text="Day"
+                                        android:layout_weight="0.15"
+                                        android:layout_width="wrap_content"
+                                        style="@style/TableLabel"
+                                        />
+                                    <TextView
+                                        android:id="@+id/at_restday"
+                                        android:layout_weight="0.5"
+                                        android:text="@{atLine.HR_DaysType}"
+                                        style="@style/TableValue2"/>-->
                                 </TableRow>
                             </TableLayout>
                         </LinearLayout>

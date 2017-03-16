@@ -26,6 +26,15 @@
             android:text="Display full comment"
             android:textSize="@dimen/abc_text_size_body_1_material" />
     </LinearLayout>
+    <LinearLayout style="@style/PTableVirtRow">
+        <TextView
+            style="@style/TableInfoLabel"
+            android:text="@string/version" />
+
+        <TextView
+            style="@style/TableValue"
+            android:id="@+id/version"/>
+    </LinearLayout>
     <!-- TODO allow selection on product value and name
        <TextView
             android:layout_width="wrap_content"

@@ -79,6 +79,8 @@ import com.pbasolutions.android.listener.PBABackKeyListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.util.List;
 
 /**
@@ -216,6 +218,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         super.onCreate(savedInstanceState);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        CookieHandler.setDefault(new CookieManager());
         init();
 
     }
