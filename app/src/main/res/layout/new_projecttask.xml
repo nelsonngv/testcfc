@@ -1,93 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
     <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
     android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:divider="?android:attr/dividerHorizontal"
-        android:showDividers="middle"
-        android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:divider="?android:attr/dividerHorizontal"
+    android:showDividers="middle"
+    android:orientation="vertical">
 
-    <LinearLayout style="@style/PTableVirtRow">
-        <TextView
-            android:id="@+id/textViewTaskName"
-            style="@style/TableInfoLabel"
-            android:text="@string/label_taskname" />
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                android:id="@+id/textViewTaskName"
+                style="@style/TableInfoLabel"
+                android:text="@string/label_taskname" />
 
-        <EditText
-            android:id="@+id/newTaskName"
-            android:inputType="textCapWords"
-            style="@style/TableValue" />
-    </LinearLayout>
-    <LinearLayout style="@style/PTableVirtRow">
-        <TextView
-            style="@style/TableInfoLabel"
-            android:text="@string/label_assignto" />
+            <EditText
+                android:id="@+id/newTaskName"
+                android:inputType="textCapWords"
+                style="@style/TableValue" />
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                style="@style/TableInfoLabel"
+                android:text="@string/label_assignto" />
 
-        <com.pbasolutions.android.control.SearchableSpinner
-            style="@style/SpinnerTableValue"
-            app:dlgTitle="@string/title_selectemployee"
-            android:id="@+id/newTaskAssignTo"
-        />
-
-    </LinearLayout>
-    <LinearLayout style="@style/PTableVirtRow">
-
-        <TextView
-            style="@style/TableInfoLabel"
-            android:text="@string/label_taskprojloc" />
-
-        <com.pbasolutions.android.control.SearchableSpinner
-            style="@style/SpinnerTableValue"
-            app:dlgTitle="@string/title_selectprojectloc"
-            android:id="@+id/newTaskProjLoc"/>
-
-    </LinearLayout>
-    <LinearLayout style="@style/PTableVirtRow">
-        <TextView
-            android:id="@+id/textViewTaskDescription"
-            style="@style/TableInfoLabel"
-            android:text="@string/label_taskdesc" />
-
-        <EditText
-            android:id="@+id/newTaskDescription"
-            android:inputType="textCapSentences"
-            style="@style/TableValue" />
-    </LinearLayout>
-    <LinearLayout style="@style/PTableVirtRow">
-        <TextView
-            android:id="@+id/textViewTaskSeqNo"
-            style="@style/TableInfoLabel"
-            android:text="@string/label_taskSeqNo"
+            <com.pbasolutions.android.control.SearchableSpinner
+                style="@style/SpinnerTableValue"
+                app:dlgTitle="@string/title_selectemployee"
+                android:id="@+id/newTaskAssignTo"
             />
 
-        <EditText
-            android:id="@+id/newTaskSeqNo"
-            style="@style/TableValue"
-            android:inputType="number"/>
-    </LinearLayout>
-    <LinearLayout style="@style/PTableVirtRow">
-        <TextView
-            style="@style/TableInfoLabel"
-            android:text="@string/label_duedate"
-            />
-        <TextView
-            android:id="@+id/taskDueDate"
-            style="@style/TableValueDate"
-            android:hint="Press to Select Date" />
-    </LinearLayout>
-    <LinearLayout style="@style/PTableVirtRow">
-        <TextView
-            style="@style/TableInfoLabel"
-            android:text="@string/label_picture1" />
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
 
-        <ImageView
-            android:id="@+id/taskPicture1"
-            android:layout_width="@dimen/dimen_small_pic"
-            android:layout_height="@dimen/dimen_small_pic"
-            android:layout_column="1"
-            android:scaleType="fitXY"
-            android:src="@drawable/camera" />
+            <TextView
+                style="@style/TableInfoLabel"
+                android:text="@string/label_taskprojloc" />
+
+            <com.pbasolutions.android.control.SearchableSpinner
+                style="@style/SpinnerTableValue"
+                app:dlgTitle="@string/title_selectprojectloc"
+                android:id="@+id/newTaskProjLoc"/>
+
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                android:id="@+id/textViewTaskDescription"
+                style="@style/TableInfoLabel"
+                android:text="@string/label_taskdesc" />
+
+            <EditText
+                android:id="@+id/newTaskDescription"
+                android:inputType="textCapSentences"
+                style="@style/TableValue" />
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                android:id="@+id/textViewTaskSeqNo"
+                style="@style/TableInfoLabel"
+                android:text="@string/label_taskSeqNo"
+                />
+
+            <EditText
+                android:id="@+id/newTaskSeqNo"
+                style="@style/TableValue"
+                android:inputType="number"/>
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                style="@style/TableInfoLabel"
+                android:text="@string/label_duedate"
+                />
+            <TextView
+                android:id="@+id/taskDueDate"
+                style="@style/TableValueDate"
+                android:hint="Press to Select Date" />
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                style="@style/TableInfoLabel"
+                android:text="@string/label_picture1" />
+
+            <ImageView
+                android:id="@+id/taskPicture1"
+                android:layout_width="@dimen/dimen_small_pic"
+                android:layout_height="@dimen/dimen_small_pic"
+                android:layout_column="1"
+                android:scaleType="fitXY"
+                android:src="@drawable/camera" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

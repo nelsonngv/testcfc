@@ -58,6 +58,8 @@ public class ProjTaskFragment extends Fragment {
     private boolean isrecyclerviewAdded;
 
     protected String taskDetailTitle;
+    private TaskRVA viewAdapter;
+    private RecyclerView recyclerView;
     /**
      * Contructor.
      */
@@ -79,7 +81,7 @@ public class ProjTaskFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.task_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.task_rv);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.task_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         new AsyncTask<Object, Void, Bundle>() {
@@ -107,7 +109,7 @@ public class ProjTaskFragment extends Fragment {
                 PandoraMain pandoraMain = PandoraMain.instance;
                 pandoraMain.dismissProgressDialog();
 
-                TaskRVA viewAdapter = new TaskRVA(pandoraMain, taskList, inflater);
+                viewAdapter = new TaskRVA(pandoraMain, taskList, inflater);
                 recyclerView.setAdapter(viewAdapter);
                 addRecyclerViewListener(recyclerView);
             }
@@ -133,16 +135,39 @@ public class ProjTaskFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case SYNC_PROJTASK_ID: {
-                Bundle result = syncProjTasks();
-                String resultTitle = result.getString(PandoraConstant.TITLE);
-                String text;
-                if (resultTitle != null && !result.isEmpty()) {
-                    text = result.getString(resultTitle);
-                } else {
-                    text = "Project Task is up to date";
-                }
-                PandoraHelper.showMessage(PandoraMain.instance, text);
-                populateProjTask();
+                new AsyncTask<Object, Void, Bundle>() {
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+                    }
+
+                    @Override
+                    protected Bundle doInBackground(Object... params) {
+                        Bundle result = syncProjTasks();
+                        return result;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Bundle result) {
+                        super.onPostExecute(result);
+                        PandoraMain pandoraMain = PandoraMain.instance;
+                        pandoraMain.dismissProgressDialog();
+
+                        String resultTitle = result.getString(PandoraConstant.TITLE);
+                        String text;
+                        if (resultTitle != null && !result.isEmpty()) {
+                            populateProjTask();
+                            viewAdapter = new TaskRVA(pandoraMain, taskList, LayoutInflater.from(PandoraMain.instance));
+                            recyclerView.setAdapter(viewAdapter);
+                            addRecyclerViewListener(recyclerView);
+                            text = result.getString(resultTitle);
+                        } else {
+                            text = "Project Task is up to date";
+                        }
+                        PandoraHelper.showMessage(PandoraMain.instance, text);
+                    }
+                }.execute();
                 return true;
             }
             case ADD_ID: {

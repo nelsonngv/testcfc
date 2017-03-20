@@ -102,6 +102,7 @@ public class LoginFragment extends Fragment {
      * created yet in the Account Manager.
      */
     public void submit() {
+        PandoraHelper.hideSoftKeyboard();
         accountName = ((TextView) getActivity().findViewById(R.id.accountName))
                 .getText().toString();
         accountPassword = ((TextView) getActivity().findViewById(R.id.accountPassword))
@@ -109,7 +110,6 @@ public class LoginFragment extends Fragment {
         serverURL = ((TextView) getActivity().findViewById(R.id.serverURL))
                 .getText().toString();
         deviceID = PandoraHelper.getDeviceID(getActivity());
-
 
         if (accountName.isEmpty() || accountPassword.isEmpty() || serverURL.isEmpty()) {
             PandoraHelper.showWarningMessage((PandoraMain) getActivity(),

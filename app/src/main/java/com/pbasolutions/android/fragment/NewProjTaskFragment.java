@@ -300,9 +300,10 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         pt.setIsDone("N");
         pt.setDueDate(dueDate);
         if (taskPicture1.getTag() != null && !((String)taskPicture1.getTag()).isEmpty()) {
-            String pic1 = CameraUtil
-                    .imageToBase64(taskPicture1.getTag().toString());
-            pt.setATTACHMENT_BEFORETASKPICTURE_1(pic1);
+//            String pic1 = CameraUtil
+//                    .imageToBase64(taskPicture1.getTag().toString());
+//            pt.setATTACHMENT_BEFORETASKPICTURE_1(pic1);
+            pt.setATTACHMENT_BEFORETASKPICTURE_1(taskPicture1.getTag().toString());
         }
 
         PandoraMain context = (PandoraMain) getActivity();

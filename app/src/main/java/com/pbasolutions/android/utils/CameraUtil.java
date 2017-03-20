@@ -192,9 +192,15 @@ public class CameraUtil {
      */
     public static String imageToBase64(String path){
         if (path != null) {
-            Bitmap immagex=resizeImage(500, 500, path);
+            Bitmap immagex = resizeImage(500, 500, path);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             immagex.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+            File file = new File(path);
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                baos.writeTo(outputStream);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             byte[] b = baos.toByteArray();
             String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
             return imageEncoded;

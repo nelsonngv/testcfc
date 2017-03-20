@@ -7,154 +7,158 @@
             name="atLine"
             type="com.pbasolutions.android.model.MAttendanceLine"/>
     </data>
-    <LinearLayout android:layout_width = "match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TableLayout android:layout_width="match_parent"
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout android:layout_width = "match_parent"
             android:layout_height="wrap_content"
-            android:divider="?android:attr/dividerHorizontal"
-            android:showDividers="middle"
-            >
-            <TableRow>
-                <LinearLayout style="@style/PTableVirtRowW"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    >
-                    <TextView
-                        android:text="@string/label_employees"
-                        style="@style/TableInfoLabel"/>
-                    <com.pbasolutions.android.control.SearchableSpinner
-                        style="@style/SpinnerTableValue"
-                        app:dlgTitle="@string/title_selectemployee"
-                        android:id="@+id/atEmplShiftSpinner"/>
-                </LinearLayout>
-            </TableRow>
-            <TableRow
-                android:id="@+id/atWorkStatusRow"
+            android:orientation="vertical">
+            <TableLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle"
                 >
-                <LinearLayout style="@style/PTableVirtRowW"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                <TableRow>
+                    <LinearLayout style="@style/PTableVirtRowW"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        >
+                        <TextView
+                            android:text="@string/label_employees"
+                            style="@style/TableInfoLabel"/>
+                        <com.pbasolutions.android.control.SearchableSpinner
+                            style="@style/SpinnerTableValue"
+                            app:dlgTitle="@string/title_selectemployee"
+                            android:id="@+id/atEmplShiftSpinner"/>
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:id="@+id/atWorkStatusRow"
                     >
-                    <TextView
-                        style="@style/TableInfoLabel"
-                        android:text="@string/label_attendancetype"
-                        android:editable="false"
-                        android:textSize="15sp"/>
-                    <Spinner
-                        style="@style/TableValue"
-                        android:id="@+id/attAttTypeSpinner"/>
-                </LinearLayout>
-            </TableRow>
-            <TableRow
-                android:id="@+id/atWorkSwitchRow"
-                >
-                <LinearLayout style="@style/PTableVirtRowW"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    <LinearLayout style="@style/PTableVirtRowW"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        >
+                        <TextView
+                            style="@style/TableInfoLabel"
+                            android:text="@string/label_attendancetype"
+                            android:editable="false"
+                            android:textSize="15sp"/>
+                        <Spinner
+                            style="@style/TableValue"
+                            android:id="@+id/attAttTypeSpinner"/>
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:id="@+id/atWorkSwitchRow"
                     >
-                    <TextView
-                        android:text="@string/label_iswork"
-                        style="@style/TableLabelL"
-                        android:layout_marginLeft="0dp"
-                        android:layout_gravity="left|center_vertical"
-                        android:layout_weight="1"
-                        />
-                    <Switch
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical"
-                        android:id="@+id/atWorkSwitch"
-                        />
-                </LinearLayout>
-            </TableRow>
-            <TableRow
-                android:id="@+id/atLeavetypeRow"
-                >
-                <LinearLayout style="@style/PTableVirtRowW"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    <LinearLayout style="@style/PTableVirtRowW"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        >
+                        <TextView
+                            android:text="@string/label_iswork"
+                            style="@style/TableLabelL"
+                            android:layout_marginLeft="0dp"
+                            android:layout_gravity="left|center_vertical"
+                            android:layout_weight="1"
+                            />
+                        <Switch
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|center_vertical"
+                            android:id="@+id/atWorkSwitch"
+                            />
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:id="@+id/atLeavetypeRow"
                     >
-                    <TextView
-                        android:text="@string/label_leavetype"
-                        style="@style/TableInfoLabel"/>
-                    <Spinner
-                        style="@style/TableValue"
-                        android:id="@+id/attLeaveTypeSpinner"/>
-                </LinearLayout>
-            </TableRow>
-            <TableRow
-                android:id="@+id/atDaytypeRow"
-                >
-                <LinearLayout style="@style/PTableVirtRowW"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    <LinearLayout style="@style/PTableVirtRowW"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        >
+                        <TextView
+                            android:text="@string/label_leavetype"
+                            style="@style/TableInfoLabel"/>
+                        <Spinner
+                            style="@style/TableValue"
+                            android:id="@+id/attLeaveTypeSpinner"/>
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:id="@+id/atDaytypeRow"
                     >
-                    <TextView
-                        android:text="@string/label_daytype"
-                        style="@style/TableInfoLabel"/>
-                    <Spinner
-                        style="@style/TableValue"
-                        android:id="@+id/attDayTypeSpinner"/>
-                </LinearLayout>
-            </TableRow>
-            <TableRow
-                android:id="@+id/atCheckinRow"
-                >
-                <LinearLayout style="@style/PTableVirtRowW"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    <LinearLayout style="@style/PTableVirtRowW"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        >
+                        <TextView
+                            android:text="@string/label_daytype"
+                            style="@style/TableInfoLabel"/>
+                        <Spinner
+                            style="@style/TableValue"
+                            android:id="@+id/attDayTypeSpinner"/>
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:id="@+id/atCheckinRow"
                     >
-                    <TextView
-                        android:text="@string/label_checkindate"
-                        style="@style/TableInfoLabel"
-                        android:textSize="@dimen/abc_text_size_body_1_material"/>
-                    <TextView
-                        style="@style/TableValueDate"
-                        android:id="@+id/atCheckinDate"
-                        android:hint="@string/cmn_select_datetime"
-                        android:text="@{atLine.CheckInDate}"
-                        />
-                </LinearLayout>
-            </TableRow>
-            <TableRow
-                android:id="@+id/atCheckoutRow"
-                >
-                <LinearLayout style="@style/PTableVirtRowW"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    <LinearLayout style="@style/PTableVirtRowW"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        >
+                        <TextView
+                            android:text="@string/label_checkindate"
+                            style="@style/TableInfoLabel"
+                            android:textSize="@dimen/abc_text_size_body_1_material"/>
+                        <TextView
+                            style="@style/TableValueDate"
+                            android:id="@+id/atCheckinDate"
+                            android:hint="@string/cmn_select_datetime"
+                            android:text="@{atLine.CheckInDate}"
+                            />
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:id="@+id/atCheckoutRow"
                     >
-                    <TextView
-                        android:text="@string/label_checkoutdate"
-                        style="@style/TableInfoLabel"
-                        android:textSize="@dimen/abc_text_size_body_1_material"/>
-                    <TextView
-                        style="@style/TableValueDate"
-                        android:id="@+id/atCheckoutDate"
-                        android:hint="@string/cmn_select_datetime"
-                        android:text="@{atLine.CheckOutDate}"
-                        />
-                </LinearLayout>
-            </TableRow>
-            <TableRow>
-                <LinearLayout style="@style/PTableVirtRowW">
-                    <TextView
-                        android:text="@string/label_comment"
-                        style="@style/TableInfoLabel"
-                        android:textSize="@dimen/abc_text_size_body_1_material"/>
-                    <EditText
-                        style="@style/TableValueDate"
-                        android:id="@+id/atComment"
-                        android:inputType="textCapSentences"
-                        android:text="@{atLine.Comments}"
-                        />
-                </LinearLayout>
-            </TableRow>
-        </TableLayout>
-        <Button
-            style="@style/ButtonLast"
-            android:id="@+id/saveATLine"
-            android:text="Save"/>
+                    <LinearLayout style="@style/PTableVirtRowW"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        >
+                        <TextView
+                            android:text="@string/label_checkoutdate"
+                            style="@style/TableInfoLabel"
+                            android:textSize="@dimen/abc_text_size_body_1_material"/>
+                        <TextView
+                            style="@style/TableValueDate"
+                            android:id="@+id/atCheckoutDate"
+                            android:hint="@string/cmn_select_datetime"
+                            android:text="@{atLine.CheckOutDate}"
+                            />
+                    </LinearLayout>
+                </TableRow>
+                <TableRow>
+                    <LinearLayout style="@style/PTableVirtRowW">
+                        <TextView
+                            android:text="@string/label_comment"
+                            style="@style/TableInfoLabel"
+                            android:textSize="@dimen/abc_text_size_body_1_material"/>
+                        <EditText
+                            style="@style/TableValueDate"
+                            android:id="@+id/atComment"
+                            android:inputType="textCapSentences"
+                            android:text="@{atLine.Comments}"
+                            />
+                    </LinearLayout>
+                </TableRow>
+            </TableLayout>
+            <Button
+                style="@style/ButtonLast"
+                android:id="@+id/saveATLine"
+                android:text="Save"/>
         </LinearLayout>
+    </ScrollView>
 </layout>

@@ -7,70 +7,75 @@
             type="com.pbasolutions.android.model.MEmployee"
         />
     </data>
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="?android:attr/dividerHorizontal"
-        android:showDividers="middle|end">
-        <TableRow>
-            <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_name" />
-                <EditText
-                    android:id="@+id/editTextEmpName"
-                    style="@style/TableValue"
-                    android:editable="false"
-                    android:text="@{employee.name}" />
-            </LinearLayout>
-        </TableRow>
-        <TableRow>
-            <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_idnumber" />
-                <EditText
-                    android:id="@+id/editTextEmpIDNumber"
-                    style="@style/TableValue"
-                    android:editable="false"
-                    android:text="@{employee.idNumber}" />
-            </LinearLayout>
-        </TableRow>
-        <TableRow>
-            <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_phone" />
-                <EditText
-                    android:id="@+id/editTextEmpPhone"
-                    style="@style/TableValue"
-                    android:editable="false"
-                    android:text="@{employee.phone}" />
-            </LinearLayout>
-        </TableRow>
-        <TableRow>
-            <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_jobtitle" />
-                <EditText
-                    style="@style/TableValue"
-                    android:id="@+id/editTextJobTitle"
-                    android:editable="false"
-                    android:text="@{employee.jobTitle}" />
-            </LinearLayout>
-        </TableRow>
-        <TableRow>
-            <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_shift" />
-                <EditText
-                    style="@style/TableValue"
-                    android:id="@+id/editTextShift"
-                    android:editable="false"
-                    android:text="@{employee.shiftName}" />
-            </LinearLayout>
-        </TableRow>
-    </TableLayout>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle|end">
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_name" />
+                    <EditText
+                        android:id="@+id/editTextEmpName"
+                        style="@style/TableValue"
+                        android:editable="false"
+                        android:text="@{employee.name}" />
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_idnumber" />
+                    <EditText
+                        android:id="@+id/editTextEmpIDNumber"
+                        style="@style/TableValue"
+                        android:editable="false"
+                        android:text="@{employee.idNumber}" />
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_phone" />
+                    <EditText
+                        android:id="@+id/editTextEmpPhone"
+                        style="@style/TableValue"
+                        android:editable="false"
+                        android:text="@{employee.phone}" />
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_jobtitle" />
+                    <EditText
+                        style="@style/TableValue"
+                        android:id="@+id/editTextJobTitle"
+                        android:editable="false"
+                        android:text="@{employee.jobTitle}" />
+                </LinearLayout>
+            </TableRow>
+            <TableRow>
+                <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_shift" />
+                    <EditText
+                        style="@style/TableValue"
+                        android:id="@+id/editTextShift"
+                        android:editable="false"
+                        android:text="@{employee.shiftName}" />
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
 </layout>

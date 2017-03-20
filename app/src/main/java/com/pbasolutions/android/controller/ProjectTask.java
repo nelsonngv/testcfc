@@ -184,6 +184,11 @@ public class ProjectTask implements Callable<Bundle> {
     private Bundle createTask() {
         MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
         ContentValues cv = getContentValuesFromTask(task);
+        if (task.getATTACHMENT_BEFORETASKPICTURE_1() != null && !task.getATTACHMENT_BEFORETASKPICTURE_1().isEmpty()) {
+            String pic1 = CameraUtil
+                    .imageToBase64(task.getATTACHMENT_BEFORETASKPICTURE_1());
+            task.setATTACHMENT_BEFORETASKPICTURE_1(pic1);
+        }
 //        boolean result = ModelConst.getURIResult(uri);
 //
 //        if (result) {
@@ -265,7 +270,16 @@ public class ProjectTask implements Callable<Bundle> {
 
             String[] selectionArgs = {taskUUID};
 
-            boolean result = ModelConst.deleteTableRow(cr, MProjectTask.TABLENAME, MProjectTask.C_PROJECTTASK_UUID_COL, selectionArgs);
+//            boolean result = ModelConst.deleteTableRow(cr, MProjectTask.TABLENAME, MProjectTask.C_PROJECTTASK_UUID_COL, selectionArgs);
+            ContentValues cv = new ContentValues();
+            cv.put(MProjectTask.COMMENTS_COL, comments);
+            cv.put(MProjectTask.ISDONE_COL, "Y");
+            cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_1_COL, input.getString(PBSTaskController.ARG_TASKPIC_1));
+            cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_2_COL, input.getString(PBSTaskController.ARG_TASKPIC_2));
+            cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_3_COL, input.getString(PBSTaskController.ARG_TASKPIC_3));
+            cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_4_COL, input.getString(PBSTaskController.ARG_TASKPIC_4));
+            cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_5_COL, input.getString(PBSTaskController.ARG_TASKPIC_5));
+            boolean result = ModelConst.updateTableRow(cr, MProjectTask.TABLENAME, cv, MProjectTask.C_PROJECTTASK_UUID_COL, selectionArgs);
 
             if (!result) {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
@@ -335,9 +349,9 @@ public class ProjectTask implements Callable<Bundle> {
             ArrayList<ContentProviderOperation> ops =
                     new ArrayList<>();
 
-            ops.add(ContentProviderOperation
-                    .newDelete(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
-                    .build());
+//            ops.add(ContentProviderOperation
+//                    .newDelete(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
+//                    .build());
             try {
                 cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops);
                 ops.clear();
@@ -346,17 +360,17 @@ public class ProjectTask implements Callable<Bundle> {
                 Log.e(TAG, e.getMessage());
             }
 
+            String projTaskIDs = "";
             for (PBSProjTaskJSON projTask : projTasks.getProjTasks()){
                 ContentValues cv = new ContentValues();
 
-
+                projTaskIDs += projTask.getC_ProjectTask_ID() + ", ";
                 cv.put(MProjectTask.C_PROJECTTASK_ID_COL, projTask.getC_ProjectTask_ID());
                 cv.put(MProjectTask.CREATED_COL, projTask.getCreated());
                 String createdBy = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
                         ModelConst.AD_USER_UUID_COL,
                         projTask.getCreatedBy(), ModelConst.AD_USER_ID_COL, cr);
                 cv.put(MProjectTask.CREATEDBY_COL, createdBy);
-
                 cv.put(MProjectTask.C_PROJECTLOCATION_UUID_COL, input.getString(PBSBroadcastController.ARG_PROJLOC_UUID));
                 cv.put(MProjectTask.ASSIGNEDTO_COL, projTask.getAssignedTo());
                 cv.put(MProjectTask.PRIORITY_COL, projTask.getSeqNo());
@@ -369,23 +383,27 @@ public class ProjectTask implements Callable<Bundle> {
                 String selection = MProjectTask.C_PROJECTTASK_ID_COL;
                 String[] arg = {cv.getAsString(selection)};
                 String tableName = ModelConst.C_PROJECTTASK_TABLE;
-//                if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
+                if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
                     cv.put(MProjectTask.C_PROJECTTASK_UUID_COL, UUID.randomUUID().toString());
                     ops.add(ContentProviderOperation
                             .newInsert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
                             .withValues(cv)
                             .build());
-//                } else {
-//                    selection = selection + "=?";
-//                    ops.add(ContentProviderOperation
-//                            .newUpdate(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
-//                            .withValues(cv)
-//                            .withSelection(selection, arg)
-//                            .build());
-//                }
+                } else {
+                    selection = selection + "=?";
+                    ops.add(ContentProviderOperation
+                            .newUpdate(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
+                            .withValues(cv)
+                            .withSelection(selection, arg)
+                            .build());
+                }
             }
+
             try {
                 ContentProviderResult results[] = cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops);
+                String selection = MProjectTask.ISDONE_COL + "=? AND " + MProjectTask.C_PROJECTTASK_ID_COL + " NOT IN (" + projTaskIDs.substring(0, projTaskIDs.length()-2) + ")";
+                String[] selectionArgs = {"Y"};
+                ModelConst.deleteTableRow(cr, MProjectTask.TABLENAME, selection, selectionArgs);
                 for(ContentProviderResult result : results) {
                     boolean resultFlag = false;
                     if (result.uri != null) {
