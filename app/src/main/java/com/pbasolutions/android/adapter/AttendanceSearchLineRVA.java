@@ -122,7 +122,6 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
         PandoraHelper.setVisibleView(holder.at_rowCheckinDate, isWork);
         PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, isWork);
         PandoraHelper.setVisibleView(holder.at_rowDate, !isWork);
-        //qweqwe
     }
 
     /**
@@ -168,8 +167,8 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
             at_leavetype = (TextView) bindView.findViewById(R.id.att_leavetype);
             at_resourcealloc = (TextView) bindView.findViewById(R.id.att_resouecealloc);
             at_type = (TextView) bindView.findViewById(R.id.att_type);
-//            at_offrestdaydesc = (TextView) bindView.findViewById(R.id.att_offrestdaydesc);
-//            at_offrestday = (TextView) bindView.findViewById(R.id.att_offrestday);
+            at_offrestdaydesc = (TextView) bindView.findViewById(R.id.att_offrestdaydesc);
+            at_offrestday = (TextView) bindView.findViewById(R.id.att_offrestday);
 
             at_rowCheckinDate = (TableRow) bindView.findViewById(R.id.ats_row_checkin);
             at_rowCheckoutDate = (TableRow) bindView.findViewById(R.id.ats_row_checkout);
