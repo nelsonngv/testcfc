@@ -95,7 +95,7 @@
                                 android:layout_weight="0.2"
                                 style="@style/TableValue2"/>
 
-                            <!--<TextView
+                            <TextView
                                 android:id="@+id/att_offrestdaydesc"
                                 android:text="Day"
                                 android:layout_weight="0.2"
@@ -106,7 +106,7 @@
                                 android:id="@+id/att_offrestday"
                                 android:layout_weight="0.6"
                                 android:text="@{attendancesearchitem.HR_DaysType}"
-                                style="@style/TableValue2"/>-->
+                                style="@style/TableValue2"/>
 
                         </TableRow>
                     </TableLayout>

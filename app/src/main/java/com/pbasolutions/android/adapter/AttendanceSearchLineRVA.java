@@ -109,19 +109,19 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
         boolean isWork = !(atLine.getCheckIn() == null || atLine.getCheckIn().equalsIgnoreCase("")
                 || atLine.getCheckOut() == null || atLine.getCheckOut().equalsIgnoreCase("")) && !isAbsent;
 
-//        if (isOff || isRest) {
+        if (isOff || isRest) {
             if (isOff)
                 holder.at_type.setText(OFFDAY);
             else if (isRest)
                 holder.at_type.setText(RESTDAY);
-//            PandoraHelper.setVisibleView(holder.at_offrestdaydesc, !isWork);
-//            PandoraHelper.setVisibleView(holder.at_offrestday, !isWork);
-//        }
+            PandoraHelper.setVisibleView(holder.at_offrestdaydesc, !isWork);
+            PandoraHelper.setVisibleView(holder.at_offrestday, !isWork);
+        }
         PandoraHelper.setVisibleView(holder.at_rowType, isOff || isRest);
         PandoraHelper.setVisibleView(holder.at_rowLeaveType, isAbsent);
         PandoraHelper.setVisibleView(holder.at_rowCheckinDate, isWork);
         PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, isWork);
-//        PandoraHelper.setVisibleView(holder.at_rowDate, !isWork);
+        PandoraHelper.setVisibleView(holder.at_rowDate, !isWork);
     }
 
     /**
