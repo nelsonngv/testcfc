@@ -45,10 +45,12 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
     transient int _ID;
 
     public String getHR_DaysType() {
-        if(Days.equalsIgnoreCase("1"))
+        if(Days == null)
+            return "";
+        else if(Days.equalsIgnoreCase("1"))
             return "Full Day";
         else
-        return "Half Day";
+            return "Half Day";
     }
 
     public void setHR_DaysType(String HR_Days) {
