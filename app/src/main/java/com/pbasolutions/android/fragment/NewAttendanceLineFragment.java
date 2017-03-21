@@ -205,8 +205,8 @@ public class NewAttendanceLineFragment extends Fragment {
 
             PandoraHelper.setVisibleView(workSwitchRow, true);
             PandoraHelper.setVisibleView(leavetypeRow, false);
-            PandoraHelper.setVisibleView(daytypeRow, false);
-//            PandoraHelper.setVisibleView(daytypeRow, !isShow);
+//            PandoraHelper.setVisibleView(daytypeRow, false);
+            PandoraHelper.setVisibleView(daytypeRow, !isShow);
             PandoraHelper.setVisibleView(checkinRow, isShow);
             PandoraHelper.setVisibleView(checkoutRow, isShow);
         }
@@ -292,8 +292,8 @@ public class NewAttendanceLineFragment extends Fragment {
                 tempATLine.setCheckInDate(sdf.format(checkin));
                 tempATLine.setCheckOutDate(sdf.format(checkout));
             }
-//                else
-//                    tempATLine.setHR_DaysType(daySpinner.getValue());
+            else
+                tempATLine.setHR_DaysType(daySpinner.getValue());
         } else {
             tempATLine.setCheckInDate(sdf.format(checkin));
             tempATLine.setCheckOutDate(sdf.format(checkout));
@@ -311,17 +311,17 @@ public class NewAttendanceLineFragment extends Fragment {
         if (isAbsent) {
             cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, Integer.parseInt(leaveSpinner.getKey()));
             cv.put(MAttendanceLine.HR_DAYS_COL, Double.parseDouble(daySpinner.getKey()));
-
             cv.put(MAttendanceLine.CHECKIN_COL, "");
             cv.put(MAttendanceLine.CHECKOUT_COL, "");
         } else {
             cv.put(MAttendanceLine.HR_LEAVETYPE_ID_COL, 0);
-            cv.put(MAttendanceLine.HR_DAYS_COL, 0);
+//            cv.put(MAttendanceLine.HR_DAYS_COL, 0);
 
             if (!((isOff || isRest) && !switchWork.isChecked())) {
                 cv.put(MAttendanceLine.CHECKIN_COL, sdf.format(checkin));
                 cv.put(MAttendanceLine.CHECKOUT_COL, sdf.format(checkout));
             } else {
+                cv.put(MAttendanceLine.HR_DAYS_COL, Double.parseDouble(daySpinner.getKey()));
                 cv.put(MAttendanceLine.CHECKIN_COL, "");
                 cv.put(MAttendanceLine.CHECKOUT_COL, "");
             }

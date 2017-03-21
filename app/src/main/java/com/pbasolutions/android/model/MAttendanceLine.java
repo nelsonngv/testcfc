@@ -161,7 +161,8 @@ public class MAttendanceLine  implements IPBSJson, IModel, Serializable {
         }
         if (!(IsAbsent != null && IsAbsent.equalsIgnoreCase("Y"))) {
             HR_LeaveType_ID = null;
-            Days = null;
+            if (!IsOff.equalsIgnoreCase("Y") && !IsRest.equalsIgnoreCase("Y"))
+                Days = null;
         }
     }
 }

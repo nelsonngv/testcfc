@@ -111,10 +111,10 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         PandoraHelper.setVisibleView(holder.at_rowLeaveType, isAbsent);
         PandoraHelper.setVisibleView(holder.at_absentdaydesc, isAbsent);
         PandoraHelper.setVisibleView(holder.at_absentday, isAbsent);
-//        PandoraHelper.setVisibleView(holder.at_offdaydesc, !isWork);
-//        PandoraHelper.setVisibleView(holder.at_offday, !isWork);
-//        PandoraHelper.setVisibleView(holder.at_restdaydesc, !isWork);
-//        PandoraHelper.setVisibleView(holder.at_restday, !isWork);
+        PandoraHelper.setVisibleView(holder.at_offdaydesc, !isWork);
+        PandoraHelper.setVisibleView(holder.at_offday, !isWork);
+        PandoraHelper.setVisibleView(holder.at_restdaydesc, !isWork);
+        PandoraHelper.setVisibleView(holder.at_restday, !isWork);
         PandoraHelper.setVisibleView(holder.at_rowCheckinDate, isWork);
         PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, isWork);
     }
@@ -165,10 +165,10 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
             at_isabsent = (TextView) bindView.findViewById(R.id.at_isabsent);
             at_absentdaydesc = (TextView) bindView.findViewById(R.id.at_absentdaydesc);
             at_absentday = (TextView) bindView.findViewById(R.id.at_absentday);
-//            at_offdaydesc = (TextView) bindView.findViewById(R.id.at_offdaydesc);
-//            at_offday = (TextView) bindView.findViewById(R.id.at_offday);
-//            at_restdaydesc = (TextView) bindView.findViewById(R.id.at_restdaydesc);
-//            at_restday = (TextView) bindView.findViewById(R.id.at_restday);
+            at_offdaydesc = (TextView) bindView.findViewById(R.id.at_offdaydesc);
+            at_offday = (TextView) bindView.findViewById(R.id.at_offday);
+            at_restdaydesc = (TextView) bindView.findViewById(R.id.at_restdaydesc);
+            at_restday = (TextView) bindView.findViewById(R.id.at_restday);
             at_checkindate = (TextView) bindView.findViewById(R.id.at_checkindate);
             at_checkoutdate = (TextView) bindView.findViewById(R.id.at_checkoutdate);
             at_leavetype = (TextView) bindView.findViewById(R.id.at_leavetype);

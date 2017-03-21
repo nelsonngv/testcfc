@@ -193,6 +193,7 @@ public class AttendanceTask implements Callable<Bundle> {
                     item.setHR_LeaveType_Name(getHRLeaveTypeName(item.getHR_LeaveType_ID()));
                     item.setCheckIn(PandoraHelper.parseToDisplaySDate(item.getCheckIn(), "yyyy-MM-dd HH:mm", null));
                     item.setCheckOut(PandoraHelper.parseToDisplaySDate(item.getCheckOut(), "yyyy-MM-dd HH:mm", null));
+                    item.setUpdated(PandoraHelper.parseToDisplaySDate(item.getUpdated(), "yyyy-MM-dd HH:mm", null));
                     item.setHR_DaysType(getHRDaysName(item.getHR_DaysType()));
                     item.setComments(item.getComments());
                     list.add(item);
@@ -505,9 +506,9 @@ public class AttendanceTask implements Callable<Bundle> {
 
         } else {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-            output.putString(PandoraConstant.ERROR, "Fail to request attendance");
-//            this is for displaying error msg received directly from api
-//            output.putString(PandoraConstant.ERROR, resultAtt.getErrorMessage());
+//            output.putString(PandoraConstant.ERROR, "Fail to request attendance");
+            //this is for displaying error msg received directly from api
+            output.putString(PandoraConstant.ERROR, resultAtt.getErrorMessage());
 
             //delete the data
             ArrayList<ContentProviderOperation> ops =
