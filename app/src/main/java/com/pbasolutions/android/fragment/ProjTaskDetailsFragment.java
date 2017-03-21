@@ -1,7 +1,6 @@
 package com.pbasolutions.android.fragment;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -32,6 +31,7 @@ import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.utils.CameraUtil;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -63,6 +63,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
     TextView taskStatus;
     TextView taskDesc;
     TextView taskDueDate;
+    ImageView pretaskPicture;
     ImageView taskPicture1;
     ImageView taskPicture2;
     ImageView taskPicture3;
@@ -71,12 +72,11 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
     EditText taskComments;
    // Button taskIsDoneButton;
     PandoraMain context;
-
     View m_rootView;
-
 
     protected static final String EVENT_DATE = "EVENT_DATE";
     protected static final String EVENT_COMPLETEPROJ = "EVENT_COMPLETEPROJ";
+    protected static final String EVENT_PREPIC = "EVENT_PREPIC";
     protected static final String EVENT_PIC1 = "EVENT_PIC1";
     protected static final String EVENT_PIC2 = "EVENT_PIC2";
     protected static final String EVENT_PIC3 = "EVENT_PIC3";
@@ -116,6 +116,13 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             taskDesc.setText(projTask.getDescription());
             taskDueDate.setText(projTask.getDueDate());
 
+            if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1()).exists()) projTask.setATTACHMENT_BEFORETASKPICTURE_1(null);
+            if (projTask.getATTACHMENT_TASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_1()).exists()) projTask.setATTACHMENT_TASKPICTURE_1(null);
+            if (projTask.getATTACHMENT_TASKPICTURE_2() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_2()).exists()) projTask.setATTACHMENT_TASKPICTURE_2(null);
+            if (projTask.getATTACHMENT_TASKPICTURE_3() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_3()).exists()) projTask.setATTACHMENT_TASKPICTURE_3(null);
+            if (projTask.getATTACHMENT_TASKPICTURE_4() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_4()).exists()) projTask.setATTACHMENT_TASKPICTURE_4(null);
+            if (projTask.getATTACHMENT_TASKPICTURE_5() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_5()).exists()) projTask.setATTACHMENT_TASKPICTURE_5(null);
+            CameraUtil.loadPicture(projTask.getATTACHMENT_BEFORETASKPICTURE_1(), pretaskPicture);
             CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_1(), taskPicture1);
             CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_2(), taskPicture2);
             CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_3(), taskPicture3);
@@ -124,11 +131,11 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             taskComments.setText(projTask.getComments());
 
             String buttonText;
-            if ("N".equalsIgnoreCase(projTask.isDone())){
+            if ("N".equalsIgnoreCase(projTask.isDone())) {
                 //buttonText = "Complete";
                 setHasOptionsMenu(true);
                 getActivity().invalidateOptionsMenu();
-            } else {
+            } /*else {
                // buttonText = "Completed";
 
                // taskIsDoneButton.setEnabled(false);
@@ -138,7 +145,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                 taskPicture3.setEnabled(false);
                 taskPicture4.setEnabled(false);
                 taskPicture5.setEnabled(false);
-            }
+            }*/
            // taskIsDoneButton.setText(buttonText);
         }
     }
@@ -201,6 +208,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         taskStatus = (TextView) rootView.findViewById(R.id.taskStatus);
         taskDesc = (TextView) rootView.findViewById(R.id.taskDesc);
         taskDueDate = (TextView) rootView.findViewById(R.id.taskDueDate);
+        pretaskPicture = (ImageView) rootView.findViewById(R.id.pretaskPicture);
         taskPicture1 = (ImageView) rootView.findViewById(R.id.taskPicture1);
         taskPicture2 = (ImageView) rootView.findViewById(R.id.taskPicture2);
         taskPicture3 = (ImageView) rootView.findViewById(R.id.taskPicture3);
@@ -218,6 +226,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
     protected void setUIListener() {
        // setOnClickListener(taskIsDoneButton, EVENT_COMPLETEPROJ);
+        setOnClickListener(pretaskPicture, EVENT_PREPIC);
         setOnClickListener(taskPicture1, EVENT_PIC1);
         setOnClickListener(taskPicture2, EVENT_PIC2);
         setOnClickListener(taskPicture3, EVENT_PIC3);
@@ -227,6 +236,9 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
     @Override
     public boolean onBackKeyPressed() {
+        if ("Y".equalsIgnoreCase(projTask.isDone()))
+            return false;
+
         boolean hasChanged = !taskComments.getText().toString().isEmpty();
         hasChanged |= !(taskPicture1.getTag() == null || ((String)taskPicture1.getTag()).isEmpty());
         hasChanged |= !(taskPicture2.getTag() == null || ((String)taskPicture2.getTag()).isEmpty());
@@ -258,6 +270,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         object.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(android.content.Intent.ACTION_VIEW);
                 switch (event) {
                     case EVENT_DATE: {
                         PandoraHelper.promptFutureDatePicker((TextView) object, getActivity());
@@ -267,24 +281,61 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 //                        completeProj();
 //                        break;
 //                    }
+                    case EVENT_PREPIC: {
+                        if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !projTask.getATTACHMENT_BEFORETASKPICTURE_1().equals("")) {
+                            intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1())), "image/*");
+                            PandoraMain.instance.startActivity(intent);
+                        }
+                        break;
+                    }
                     case EVENT_PIC1: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_1, object);
+                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
+                            if (projTask.getATTACHMENT_TASKPICTURE_1() != null && !projTask.getATTACHMENT_TASKPICTURE_1().equals("")) {
+                                intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_TASKPICTURE_1())), "image/*");
+                                PandoraMain.instance.startActivity(intent);
+                            }
+                        }
+                        else takePicture(CameraUtil.CAPTURE_ATTACH_1, object);
                         break;
                     }
                     case EVENT_PIC2: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_2, object);
+                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
+                            if (projTask.getATTACHMENT_TASKPICTURE_2() != null && !projTask.getATTACHMENT_TASKPICTURE_2().equals("")) {
+                                intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_TASKPICTURE_2())), "image/*");
+                                PandoraMain.instance.startActivity(intent);
+                            }
+                        }
+                        else takePicture(CameraUtil.CAPTURE_ATTACH_2, object);
                         break;
                     }
                     case EVENT_PIC3: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_3, object);
+                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
+                            if (projTask.getATTACHMENT_TASKPICTURE_3() != null && !projTask.getATTACHMENT_TASKPICTURE_3().equals("")) {
+                                intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_TASKPICTURE_3())), "image/*");
+                                PandoraMain.instance.startActivity(intent);
+                            }
+                        }
+                        else takePicture(CameraUtil.CAPTURE_ATTACH_3, object);
                         break;
                     }
                     case EVENT_PIC4: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_4, object);
+                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
+                            if (projTask.getATTACHMENT_TASKPICTURE_4() != null && !projTask.getATTACHMENT_TASKPICTURE_4().equals("")) {
+                                intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_TASKPICTURE_4())), "image/*");
+                                PandoraMain.instance.startActivity(intent);
+                            }
+                        }
+                        else takePicture(CameraUtil.CAPTURE_ATTACH_4, object);
                         break;
                     }
                     case EVENT_PIC5: {
-                        takePicture(CameraUtil.CAPTURE_ATTACH_5, object);
+                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
+                            if (projTask.getATTACHMENT_TASKPICTURE_5() != null && !projTask.getATTACHMENT_TASKPICTURE_5().equals("")) {
+                                intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_TASKPICTURE_5())), "image/*");
+                                PandoraMain.instance.startActivity(intent);
+                            }
+                        }
+                        else takePicture(CameraUtil.CAPTURE_ATTACH_5, object);
                         break;
                     }
                     default:

@@ -199,6 +199,7 @@
     <!--
     Task layout.
     !-->
+    <string name="label_pretaskpicture">Pre-Task Picture </string>
     <string name="label_picture1">Picture [1] </string>
     <string name="label_picture2">Picture [2] </string>
     <string name="label_picture3">Picture [3] </string>
