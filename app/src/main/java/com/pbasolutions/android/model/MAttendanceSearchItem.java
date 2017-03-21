@@ -32,6 +32,7 @@ public class MAttendanceSearchItem  extends PBSJson {
     private String CheckIn;
     private String HR_ResourceAllocation_ID;
     private String Comments;
+    private String Updated;
 
     private transient String HR_LeaveType_Name;
     private transient String C_BPartner_Name;
@@ -145,5 +146,13 @@ public class MAttendanceSearchItem  extends PBSJson {
 
     public void setC_BPartner_Name(String c_BPartner_Name) {
         C_BPartner_Name = c_BPartner_Name;
+    }
+
+    public String getUpdated() {
+        return Updated;
+    }
+
+    public void setUpdated(String updated) {
+        Updated = updated;
     }
 }
