@@ -122,6 +122,7 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
         PandoraHelper.setVisibleView(holder.at_rowCheckinDate, isWork);
         PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, isWork);
 //        PandoraHelper.setVisibleView(holder.at_rowDate, !isWork);
+        //asdasd
     }
 
     /**
