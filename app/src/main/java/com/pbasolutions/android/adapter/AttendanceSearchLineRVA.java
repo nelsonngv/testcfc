@@ -109,20 +109,14 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
         boolean isWork = !(atLine.getCheckIn() == null || atLine.getCheckIn().equalsIgnoreCase("")
                 || atLine.getCheckOut() == null || atLine.getCheckOut().equalsIgnoreCase("")) && !isAbsent;
 
-//        if (isOff || isRest) {
-            if (isOff)
-                holder.at_type.setText(OFFDAY);
-            else if (isRest)
-                holder.at_type.setText(RESTDAY);
-//            PandoraHelper.setVisibleView(holder.at_offrestdaydesc, !isWork);
-//            PandoraHelper.setVisibleView(holder.at_offrestday, !isWork);
-//        }
+        if (isOff)
+            holder.at_type.setText(OFFDAY);
+        else if (isRest)
+            holder.at_type.setText(RESTDAY);
         PandoraHelper.setVisibleView(holder.at_rowType, isOff || isRest);
         PandoraHelper.setVisibleView(holder.at_rowLeaveType, isAbsent);
         PandoraHelper.setVisibleView(holder.at_rowCheckinDate, isWork);
         PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, isWork);
-//        PandoraHelper.setVisibleView(holder.at_rowDate, !isWork);
-        //asdasd
     }
 
     /**
@@ -145,14 +139,11 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
         TextView at_leavetype;
         TextView at_resourcealloc;
         TextView at_type;
-        TextView at_offrestdaydesc;
-        TextView at_offrestday;
 
         TableRow at_rowCheckinDate;
         TableRow at_rowCheckoutDate;
         TableRow at_rowLeaveType;
         TableRow at_rowType;
-        TableRow at_rowDate;
 
         private BroadcastRVA.IViewHolderOnClicks listeners;
 
@@ -168,14 +159,11 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
             at_leavetype = (TextView) bindView.findViewById(R.id.att_leavetype);
             at_resourcealloc = (TextView) bindView.findViewById(R.id.att_resouecealloc);
             at_type = (TextView) bindView.findViewById(R.id.att_type);
-//            at_offrestdaydesc = (TextView) bindView.findViewById(R.id.att_offrestdaydesc);
-//            at_offrestday = (TextView) bindView.findViewById(R.id.att_offrestday);
 
             at_rowCheckinDate = (TableRow) bindView.findViewById(R.id.ats_row_checkin);
             at_rowCheckoutDate = (TableRow) bindView.findViewById(R.id.ats_row_checkout);
             at_rowLeaveType = (TableRow) bindView.findViewById(R.id.ats_row_leavetype);
             at_rowType = (TableRow) bindView.findViewById(R.id.ats_row_type);
-            at_rowDate = (TableRow) bindView.findViewById(R.id.ats_row_date);
 
             at_checkindate.setOnClickListener(this);
             at_checkoutdate.setOnClickListener(this);

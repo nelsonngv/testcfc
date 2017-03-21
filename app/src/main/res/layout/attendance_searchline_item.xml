@@ -95,37 +95,10 @@
                                 android:layout_weight="0.2"
                                 style="@style/TableValue2"/>
 
-                            <!--<TextView
-                                android:id="@+id/att_offrestdaydesc"
-                                android:text="Day"
-                                android:layout_weight="0.2"
-                                android:layout_width="wrap_content"
-                                style="@style/TableLabel"
-                                />
-                            <TextView
-                                android:id="@+id/att_offrestday"
-                                android:layout_weight="0.6"
-                                android:text="@{attendancesearchitem.HR_DaysType}"
-                                style="@style/TableValue2"/>-->
-
                         </TableRow>
                     </TableLayout>
                 </RelativeLayout>
 
-            </TableRow>
-            <TableRow
-                android:id="@+id/ats_row_date"
-                android:divider="?android:attr/dividerVertical"
-                android:showDividers="middle"
-                android:visibility="gone">
-                <TextView
-                    android:text="@string/label_date"
-                    style="@style/TableLabel"/>
-                <TextView
-                    android:id="@+id/att_date"
-                    style="@style/TableValue2"
-                    android:text="@{attendancesearchitem.Updated}"
-                    />
             </TableRow>
             <TableRow
                 android:id="@+id/ats_row_checkin"
