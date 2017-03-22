@@ -113,8 +113,8 @@ public class NewAttendanceLineFragment extends Fragment {
         textCheckinDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String deployDate = PBSAttendanceController.deployDate;
-                Date dt =  PandoraHelper.stringToDate("dd-MM-yyyy", deployDate);
+                String deployDate = textCheckinDate.getText().toString();
+                Date dt =  PandoraHelper.stringToDate("dd-MM-yyyy HH:mm", deployDate);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(dt);
                 PandoraHelper.promptDateTimePicker(textCheckinDate, cal, getActivity());
@@ -124,8 +124,8 @@ public class NewAttendanceLineFragment extends Fragment {
         textCheckoutDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String deployDate = PBSAttendanceController.deployDate;
-                Date dt =  PandoraHelper.stringToDate("dd-MM-yyyy", deployDate);
+                String deployDate = textCheckoutDate.getText().toString();
+                Date dt =  PandoraHelper.stringToDate("dd-MM-yyyy HH:mm", deployDate);
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(dt);
                 PandoraHelper.promptDateTimePicker(textCheckoutDate, cal, getActivity());
