@@ -350,8 +350,14 @@ public class PandoraHelper  {
 
                     }
                 }, mYear, mMonth, mDay);
-        if (hasMaxDate)
-            dpd.getDatePicker().setMaxDate(Calendar.getInstance().getTimeInMillis());
+        if (hasMaxDate) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, cal.getMaximum(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, cal.getMaximum(Calendar.MINUTE));
+            cal.set(Calendar.SECOND, cal.getMaximum(Calendar.SECOND));
+            cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
+            dpd.getDatePicker().setMaxDate(cal.getTimeInMillis());
+        }
         dpd.show();
     }
 
@@ -387,8 +393,14 @@ public class PandoraHelper  {
 
                     }
                 }, mYear, mMonth, mDay);
-        if (hasMinDate)
-            dpd.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
+        if (hasMinDate) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, cal.getMinimum(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, cal.getMinimum(Calendar.MINUTE));
+            cal.set(Calendar.SECOND, cal.getMinimum(Calendar.SECOND));
+            cal.set(Calendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
+            dpd.getDatePicker().setMinDate(cal.getTimeInMillis());
+        }
         dpd.show();
     }
 
@@ -404,6 +416,8 @@ public class PandoraHelper  {
         int  mYear = calendar.get(Calendar.YEAR);
         int  mMonth = calendar.get(Calendar.MONTH);
         int  mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        final int  mHour = calendar.get(Calendar.HOUR_OF_DAY);
+        final int  mMinute = calendar.get(Calendar.MINUTE);
 
         DatePickerDialog dpd = new DatePickerDialog(activity,
                 new DatePickerDialog.OnDateSetListener() {
@@ -422,19 +436,27 @@ public class PandoraHelper  {
                         m_nMonth = monthOfYear;
                         m_nDay = dayOfMonth;
 
-                        Calendar calTime = Calendar.getInstance();
+//                        Calendar calTime = Calendar.getInstance();
                         TimePickerDialog timedlg = new TimePickerDialog(activity, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 String timeStr = String.format("%02d-%02d-%04d %02d:%02d", m_nDay, m_nMonth + 1, m_nYear, hourOfDay, minute);
                                 date.setText(timeStr);
                             }
-                        }, calTime.get(Calendar.HOUR_OF_DAY), calTime.get(Calendar.MINUTE), false);
+                        }, mHour, mMinute, false);
                         timedlg.show();
                     }
                 }, mYear, mMonth, mDay);
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getMinimum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getMinimum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getMinimum(Calendar.SECOND));
+        calendar.set(Calendar.MILLISECOND, calendar.getMinimum(Calendar.MILLISECOND));
         dpd.getDatePicker().setMinDate(calendar.getTimeInMillis());
         calendar.add(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getMaximum(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, calendar.getMaximum(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, calendar.getMaximum(Calendar.SECOND));
+        calendar.set(Calendar.MILLISECOND, calendar.getMaximum(Calendar.MILLISECOND));
         dpd.getDatePicker().setMaxDate(calendar.getTimeInMillis());
         dpd.show();
     }

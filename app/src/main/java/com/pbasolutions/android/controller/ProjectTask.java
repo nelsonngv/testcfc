@@ -327,6 +327,7 @@ public class ProjectTask implements Callable<Bundle> {
 
         cv.put(MProjectTask.COMMENTS_COL,projTask.getComments());
         cv.put(MProjectTask.DUEDATE_COL,projTask.getDueDate());
+        cv.put(MProjectTask.ATTACHMENT_BEFORETASKPICTURE_1_COL,projTask.getATTACHMENT_BEFORETASKPICTURE_1());
 
         return cv;
     }
@@ -444,6 +445,7 @@ public class ProjectTask implements Callable<Bundle> {
             MProjectTask.COMMENTS_COL,
             MProjectTask.CREATED_COL,
             MProjectTask.CREATEDBY_COL,
+            MProjectTask.ATTACHMENT_BEFORETASKPICTURE_1_COL,
             MProjectTask.ATTACHMENT_TASKPICTURE_1_COL,
             MProjectTask.ATTACHMENT_TASKPICTURE_2_COL,
             MProjectTask.ATTACHMENT_TASKPICTURE_3_COL,
@@ -537,6 +539,9 @@ public class ProjectTask implements Callable<Bundle> {
             } else if (MProjectTask.CREATEDBY_COL
                     .equalsIgnoreCase(columnName)) {
                 projTask.setCreatedBy(rowValue);
+            } else if (MProjectTask.ATTACHMENT_BEFORETASKPICTURE_1_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_BEFORETASKPICTURE_1(rowValue);
             } else if (MProjectTask.ATTACHMENT_TASKPICTURE_1_COL
                     .equalsIgnoreCase(columnName)) {
                 projTask.setATTACHMENT_TASKPICTURE_1(rowValue);
