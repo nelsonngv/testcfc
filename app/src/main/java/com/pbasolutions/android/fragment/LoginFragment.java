@@ -118,7 +118,9 @@ public class LoginFragment extends Fragment {
         }
 
         // complement server URL
-        if (!serverURL.startsWith("https://"))
+        if (serverURL.startsWith("http://"))
+            serverURL = new StringBuilder(serverURL).insert(4, "s").toString();
+        else if (!serverURL.startsWith("https://"))
             serverURL = "https://" + serverURL;
 
         final Bundle bundle = new Bundle();
