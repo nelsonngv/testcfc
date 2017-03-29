@@ -8,83 +8,87 @@
             name="movement"
             type="com.pbasolutions.android.model.MMovement" />
     </data>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TableLayout
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_top"
-            android:divider="?android:attr/dividerHorizontal"
-            android:showDividers="middle|end"
-            >
-            <TableRow>
-                <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_docno" />
-                <TextView
-                    android:id="@+id/documentNo"
-                    style="@style/TableValue"
-                    android:text="@{String.valueOf(movement.DocumentNo)}"
-                />
-                </LinearLayout>>
-            </TableRow>
-            <TableRow>
-                <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_fromprojloc" />
-                <TextView
-                    style="@style/TableValue"
-                    android:text="@{movement.ProjectLocation}"
-                    android:id="@+id/projectLocation">
-                </TextView>
-                </LinearLayout>>
-            </TableRow>
-            <TableRow>
-                <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_toprojloc" />
-                <com.pbasolutions.android.control.SearchableSpinner
-                    style="@style/SpinnerTableValue"
-                    android:id="@+id/toProjectLocation"
-                    app:dlgTitle="@string/title_selectprojectloc"
-                />
-                </LinearLayout>>
-            </TableRow>
-            <TableRow>
-                <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/label_movementdate"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top"
+                android:divider="?android:attr/dividerHorizontal"
+                android:showDividers="middle|end"
+                >
+                <TableRow>
+                    <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_docno" />
+                    <TextView
+                        android:id="@+id/documentNo"
+                        style="@style/TableValue"
+                        android:text="@{String.valueOf(movement.DocumentNo)}"
                     />
-                <TextView
-                    android:id="@+id/movementDate"
-                    style="@style/TableValueDate"
-                    android:hint="Press to Select Date"
-                    android:text="@{movement.MovementDate}"
+                    </LinearLayout>>
+                </TableRow>
+                <TableRow>
+                    <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_fromprojloc" />
+                    <TextView
+                        style="@style/TableValue"
+                        android:text="@{movement.ProjectLocation}"
+                        android:id="@+id/projectLocation">
+                    </TextView>
+                    </LinearLayout>>
+                </TableRow>
+                <TableRow>
+                    <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_toprojloc" />
+                    <com.pbasolutions.android.control.SearchableSpinner
+                        style="@style/SpinnerTableValue"
+                        android:id="@+id/toProjectLocation"
+                        app:dlgTitle="@string/title_selectprojectloc"
                     />
-                </LinearLayout>>
-            </TableRow>
-            <TableRow>
-                <LinearLayout style="@style/PTableVirtRowW">
-                <TextView
-                    style="@style/TableInfoLabel"
-                    android:text="@string/movement_label_lines"
-                    android:layout_column="0"/>
-                <TableLayout
-                    style="@style/TableValue">
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/movementline_rv"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </android.support.v7.widget.RecyclerView>
-                </TableLayout>
-                </LinearLayout>>
-            </TableRow>
-        </TableLayout>
-    </LinearLayout>
+                    </LinearLayout>>
+                </TableRow>
+                <TableRow>
+                    <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/label_movementdate"
+                        />
+                    <TextView
+                        android:id="@+id/movementDate"
+                        style="@style/TableValueDate"
+                        android:hint="Press to Select Date"
+                        android:text="@{movement.MovementDate}"
+                        />
+                    </LinearLayout>>
+                </TableRow>
+                <TableRow>
+                    <LinearLayout style="@style/PTableVirtRowW">
+                    <TextView
+                        style="@style/TableInfoLabel"
+                        android:text="@string/movement_label_lines"
+                        android:layout_column="0"/>
+                    <TableLayout
+                        style="@style/TableValue">
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/movementline_rv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        </android.support.v7.widget.RecyclerView>
+                    </TableLayout>
+                    </LinearLayout>>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
 </layout>

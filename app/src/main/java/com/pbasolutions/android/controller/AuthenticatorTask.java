@@ -27,6 +27,7 @@ import com.pbasolutions.android.R;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.authentication.PBSIServerAuthenticate;
 import com.pbasolutions.android.authentication.PBSServerAuthenticate;
+import com.pbasolutions.android.database.PBSDBHelper;
 import com.pbasolutions.android.json.PBSLoginJSON;
 import com.pbasolutions.android.json.PBSProjLocJSON;
 import com.pbasolutions.android.json.PBSRoleJSON;
@@ -140,6 +141,8 @@ public class AuthenticatorTask extends Task {
         try {
             Account account = getAccount(input.getString(PBSAuthenticatorController.USER_NAME_ARG),
                     input.getString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE));
+            am.setUserData(account, PBSAuthenticatorController.SERVER_URL_ARG,
+                    input.getString(PBSAuthenticatorController.SERVER_URL_ARG));
             am.setUserData(account, PBSAuthenticatorController.ROLE_ARG,
                     input.getString(PBSAuthenticatorController.ROLE_ARG));
             am.setUserData(account, PBSAuthenticatorController.ORG_ARG,
@@ -373,7 +376,10 @@ public class AuthenticatorTask extends Task {
 //            Account userAccount = getAccount(userName, accType);
 //            am.removeAccount(userAccount, null, null);
 
-            ((PandoraMain) ctx).globalVariable = null;
+//            ((PandoraMain) ctx).globalVariable = null;
+            ((PandoraMain) ctx).globalVariable.setAd_user_name("");
+            ((PandoraMain) ctx).globalVariable.setAd_user_password("");
+            ((PandoraMain) ctx).globalVariable.setAuth_token("");
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully logged out");
         } else {
@@ -462,6 +468,19 @@ public class AuthenticatorTask extends Task {
                 if (user.getSuccess().equals("TRUE")) {
 //                    PandoraHelper.populateMenuForms(user.getForms());
                     Account arrayAccounts[] = getAccounts(accType);
+
+                    // clear db and account if connects to another server
+                    if (!PandoraMain.instance.getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(PandoraMain.instance.getGlobalVariable().getServer_url())) {
+                        PBSDBHelper.reCreateDatabase(PandoraMain.instance);
+                        PandoraMain.instance.resetServerData(serverURL);
+                        PandoraMain.instance.setGlobalVariable(null);
+
+                        // remove all accounts
+                        for (int i = 0; i < arrayAccounts.length; i++) {
+                            am.removeAccount(getAccount(arrayAccounts[i].name, accType), null, null);
+                        }
+                    }
+
                     //if account already created.
                     if (arrayAccounts.length > 0) {
                         Account userAccount = getAccount(userName, accType);

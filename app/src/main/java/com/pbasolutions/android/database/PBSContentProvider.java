@@ -1223,4 +1223,14 @@ public class PBSContentProvider extends ContentProvider {
         }
         return resultFlag;
     }
+
+    public void resetDatabase() {
+        if(dbHelper != null) {
+            dbHelper.close();
+            ((PBSDBHelper) dbHelper).removeDatabase(getContext());
+            dbHelper = new PBSDBHelper(getContext());
+        } else {
+            Log.d(TAG, "Database NULL");
+        }
+    }
 }

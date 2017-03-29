@@ -465,12 +465,12 @@ public class RequisitionTask implements Callable<Bundle> {
                 );
 
         Pair pair = PandoraHelper.parseJsonWithArraytoPair(resultJson, "Success", "Requisitions", MPurchaseRequest[].class.getName());
-        String success = (String) pair.first;
-        MPurchaseRequest[] purchaseReqs = (MPurchaseRequest[]) pair.second;
+        if (pair != null) {
+            String success = (String) pair.first;
+            MPurchaseRequest[] purchaseReqs = (MPurchaseRequest[]) pair.second;
 
-        ArrayList<ContentProviderOperation> ops =
-                new ArrayList<>();
-        if (pair != null){
+            ArrayList<ContentProviderOperation> ops =
+                    new ArrayList<>();
             if ("TRUE".equalsIgnoreCase(success)) {
                 if(purchaseReqs != null) {
                     for (MPurchaseRequest purchaseReq : purchaseReqs) {

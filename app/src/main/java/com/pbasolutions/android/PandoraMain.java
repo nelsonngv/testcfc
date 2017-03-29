@@ -11,11 +11,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -35,6 +38,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 //import com.google.firebase.iid.FirebaseInstanceId;
+import com.android.volley.toolbox.RequestFuture;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
 import com.pbasolutions.android.fragment.ApplicantDetailsFragment;
@@ -82,6 +86,9 @@ import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by pbadell on 6/29/15.
@@ -209,6 +216,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     //dialog builder
     android.support.v7.app.AlertDialog dialog = null;
 
+    public RequestFuture<String> future;
+
     //receive broadcast message from push notification
 //    ReceiveMessages myReceiver = null;
 //    Boolean myReceiverIsRegistered = false;
@@ -241,6 +250,18 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * Initial.
      */
     private void init() {
+        future = RequestFuture.newFuture();
+        try {
+            future.get(0, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            Log.e(TAG, "Error: " + e.getMessage());
+        } catch (TimeoutException e) {
+            Log.e(TAG, "Error: " + e.getMessage());
+        }
+//        appSingleton = AppSingleton.getInstance(getApplicationContext());
         authenticatorController = new PBSAuthenticatorController(this);
         setGlobalVariable((PandoraContext) getApplicationContext());
         if (getGlobalVariable() != null) {
@@ -529,7 +550,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
                         inputBundle, null, this);
 
-                globalVariable = null;
+//                globalVariable = null;
                 PBSServerConst.cookieStore = null;
 
                 return null;
@@ -990,6 +1011,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 try {
                     f = CameraUtil.setUpPhotoFile(mAlbumStorageDirFactory);
                     mCurrentPhotoPath = f.getAbsolutePath();
+                    CameraUtil.galleryAddPic(mCurrentPhotoPath, PandoraMain.this);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -1006,6 +1028,19 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
         loadPictureItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
+                if (Build.VERSION.SDK_INT >= 14) {
+                    Log.e("-->", " >= 14");
+                    MediaScannerConnection.scanFile(getApplicationContext(), new String[]{Environment.getExternalStorageDirectory().toString()}, null, new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+                            Log.e("ExternalStorage", "Scanned " + path + ":");
+                            Log.e("ExternalStorage", "-> uri=" + uri);
+                        }
+                    });
+                } else {
+                    Log.e("-->", " < 14");
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+                }
+
                 Intent loadPictureIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 if (loadPictureIntent.resolveActivity(getPackageManager()) == null) return true;
 

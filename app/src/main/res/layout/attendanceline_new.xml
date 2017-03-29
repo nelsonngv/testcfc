@@ -155,10 +155,11 @@
                     </LinearLayout>
                 </TableRow>
             </TableLayout>
+
             <Button
-                style="@style/ButtonLast"
                 android:id="@+id/saveATLine"
-                android:text="Save"/>
+                style="@style/PLargeButton"
+                android:text="Save" />
         </LinearLayout>
     </ScrollView>
 </layout>

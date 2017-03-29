@@ -1,6 +1,9 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="?android:attr/dividerHorizontal"
@@ -61,4 +64,5 @@
                 android:onClick="roleOkClicked"
                 android:text="Ok" />
         </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

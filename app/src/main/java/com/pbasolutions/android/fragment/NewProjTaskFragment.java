@@ -161,32 +161,22 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == context.RESULT_OK) {
-            String picturePath = null;
-            if (data != null) {
-                Uri curImage = data.getData();
+            String picturePath = CameraUtil.getPicPath(context, data);
 
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getActivity().getContentResolver().query(curImage, filePathColumn, null, null, null);
-                cursor.moveToFirst();
+            if (picturePath != null) {
+//            if (!(picturePath.endsWith(".jpg") || picturePath.endsWith(".jpeg")))
+                if (!picturePath.endsWith(".jpg") && !picturePath.endsWith(".jpg"))
+                    picturePath += ".jpg";
 
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                picturePath = cursor.getString(columnIndex);
-                cursor.close();
-            } else {
-                picturePath = context.getmCurrentPhotoPath();
-            }
-
-            if (!picturePath.endsWith(".jpg") && !picturePath.endsWith(".jpg"))
-                picturePath += ".jpg";
-
-            switch (requestCode) {
-                case CameraUtil.CAPTURE_ATTACH_1: {
-                    CameraUtil.handleBigCameraPhoto(taskPicture1, picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
+                switch (requestCode) {
+                    case CameraUtil.CAPTURE_ATTACH_1: {
+                        CameraUtil.handleBigCameraPhoto(taskPicture1, picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    default:
+                        break;
                 }
-                default:
-                    break;
             }
         }
     }

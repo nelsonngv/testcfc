@@ -349,99 +349,88 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == context.RESULT_OK) {
-            String picturePath = null;
-            if (data != null) {
-                Uri curImage = data.getData();
+            String picturePath = CameraUtil.getPicPath(context, data);
 
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getActivity().getContentResolver().query(curImage, filePathColumn, null, null, null);
-                cursor.moveToFirst();
-
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                picturePath = cursor.getString(columnIndex);
-                cursor.close();
-            } else {
-                picturePath = context.getmCurrentPhotoPath();
-            }
-
-            int extIndex = picturePath.lastIndexOf(".");
-            if (extIndex == -1) {
-                picturePath += ".jpg";
-            } else {
-                int extCnt = picturePath.length() - extIndex;
-                if (extCnt > 4)
+            if (picturePath != null) {
+                int extIndex = picturePath.lastIndexOf(".");
+                if (extIndex == -1) {
                     picturePath += ".jpg";
-            }
+                } else {
+                    int extCnt = picturePath.length() - extIndex;
+                    if (extCnt > 4)
+                        picturePath += ".jpg";
+                }
 
-            switch (requestCode) {
-                case CameraUtil.CAPTURE_PROF_PIC : {
-                    CameraUtil.handleBigCameraPhoto(profileImage,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
+                switch (requestCode) {
+                    case CameraUtil.CAPTURE_PROF_PIC: {
+                        CameraUtil.handleBigCameraPhoto(profileImage,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    case CameraUtil.CAPTURE_ATTACH_1: {
+                        CameraUtil.handleBigCameraPhoto(cert1Pic,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    case CameraUtil.CAPTURE_ATTACH_2: {
+                        CameraUtil.handleBigCameraPhoto(cert2Pic,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    case CameraUtil.CAPTURE_ATTACH_3: {
+                        CameraUtil.handleBigCameraPhoto(cert3Pic,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    case CameraUtil.CAPTURE_ATTACH_4: {
+                        CameraUtil.handleBigCameraPhoto(cert4Pic,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    case CameraUtil.CAPTURE_ATTACH_5: {
+                        CameraUtil.handleBigCameraPhoto(cert5Pic,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    case CameraUtil.CAPTURE_ATTACH_6: {
+                        CameraUtil.handleBigCameraPhoto(cert6Pic,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    case CameraUtil.CAPTURE_ATTACH_7: {
+                        CameraUtil.handleBigCameraPhoto(cert7Pic,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    case CameraUtil.CAPTURE_ATTACH_8: {
+                        CameraUtil.handleBigCameraPhoto(cert8Pic,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    case CameraUtil.CAPTURE_ATTACH_9: {
+                        CameraUtil.handleBigCameraPhoto(cert9Pic,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    case CameraUtil.CAPTURE_ATTACH_10: {
+                        CameraUtil.handleBigCameraPhoto(cert10Pic,
+                                picturePath, context);
+                        context.mCurrentPhotoPath = null;
+                        break;
+                    }
+                    default:
+                        break;
                 }
-                case CameraUtil.CAPTURE_ATTACH_1: {
-                    CameraUtil.handleBigCameraPhoto(cert1Pic,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
-                }
-                case CameraUtil.CAPTURE_ATTACH_2: {
-                    CameraUtil.handleBigCameraPhoto(cert2Pic,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
-                }
-                case CameraUtil.CAPTURE_ATTACH_3: {
-                    CameraUtil.handleBigCameraPhoto(cert3Pic,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
-                }
-                case CameraUtil.CAPTURE_ATTACH_4: {
-                    CameraUtil.handleBigCameraPhoto(cert4Pic,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
-                }
-                case CameraUtil.CAPTURE_ATTACH_5: {
-                    CameraUtil.handleBigCameraPhoto(cert5Pic,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
-                }
-                case CameraUtil.CAPTURE_ATTACH_6: {
-                    CameraUtil.handleBigCameraPhoto(cert6Pic,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
-                }
-                case CameraUtil.CAPTURE_ATTACH_7: {
-                    CameraUtil.handleBigCameraPhoto(cert7Pic,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
-                }
-                case CameraUtil.CAPTURE_ATTACH_8: {
-                    CameraUtil.handleBigCameraPhoto(cert8Pic,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
-                }
-                case CameraUtil.CAPTURE_ATTACH_9: {
-                    CameraUtil.handleBigCameraPhoto(cert9Pic,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
-                }
-                case CameraUtil.CAPTURE_ATTACH_10: {
-                    CameraUtil.handleBigCameraPhoto(cert10Pic,
-                            picturePath, context);
-                    context.mCurrentPhotoPath = null;
-                    break;
-                }
-                default:
-                    break;
             }
         }
     }

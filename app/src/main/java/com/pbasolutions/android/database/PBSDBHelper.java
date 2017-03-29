@@ -1,14 +1,16 @@
 package com.pbasolutions.android.database;
 
+import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.util.Log;
 
 import com.pbasolutions.android.PandoraConstant;
-import com.pbasolutions.android.PandoraHelper;
-import com.pbasolutions.android.PandoraMain;
+import com.pbasolutions.android.account.PBSAccountInfo;
 
 
 /**
@@ -22,7 +24,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
         /**
          * Database name.
          */
-        private static final String DATABASE_NAME = "cfc.db";
+        public static final String DATABASE_NAME = "cfc.db";
         /**
          * Database version.
          */
@@ -1194,4 +1196,29 @@ public class PBSDBHelper extends SQLiteOpenHelper {
             }
         }
 
+    /**
+     * Delete database
+     */
+    public static void reCreateDatabase(Context mContext) {
+        ContentResolver resolver = mContext.getContentResolver();
+        ContentProviderClient client = resolver.acquireContentProviderClient(PBSAccountInfo.ACCOUNT_AUTHORITY);
+
+        assert client != null;
+        PBSContentProvider provider = (PBSContentProvider) client.getLocalContentProvider();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            client.close();
+        else
+            client.release();
+
+        assert provider != null;
+        provider.resetDatabase();
+    }
+
+    public void removeDatabase(Context mContext) {
+        boolean result = mContext.deleteDatabase(DATABASE_NAME);
+        if (result)
+            Log.d(TAG, "Database Deleted...");
+        else Log.d(TAG, "Database Deletion failed.");
+    }
 }

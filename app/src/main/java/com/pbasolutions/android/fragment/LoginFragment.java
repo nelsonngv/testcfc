@@ -118,8 +118,8 @@ public class LoginFragment extends Fragment {
         }
 
         // complement server URL
-        if (!serverURL.startsWith("http://"))
-            serverURL = "http://" + serverURL;
+        if (!serverURL.startsWith("https://"))
+            serverURL = "https://" + serverURL;
 
         final Bundle bundle = new Bundle();
 
@@ -175,7 +175,7 @@ public class LoginFragment extends Fragment {
         protected void onPostExecute(Bundle resultBundle) {
             context.dismissProgressDialog();
             if (resultBundle.getString(PandoraConstant.ERROR) != null) {
-                PandoraHelper.showMessage((PandoraMain)getActivity(),
+                PandoraHelper.showMessage(PandoraMain.instance,
                         resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)));
                 return;
             }
@@ -190,7 +190,8 @@ public class LoginFragment extends Fragment {
                     {
                         context.setGlobalVariable(new PandoraContext());
                     }
-                    if (getActivity() == null) return;
+                    if (getActivity() == null)
+                        return;
                     ((PandoraMain)getActivity()).drawerFragment.resetUsername(accountName);
                     ((PandoraMain)getActivity()).drawerFragment.invalidateView();
                     context.getGlobalVariable().setAd_user_name(accountName);

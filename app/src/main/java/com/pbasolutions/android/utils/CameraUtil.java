@@ -2,28 +2,23 @@ package com.pbasolutions.android.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Base64InputStream;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.pbasolutions.android.R;
-
-import java.io.BufferedInputStream;
+import com.pbasolutions.android.PandoraMain;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -58,10 +53,21 @@ public class CameraUtil {
         mImageView.post(new Runnable() {
             @Override
             public void run() {
+                Bitmap bitmap = resizeImage(500, 500, mCurrentPhotoPath);
+                // compress
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                File file = new File(mCurrentPhotoPath);
+                try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                    baos.writeTo(outputStream);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                Bitmap bitmap = resizeImage(mImageView.getMeasuredWidth(),
+                bitmap = resizeImage(mImageView.getMeasuredWidth(),
                         mImageView.getMeasuredHeight(), mCurrentPhotoPath);
-		/* Associate the Bitmap to the ImageView */
+
+		        /* Associate the Bitmap to the ImageView */
                 mImageView.setImageBitmap(bitmap);
             }
         });
@@ -114,8 +120,8 @@ public class CameraUtil {
             return scaledBmp;
         }
     }
-    private static void galleryAddPic(String mCurrentPhotoPath, Activity activity) {
-        Intent mediaScanIntent = new Intent("android.intent.action.MEDIA_SCANNER_SCAN_FILE");
+    public static void galleryAddPic(String mCurrentPhotoPath, Activity activity) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(mCurrentPhotoPath);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
@@ -126,7 +132,6 @@ public class CameraUtil {
         if (mCurrentPhotoPath != null) {
             setPic(imageView, mCurrentPhotoPath);
             addPathToPic(imageView, mCurrentPhotoPath);
-            galleryAddPic(mCurrentPhotoPath, activity);
         }
     }
 
@@ -192,15 +197,9 @@ public class CameraUtil {
      */
     public static String imageToBase64(String path){
         if (path != null) {
-            Bitmap immagex = resizeImage(500, 500, path);
+            Bitmap immagex = BitmapFactory.decodeFile(path);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            immagex.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-            File file = new File(path);
-            try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                baos.writeTo(outputStream);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] b = baos.toByteArray();
             String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
             return imageEncoded;
@@ -216,6 +215,28 @@ public class CameraUtil {
     public static void loadPicture(String path, ImageView imageView) {
         if (path != null) {
             setPic(imageView, path);
+        }
+    }
+
+    public static String getPicPath(PandoraMain context, Intent data) {
+        String picturePath = null;
+        try {
+            if (data != null) {
+                Uri curImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                Cursor cursor = context.getContentResolver().query(curImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                picturePath = cursor.getString(columnIndex);
+                cursor.close();
+            } else {
+                picturePath = context.getmCurrentPhotoPath();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return picturePath;
         }
     }
 

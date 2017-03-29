@@ -65,11 +65,16 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
+        Context context;
+        if (PandoraMain.instance != null)
+            context = PandoraMain.instance.getApplicationContext();
+        else context = getContext();
+
         //call the controller update sync here.
-        PBSServerController serverController = new PBSServerController(getContext());
-        PBSAuthenticatorController authController = new PBSAuthenticatorController(getContext());
+        PBSServerController serverController = new PBSServerController(context);
+        PBSAuthenticatorController authController = new PBSAuthenticatorController(context);
         try {
-            PandoraContext global =  ((PandoraContext)getContext());
+            PandoraContext global =  ((PandoraContext)context);
 
             //work around to get latest authToken after authToken has been changed.
           //  String globalAuthToken = global.getAuth_token();
@@ -80,19 +85,19 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
            // }
 
             //work around to get latest serverURL after serverURL has been changed.
-            String globalServerURL = global.getServer_url();
+//            String globalServerURL = global.getServer_url();
             String serverURL = accountManager.getUserData(account,
                     PBSAuthenticatorController.SERVER_URL_ARG);
-            if (!serverURL.equalsIgnoreCase(globalServerURL) && !globalServerURL.isEmpty()) {
-                serverURL = globalServerURL;
-            }
+//            if (!serverURL.equalsIgnoreCase(globalServerURL) && !globalServerURL.isEmpty()) {
+//                serverURL = globalServerURL;
+//            }
 
             //work around to get latest deviceID after deviceID has been changed.
             String globalDeviceID = global.getSerial();
             String deviceID = accountManager.getUserData(account,
                     PBSAuthenticatorController.SERIAL_ARG);
             if (!deviceID.equalsIgnoreCase(globalDeviceID) && !globalDeviceID.isEmpty()) {
-                serverURL = globalDeviceID;
+                deviceID = globalDeviceID;
             }
             String userName = account.name;
 
