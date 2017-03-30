@@ -87,7 +87,7 @@ public class RequisitionFragment extends Fragment{
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.requisition_list, container, false);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.RefreshRequisition);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.requisition_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         setIsApprovedSpinner(rootView);
@@ -108,7 +108,7 @@ public class RequisitionFragment extends Fragment{
                 recyclerView = (RecyclerView) params[1];
 
                 if (PBSServerConst.cookieStore != null) {
-                    syncRequsitions();
+                    refreshRequsitions();
                 }
 
                 requisitionList = getRequisitionList();
@@ -134,7 +134,7 @@ public class RequisitionFragment extends Fragment{
             @Override
             public void onRefresh() {
                 if (PBSServerConst.cookieStore != null) {
-                    syncRequsitions();
+                    refreshRequsitions();
                 }
                 // Refresh items
                 requisitionList = getRequisitionList();
@@ -323,7 +323,7 @@ public class RequisitionFragment extends Fragment{
         }
     }
 
-    public void syncRequsitions(){
+    public void refreshRequsitions(){
         PandoraContext globalVar = ((PandoraMain)context).getGlobalVariable();
         Bundle input = new Bundle();
         input.putString(requisCont.ARG_USER_ID, globalVar.getAd_user_id());

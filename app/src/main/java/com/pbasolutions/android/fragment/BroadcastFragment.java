@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -63,6 +64,9 @@ public class BroadcastFragment extends Fragment {
      */
     public static final int DELETE_NOTE_ID = 500;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView recyclerView;
+
     /**
      * Constructor.
      */
@@ -82,54 +86,20 @@ public class BroadcastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.note_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.broadcast_rv);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.broadcast_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        refreshBroadcast(false);
 
-        new AsyncTask<Object, Void, String[]>() {
-            protected LayoutInflater inflater;
-            protected RecyclerView recyclerView;
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            public void onRefresh() {
+                // Refresh items
+                refreshBroadcast(true);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
-
-            @Override
-            protected String[] doInBackground(Object... params) {
-                inflater = (LayoutInflater) params[0];
-                recyclerView = (RecyclerView) params[1];
-
-                String[] message = null;
-                if (context.getC_projectlocation_uuid() != null
-                        && !context.getC_projectlocation_uuid().isEmpty()) {
-                    message = syncNotes();
-                } else {
-                    PandoraHelper.getProjLocAvailable(getActivity(), false);
-                }
-
-                broadCastList = getBroadCastList();
-
-                return message;
-            }
-
-            @Override
-            protected void onPostExecute(String[] message) {
-                super.onPostExecute(message);
-
-                if (message != null)
-                {
-                    PandoraHelper.showMessage((PandoraMain)getActivity(), message[1]);
-//                    PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
-//                            message[1],
-//                            message[0], PandoraConstant.OK_BUTTON, null);
-                }
-
-                viewAdapter = new BroadcastRVA(getActivity(),broadCastList, inflater);
-                recyclerView.setAdapter(viewAdapter);
-
-                ((PandoraMain)getActivity()).dismissProgressDialog();
-            }
-        }.execute(inflater, recyclerView);
+        });
 
         return rootView;
     }
@@ -138,10 +108,6 @@ public class BroadcastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case SYNC_NOTE_ID: {
-                syncNotes();
-                return true;
-            }
             case DELETE_NOTE_ID: {
                 deleteNotes();
                 return true;
@@ -219,11 +185,6 @@ public class BroadcastFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem sync;
-        sync = menu.add(0, SYNC_NOTE_ID, 0, "Sync Note");
-        sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        sync.setIcon(R.drawable.refresh);
-
         MenuItem delete;
         delete = menu.add(0, DELETE_NOTE_ID, 1, "Delete Note");
         delete.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -296,5 +257,49 @@ public class BroadcastFragment extends Fragment {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.detach(this).attach(this).commit();
         }
+    }
+
+    protected void refreshBroadcast(final boolean showMsg) {
+        new AsyncTask<Object, Void, String[]>() {
+            protected LayoutInflater inflater;
+            protected RecyclerView recyclerView;
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected String[] doInBackground(Object... params) {
+                inflater = (LayoutInflater) params[0];
+                recyclerView = (RecyclerView) params[1];
+
+                String[] message = null;
+                if (context.getC_projectlocation_uuid() != null
+                        && !context.getC_projectlocation_uuid().isEmpty()) {
+                    message = syncNotes();
+                } else {
+                    PandoraHelper.getProjLocAvailable(getActivity(), false);
+                }
+
+                broadCastList = getBroadCastList();
+
+                return message;
+            }
+
+            @Override
+            protected void onPostExecute(String[] message) {
+                super.onPostExecute(message);
+
+                if (message != null && showMsg) {
+                    PandoraHelper.showMessage((PandoraMain)getActivity(), message[1]);
+                }
+
+                viewAdapter = new BroadcastRVA(getActivity(),broadCastList, inflater);
+                recyclerView.setAdapter(viewAdapter);
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(LayoutInflater.from(PandoraMain.instance), recyclerView);
     }
 }

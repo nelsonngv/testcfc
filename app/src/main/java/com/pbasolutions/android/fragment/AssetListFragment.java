@@ -46,7 +46,7 @@ public class AssetListFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.asset_list, container, false);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.RefreshAsset);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.asset_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -79,7 +79,7 @@ public class AssetListFragment extends Fragment {
                 if (PBSServerConst.cookieStore == null) {
                     PandoraHelper.showErrorMessage((PandoraMain) getActivity(),
                             getString(R.string.error_logged_out_sync, getString(R.string.assets_and_movements)));
-                } else if (assetList != null) {
+                } else {
                     AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
                     recyclerView.setAdapter(viewAdapter);
                 }

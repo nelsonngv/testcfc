@@ -65,7 +65,7 @@ public class MovementListFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.asset_movement_list, container, false);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.RefreshMovement);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.asset_movement_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 

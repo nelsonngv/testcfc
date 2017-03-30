@@ -4,6 +4,7 @@ import android.databinding.ObservableArrayList;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,7 +33,9 @@ public class CheckPointFragment extends Fragment {
      */
     private static final String TAG = "CheckPointFragment";
 
-    PBSCheckpointController checkpointController;
+    private PBSCheckpointController checkpointController;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView recyclerView;
 
     public CheckPointFragment() {
     }
@@ -47,9 +50,42 @@ public class CheckPointFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.checkpoint_sequence, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.checkpoint_seq_rv);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.checkpoint_seq_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        refreshCheckPoint(false);
 
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                refreshCheckPoint(true);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        return rootView;
+    }
+
+    private ObservableArrayList<MCheckPoint> getCheckPointSeqList() {
+        PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
+        if (globalVar != null) {
+            String projectLocationUUID = globalVar.getC_projectlocation_uuid();
+            if (projectLocationUUID != null) {
+                Bundle input = new Bundle();
+                input.putString(checkpointController.ARG_PROJECT_LOCATION_UUID, projectLocationUUID);
+                Bundle result = checkpointController.triggerEvent(checkpointController.CHECKPOINT_SEQ_ROWS_EVENT, input, new Bundle(), null);
+                ObservableArrayList<MCheckPoint>  mCheckPointSeq =  (ObservableArrayList<MCheckPoint>) result.getSerializable(checkpointController.ARG_CHECKPOINT_SEQ);
+                return mCheckPointSeq;
+            } else {
+//                PandoraHelper.showAlertMessage((PandoraMain)getActivity(), "Project Location is not selected. Please select the project location in defaults setting tab.", PandoraConstant.ERROR, "Ok", null);
+            }
+        }
+        return null;
+    }
+
+    protected void refreshCheckPoint(final boolean showMsg) {
         new AsyncTask<Object, Void, Bundle>() {
             protected LayoutInflater inflater;
             protected RecyclerView recyclerView;
@@ -101,33 +137,15 @@ public class CheckPointFragment extends Fragment {
                 } else {
                     PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
                     if (globalVar != null && checkPoints == null)
-                        PandoraHelper.showWarningMessage((PandoraMain)getActivity(),
-                                "No check point for the current Project Location. Please select another project location in defaults setting tab.");
+                        if (showMsg)
+                            PandoraHelper.showWarningMessage((PandoraMain)getActivity(),
+                            "No check point for the current Project Location. Please select another project location in defaults setting tab.");
                 }
 
                 CheckPointRVA viewAdapter = new CheckPointRVA(getActivity(), checkPoints, inflater);
                 recyclerView.setAdapter(viewAdapter);
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }
-        }.execute(inflater, recyclerView);
-
-        return rootView;
-    }
-
-    private ObservableArrayList<MCheckPoint> getCheckPointSeqList() {
-        PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
-        if (globalVar != null) {
-            String projectLocationUUID = globalVar.getC_projectlocation_uuid();
-            if (projectLocationUUID != null) {
-                Bundle input = new Bundle();
-                input.putString(checkpointController.ARG_PROJECT_LOCATION_UUID, projectLocationUUID);
-                Bundle result = checkpointController.triggerEvent(checkpointController.CHECKPOINT_SEQ_ROWS_EVENT, input, new Bundle(), null);
-                ObservableArrayList<MCheckPoint>  mCheckPointSeq =  (ObservableArrayList<MCheckPoint>) result.getSerializable(checkpointController.ARG_CHECKPOINT_SEQ);
-                return mCheckPointSeq;
-            } else {
-//                PandoraHelper.showAlertMessage((PandoraMain)getActivity(), "Project Location is not selected. Please select the project location in defaults setting tab.", PandoraConstant.ERROR, "Ok", null);
-            }
-        }
-        return null;
+        }.execute(LayoutInflater.from(PandoraMain.instance), recyclerView);
     }
 }

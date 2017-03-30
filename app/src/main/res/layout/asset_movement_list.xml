@@ -1,106 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="?android:attr/dividerHorizontal"
+    android:showDividers="middle|end"
+    android:orientation="vertical">
+
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="?android:attr/dividerHorizontal"
-        android:showDividers="middle|end"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:stretchColumns="*"
+        >
+        <TableRow android:background="@color/colorButtons" >
+            <TextView
+                android:padding="10dp"
+                android:layout_weight="1"
+                android:id="@+id/DocSortDesc"
+                android:text="Doc No"
+                android:layout_width="0dp"
+                android:gravity="center"
+                android:clickable="true"
+                android:background="@drawable/textline"
 
-        <TableLayout
+                />
+            <TextView
+                android:padding="10dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/DocSortAsc"
+                android:text="Doc No"
+                android:clickable="true"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:background="@drawable/textline"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/DateSortDesc"
+                android:text="Date"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@drawable/textline"
+                android:clickable="true"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/DateSortAsc"
+                android:text="Date"
+                android:textAlignment="center"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@drawable/textline"
+                android:clickable="true"
+                />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/StatusSortDesc"
+                android:padding="10dp"
+                android:text="Status"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:clickable="true"
+                />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/StatusSortAsc"
+                android:padding="10dp"
+                android:text="Status"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:clickable="true"
+                />
+        </TableRow>
+    </TableLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+            android:id="@+id/asset_movement_rv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*"
-            >
-            <TableRow android:background="@color/colorButtons" >
-                <TextView
-                    android:padding="10dp"
-                    android:layout_weight="1"
-                    android:id="@+id/DocSortDesc"
-                    android:text="Doc No"
-                    android:layout_width="0dp"
-                    android:gravity="center"
-                    android:clickable="true"
-                    android:background="@drawable/textline"
-
-                    />
-                <TextView
-                    android:padding="10dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:id="@+id/DocSortAsc"
-                    android:text="Doc No"
-                    android:clickable="true"
-                    android:textAlignment="center"
-                    android:gravity="center"
-                    android:background="@drawable/textline"
-                    />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:id="@+id/DateSortDesc"
-                    android:text="Date"
-                    android:padding="10dp"
-                    android:textAlignment="center"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:background="@drawable/textline"
-                    android:clickable="true"
-                    />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:id="@+id/DateSortAsc"
-                    android:text="Date"
-                    android:textAlignment="center"
-                    android:padding="10dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:background="@drawable/textline"
-                    android:clickable="true"
-                    />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:id="@+id/StatusSortDesc"
-                    android:padding="10dp"
-                    android:text="Status"
-                    android:textAlignment="center"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:clickable="true"
-                    />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:id="@+id/StatusSortAsc"
-                    android:padding="10dp"
-                    android:text="Status"
-                    android:textAlignment="center"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:clickable="true"
-                    />
-            </TableRow>
-        </TableLayout>
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/RefreshMovement"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
-                android:id="@+id/asset_movement_rv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                layout_marginBottom="?attr/actionBarSize"
-                android:stackFromBottom="true"
-                app:fastScrollThumbColor="@color/colorAccent"
-                app:fastScrollAutoHide="false">
-            </com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView>
-        </android.support.v4.widget.SwipeRefreshLayout>
-    </LinearLayout>
-</ScrollView>
+            android:layout_height="match_parent"
+            layout_marginBottom="?attr/actionBarSize"
+            android:stackFromBottom="true"
+            app:fastScrollThumbColor="@color/colorAccent"
+            app:fastScrollAutoHide="false">
+        </com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

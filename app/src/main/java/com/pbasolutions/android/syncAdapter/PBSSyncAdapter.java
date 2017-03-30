@@ -177,7 +177,11 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                         ContentResolver.requestSync(account, authority, extras);
                         PandoraMain.instance.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(PandoraMain.instance.getBaseContext(), "Initial syncing...", Toast.LENGTH_SHORT).show();
+                                String text;
+                                if (PandoraMain.instance.getGlobalVariable().isInitialSynced())
+                                    text = "Syncing...";
+                                else text = "Initial syncing...";
+                                Toast.makeText(PandoraMain.instance.getBaseContext(), text, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

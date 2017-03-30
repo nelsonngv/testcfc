@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -55,6 +56,8 @@ public class CheckInFragment extends Fragment {
     public CheckInRVA adapter;
     PBSCheckpointController checkpointController;
     ObservableArrayList<MCheckIn> checkIns;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     public CheckInFragment() {
     }
 
@@ -68,41 +71,21 @@ public class CheckInFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.checkpoints, container, false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        refreshCheckIn();
 
-        new AsyncTask<Void, Void, Void>() {
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            public void onRefresh() {
+                // Refresh items
+                refreshCheckIn();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
+        });
 
-            @Override
-            protected Void doInBackground(Void... params) {
-                checkIns = getCheckIns();
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                ObservableArrayList<IModel> modelList = (ObservableArrayList)checkIns;
-                recyclerView.addOnItemTouchListener(
-                        new RecyclerItemClickListener(getActivity(),
-                                new FragmentListOnItemClickListener(modelList,
-                                        new CheckInDetailsFragment(), getActivity(), getString(R.string.title_guardtour_checkin))
-                        ));
-                try {
-                    adapter = new CheckInRVA(getActivity(), checkIns);
-                } catch (Exception e) {
-                    Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
-                }
-                recyclerView.setAdapter(adapter);
-
-                ((PandoraMain)getActivity()).dismissProgressDialog();
-            }
-        }.execute();
         setHasOptionsMenu(true);
 
         // Inflate the layout for this fragment
@@ -139,15 +122,15 @@ public class CheckInFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        MenuItem sync;
-        sync = menu.add(0, ACTION_SYNC, 0, "Sync");
-        sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        sync.setIcon(R.drawable.refresh);
+//        MenuItem sync;
+//        sync = menu.add(0, ACTION_SYNC, 0, "Sync");
+//        sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//        sync.setIcon(R.drawable.refresh);
 
         MenuItem add;
-        sync = menu.add(0, ACTION_ADD, 1, "Add");
-        sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        sync.setIcon(R.drawable.add);
+        add = menu.add(0, ACTION_ADD, 1, "Add");
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.add);
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -156,21 +139,19 @@ public class CheckInFragment extends Fragment {
             case ACTION_ADD:
                 ((PandoraMain)getActivity()).displayView(PandoraMain.FRAGMENT_NEW_CHECK_IN, false);
                 return true;
-            case ACTION_SYNC:
-                ((PandoraMain)getActivity()).sync(false);
-                return true;
+//            case ACTION_SYNC:
+//                ((PandoraMain)getActivity()).sync(false);
+//                return true;
         }
 
         return false;
     }
             @Override
     public void onPause() {
-        Log.e("DEBUG", "OnPause of loginFragment");
         super.onPause();
     }
     @Override
     public void onResume() {
-        Log.e("DEBUG", "onResume of LoginFragment");
         super.onResume();
     }
     /**
@@ -183,5 +164,40 @@ public class CheckInFragment extends Fragment {
                 getView().invalidate();
             }
         });
+    }
+
+    protected void refreshCheckIn() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                checkIns = getCheckIns();
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                try {
+                    adapter = new CheckInRVA(getActivity(), checkIns);
+                } catch (Exception e) {
+                    Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
+                }
+                recyclerView.setAdapter(adapter);
+                ObservableArrayList<IModel> modelList = (ObservableArrayList)checkIns;
+                recyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(getActivity(),
+                                new FragmentListOnItemClickListener(modelList,
+                                        new CheckInDetailsFragment(), getActivity(), getString(R.string.title_guardtour_checkin))
+                        ));
+
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute();
     }
 }

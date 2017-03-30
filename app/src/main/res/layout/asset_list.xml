@@ -8,17 +8,17 @@
     >
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/RefreshAsset"
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
-        android:id="@+id/asset_rv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout_marginBottom="?attr/actionBarSize"
-        android:stackFromBottom="true"
-        app:fastScrollThumbColor="@color/colorAccent"
-        app:fastScrollAutoHide="false">
-    </com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView>
+        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
+            android:id="@+id/asset_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout_marginBottom="?attr/actionBarSize"
+            android:stackFromBottom="true"
+            app:fastScrollThumbColor="@color/colorAccent"
+            app:fastScrollAutoHide="false">
+        </com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
