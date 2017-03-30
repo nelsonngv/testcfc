@@ -122,6 +122,7 @@ public class CheckInFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
 //        MenuItem sync;
 //        sync = menu.add(0, ACTION_SYNC, 0, "Sync");
 //        sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

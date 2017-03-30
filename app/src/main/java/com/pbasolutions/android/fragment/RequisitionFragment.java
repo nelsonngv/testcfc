@@ -303,6 +303,7 @@ public class RequisitionFragment extends Fragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         MenuItem add;
         add = menu.add(0, ADD_REQUISITION_ID, 0, getString(R.string.text_icon_add));
         add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

@@ -164,6 +164,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         MenuItem item;
         item = menu.add(0, COMPLETE_PROJTASK_ID, 1, "Complete Project Task");
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

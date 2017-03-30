@@ -65,6 +65,7 @@ public class DeploymentFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         MenuItem sync;
         sync = menu.add(0, PandoraMain.SYNC_DEPLOY_ID, 0, "Sync Deploy");
         sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

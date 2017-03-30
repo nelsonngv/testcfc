@@ -470,6 +470,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }

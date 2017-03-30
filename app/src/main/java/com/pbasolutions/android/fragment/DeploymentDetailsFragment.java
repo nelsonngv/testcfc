@@ -71,6 +71,7 @@ public class DeploymentDetailsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         MenuItem delete;
         delete = menu.add(0, PandoraMain.SAVE_DEPLOY_ID, 1, "Save Deploy");
         delete.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

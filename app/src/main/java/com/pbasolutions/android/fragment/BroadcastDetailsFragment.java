@@ -52,6 +52,7 @@ public class BroadcastDetailsFragment extends PBSDetailsFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         MenuItem delete;
         delete = menu.add(0, BroadcastFragment.DELETE_NOTE_ID, 1, "Delete Note");
         delete.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

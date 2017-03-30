@@ -427,6 +427,7 @@ public class NewRequisitionFragment extends Fragment {
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         MenuItem add;
         add = menu.add(0, ACTION_ADD_LINE, 0, getString(R.string.text_add_line));
         add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);

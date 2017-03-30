@@ -119,6 +119,7 @@ public class AccountFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         MenuItem sync;
         sync = menu.add(0, PandoraMain.LOGOUT_ID, 0, "Log Out");
         sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
