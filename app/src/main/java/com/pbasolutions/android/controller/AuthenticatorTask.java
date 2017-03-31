@@ -380,6 +380,7 @@ public class AuthenticatorTask extends Task {
             ((PandoraMain) ctx).globalVariable.setAd_user_name("");
             ((PandoraMain) ctx).globalVariable.setAd_user_password("");
             ((PandoraMain) ctx).globalVariable.setAuth_token("");
+            PandoraHelper.populateMenuForms(null);
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully logged out");
         } else {
@@ -451,8 +452,6 @@ public class AuthenticatorTask extends Task {
     private Bundle submitLogin() {
 //        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
         try {
-
-
             final String userName = input.getString(PBSAuthenticatorController.ARG_ACCOUNT_NAME);
             final String userPass = input.getString(PBSAuthenticatorController.USER_PASS_ARG);
             final String authType = input.getString(PBSAuthenticatorController.ARG_AUTH_TYPE);
@@ -470,10 +469,11 @@ public class AuthenticatorTask extends Task {
                     Account arrayAccounts[] = getAccounts(accType);
 
                     // clear db and account if connects to another server
-                    if (!PandoraMain.instance.getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(PandoraMain.instance.getGlobalVariable().getServer_url())) {
-                        PBSDBHelper.reCreateDatabase(PandoraMain.instance.getApplicationContext());
-                        PandoraMain.instance.resetServerData(serverURL);
-                        PandoraMain.instance.setGlobalVariable(null);
+                    if (!((PandoraMain) ctx).getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(((PandoraMain) ctx).getGlobalVariable().getServer_url())) {
+                        PBSDBHelper.reCreateDatabase(ctx.getApplicationContext());
+                        ((PandoraMain) ctx).resetServerData(serverURL);
+                        ((PandoraMain) ctx).setGlobalVariable(null);
+                        PandoraHelper.populateMenuForms(null);
 
                         // remove all accounts
                         for (int i = 0; i < arrayAccounts.length; i++) {
@@ -502,7 +502,7 @@ public class AuthenticatorTask extends Task {
                                     userPass, authType, user.getToken());
                         }
                     } else {
-                        PandoraMain.instance.resetServerData(serverURL);
+                        ((PandoraMain) ctx).resetServerData(serverURL);
                         createNewAccount(userName, accType, deviceID, serverURL,
                                 userPass, authType, user.getToken());
                     }
