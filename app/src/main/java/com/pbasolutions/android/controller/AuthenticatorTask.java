@@ -471,7 +471,7 @@ public class AuthenticatorTask extends Task {
 
                     // clear db and account if connects to another server
                     if (!PandoraMain.instance.getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(PandoraMain.instance.getGlobalVariable().getServer_url())) {
-                        PBSDBHelper.reCreateDatabase(PandoraMain.instance);
+                        PBSDBHelper.reCreateDatabase(PandoraMain.instance.getApplicationContext());
                         PandoraMain.instance.resetServerData(serverURL);
                         PandoraMain.instance.setGlobalVariable(null);
 
@@ -539,6 +539,7 @@ public class AuthenticatorTask extends Task {
             return  output;
         } catch (Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE +e.getMessage());
+            e.printStackTrace();
         }
         output.putBoolean(PBSServerConst.RESULT, false);
         return output;
