@@ -358,7 +358,7 @@ public class NewAttendanceFragment extends Fragment {
         if (spinnerPair.getKey() == null)
         {
             PandoraHelper.showMessage(PandoraMain.instance, getString(
-                    R.string.no_shift_error, getString(R.string.proj_shift)));
+                    R.string.no_list_error, getString(R.string.proj_shift)));
             return false;
         }
 
@@ -440,7 +440,7 @@ public class NewAttendanceFragment extends Fragment {
         SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
         if (spinnerPair.getKey() == null) {
             PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
-                    R.string.no_shift_error, getString(R.string.proj_shift)));
+                    R.string.no_list_error, getString(R.string.proj_shift)));
             return;
         }
 

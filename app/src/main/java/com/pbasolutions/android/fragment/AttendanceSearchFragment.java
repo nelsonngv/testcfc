@@ -34,9 +34,12 @@ import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.model.MAttendance;
 import com.pbasolutions.android.model.MAttendanceSearchItem;
 import com.pbasolutions.android.model.ModelConst;
+import com.wnafee.vector.compat.ResourcesCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -55,11 +58,17 @@ public class AttendanceSearchFragment extends Fragment {
     PBSAttendanceController attendanceCont;
     TextView deployDateFromView;
     TextView deployDateToView;
-    protected Spinner shiftSpinner;
-    protected ArrayAdapter shiftAdapter;
+//    protected Spinner shiftSpinner;
+//    protected ArrayAdapter shiftAdapter;
 
     protected Spinner projLocationSpinner;
     private ArrayAdapter projLocNameAdapter;
+    private TextView sortNameDesc;
+    private TextView sortNameAsc;
+    private TextView sortShiftDesc;
+    private TextView sortShiftAsc;
+    private TextView sortDateDesc;
+    private TextView sortDateAsc;
 
     RecyclerView recyclerView;
     AttendanceSearchLineRVA linesAdapter;
@@ -114,7 +123,7 @@ public class AttendanceSearchFragment extends Fragment {
         super.onStart();
         projLocNameAdapter = PandoraHelper.addListToSpinner(getActivity(), projLocationSpinner, getProjLocList());
 
-        refreshAttendances();
+//        refreshAttendances();
         if (projLocNameAdapter.getCount() > 0)
         {
             PandoraMain pandoraMain = PandoraMain.instance;
@@ -133,16 +142,16 @@ public class AttendanceSearchFragment extends Fragment {
     }
 
     void refreshAttendances() {
-        List<SpinnerPair> prefShiftList = getPrefShiftList();
-        if(prefShiftList.size() == 0) {
-            SpinnerPair pair = new SpinnerPair();
-            pair.setKey(null);
-            pair.setValue(getString(R.string.no_shift_spinner));
-            prefShiftList = new ArrayList<>();
-            prefShiftList.add(pair);
-        }
-        shiftAdapter = PandoraHelper.addListToSpinner(getActivity(), shiftSpinner,
-                prefShiftList);
+//        List<SpinnerPair> prefShiftList = getPrefShiftList();
+//        if(prefShiftList.size() == 0) {
+//            SpinnerPair pair = new SpinnerPair();
+//            pair.setKey(null);
+//            pair.setValue(getString(R.string.no_shift_spinner));
+//            prefShiftList = new ArrayList<>();
+//            prefShiftList.add(pair);
+//        }
+//        shiftAdapter = PandoraHelper.addListToSpinner(getActivity(), shiftSpinner,
+//                prefShiftList);
 
         refreshAttendanceLines();
     }
@@ -160,7 +169,7 @@ public class AttendanceSearchFragment extends Fragment {
     }
 
     void setUI(View rootView) {
-        shiftSpinner = (Spinner) rootView.findViewById(R.id.attsrchShiftSpinner);
+//        shiftSpinner = (Spinner) rootView.findViewById(R.id.attsrchShiftSpinner);
 
         projLocationSpinner = (Spinner) rootView.findViewById(R.id.attsrchProjLocation);
         projLocationSpinner.setEnabled(false);
@@ -174,7 +183,21 @@ public class AttendanceSearchFragment extends Fragment {
         deployDateToView.setText(sdf.format(date));
 
         searchButton = (Button) rootView.findViewById(R.id.atsrchSearch);
+
+        sortNameDesc = (TextView) rootView.findViewById(R.id.NameSortDesc);
+        sortNameAsc = (TextView) rootView.findViewById(R.id.NameSortAsc);
+        sortShiftDesc = (TextView) rootView.findViewById(R.id.ShiftSortDesc);
+        sortShiftAsc = (TextView) rootView.findViewById(R.id.ShiftSortAsc);
+        sortDateDesc = (TextView) rootView.findViewById(R.id.DateSortDesc);
+        sortDateAsc = (TextView) rootView.findViewById(R.id.DateSortAsc);
+        sortNameDesc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortdescicon), null, null, null);
+        sortNameAsc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortascicon), null, null, null);
+        sortShiftDesc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortdescicon), null, null, null);
+        sortShiftAsc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortascicon), null, null, null);
+        sortDateDesc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortdescicon), null, null, null);
+        sortDateAsc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortascicon), null, null, null);
     }
+
     void setUIListener() {
         projLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -188,18 +211,18 @@ public class AttendanceSearchFragment extends Fragment {
             }
         });
 
-        shiftSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SpinnerPair pair = (SpinnerPair) shiftAdapter.getItem(position);
-                shiftChanged(pair.getKey());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        shiftSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                SpinnerPair pair = (SpinnerPair) shiftAdapter.getItem(position);
+//                shiftChanged(pair.getKey());
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
         deployDateFromView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,6 +262,96 @@ public class AttendanceSearchFragment extends Fragment {
                 onSearchAttendance();
             }
         });
+
+        sortNameDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(attendances, new Comparator<MAttendanceSearchItem>() {
+                    @Override
+                    public int compare(MAttendanceSearchItem lhs, MAttendanceSearchItem rhs) {
+                        return lhs.getC_BPartner_Name().compareTo(rhs.getC_BPartner_Name());
+                    }
+                });
+                refreshAttendanceLines();
+                sortNameDesc.setVisibility(View.GONE);
+                sortNameAsc.setVisibility(View.VISIBLE);
+            }
+        });
+
+        sortNameAsc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(attendances, new Comparator<MAttendanceSearchItem>() {
+                    @Override
+                    public int compare(MAttendanceSearchItem lhs, MAttendanceSearchItem rhs) {
+                        return rhs.getC_BPartner_Name().compareTo(lhs.getC_BPartner_Name());
+                    }
+                });
+                refreshAttendanceLines();
+                sortNameDesc.setVisibility(View.VISIBLE);
+                sortNameAsc.setVisibility(View.GONE);
+            }
+        });
+
+        sortShiftDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(attendances, new Comparator<MAttendanceSearchItem>() {
+                    @Override
+                    public int compare(MAttendanceSearchItem lhs, MAttendanceSearchItem rhs) {
+                        return lhs.getHR_Shift_Name().compareTo(rhs.getHR_Shift_Name());
+                    }
+                });
+                refreshAttendanceLines();
+                sortShiftDesc.setVisibility(View.GONE);
+                sortShiftAsc.setVisibility(View.VISIBLE);
+            }
+        });
+
+        sortShiftAsc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(attendances, new Comparator<MAttendanceSearchItem>() {
+                    @Override
+                    public int compare(MAttendanceSearchItem lhs, MAttendanceSearchItem rhs) {
+                        return rhs.getHR_Shift_Name().compareTo(lhs.getHR_Shift_Name());
+                    }
+                });
+                refreshAttendanceLines();
+                sortShiftDesc.setVisibility(View.VISIBLE);
+                sortShiftAsc.setVisibility(View.GONE);
+            }
+        });
+
+        sortDateDesc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(attendances, new Comparator<MAttendanceSearchItem>() {
+                    @Override
+                    public int compare(MAttendanceSearchItem lhs, MAttendanceSearchItem rhs) {
+                        return lhs.getDeploymentDate().compareTo(rhs.getDeploymentDate());
+                    }
+                });
+                refreshAttendanceLines();
+                sortDateDesc.setVisibility(View.GONE);
+                sortDateAsc.setVisibility(View.VISIBLE);
+            }
+        });
+
+        sortDateAsc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(attendances, new Comparator<MAttendanceSearchItem>() {
+                    @Override
+                    public int compare(MAttendanceSearchItem lhs, MAttendanceSearchItem rhs) {
+                        return rhs.getDeploymentDate().compareTo(lhs.getDeploymentDate());
+                    }
+                });
+                refreshAttendanceLines();
+                sortDateDesc.setVisibility(View.VISIBLE);
+                sortDateAsc.setVisibility(View.GONE);
+            }
+        });
     }
 
     public List<SpinnerPair> getProjLocList() {
@@ -271,12 +384,12 @@ public class AttendanceSearchFragment extends Fragment {
     protected void onSearchAttendance() {
         MAttendance attendance = new MAttendance();
 
-        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
-        if (spinnerPair.getKey() == null) {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
-                    R.string.no_shift_error, getString(R.string.proj_shift)));
-            return;
-        }
+//        SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
+//        if (spinnerPair.getKey() == null) {
+//            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+//                    R.string.no_list_error, getString(R.string.proj_shift)));
+//            return;
+//        }
 
         String deployDateFrom = deployDateFromView.getText().toString();
         String deployDateTo = deployDateToView.getText().toString();
@@ -302,9 +415,8 @@ public class AttendanceSearchFragment extends Fragment {
         attendance.setDeploymentDateFrom(deployDateFrom);
         attendance.setDeploymentDateTo(deployDateTo);
 
-        String shiftId = ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_ID_COL, spinnerPair.getKey(), ModelConst.HR_SHIFT_UUID_COL, cr);
-        attendance.setHR_Shift_ID(Integer.parseInt(shiftId));
-
+//        String shiftId = ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE, ModelConst.HR_SHIFT_ID_COL, spinnerPair.getKey(), ModelConst.HR_SHIFT_UUID_COL, cr);
+//        attendance.setHR_Shift_ID(Integer.parseInt(shiftId));
 
         Bundle input = new Bundle();
         input.putSerializable(PBSAttendanceController.ARG_SEARCH_ATTENDANCE_REQUEST, attendance);
@@ -333,6 +445,12 @@ public class AttendanceSearchFragment extends Fragment {
 
                 if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
                     attendances = (ObservableArrayList<MAttendanceSearchItem>)result.get(PBSAttendanceController.ARG_ATTENDANCESEARCHRES);
+                    sortNameDesc.setVisibility(View.VISIBLE);
+                    sortShiftDesc.setVisibility(View.VISIBLE);
+                    sortDateDesc.setVisibility(View.VISIBLE);
+                    sortNameAsc.setVisibility(View.GONE);
+                    sortShiftAsc.setVisibility(View.GONE);
+                    sortDateAsc.setVisibility(View.GONE);
                     refreshAttendanceLines();
                 } else {
                     PandoraHelper.showErrorMessage(getActivity(), result.getString(PandoraConstant.ERROR));

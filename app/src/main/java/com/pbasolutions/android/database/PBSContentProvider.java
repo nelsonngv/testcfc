@@ -168,6 +168,24 @@ public class PBSContentProvider extends ContentProvider {
             // HR_ClusterManagement
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.HR_CLUSTERMANAGEMENT_TABLE, ModelConst.HR_CLUSTERMANAGEMENT_TOKEN);
 
+            // C_SURVEY
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.C_SURVEY_TABLE, ModelConst.C_SURVEY_TOKEN);
+
+            // C_SURVEYRESPONSE
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.C_SURVEYRESPONSE_TABLE, ModelConst.C_SURVEYRESPONSE_TOKEN);
+
+            // C_SURVEYTEMPLATE
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.C_SURVEYTEMPLATE_TABLE, ModelConst.C_SURVEYTEMPLATE_TOKEN);
+
+            // C_SURVEYTEMPLATEQUESTION
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE, ModelConst.C_SURVEYTEMPLATEQUESTION_TOKEN);
+
+            // C_SURVEY_JOIN_TEMPLATE
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.C_SURVEY_JOIN_TEMPLATE_TABLE, ModelConst.C_SURVEY_JOIN_TEMPLATE_TOKEN);
+
+            // C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TABLE, ModelConst.C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TOKEN);
+
         } catch(Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
         }
@@ -514,6 +532,54 @@ public class PBSContentProvider extends ContentProvider {
                 return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
             }
 
+            case ModelConst.C_SURVEY_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.C_SURVEY_TABLE);
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
+            case ModelConst.C_SURVEYRESPONSE_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.C_SURVEYRESPONSE_TABLE);
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
+            case ModelConst.C_SURVEYTEMPLATE_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.C_SURVEYTEMPLATE_TABLE);
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
+            case ModelConst.C_SURVEYTEMPLATEQUESTION_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE);
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
+            case ModelConst.C_SURVEY_JOIN_TEMPLATE_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.C_SURVEY_TABLE
+                        + " INNER JOIN " + ModelConst.C_SURVEYTEMPLATE_TABLE +
+                        " ON (" + ModelConst.C_SURVEY_TABLE + "." + ModelConst.C_SURVEYTEMPLATE_TABLE + "_UUID = "
+                        + ModelConst.C_SURVEYTEMPLATE_TABLE + "." + ModelConst.C_SURVEYTEMPLATE_TABLE + "_UUID)");
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
+            case ModelConst.C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.C_SURVEY_TABLE
+                        + " INNER JOIN " + ModelConst.C_SURVEYTEMPLATE_TABLE +
+                        " ON (" + ModelConst.C_SURVEY_TABLE + "." + ModelConst.C_SURVEYTEMPLATE_TABLE + "_UUID = "
+                        + ModelConst.C_SURVEYTEMPLATE_TABLE + "." + ModelConst.C_SURVEYTEMPLATE_TABLE + "_UUID)"
+                        + " INNER JOIN " + ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE +
+                        " ON (" + ModelConst.C_SURVEYTEMPLATE_TABLE + "." + ModelConst.C_SURVEYTEMPLATE_TABLE + "_UUID = "
+                        + ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + ModelConst.C_SURVEYTEMPLATE_TABLE + "_UUID)"
+                        + " INNER JOIN " + ModelConst.C_SURVEYRESPONSE_TABLE +
+                        " ON (" + ModelConst.C_SURVEY_TABLE + "." + ModelConst.C_SURVEY_TABLE + "_UUID = "
+                        + ModelConst.C_SURVEYRESPONSE_TABLE + "." + ModelConst.C_SURVEY_TABLE + "_UUID)");
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
             default:
                 return null;
         }
@@ -542,66 +608,40 @@ public class PBSContentProvider extends ContentProvider {
         final int match = URI_MATCHER.match(uri);
         switch (match) {
             case ModelConst.M_CHECKPOINT_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.AD_USER_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.AD_ORG_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.AD_CLIENT_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.AD_ROLE_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.M_CHECKIN_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.C_PROJECTLOCATION_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.C_BPARTNER_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.A_ASSET_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.AD_NOTE_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.C_BPARTNER_LOCATION_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.C_PROJECTTASK_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.C_UOM_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_JOBAPPLICATION_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_JOBPOSITION_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_NATIONALITY_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_SETUP_JOB_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_SHIFT_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_PROJLOCATION_SHIFT_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.M_ATTRIBUTESETINSTANCE_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.M_MOVEMENT_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.M_MOVEMENTLINE_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_PROJECTASSIGNMENT_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.JOBAPP_SHIFTS_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.JOBAPP_LIST_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.C_BPARTNER_VIEW_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_IDENTITY_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_LEAVETYPE_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.M_ATTENDANCE_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.M_ATTENDANCELINE_TOKEN:
-                return ModelConst.CONTENT_TYPE_DIR;
             case ModelConst.HR_CLUSTERMANAGEMENT_TOKEN:
+            case ModelConst.C_SURVEY_TOKEN:
+            case ModelConst.C_SURVEYRESPONSE_TOKEN:
+            case ModelConst.C_SURVEYTEMPLATE_TOKEN:
+            case ModelConst.C_SURVEYTEMPLATEQUESTION_TOKEN:
                 return ModelConst.CONTENT_TYPE_DIR;
             default: {
                 Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + "URI " + uri + " is not supported.");
@@ -633,207 +673,158 @@ public class PBSContentProvider extends ContentProvider {
             db.execSQL("PRAGMA foreign_keys=ON;");
         }
         int token = URI_MATCHER.match(uri);
+        long id;
         switch (token) {
             case ModelConst.M_CHECKPOINT_TOKEN: {
-                long id = db.insert(ModelConst.M_CHECKPOINT_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_CHECKPOINT_TABLE, null, values);
+                break;
             }
             case ModelConst.M_CHECKIN_TOKEN: {
-                long id = db.insert(ModelConst.M_CHECKIN_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_CHECKIN_TABLE, null, values);
+                break;
             }
             case ModelConst.AD_USER_TOKEN: {
-                long id = db.insert(ModelConst.AD_USER_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.AD_USER_TABLE, null, values);
+                break;
             }
             case ModelConst.AD_ORG_TOKEN: {
-                long id = db.insert(ModelConst.AD_ORG_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.AD_ORG_TABLE, null, values);
+                break;
             }
             case ModelConst.AD_CLIENT_TOKEN: {
-                long id = db.insert(ModelConst.AD_CLIENT_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.AD_CLIENT_TABLE, null, values);
+                break;
             }
             case ModelConst.AD_ROLE_TOKEN: {
-                long id = db.insert(ModelConst.AD_ROLE_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.AD_ROLE_TABLE, null, values);
+                break;
             }
 
             case ModelConst.C_PROJECTLOCATION_TOKEN: {
-                long id = db.insert(ModelConst.C_PROJECT_LOCATION_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.C_PROJECT_LOCATION_TABLE, null, values);
+                break;
             }
 
             case ModelConst.PBS_SYNCTABLE_TOKEN: {
-                long id = db.insert(ModelConst.PBS_SYNCTABLE_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.PBS_SYNCTABLE_TABLE, null, values);
+                break;
             }
 
             case ModelConst.HR_JOBPOSITION_TOKEN: {
-                long id = db.insert(ModelConst.HR_JOBPOSITION_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.HR_JOBPOSITION_TABLE, null, values);
+                break;
             }
             case ModelConst.HR_NATIONALITY_TOKEN: {
-                long id = db.insert(ModelConst.HR_NATIONALITY_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.HR_NATIONALITY_TABLE, null, values);
+                break;
             }
             case ModelConst.HR_PROJLOCATION_SHIFT_TOKEN: {
-                long id = db.insert(ModelConst.HR_PROJLOCATION_SHIFT_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.HR_PROJLOCATION_SHIFT_TABLE, null, values);
+                break;
             }
             case ModelConst.HR_JOBAPPLICATION_TOKEN: {
-                long id = db.insert(ModelConst.HR_JOBAPPLICATION_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.HR_JOBAPPLICATION_TABLE, null, values);
+                break;
             }
             case ModelConst.HR_SHIFT_TOKEN: {
-                long id = db.insert(ModelConst.HR_SHIFT_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.HR_SHIFT_TABLE, null, values);
+                break;
             }
             case ModelConst.C_BPARTNER_TOKEN: {
-                long id = db.insert(ModelConst.C_BPARTNER_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.C_BPARTNER_TABLE, null, values);
+                break;
             }
             case ModelConst.C_BPARTNER_LOCATION_TOKEN: {
-                long id = db.insert(ModelConst.C_BPARTNER_LOCATION_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.C_BPARTNER_LOCATION_TABLE, null, values);
+                break;
             }
             case ModelConst.M_PRODUCT_CATEGORY_TOKEN: {
-                long id = db.insert(ModelConst.M_PRODUCT_CATEGORY_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_PRODUCT_CATEGORY_TABLE, null, values);
+                break;
             }
             case ModelConst.M_PRODUCT_TOKEN: {
-                long id = db.insert(ModelConst.M_PRODUCT_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_PRODUCT_TABLE, null, values);
+                break;
             }
             case ModelConst.C_UOM_TOKEN: {
-                long id = db.insert(ModelConst.C_UOM_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.C_UOM_TABLE, null, values);
+                break;
             }
             case ModelConst.M_ATTRIBUTESETINSTANCE_TOKEN: {
-                long id = db.insert(ModelConst.M_ATTRIBUTESETINSTANCE_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_ATTRIBUTESETINSTANCE_TABLE, null, values);
+                break;
             }
             case ModelConst.M_PURCHASEREQUEST_TOKEN: {
-                long id = db.insert(ModelConst.M_PURCHASEREQUEST_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_PURCHASEREQUEST_TABLE, null, values);
+                break;
             }
             case ModelConst.M_PURCHASEREQUESTLINE_TOKEN: {
-                long id = db.insert(ModelConst.M_PURCHASEREQUESTLINE_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_PURCHASEREQUESTLINE_TABLE, null, values);
+                break;
             }
             case ModelConst.C_PROJECTTASK_TOKEN: {
-                long id = db.insert(ModelConst.C_PROJECTTASK_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.C_PROJECTTASK_TABLE, null, values);
+                break;
             }
             case ModelConst.A_ASSET_TOKEN: {
-                long id = db.insert(ModelConst.A_ASSET_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.A_ASSET_TABLE, null, values);
+                break;
             }
             case ModelConst.AD_NOTE_TOKEN: {
-                long id = db.insert(ModelConst.AD_NOTE_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.AD_NOTE_TABLE, null, values);
+                break;
             }
             case ModelConst.M_MOVEMENT_TOKEN: {
-                long id = db.insert(ModelConst.M_MOVEMENT_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_MOVEMENT_TABLE, null, values);
+                break;
             }
             case ModelConst.M_MOVEMENTLINE_TOKEN: {
-                long id = db.insert(ModelConst.M_MOVEMENTLINE_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_MOVEMENTLINE_TABLE, null, values);
+                break;
             }
             case ModelConst.HR_PROJECTASSIGNMENT_TOKEN: {
-                long id = db.insert(ModelConst.HR_PROJECTASSIGNMENT_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.HR_PROJECTASSIGNMENT_TABLE, null, values);
+                break;
             }
             case ModelConst.HR_SETUP_JOB_TOKEN: {
-                long id = db.insert(ModelConst.HR_SETUP_JOB_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.HR_SETUP_JOB_TABLE, null, values);
+                break;
             }
             case ModelConst.HR_IDENTITY_TOKEN: {
-                long id = db.insert(ModelConst.HR_IDENTITY_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.HR_IDENTITY_TABLE, null, values);
+                break;
             }
             case ModelConst.HR_LEAVETYPE_TOKEN: {
-                long id = db.insert(ModelConst.HR_LEAVETYPE_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.HR_LEAVETYPE_TABLE, null, values);
+                break;
             }
             case ModelConst.M_ATTENDANCE_TOKEN: {
-                long id = db.insert(ModelConst.M_ATTENDANCE_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_ATTENDANCE_TABLE, null, values);
+                break;
             }
             case ModelConst.M_ATTENDANCELINE_TOKEN: {
-                long id = db.insert(ModelConst.M_ATTENDANCELINE_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.M_ATTENDANCELINE_TABLE, null, values);
+                break;
             }
             case ModelConst.HR_CLUSTERMANAGEMENT_TOKEN: {
-                long id = db.insert(ModelConst.HR_CLUSTERMANAGEMENT_TABLE, null, values);
-                if (id != -1)
-                    getContext().getContentResolver().notifyChange(uri, null);
-                return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+                id = db.insert(ModelConst.HR_CLUSTERMANAGEMENT_TABLE, null, values);
+                break;
+            }
+            case ModelConst.C_SURVEY_TOKEN: {
+                id = db.insert(ModelConst.C_SURVEY_TABLE, null, values);
+                break;
+            }
+            case ModelConst.C_SURVEYRESPONSE_TOKEN: {
+                id = db.insert(ModelConst.C_SURVEYRESPONSE_TABLE, null, values);
+                break;
+            }
+            case ModelConst.C_SURVEYTEMPLATE_TOKEN: {
+                id = db.insert(ModelConst.C_SURVEYTEMPLATE_TABLE, null, values);
+                break;
+            }
+            case ModelConst.C_SURVEYTEMPLATEQUESTION_TOKEN: {
+                id = db.insert(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE, null, values);
+                break;
             }
             default: {
                 Log.e(TAG, PandoraConstant.ERROR +
@@ -841,6 +832,9 @@ public class PBSContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("URI: " + uri + " not supported.");
             }
         }
+        if (id != -1)
+            getContext().getContentResolver().notifyChange(uri, null);
+        return ModelConst.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
     }
 
     /**
@@ -998,6 +992,22 @@ public class PBSContentProvider extends ContentProvider {
             }
             case ModelConst.HR_CLUSTERMANAGEMENT_TOKEN: {
                 rowsDeleted = db.delete(ModelConst.HR_CLUSTERMANAGEMENT_TABLE, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.C_SURVEY_TOKEN: {
+                rowsDeleted = db.delete(ModelConst.C_SURVEY_TABLE, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.C_SURVEYRESPONSE_TOKEN: {
+                rowsDeleted = db.delete(ModelConst.C_SURVEYRESPONSE_TABLE, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.C_SURVEYTEMPLATE_TOKEN: {
+                rowsDeleted = db.delete(ModelConst.C_SURVEYTEMPLATE_TABLE, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.C_SURVEYTEMPLATEQUESTION_TOKEN: {
+                rowsDeleted = db.delete(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE, selection, selectionArgs);
                 break;
             }
 
@@ -1163,6 +1173,22 @@ public class PBSContentProvider extends ContentProvider {
             }
             case ModelConst.HR_CLUSTERMANAGEMENT_TOKEN: {
                 rowsUpdated = db.update(ModelConst.HR_CLUSTERMANAGEMENT_TABLE, values, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.C_SURVEY_TOKEN: {
+                rowsUpdated = db.update(ModelConst.C_SURVEY_TABLE, values, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.C_SURVEYRESPONSE_TOKEN: {
+                rowsUpdated = db.update(ModelConst.C_SURVEYRESPONSE_TABLE, values, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.C_SURVEYTEMPLATE_TOKEN: {
+                rowsUpdated = db.update(ModelConst.C_SURVEYTEMPLATE_TABLE, values, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.C_SURVEYTEMPLATEQUESTION_TOKEN: {
+                rowsUpdated = db.update(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE, values, selection, selectionArgs);
                 break;
             }
             default:{

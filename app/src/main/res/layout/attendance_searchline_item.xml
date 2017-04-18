@@ -24,6 +24,16 @@
                     style="@style/TableValue2"/>
             </TableRow>
             <TableRow
+                android:divider="?android:attr/dividerVertical"
+                android:showDividers="middle">
+                <TextView
+                    android:text="@string/label_shift"
+                    style="@style/TableLabel"/>
+                <TextView
+                    android:text="@{attendancesearchitem.HR_Shift_Name}"
+                    style="@style/TableValue2"/>
+            </TableRow>
+            <TableRow
                 android:id="@+id/ats_row_leavetype"
                 android:divider="?android:attr/dividerVertical"
                 android:showDividers="middle"
@@ -124,7 +134,7 @@
                 <TextView
                     android:id="@+id/att_date"
                     style="@style/TableValue2"
-                    android:text="@{attendancesearchitem.Updated}"
+                    android:text="@{attendancesearchitem.deploymentDate}"
                     />
             </TableRow>
             <TableRow

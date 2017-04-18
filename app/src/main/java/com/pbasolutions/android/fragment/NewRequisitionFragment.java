@@ -370,6 +370,12 @@ public class NewRequisitionFragment extends Fragment {
     }
 
     private void removeLine() {
+        if (lines == null || lines.size() == 0) {
+            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), getString(
+                    R.string.no_list_error, "line"));
+            return;
+        }
+
         new AsyncTask<Void, Void, Bundle>() {
             protected LayoutInflater inflater;
             protected RecyclerView recyclerView;

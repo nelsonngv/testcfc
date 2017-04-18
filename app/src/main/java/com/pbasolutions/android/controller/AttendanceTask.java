@@ -193,7 +193,8 @@ public class AttendanceTask implements Callable<Bundle> {
                     item.setHR_LeaveType_Name(getHRLeaveTypeName(item.getHR_LeaveType_ID()));
                     item.setCheckIn(PandoraHelper.parseToDisplaySDate(item.getCheckIn(), "yyyy-MM-dd HH:mm", null));
                     item.setCheckOut(PandoraHelper.parseToDisplaySDate(item.getCheckOut(), "yyyy-MM-dd HH:mm", null));
-                    item.setUpdated(PandoraHelper.parseToDisplaySDate(item.getUpdated(), "yyyy-MM-dd HH:mm", null));
+                    item.setDeploymentDate(PandoraHelper.parseToDisplaySDate(item.getDeploymentDate(), "yyyy-MM-dd", null));
+                    item.setHR_Shift_Name(getHRShiftName(item.getHR_Shift_ID()));
                     item.setHR_DaysType(getHRDaysName(item.getHR_DaysType()));
                     item.setComments(item.getComments());
                     list.add(item);
@@ -269,7 +270,7 @@ public class AttendanceTask implements Callable<Bundle> {
     private String getHRShiftName(int hr_shift_id) {
         return ModelConst.mapIDtoColumn(ModelConst.HR_SHIFT_TABLE,
                 ModelConst.NAME_COL, String.valueOf(hr_shift_id),
-                ModelConst.C_BPARTNER_ID_COL, cr);
+                ModelConst.HR_SHIFT_ID_COL, cr);
     }
 
     private String getHRDaysName(String hr_days)

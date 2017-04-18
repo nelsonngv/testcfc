@@ -101,7 +101,7 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
             }
         } else {
             PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
-                    R.string.no_shift_error, "Product"));
+                    R.string.no_list_error, "Product"));
         }
         return result;
     }

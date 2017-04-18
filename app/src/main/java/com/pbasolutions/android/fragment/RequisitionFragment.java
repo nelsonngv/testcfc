@@ -133,16 +133,40 @@ public class RequisitionFragment extends Fragment{
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (PBSServerConst.cookieStore != null) {
-                    refreshRequsitions();
-                }
-                // Refresh items
-                requisitionList = getRequisitionList();
-                RequisitionRVA viewAdapter = new RequisitionRVA(getActivity(),requisitionList, inflater);
-                recyclerView.setAdapter(viewAdapter);
-                PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
-                        new RequisitionDetailFragment(), requisitionDetailTitle);
-                mSwipeRefreshLayout.setRefreshing(false);
+                new AsyncTask<Object, Void, Void>() {
+                    protected LayoutInflater inflater;
+                    protected RecyclerView recyclerView;
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                    }
+
+                    @Override
+                    protected Void doInBackground(Object... params) {
+                        inflater = (LayoutInflater) params[0];
+                        recyclerView = (RecyclerView) params[1];
+
+                        if (PBSServerConst.cookieStore != null) {
+                            refreshRequsitions();
+                        }
+
+                        requisitionList = getRequisitionList();
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void avoid) {
+                        super.onPostExecute(avoid);
+
+                        RequisitionRVA viewAdapter = new RequisitionRVA(getActivity(),requisitionList, inflater);
+                        recyclerView.setAdapter(viewAdapter);
+                        PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
+                                new RequisitionDetailFragment(), requisitionDetailTitle);
+
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }.execute(inflater, recyclerView);
             }
         });
 
@@ -159,13 +183,9 @@ public class RequisitionFragment extends Fragment{
         sortStatusDesc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortdescicon), null, null, null);
         sortStatusAsc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortascicon), null, null, null);
 
-        sortDocAsc.setVisibility(View.GONE);
-        sortDateAsc.setVisibility(View.GONE);
-        sortStatusAsc.setVisibility(View.GONE);
-
-        sortDocDesc.setOnTouchListener(new View.OnTouchListener() {
+        sortDocDesc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 Collections.sort(requisitionList, new Comparator<MPurchaseRequest>(){
                     @Override
                     public int compare(MPurchaseRequest lhs, MPurchaseRequest rhs) {
@@ -178,13 +198,12 @@ public class RequisitionFragment extends Fragment{
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortDocDesc.setVisibility(View.GONE);
                 sortDocAsc.setVisibility(View.VISIBLE);
-                return false;
             }
         });
 
-        sortDocAsc.setOnTouchListener(new View.OnTouchListener() {
+        sortDocAsc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 Collections.sort(requisitionList, new Comparator<MPurchaseRequest>(){
                     @Override
                     public int compare(MPurchaseRequest lhs, MPurchaseRequest rhs) {
@@ -197,13 +216,12 @@ public class RequisitionFragment extends Fragment{
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortDocAsc.setVisibility(View.GONE);
                 sortDocDesc.setVisibility(View.VISIBLE);
-                return false;
             }
         });
 
-        sortDateDesc.setOnTouchListener(new View.OnTouchListener() {
+        sortDateDesc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
 //                for (int i = 0; i< requisitionList.size(); i++){
 //                    requisitionList.get(i).getRequestDate();
 //                    Log.i(TAG, "onTouch: " + requisitionList.get(i).getRequestDate());
@@ -221,13 +239,12 @@ public class RequisitionFragment extends Fragment{
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortDateDesc.setVisibility(View.GONE);
                 sortDateAsc.setVisibility(View.VISIBLE);
-                return false;
             }
         });
 
-        sortDateAsc.setOnTouchListener(new View.OnTouchListener() {
+        sortDateAsc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 Collections.sort(requisitionList, new Comparator<MPurchaseRequest>(){
                     @Override
                     public int compare(MPurchaseRequest lhs, MPurchaseRequest rhs) {
@@ -240,13 +257,12 @@ public class RequisitionFragment extends Fragment{
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortDateDesc.setVisibility(View.VISIBLE);
                 sortDateAsc.setVisibility(View.GONE);
-                return false;
             }
         });
 
-        sortStatusDesc.setOnTouchListener(new View.OnTouchListener() {
+        sortStatusDesc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 Collections.sort(requisitionList, new Comparator<MPurchaseRequest>(){
                     @Override
                     public int compare(MPurchaseRequest lhs, MPurchaseRequest rhs) {
@@ -259,13 +275,12 @@ public class RequisitionFragment extends Fragment{
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortStatusDesc.setVisibility(View.GONE);
                 sortStatusAsc.setVisibility(View.VISIBLE);
-                return false;
             }
         });
 
-        sortStatusAsc.setOnTouchListener(new View.OnTouchListener() {
+        sortStatusAsc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 Collections.sort(requisitionList, new Comparator<MPurchaseRequest>(){
                     @Override
                     public int compare(MPurchaseRequest lhs, MPurchaseRequest rhs) {
@@ -278,7 +293,6 @@ public class RequisitionFragment extends Fragment{
                         new RequisitionDetailFragment(), requisitionDetailTitle);
                 sortStatusDesc.setVisibility(View.VISIBLE);
                 sortStatusAsc.setVisibility(View.GONE);
-                return false;
             }
         });
 
@@ -318,7 +332,7 @@ public class RequisitionFragment extends Fragment{
             case ADD_REQUISITION_ID: {
                 ((PandoraMain)getActivity()).
                         displayView(PandoraMain.FRAGMENT_CREATE_REQUISITION, false);
-                return  true;
+                return true;
             }
             default:return false;
         }

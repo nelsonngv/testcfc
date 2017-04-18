@@ -52,6 +52,8 @@ public class ModelConst {
     public static final String HR_LEAVETYPE_UUID_COL = "HR_LEAVETYPE_UUID";
     public static final String HR_LEAVETYPE_ID_COL = "HR_LEAVETYPE_ID";
     public static final String INTERVIEWER_NOTES_COL = "INTERVIEWER_NOTES";
+    public static final String C_BPARTNER_ID_COL = "C_BPartner_ID";
+    public static final String C_BPARTNER_UUID_COL = "C_BPartner_UUID";
 
     /**
      * table names.
@@ -91,20 +93,25 @@ public class ModelConst {
     public static final String HR_SETUP_JOB_TABLE = "HR_Setup_Job" ;
     public static final String C_BPARTNER_VIEW = "C_BPartner_View" ;
     public static final String C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TABLE = "c_bpartner_view_join_hr_hr_projectassignment_table" ;
-    public static final String C_BPARTNER_ID_COL = "C_BPartner_ID";
-    public static final String C_BPARTNER_UUID_COL = "C_BPartner_UUID";
     public static final String HR_IDENTITY_TABLE = "HR_Identity";
 
     public static final String HR_LEAVETYPE_TABLE = "HR_LeaveType";
     public static final String M_ATTENDANCE_TABLE = "M_Attendance";
     public static final String M_ATTENDANCELINE_TABLE = "M_AttendanceLine";
     public static final String HR_CLUSTERMANAGEMENT_TABLE = "HR_ClusterManagement";
+    public static final String C_SURVEY_TABLE = "C_Survey";
+    public static final String C_SURVEYRESPONSE_TABLE = "C_SurveyResponse";
+    public static final String C_SURVEYTEMPLATE_TABLE = "C_SurveyTemplate";
+    public static final String C_SURVEYTEMPLATEQUESTION_TABLE = "C_SurveyTemplateQuestion";
+    public static final String C_SURVEY_JOIN_TEMPLATE_TABLE = "C_Survey_Join_Template";
+    public static final String C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TABLE = "C_Survey_Join_Template_Join_Question_Join_Response";
 
 
 
     /**
      * Table token.
      */
+    public static final int JOIN_TOKEN = 10;
     public static final int AD_USER_TOKEN = 100;
     public static final int AD_ORG_TOKEN = 200;
     public static final int AD_CLIENT_TOKEN = 300;
@@ -112,8 +119,6 @@ public class ModelConst {
     public static final int M_CHECKPOINT_TOKEN = 500;
     public static final int M_CHECKIN_TOKEN = 600;
     public static final int C_PROJECTLOCATION_TOKEN = 700;
-    public static final int PBS_SYNCTABLE_TOKEN = 3000;
-    public static final int JOIN_TOKEN = 10;
     public static final int HR_SETUP_JOB_TOKEN = 800;
     public static final int HR_JOBPOSITION_TOKEN = 900;
     public static final int HR_NATIONALITY_TOKEN = 1000;
@@ -136,12 +141,18 @@ public class ModelConst {
     public static final int HR_PROJECTASSIGNMENT_TOKEN = 2700;
     public static final int JOBAPP_SHIFTS_TOKEN = 2800;
     public static final int JOBAPP_LIST_TOKEN = 2900;
+    public static final int PBS_SYNCTABLE_TOKEN = 3000;
     public static final int C_BPARTNER_VIEW_TOKEN = 3100;
 
     public static final int HR_LEAVETYPE_TOKEN = 3200;
     public static final int M_ATTENDANCE_TOKEN = 3300;
     public static final int M_ATTENDANCELINE_TOKEN = 3400;
     public static final int HR_CLUSTERMANAGEMENT_TOKEN = 3500;
+    public static final int C_SURVEY_TOKEN = 3600;
+    public static final int C_SURVEYRESPONSE_TOKEN = 3700;
+    public static final int C_SURVEYTEMPLATE_TOKEN = 3800;
+    public static final int C_SURVEYTEMPLATEQUESTION_TOKEN = 3900;
+    public static final int HR_IDENTITY_TOKEN = 4000;
 
     /**
      * TODO : Evaluate which table to be joined and provide table tokens for that.
@@ -149,6 +160,8 @@ public class ModelConst {
     public static final int CHECKIN_JOIN_CHECKPOINT_TOKEN = 20;
     public static final int CHECKIN_JOIN_CHECKPOINT_DETAILS_TOKEN = 30;
     public static final int C_BPARTNER_VIEW_JOIN_HR_HR_PROJECTASSIGNMENT_TOKEN = 40;
+    public static final int C_SURVEY_JOIN_TEMPLATE_TOKEN = 50;
+    public static final int C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TOKEN = 60;
     /**
      *
      */
@@ -156,7 +169,6 @@ public class ModelConst {
     public static final Uri CONTENT_URI = Uri.parse("content://"+ PBSAccountInfo.ACCOUNT_AUTHORITY+"/");
     public static final String CONTENT_URI_STRING = "content://"+ PBSAccountInfo.ACCOUNT_AUTHORITY+"/";
     public static final String VALUE_COL = "Value";
-    public static final int HR_IDENTITY_TOKEN = 4000;
 
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -192,14 +204,20 @@ public class ModelConst {
                     ModelConst.HR_PROJECTASSIGNMENT_TABLE,
                     ModelConst.HR_JOBAPPLICATION_TABLE,
                     ModelConst.HR_LEAVETYPE_TABLE,
-                    ModelConst.HR_CLUSTERMANAGEMENT_TABLE
+                    ModelConst.HR_CLUSTERMANAGEMENT_TABLE,
+                    ModelConst.C_SURVEY_TABLE,
+                    ModelConst.C_SURVEYRESPONSE_TABLE,
+                    ModelConst.C_SURVEYTEMPLATE_TABLE,
+                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE
             };
 
     //TODO : other table then master data is updateable by phone.
     public static String localUpdateTables[] =
             {
                     ModelConst.M_CHECKIN_TABLE,
-                    ModelConst.HR_JOBAPPLICATION_TABLE
+                    ModelConst.HR_JOBAPPLICATION_TABLE,
+                    ModelConst.C_SURVEY_TABLE,
+                    ModelConst.C_SURVEYRESPONSE_TABLE
 
             };
     /**
@@ -503,7 +521,7 @@ public class ModelConst {
 
         if (result) {
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-            output.putString(PandoraConstant.RESULT, "Successfuly inserted.");
+            output.putString(PandoraConstant.RESULT, "Successfully inserted.");
         } else {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
             output.putString(PandoraConstant.ERROR, "Fail to insert.");

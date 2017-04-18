@@ -490,19 +490,10 @@ public class ProjectTask implements Callable<Bundle> {
                 if (rowValue != null){
                     if (!rowValue.isEmpty()) {
                         //String project location name.
-                        String projLocName;
-                        String projLocProjection[] = {MProjectTask.NAME_COL};
-                        String projLocSelArgs[] = {rowValue};
-                        Cursor projLocCursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projLocProjection, ModelConst.C_PROJECTLOCATION_UUID_COL + "=?", projLocSelArgs, null);
-                        if (projLocCursor != null && projLocCursor.getCount() != 0) {
-                            projLocCursor.moveToFirst();
-                            for (int y = 0; y < projLocCursor.getColumnNames().length; y++) {
-                                if(MProjectTask.NAME_COL.equalsIgnoreCase(projLocCursor.getColumnName(y)))
-                                    projTask.setProjLocName(projLocCursor.getString(y));
-                            }
-                        }
-
-                        projLocCursor.close();
+                        String projLocName = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_UUID_COL,
+                                rowValue, MProjectTask.NAME_COL, cr);
+                        if (!projLocName.equals("null"))
+                            projTask.setProjLocName(projLocName);
                     }
                 }
                 projTask.setProjLocUUID(rowValue);

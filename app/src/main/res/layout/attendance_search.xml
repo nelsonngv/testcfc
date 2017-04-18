@@ -73,7 +73,7 @@
                                 android:layout_marginBottom="@dimen/margin_bottom" />
                         </LinearLayout>
                     </TableRow>
-                    <TableRow>
+                    <!--<TableRow>
                         <LinearLayout style="@style/PTableVirtRowW">
                             <TextView
                                 style="@style/TableInfoLabel"
@@ -84,7 +84,7 @@
                                 style="@style/TableValue"
                                 android:id="@+id/attsrchShiftSpinner"/>
                         </LinearLayout>
-                    </TableRow>
+                    </TableRow>-->
                     <TableRow>
                         <LinearLayout style="@style/PTableVirtRowW">
                             <Button
@@ -116,7 +116,84 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginRight="5dp"
+                    android:stretchColumns="*"
                     >
+                    <TableRow android:background="@color/colorButtons" >
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:padding="10dp"
+                            android:id="@+id/NameSortDesc"
+                            android:text="Name"
+                            android:clickable="true"
+                            android:textAlignment="center"
+                            android:gravity="center"
+                            android:background="@drawable/textline"
+                            />
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:padding="10dp"
+                            android:id="@+id/NameSortAsc"
+                            android:text="Name"
+                            android:clickable="true"
+                            android:textAlignment="center"
+                            android:gravity="center"
+                            android:background="@drawable/textline"
+                            android:visibility="gone"
+                            />
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:padding="10dp"
+                            android:id="@+id/ShiftSortDesc"
+                            android:text="Shift"
+                            android:clickable="true"
+                            android:textAlignment="center"
+                            android:gravity="center"
+                            android:background="@drawable/textline"
+                            />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:padding="10dp"
+                            android:id="@+id/ShiftSortAsc"
+                            android:text="Shift"
+                            android:clickable="true"
+                            android:textAlignment="center"
+                            android:gravity="center"
+                            android:background="@drawable/textline"
+                            android:visibility="gone"
+                            />
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:padding="10dp"
+                            android:id="@+id/DateSortDesc"
+                            android:text="Date"
+                            android:clickable="true"
+                            android:textAlignment="center"
+                            android:gravity="center"
+                            />
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:padding="10dp"
+                            android:id="@+id/DateSortAsc"
+                            android:text="Date"
+                            android:clickable="true"
+                            android:textAlignment="center"
+                            android:gravity="center"
+                            android:visibility="gone"
+                            />
+                    </TableRow>
                     <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
                         android:id="@+id/attendancesrch_rv"
                         android:layout_width="match_parent"

@@ -110,10 +110,40 @@ public class MovementListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 // Refresh items
-                movements = getMovements();
-                AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(), movements, inflater);
-                recyclerView.setAdapter(viewAdapter);
-                mSwipeRefreshLayout.setRefreshing(false);
+                new AsyncTask<Object, Void, Void>() {
+                    protected LayoutInflater inflater;
+                    protected RecyclerView recyclerView;
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                    }
+
+                    @Override
+                    protected Void doInBackground(Object... params) {
+                        inflater = (LayoutInflater) params[0];
+                        recyclerView = (RecyclerView) params[1];
+
+                        if (PBSServerConst.cookieStore == null){
+                            movements = null;
+                        } else {
+                            movements = getMovements();
+                        }
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void av) {
+                        super.onPostExecute(av);
+
+                        AssetMovementRVA viewAdapter = new AssetMovementRVA(getActivity(), movements, inflater);
+                        recyclerView.setAdapter(viewAdapter);
+                        PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
+                                new AssetMovementDetails(), movementDetailTitle);
+
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }.execute(inflater, recyclerView);
             }
         });
 
@@ -130,13 +160,9 @@ public class MovementListFragment extends Fragment {
         sortStatusDesc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortdescicon), null, null, null);
         sortStatusAsc.setCompoundDrawablesWithIntrinsicBounds(ResourcesCompat.getDrawable(getActivity(), R.drawable.sortascicon), null, null, null);
 
-        sortDocAsc.setVisibility(View.GONE);
-        sortDateAsc.setVisibility(View.GONE);
-        sortStatusAsc.setVisibility(View.GONE);
-
-        sortDocDesc.setOnTouchListener(new View.OnTouchListener() {
+        sortDocDesc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 Collections.sort(movements, new Comparator<MMovement>(){
                     @Override
                     public int compare(MMovement lhs, MMovement rhs) {
@@ -149,13 +175,12 @@ public class MovementListFragment extends Fragment {
                         new AssetMovementDetails(), movementDetailTitle);
                 sortDocDesc.setVisibility(View.GONE);
                 sortDocAsc.setVisibility(View.VISIBLE);
-                return false;
             }
         });
 
-        sortDocAsc.setOnTouchListener(new View.OnTouchListener() {
+        sortDocAsc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 Collections.sort(movements, new Comparator<MMovement>(){
                     @Override
                     public int compare(MMovement lhs, MMovement rhs) {
@@ -168,15 +193,14 @@ public class MovementListFragment extends Fragment {
                         new AssetMovementDetails(), movementDetailTitle);
                 sortDocAsc.setVisibility(View.GONE);
                 sortDocDesc.setVisibility(View.VISIBLE);
-                return false;
             }
 
 
         });
 
-        sortDateDesc.setOnTouchListener(new View.OnTouchListener() {
+        sortDateDesc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
 //                for (int i = 0; i< movements.size(); i++){
 //                    movements.get(i).getRequestDate();
 //                    Log.i(TAG, "onTouch: " + movements.get(i).getRequestDate());
@@ -194,13 +218,12 @@ public class MovementListFragment extends Fragment {
                         new AssetMovementDetails(), movementDetailTitle);
                 sortDateDesc.setVisibility(View.GONE);
                 sortDateAsc.setVisibility(View.VISIBLE);
-                return false;
             }
         });
 
-        sortDateAsc.setOnTouchListener(new View.OnTouchListener() {
+        sortDateAsc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 Collections.sort(movements, new Comparator<MMovement>(){
                     @Override
                     public int compare(MMovement lhs, MMovement rhs) {
@@ -213,13 +236,12 @@ public class MovementListFragment extends Fragment {
                         new AssetMovementDetails(), movementDetailTitle);
                 sortDateDesc.setVisibility(View.VISIBLE);
                 sortDateAsc.setVisibility(View.GONE);
-                return false;
             }
         });
 
-        sortStatusDesc.setOnTouchListener(new View.OnTouchListener() {
+        sortStatusDesc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 Collections.sort(movements, new Comparator<MMovement>(){
                     @Override
                     public int compare(MMovement lhs, MMovement rhs) {
@@ -232,13 +254,12 @@ public class MovementListFragment extends Fragment {
                         new AssetMovementDetails(), movementDetailTitle);
                 sortStatusDesc.setVisibility(View.GONE);
                 sortStatusAsc.setVisibility(View.VISIBLE);
-                return false;
             }
         });
 
-        sortStatusAsc.setOnTouchListener(new View.OnTouchListener() {
+        sortStatusAsc.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View view) {
                 Collections.sort(movements, new Comparator<MMovement>(){
                     @Override
                     public int compare(MMovement lhs, MMovement rhs) {
@@ -251,7 +272,6 @@ public class MovementListFragment extends Fragment {
                         new AssetMovementDetails(), movementDetailTitle);
                 sortStatusDesc.setVisibility(View.VISIBLE);
                 sortStatusAsc.setVisibility(View.GONE);
-                return false;
             }
         });
 

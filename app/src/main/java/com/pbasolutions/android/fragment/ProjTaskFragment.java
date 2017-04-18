@@ -214,11 +214,11 @@ public class ProjTaskFragment extends Fragment {
 
                 String resultTitle = result.getString(PandoraConstant.TITLE);
                 String text;
+                populateProjTask();
+                viewAdapter = new TaskRVA(pandoraMain, taskList, LayoutInflater.from(PandoraMain.instance));
+                recyclerView.setAdapter(viewAdapter);
+                addRecyclerViewListener(recyclerView);
                 if (resultTitle != null && !result.isEmpty()) {
-                    populateProjTask();
-                    viewAdapter = new TaskRVA(pandoraMain, taskList, LayoutInflater.from(PandoraMain.instance));
-                    recyclerView.setAdapter(viewAdapter);
-                    addRecyclerViewListener(recyclerView);
                     text = result.getString(resultTitle);
                 } else {
                     text = "Project Task is up to date";

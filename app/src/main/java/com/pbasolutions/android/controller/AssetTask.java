@@ -724,7 +724,7 @@ public class AssetTask extends Task {
             //TODO:share make it generic for return string.
             if (ModelConst.updateTableRow(cr, MMovement.TABLENAME, cv, MMovement.M_MOVEMENT_UUID_COL, selectionArgs)) {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-                output.putString(PandoraConstant.RESULT, "Successfuly insert updated movement.");
+                output.putString(PandoraConstant.RESULT, "Successfully insert updated movement.");
             } else {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
                 output.putString(PandoraConstant.ERROR, "Fail to update movement.");

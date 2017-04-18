@@ -60,6 +60,7 @@
     <string name="title_employee_details">Employee Details</string>
     <string name="title_broadcastdetails">Broadcast Details</string>
     <string name="title_projtaskdetails">Project Task Details</string>
+    <string name="title_surveydetails">Survey Details</string>
     <string name="title_default"></string>
     <string name="title_camera_button">Take Picture</string>
     <string name="title_gallery_button">Load From Gallery</string>
@@ -196,6 +197,8 @@
     <string name="label_button_request">Request</string>
     <string name="label_button_submit">Submit</string>
     <string name="label_button_save">Save</string>
+    <string name="label_button_start">Start</string>
+    <string name="label_button_complete">Complete</string>
     <!--
     Task layout.
     !-->
@@ -232,6 +235,9 @@
     <string name="title_attentance">Attendance</string>
     <string name="title_create_attendance">New Attendance</string>
     <string name="title_create_attendanceline">New Attendance Line</string>
+    <string name="title_survey">Survey</string>
+    <string name="title_new_survey">New Survey</string>
+    <string name="title_sign_survey">Sign for Survey</string>
     <!--
     Error text
     !-->
@@ -248,8 +254,7 @@
 
     <string name="movement_label_docno">Document No </string>
     <string name="movement_label_movedate">Movement Date </string>
-    <string name="movement_label_status">Status
-        </string>
+    <string name="movement_label_status">Status </string>
     <string name="label_requested_date">Requested Date </string>
     <string name="label_serverurl">Server URL</string>
     <string name="label_username">Username</string>
@@ -258,7 +263,7 @@
     <string name="no_value_movement_qty">Please insert value for movement quantity</string>
     <string name="no_line_error">Please add at least one line to %1$s</string>
     <string name="no_shift_spinner">No shift to be selected</string>
-    <string name="no_shift_error">Please select a %1$s</string>
+    <string name="no_list_error">Please select a %1$s</string>
     <string name="proj_shift">Project Shift</string>
     <string name="request">request</string>
     <string name="please_fill_in_fields">Please fill in required field(s) : %1$s</string>
@@ -270,6 +275,7 @@
     <string name="label_taskdesc">Description</string>
     <string name="label_assignto">Assign To</string>
     <string name="label_taskSeqNo">Priority</string>
+    <string name="label_template">Template</string>
     <string name="text_icon_assign">Assign Project</string>
     <string name="title_newprojecttask">New Task</string>
     <string name="text_icon_complete">Complete</string>
@@ -294,5 +300,13 @@
     <string name="title_projectloc3">Select Project Location</string>
     <string name="title_projectloc4">Select Project Location</string>
     <string name="title_projectloc5">Select Project Location</string>
+    <string name="title_selecttemplate">Select Template</string>
+
+    <!--
+    Signature pad.
+    !-->
+    <string name="agreement">I agree the survey answers are true.</string>
+    <string name="clear_pad">Clear Pad</string>
+    <string name="submit_survey">Submit Survey</string>
 
 </resources>

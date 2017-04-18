@@ -93,10 +93,37 @@ public class AssetListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 // Refresh items
-                assetList = getMStorage();
-                AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
-                recyclerView.setAdapter(viewAdapter);
-                mSwipeRefreshLayout.setRefreshing(false);
+                new AsyncTask<Object, Void, Void>() {
+                    protected LayoutInflater inflater;
+                    protected RecyclerView recyclerView;
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                    }
+
+                    @Override
+                    protected Void doInBackground(Object... params) {
+                        inflater = (LayoutInflater) params[0];
+                        recyclerView = (RecyclerView) params[1];
+
+                        if (PBSServerConst.cookieStore == null){
+                            assetList = null;
+                        } else {
+                            assetList = getMStorage();
+                        }
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void avoid) {
+                        super.onPostExecute(avoid);
+                        AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
+                        recyclerView.setAdapter(viewAdapter);
+
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }.execute(inflater, recyclerView);
             }
         });
 

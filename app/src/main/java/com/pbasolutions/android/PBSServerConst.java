@@ -7,6 +7,9 @@ import com.pbasolutions.android.model.ModelConst;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+
 /**
  * Created by pbadell on 6/25/15.
  */
@@ -131,6 +134,7 @@ public class PBSServerConst {
      */
     public static void instantiateCookie(){
         cookieStore = new BasicCookieStore();
+        CookieHandler.setDefault(new CookieManager());
     }
 
 }

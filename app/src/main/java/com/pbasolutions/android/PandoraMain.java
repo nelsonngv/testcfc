@@ -68,12 +68,16 @@ import com.pbasolutions.android.fragment.AccountFragment;
 import com.pbasolutions.android.fragment.NewMovementLineFragment;
 import com.pbasolutions.android.fragment.NewRequisitionFragment;
 import com.pbasolutions.android.fragment.NewRequisitionLineFragment;
+import com.pbasolutions.android.fragment.NewSurveyPagerFragment;
+import com.pbasolutions.android.fragment.NewSurveySignFragment;
+import com.pbasolutions.android.fragment.NewSurveyStartFragment;
 import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
 import com.pbasolutions.android.fragment.ProjTaskFragment;
 import com.pbasolutions.android.fragment.RecruitFragment;
 import com.pbasolutions.android.fragment.RequisitionDetailFragment;
 import com.pbasolutions.android.fragment.RequisitionFragment;
 import com.pbasolutions.android.fragment.RequisitionLineDetailsFragment;
+import com.pbasolutions.android.fragment.SurveyFragment;
 import com.pbasolutions.android.json.PBSResultJSON;
 import com.pbasolutions.android.utils.AlbumStorageDirFactory;
 import com.pbasolutions.android.utils.BaseAlbumDirFactory;
@@ -160,10 +164,11 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public static final int FRAGMENT_ASSET = 2;
     public static final int FRAGMENT_REQUISITION = 3;
     public static final int FRAGMENT_TASK = 4;
-    public static final int FRAGMENT_CHECKPOINTS = 5;
-    public static final int FRAGMENT_CHECKPOINT_SEQ = 6;
-    public static final int FRAGMENT_BROADCAST = 7;
-    public static final int SETTING_MENU = 8;
+    public static final int FRAGMENT_SURVEY = 5;
+    public static final int FRAGMENT_CHECKPOINTS = 6;
+    public static final int FRAGMENT_CHECKPOINT_SEQ = 7;
+    public static final int FRAGMENT_BROADCAST = 8;
+    public static final int SETTING_MENU = 9;
     public static final int FRAGMENT_CHECKPOINTS_DETAILS = 50;
     public static final int FRAGMENT_NEW_CHECK_IN = 51;
     public static final int FRAGMENT_ACCOUNT = 80;
@@ -174,6 +179,9 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public static final int FRAGMENT_CREATE_MOVEMENTLINE = 14;
     public static final int FRAGMENT_CREATE_ATTENDANCE = 16;
     public static final int FRAGMENT_CREATE_ATTENDANCELINE = 17;
+    public static final int FRAGMENT_START_SURVEY = 18;
+    public static final int FRAGMENT_NEW_SURVEY = 19;
+    public static final int FRAGMENT_SIGN_SURVEY = 20;
 
     /**
      * Toolbar menu id.
@@ -208,15 +216,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
     //menu list constant
     public static final String[] MENU_LIST = {"Attendance", "Recruit", "Asset", "Requisition", "Task",
-            "Check In", "Check Point", "Broadcast", "Setting"};
+            "Survey", "Check In", "Check Point", "Broadcast", "Setting"};
 
     //welcome dialog indicator
     private boolean isWelcomeDisplayed = false;
 
     //dialog builder
     android.support.v7.app.AlertDialog dialog = null;
-
-    public RequestFuture<String> future;
 
     //receive broadcast message from push notification
 //    ReceiveMessages myReceiver = null;
@@ -250,18 +256,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * Initial.
      */
     private void init() {
-        future = RequestFuture.newFuture();
-        try {
-            future.get(0, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-            Log.e(TAG, "Error: " + e.getMessage());
-        } catch (TimeoutException e) {
-            Log.e(TAG, "Error: " + e.getMessage());
-        }
-//        appSingleton = AppSingleton.getInstance(getApplicationContext());
         authenticatorController = new PBSAuthenticatorController(this);
         setGlobalVariable((PandoraContext) getApplicationContext());
         if (getGlobalVariable() != null) {
@@ -404,6 +398,14 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             titleID = R.string.title_create_attendanceline;
         } else if (AttendanceDetailFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_attentance;
+        } else if (SurveyFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_survey;
+        } else if (NewSurveyStartFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_new_survey;
+        } else if (NewSurveyPagerFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_new_survey;
+        } else if (NewSurveySignFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_sign_survey;
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -889,6 +891,30 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             case FRAGMENT_CREATE_ATTENDANCELINE: {
                 fragment = new NewAttendanceLineFragment();
                 title = getString(R.string.title_create_attendanceline);
+                break;
+            }
+
+            case FRAGMENT_SURVEY: {
+                fragment = new SurveyFragment();
+                title = getString(R.string.title_survey);
+                break;
+            }
+
+            case FRAGMENT_START_SURVEY: {
+                fragment = new NewSurveyStartFragment();
+                title = getString(R.string.title_new_survey);
+                break;
+            }
+
+            case FRAGMENT_NEW_SURVEY: {
+                fragment = new NewSurveyPagerFragment();
+                title = getString(R.string.title_new_survey);
+                break;
+            }
+
+            case FRAGMENT_SIGN_SURVEY: {
+                fragment = new NewSurveySignFragment();
+                title = getString(R.string.title_sign_survey);
                 break;
             }
 

@@ -34,6 +34,7 @@
                 android:textAlignment="center"
                 android:gravity="center"
                 android:background="@drawable/textline"
+                android:visibility="gone"
                 />
             <TextView
                 android:layout_width="0dp"
@@ -58,6 +59,7 @@
                 android:gravity="center"
                 android:background="@drawable/textline"
                 android:clickable="true"
+                android:visibility="gone"
                 />
             <TextView
                 android:layout_width="0dp"
@@ -81,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:clickable="true"
+                android:visibility="gone"
                 />
         </TableRow>
     </TableLayout>

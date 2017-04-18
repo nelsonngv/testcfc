@@ -111,7 +111,7 @@ public class RequisitionTask implements Callable<Bundle> {
             if (ModelConst.updateTableRow(cr, MPurchaseRequestLine.TABLENAME, cv,
                     MPurchaseRequestLine.M_PURCHASEREQUESTLINE_UUID_COL, selectionArgs)) {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-                output.putString(PandoraConstant.RESULT, "Successfuly updated requisition line.");
+                output.putString(PandoraConstant.RESULT, "Successfully updated requisition line.");
             } else {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
                 output.putString(PandoraConstant.ERROR, "Fail to update requisition line.");
@@ -210,7 +210,7 @@ public class RequisitionTask implements Callable<Bundle> {
             if (ModelConst.updateTableRow(cr, MPurchaseRequest.TABLENAME, cv,
                     MPurchaseRequest.M_PURCHASEREQUEST_UUID_COL, selectionArgs)) {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-                output.putString(PandoraConstant.RESULT, "Successfuly insert updated requisition.");
+                output.putString(PandoraConstant.RESULT, "Successfully insert updated requisition.");
             } else {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
                 output.putString(PandoraConstant.ERROR, "Fail to update requisition.");

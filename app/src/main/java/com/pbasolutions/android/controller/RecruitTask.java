@@ -229,7 +229,7 @@ public class RecruitTask extends Task {
 
         if (result) {
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-            output.putString(PandoraConstant.RESULT, "Successfuly insert new applicant.");
+            output.putString(PandoraConstant.RESULT, "Successfully insert new applicant.");
         } else {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
             output.putString(PandoraConstant.ERROR, "Fail to insert new applicant.");

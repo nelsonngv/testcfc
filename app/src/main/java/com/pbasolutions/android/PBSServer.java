@@ -1,20 +1,16 @@
 package com.pbasolutions.android;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.pbasolutions.android.json.PBSJson;
 
 import org.apache.http.HttpResponse;
@@ -35,22 +31,17 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
+import java.security.cert.CertificateException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -94,15 +85,16 @@ public class PBSServer {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put(ClientContext.COOKIE_STORE, PBSServerConst.cookieStore.toString());
+                    headers.put("Content-Type", "application/x-www-form-urlencoded");
                     return headers;
                 }
             };
             stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            stringReq.setShouldCache(false);
 
             // Adding string request to request queue
-            AppSingleton appSingleton = AppSingleton.getInstance(PandoraMain.instance.getApplicationContext());
-            appSingleton.getRequestQueue().add(stringReq);
+            RequestQueue queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
+            queue.add(stringReq);
             try {
                 String response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 30 seconds
                 return (PBSJson) new Gson().fromJson(response.toString(), cls);
@@ -142,13 +134,52 @@ public class PBSServer {
 //            HttpResponse response = httpClient.execute(httpPost, localContext);
 //            return EntityUtils.toString(response.getEntity());
 
+
+//            //Here a logging interceptor is created
+//            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+//
+//            //The logging interceptor will be added to the http client
+//            OkHttpClient okhttp = getUnsafeOkHttpClient(logging, new JavaNetCookieJar(CookieHandler.getDefault()));
+//
+//            //The Retrofit builder will have the client attached, in order to get connection logs
+//            Retrofit retrofit = new Retrofit.Builder()
+//                    .client(okhttp)
+//                    .addConverterFactory(GsonConverterFactory.create())
+//                    .baseUrl(url.substring(0, url.lastIndexOf("?")) + "/")
+//                    .build();
+//            ApiCall service = retrofit.create(ApiCall.class);
+//
+//            Map<String, String> headers = new HashMap<>();
+//            headers.put("Content-Type", "application/x-www-form-urlencoded");
+//            headers.put("Accept", "application/json");
+//            Call<JsonObject> call = service.post(url, headers, json);
+//
+//            final BlockingQueue<JsonObject> blockingQueue = new ArrayBlockingQueue<>(1);
+//            call.enqueue(new Callback<JsonObject>() {
+//                @Override
+//                public void onResponse(Call<JsonObject> call, retrofit2.Response<JsonObject> response) {
+//                    JsonObject result = response.body();
+//                    blockingQueue.offer(result);
+//                }
+//
+//                @Override
+//                public void onFailure(Call<JsonObject> call, Throwable t) {
+//                    // handle execution failures like no internet connectivity
+//                    Log.d(TAG, "Failed");
+//                }
+//            });
+//            String a = blockingQueue.poll(5, TimeUnit.SECONDS).toString();
+//            return a;
+
             PBSHttpsTrustManager.allowAllSSL();
-            RequestFuture<String> future = PandoraMain.instance.future;
+            RequestFuture<String> future = RequestFuture.newFuture();
             StringRequest stringReq = new StringRequest(Request.Method.POST, url, future, future) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headers = new HashMap<>();
-                    headers.put(ClientContext.COOKIE_STORE, PBSServerConst.cookieStore.toString());
+                    headers.put("Content-Type", "application/x-www-form-urlencoded");
+                    headers.put("Accept", "application/json");
                     return headers;
                 }
 
@@ -160,10 +191,11 @@ public class PBSServer {
                 }
             };
             stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            stringReq.setShouldCache(false);
 
             // Adding string request to request queue
-            AppSingleton appSingleton = AppSingleton.getInstance(PandoraMain.instance.getApplicationContext());
-            appSingleton.getRequestQueue().add(stringReq);
+            RequestQueue queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
+            queue.add(stringReq);
             try {
                 String response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 30 seconds
                 return response.toString();
@@ -181,6 +213,52 @@ public class PBSServer {
         return null;
     }
 
+//    private static OkHttpClient getUnsafeOkHttpClient(HttpLoggingInterceptor logging, JavaNetCookieJar cookieJar) {
+//        try {
+//            // Create a trust manager that does not validate certificate chains
+//            final TrustManager[] trustAllCerts = new TrustManager[] {
+//                    new X509TrustManager() {
+//                        @Override
+//                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+//                        }
+//
+//                        @Override
+//                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+//                        }
+//
+//                        @Override
+//                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+//                            return new java.security.cert.X509Certificate[]{};
+//                        }
+//                    }
+//            };
+//
+//            // Install the all-trusting trust manager
+//            final SSLContext sslContext = SSLContext.getInstance("SSL");
+//            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+//            // Create an ssl socket factory with our all-trusting manager
+//            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+//
+//            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+//            builder.addInterceptor(logging);
+//            builder.cookieJar(cookieJar);
+//            builder.readTimeout(30, TimeUnit.SECONDS);
+//            builder.connectTimeout(30, TimeUnit.SECONDS);
+//            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
+//            builder.hostnameVerifier(new HostnameVerifier() {
+//                @Override
+//                public boolean verify(String hostname, SSLSession session) {
+//                    return true;
+//                }
+//            });
+//
+//            OkHttpClient okHttpClient = builder.build();
+//            return okHttpClient;
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
     /**
      * Return main url path without action and variable parameters.
      * @param url
@@ -192,4 +270,15 @@ public class PBSServer {
         return url + path + jsp;
     }
 
+//    public interface ApiCall {
+//
+//        //This method is used for "POST"
+//        @FormUrlEncoded
+//        @POST
+//        Call<JsonObject> post(
+//                @Url String url,
+//                @HeaderMap Map<String, String> headers,
+//                @Field("json") String json
+//        );
+//    }
 }
