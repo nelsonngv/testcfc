@@ -50,6 +50,7 @@ public class PBSServerAccessor extends PBSServer implements PBSIServerAccessor {
         if (resultJSON.getSuccess() != null) {
             if (resultJSON.getSuccess().equals("TRUE")) {
                 returnBundle.putBoolean("RESULT", true);
+                returnBundle.putString("ID", resultJSON.getID());
             } else if (resultJSON.getInvalidSession() != null) {
                 returnBundle.putBoolean("RESULT", false);
                 returnBundle.putString(PandoraConstant.ERROR, "Invalid Session, Please re-login to run sync.");

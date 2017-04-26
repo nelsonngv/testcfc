@@ -1,16 +1,19 @@
 package com.pbasolutions.android.fragment;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
@@ -74,6 +77,8 @@ public class NewSurveyStartFragment extends Fragment {
         etName = (EditText) rootView.findViewById(R.id.atSurveyName);
         templateSpinner = (Spinner) rootView.findViewById(R.id.atTemplate);
         startButton = (Button) rootView.findViewById(R.id.atStart);
+        TextView tvName = (TextView) rootView.findViewById(R.id.tvSurveyName);
+        PandoraHelper.setAsterisk(tvName);
 
         ArrayAdapter projLocNameAdapter = PandoraHelper.addListToSpinner(getActivity(), projLocationSpinner, getProjLocList());
         if (projLocNameAdapter.getCount() > 0) {
@@ -129,8 +134,16 @@ public class NewSurveyStartFragment extends Fragment {
     }
 
     protected void startSurvey() {
-        SpinnerPair spinnerPair = (SpinnerPair) templateSpinner.getSelectedItem();
-        if (spinnerPair.getKey() == null) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        SpinnerPair projLocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
+        SpinnerPair templatePair = (SpinnerPair) templateSpinner.getSelectedItem();
+        if (etName.getText().toString().equals("")) {
+            PandoraHelper.showWarningMessage(getActivity(), "Please enter the Survey name");
+            etName.requestFocus();
+            imm.showSoftInput(etName, InputMethodManager.SHOW_IMPLICIT);
+            return;
+        }
+        if (templatePair.getKey() == null) {
             PandoraHelper.showWarningMessage(getActivity(), getString(
                     R.string.no_list_error, getString(R.string.label_template)));
             return;
@@ -141,7 +154,8 @@ public class NewSurveyStartFragment extends Fragment {
         dt.setTimeZone(TimeZone.getDefault());
         String now = dt.format(date);
         PBSSurveyController.name = etName.getText().toString();
-        PBSSurveyController.templateUUID = spinnerPair.getKey();
+        PBSSurveyController.projLocUUID = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_ID_COL, projLocPair.getKey(), ModelConst.C_PROJECTLOCATION_UUID_COL, cr);
+        PBSSurveyController.templateUUID = templatePair.getKey();
         PBSSurveyController.dateStart = now;
 
         ((PandoraMain) getActivity()).

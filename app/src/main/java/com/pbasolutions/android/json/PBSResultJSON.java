@@ -5,7 +5,7 @@ package com.pbasolutions.android.json;
  */
 public class PBSResultJSON extends PBSJson {
 
-    String GUID;
+    String ID;
     String Record;
     String DocStatus;
     String error;
@@ -22,12 +22,12 @@ public class PBSResultJSON extends PBSJson {
         this.error = error;
     }
 
-    public String getGUID() {
-        return GUID;
+    public String getID() {
+        return ID;
     }
 
-    public void setGUID(String GUID) {
-        this.GUID = GUID;
+    public void setID(String GUID) {
+        this.ID = ID;
     }
 
     public String getRecord() {

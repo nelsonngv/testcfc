@@ -1153,7 +1153,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
 
             //C_SURVEY
             db.execSQL("CREATE TABLE C_SURVEY(" +
-                    "C_SURVEY_ID NUMBER(10, 0) NOT NULL, " +
+                    "C_SURVEY_ID NUMBER(10, 0) DEFAULT NULL, " +
                     "C_SURVEY_UUID TEXT PRIMARY KEY NOT NULL, " +
                     "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
                     "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
@@ -1187,9 +1187,12 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                     ");");
 
+            //create index for C_SURVEY_ID_INDEX
+            db.execSQL("CREATE INDEX C_SURVEY_ID_INDEX ON C_SURVEY(C_SURVEY_ID)");
+
             //C_SURVEYRESPONSE
             db.execSQL("CREATE TABLE C_SURVEYRESPONSE(" +
-                    "C_SURVEYRESPONSE_ID NUMBER(10, 0) NOT NULL, " +
+                    "C_SURVEYRESPONSE_ID NUMBER(10, 0) DEFAULT NULL, " +
                     "C_SURVEYRESPONSE_UUID TEXT PRIMARY KEY NOT NULL, " +
                     "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
                     "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
@@ -1212,6 +1215,9 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
                     "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                     ");");
+
+            //create index for C_SURVEYRESPONSE_ID_INDEX
+            db.execSQL("CREATE INDEX C_SURVEYRESPONSE_ID_INDEX ON C_SURVEYRESPONSE(C_SURVEYRESPONSE_ID)");
             //END added 06/04/2017 by yao
 
             //create index for M_MOVEMENT_ID_INDEX
@@ -1372,7 +1378,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
 
                 //C_SURVEY
                 db.execSQL("CREATE TABLE C_SURVEY(" +
-                        "C_SURVEY_ID NUMBER(10, 0) NOT NULL, " +
+                        "C_SURVEY_ID NUMBER(10, 0) DEFAULT NULL, " +
                         "C_SURVEY_UUID TEXT PRIMARY KEY NOT NULL, " +
                         "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
                         "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
@@ -1406,9 +1412,12 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                         "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                         ");");
 
+                //create index for C_SURVEY_ID_INDEX
+                db.execSQL("CREATE INDEX C_SURVEY_ID_INDEX ON C_SURVEY(C_SURVEY_ID)");
+
                 //C_SURVEYRESPONSE
                 db.execSQL("CREATE TABLE C_SURVEYRESPONSE(" +
-                        "C_SURVEYRESPONSE_ID NUMBER(10, 0) NOT NULL, " +
+                        "C_SURVEYRESPONSE_ID NUMBER(10, 0) DEFAULT NULL, " +
                         "C_SURVEYRESPONSE_UUID TEXT PRIMARY KEY NOT NULL, " +
                         "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
                         "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
@@ -1431,6 +1440,9 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                         "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
                         "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                         ");");
+
+                //create index for C_SURVEYRESPONSE_ID_INDEX
+                db.execSQL("CREATE INDEX C_SURVEYRESPONSE_ID_INDEX ON C_SURVEYRESPONSE(C_SURVEYRESPONSE_ID)");
             }
         } catch (SQLException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE

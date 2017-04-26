@@ -3,6 +3,7 @@ package com.pbasolutions.android.controller;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
@@ -82,7 +83,7 @@ public class SurveyTask extends Task {
                 MSurvey.C_PROJECTLOCATION_UUID_COL,
                 MSurvey.NAME_COL,
                 MSurvey.DATEDELIVERY_COL,
-                MSurvey.STATUS_COL
+                ModelConst.IS_SYNCED_COL
         };
         String sortOrder = MSurvey.STATUS_COL + " DESC, " + MSurvey.DATEDELIVERY_COL + " DESC";
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_TABLE),
@@ -103,11 +104,7 @@ public class SurveyTask extends Task {
     private Bundle getSurvey() {
         String templateUUID = "";
         String[] surveyProjection = {
-//                ModelConst.C_SURVEY_TABLE + "." + MSurvey.C_SURVEY_UUID_COL,
                 ModelConst.C_SURVEY_TABLE + "." + MSurvey.NAME_COL,
-//                ModelConst.C_SURVEY_TABLE + "." + MSurvey.DATEDELIVERY_COL,
-//                ModelConst.C_SURVEY_TABLE + "." + MSurvey.STATUS_COL,
-//                ModelConst.C_SURVEY_TABLE + "." + MSurvey.C_PROJECTLOCATION_UUID_COL,
                 ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.C_SURVEYTEMPLATE_UUID_COL,
                 ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.NAME_COL + " AS TemplateName",
                 ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.DESCRIPTION_COL
@@ -118,7 +115,7 @@ public class SurveyTask extends Task {
                 surveyProjection, selection, selectionArgs, null);
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
-            templateUUID = cursor.getString(0);
+            templateUUID = cursor.getString(1);
             output.putSerializable(PBSSurveyController.ARG_SURVEY, populateProjectTask(cursor));
             cursor.close();
         }
@@ -167,7 +164,7 @@ public class SurveyTask extends Task {
     }
 
     private MSurvey populateProjectTask(Cursor cursor) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         MSurvey survey = new MSurvey();
         try {
@@ -216,12 +213,12 @@ public class SurveyTask extends Task {
                 } else if (MSurvey.NAME_COL
                         .equalsIgnoreCase(columnName)) {
                     survey.setName(rowValue);
-                } else if (MSurvey.STATUS_COL
+                } else if (ModelConst.IS_SYNCED_COL
                         .equalsIgnoreCase(columnName)) {
                     if ("N".equalsIgnoreCase(rowValue)) {
-                        survey.setStatus("Incomplete");
+                        survey.setStatus("Pending to sync");
                     } else {
-                        survey.setStatus("Completed");
+                        survey.setStatus("Synced");
                     }
                 } else if (MSurvey.DATEDELIVERY_COL
                         .equalsIgnoreCase(columnName)) {
@@ -264,11 +261,18 @@ public class SurveyTask extends Task {
 
 
     private Bundle insertSurvey() {
-        ContentValues cv = input.getParcelable(PBSSurveyController.SURVEY_VALUES);
-        Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_TABLE), cv);
+        ContentValues[] answerCV = (ContentValues[]) input.getParcelableArray(PBSSurveyController.SURVEY_ANSWERS);
+        ContentValues surveyCV = input.getParcelable(PBSSurveyController.SURVEY_VALUES);
+        Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_TABLE), surveyCV);
         boolean result = ModelConst.getURIResult(uri);
 
         if (result) {
+            long id = ContentUris.parseId(uri);
+            String surveyuuid = ModelConst.mapUUIDtoColumn(ModelConst.C_SURVEY_TABLE, "rowid", String.valueOf(id), MSurvey.C_SURVEY_UUID_COL, cr);
+            for (int i = 0; i < answerCV.length; i++) {
+                answerCV[i].put(MSurvey.C_SURVEY_UUID_COL, surveyuuid);
+            }
+            int insertedCount = cr.bulkInsert(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYRESPONSE_TABLE), answerCV);
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully insert new survey.");
         } else {

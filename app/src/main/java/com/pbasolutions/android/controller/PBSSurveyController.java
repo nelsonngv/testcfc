@@ -35,7 +35,9 @@ public class PBSSurveyController extends PBSController {
     public static final String ARG_QUESTIONS = "ARG_QUESTIONS";
     public static final String ARG_SECTIONS = "ARG_SECTIONS";
     public static final String SURVEY_VALUES = "SURVEY_VALUES";
+    public static final String SURVEY_ANSWERS = "SURVEY_ANSWERS";
     public static String name;
+    public static String projLocUUID;
     public static String templateUUID;
     public static String dateStart;
 

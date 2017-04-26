@@ -1,20 +1,26 @@
 package com.pbasolutions.android.model;
 
+import android.graphics.Color;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.pbasolutions.android.json.PBSJson;
 
 /**
  * Created by tinker on 4/24/16.
  */
-public class MSurvey extends PBSJson {
+public class MSurvey extends PBSJson implements Parcelable {
     public static final String TABLENAME = "C_Survey";
     public static final String C_SURVEY_ID_COL = "C_Survey_ID";
     public static final String C_SURVEY_UUID_COL = "C_Survey_UUID";
+    public static final String C_SURVEYRESPONSE_UUID_COL = "C_SurveyResponse_UUID";
     public static final String C_PROJECTLOCATION_ID_COL = "C_ProjectLocation_ID";
     public static final String C_PROJECTLOCATION_UUID_COL = "C_ProjectLocation_UUID";
     public static final String C_SURVEYTEMPLATE_ID_COL = "C_SurveyTemplate_ID";
     public static final String C_SURVEYTEMPLATE_UUID_COL = "C_SurveyTemplate_UUID";
     public static final String C_SURVEYTEMPLATEQUESTION_ID_COL = "C_SurveyTemplateQuestion_ID";
     public static final String C_SURVEYTEMPLATEQUESTION_UUID_COL = "C_SurveyTemplateQuestion_UUID";
+    public static final String ISACTIVE_COL = "IsActive";
     public static final String VALUE_COL = "Value";
     public static final String VALIDTO_COL = "ValidTo";
     public static final String EMAIL_COL = "Email";
@@ -34,6 +40,7 @@ public class MSurvey extends PBSJson {
     public static final String REMARKS_COL = "Remarks";
     public static final String AMT_COL = "Amt";
 
+    private String _UUID;
     private int C_ProjectLocation_ID;
     private String C_ProjectLocation_UUID;
     private String C_ProjectLocation_Name;
@@ -63,6 +70,103 @@ public class MSurvey extends PBSJson {
     private String type;
     private String remarks;
     private String amt;
+    private int statusColor;
+
+    public MSurvey() {
+
+    }
+
+    public MSurvey(Parcel in) {
+        C_ProjectLocation_ID = in.readInt();
+        C_ProjectLocation_UUID = in.readString();
+        C_ProjectLocation_Name = in.readString();
+        C_SurveyTemplate_ID = in.readInt();
+        C_SurveyTemplate_UUID = in.readString();
+        C_SurveyTemplate_Name = in.readString();
+        C_SurveyTemplateQuestion_ID = in.readInt();
+        C_SurveyTemplateQuestion_UUID = in.readString();
+        value = in.readString();
+        validTo = in.readString();
+        dateDelivery = in.readString();
+        email = in.readString();
+        emailSent = in.readString();
+        status = in.readString();
+        name = in.readString();
+        dateStart = in.readString();
+        dateEnd = in.readString();
+        longitude = in.readString();
+        latitude = in.readString();
+        Attachment_Signature = in.readString();
+        templatename = in.readString();
+        description = in.readString();
+        question = in.readString();
+        questiondesc = in.readString();
+        sectionno = in.readString();
+        sectionname = in.readString();
+        type = in.readString();
+        remarks = in.readString();
+        amt = in.readString();
+    }
+
+    public static final Creator<MSurvey> CREATOR = new Creator<MSurvey>() {
+        @Override
+        public MSurvey createFromParcel(Parcel in) {
+            return new MSurvey(in);
+        }
+
+        @Override
+        public MSurvey[] newArray(int size) {
+            return new MSurvey[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(C_ProjectLocation_ID);
+        parcel.writeString(C_ProjectLocation_UUID);
+        parcel.writeString(C_ProjectLocation_Name);
+        parcel.writeInt(C_SurveyTemplate_ID);
+        parcel.writeString(C_SurveyTemplate_UUID);
+        parcel.writeString(C_SurveyTemplate_Name);
+        parcel.writeInt(C_SurveyTemplateQuestion_ID);
+        parcel.writeString(C_SurveyTemplateQuestion_UUID);
+        parcel.writeString(value);
+        parcel.writeString(validTo);
+        parcel.writeString(dateDelivery);
+        parcel.writeString(email);
+        parcel.writeString(emailSent);
+        parcel.writeString(status);
+        parcel.writeString(name);
+        parcel.writeString(dateStart);
+        parcel.writeString(dateEnd);
+        parcel.writeString(longitude);
+        parcel.writeString(latitude);
+        parcel.writeString(Attachment_Signature);
+        parcel.writeString(templatename);
+        parcel.writeString(description);
+        parcel.writeString(question);
+        parcel.writeString(questiondesc);
+        parcel.writeString(sectionno);
+        parcel.writeString(sectionname);
+        parcel.writeString(type);
+        parcel.writeString(remarks);
+        parcel.writeString(amt);
+    }
+
+    @Override
+    public String get_UUID() {
+        return _UUID;
+    }
+
+    @Override
+    public void set_UUID(String _UUID) {
+        this._UUID = _UUID;
+    }
 
     public int getC_ProjectLocation_ID() {
         return C_ProjectLocation_ID;
@@ -174,6 +278,24 @@ public class MSurvey extends PBSJson {
 
     public void setStatus(String status) {
         this.status = status;
+        switch(status){
+            case "Synced": {
+                setStatusColor(Color.GREEN);
+                break;
+            }
+            default: {
+                setStatusColor(Color.RED);
+                break;
+            }
+        }
+    }
+
+    public int getStatusColor() {
+        return statusColor;
+    }
+
+    public void setStatusColor(int statusColor) {
+        this.statusColor = statusColor;
     }
 
     public String getName() {

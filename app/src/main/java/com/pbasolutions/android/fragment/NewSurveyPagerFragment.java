@@ -3,6 +3,7 @@ package com.pbasolutions.android.fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -113,52 +114,50 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment implements PBABac
             }
         });
 
-        complete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                imm.hideSoftInputFromWindow(PandoraMain.instance.getCurrentFocus().getWindowToken(), 0);
-//
-//                ArrayList<View> spinnerList = getAllChildren(mPager, Spinner.class);
-//                ArrayList<View> etList = getAllChildren(mPager, EditText.class);
-//                ArrayList<MSurvey> answerList = new ArrayList<>();
-//
-//                for (int i = 0; i < etList.size(); i++) {
-//                    Spinner spinner = (Spinner) spinnerList.get(i);
-//                    EditText et = (EditText) etList.get(i);
-//                    String uuid = spinner.getTag().toString();
-//                    if (spinner.getSelectedItemPosition() == 0) {
-//                        mPager.setCurrentItem(getQuestionPageNo(uuid));
-//                        spinner.requestFocus();
-//                        return;
-//                    } else if (et.getText().toString().equals("")) {
-//                        mPager.setCurrentItem(getQuestionPageNo(uuid));
-//                        et.requestFocus();
-//                        imm.showSoftInput(et, InputMethodManager.SHOW_IMPLICIT);
-//                        return;
-//                    } else {
-//                        MSurvey answer = new MSurvey();
-//                        answer.setC_SurveyTemplateQuestion_UUID(uuid);
-//                        answer.setAmt(((SpinnerPair) spinner.getSelectedItem()).getKey());
-//                        answer.setRemarks(et.getText().toString());
-//                        answerList.add(answer);
-//                    }
-//                }
+        if (_UUID != null && !_UUID.equals("")) {
+            complete.setVisibility(View.GONE);
+        } else {
+            complete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PandoraHelper.hideSoftKeyboard();
+                    ArrayList<View> spinnerList = getAllChildren(mPager, Spinner.class);
+                    ArrayList<View> etList = getAllChildren(mPager, EditText.class);
+                    ArrayList<MSurvey> answerList = new ArrayList<>();
 
-//                ((PandoraMain) getActivity()).
-//                        displayView(PandoraMain.FRAGMENT_SIGN_SURVEY, false);
-                Bundle bundle = new Bundle();
-                Fragment fragment = new NewSurveySignFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragment.setArguments(bundle);
-                fragment.setRetainInstance(true);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                fragmentTransaction.commit();
-                PandoraMain.instance.getSupportActionBar().setTitle(getString(R.string.title_sign_survey));
-            }
-        });
+                    for (int i = 0; i < etList.size(); i++) {
+                        Spinner spinner = (Spinner) spinnerList.get(i);
+                        EditText et = (EditText) etList.get(i);
+                        String uuid = spinner.getTag().toString();
+                        if (spinner.getSelectedItemPosition() == 0) {
+                            promptAlert(spinner, uuid);
+                            return;
+                        }
+                        if (et.getText().toString().equals("")) {
+                            promptAlert(et, uuid);
+                            return;
+                        }
+                        MSurvey answer = new MSurvey();
+                        answer.setC_SurveyTemplateQuestion_UUID(uuid);
+                        answer.setAmt(((SpinnerPair) spinner.getSelectedItem()).getKey());
+                        answer.setRemarks(et.getText().toString());
+                        answerList.add(answer);
+                    }
+
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList("answers", answerList);
+                    Fragment fragment = new NewSurveySignFragment();
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    fragment.setArguments(bundle);
+                    fragment.setRetainInstance(true);
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.container_body, fragment);
+                    fragmentTransaction.addToBackStack(fragment.getClass().getName());
+                    fragmentTransaction.commit();
+                    PandoraMain.instance.getSupportActionBar().setTitle(getString(R.string.title_sign_survey));
+                }
+            });
+        }
     }
 
     @Override
@@ -244,6 +243,11 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment implements PBABac
             survey = (MSurvey) result.getSerializable(PBSSurveyController.ARG_SURVEY);
             questions = (ArrayList<MSurvey>) result.getSerializable(PBSSurveyController.ARG_QUESTIONS);
             sections = (ArrayList<String>) result.getSerializable(PBSSurveyController.ARG_SECTIONS);
+            if (sections.size() == 0) {
+                PandoraHelper.showWarningMessage(getActivity(), "This template does not have any questions.");
+                PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                return;
+            }
             NUM_PAGES = sections.size();
             mPager.setOffscreenPageLimit(NUM_PAGES);
 
@@ -269,6 +273,20 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment implements PBABac
         return result;
     }
 
+    private void promptAlert(Object obj, String uuid) {
+        PandoraHelper.showWarningMessage(getActivity(), "Please answer all the questions");
+        if (obj instanceof Spinner) {
+            mPager.setCurrentItem(getQuestionPageNo(uuid));
+            ((Spinner) obj).requestFocus();
+        }
+        else if (obj instanceof EditText) {
+            mPager.setCurrentItem(getQuestionPageNo(uuid));
+            ((EditText) obj).requestFocus();
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(((EditText) obj), InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
     private int getQuestionPageNo(String question_uuid) {
         for (int j = 0; j < questions.size(); j++) {
             MSurvey question = questions.get(j);
@@ -280,7 +298,6 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment implements PBABac
                 }
             }
         }
-        PandoraHelper.showMessage(getActivity(), "Please answer all the fields");
         return 0;
     }
 

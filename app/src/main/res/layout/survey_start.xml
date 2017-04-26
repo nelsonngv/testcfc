@@ -36,6 +36,7 @@
                     android:layout_height="wrap_content">
                     <LinearLayout style="@style/PTableVirtRowW">
                         <TextView
+                            android:id="@+id/tvSurveyName"
                             style="@style/TableInfoLabel"
                             android:text="@string/label_name" />
 

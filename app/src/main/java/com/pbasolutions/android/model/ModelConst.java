@@ -211,15 +211,25 @@ public class ModelConst {
                     ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE
             };
 
-    //TODO : other table then master data is updateable by phone.
+    /**
+     * other tables than master data is updateable by phone.
+     */
     public static String localUpdateTables[] =
             {
                     ModelConst.M_CHECKIN_TABLE,
                     ModelConst.HR_JOBAPPLICATION_TABLE,
                     ModelConst.C_SURVEY_TABLE,
                     ModelConst.C_SURVEYRESPONSE_TABLE
-
             };
+
+    /**
+     * tables that need to update their id in local tables after updated to server.
+     */
+    public static String localUpdateIDTables[] =
+            {
+                    ModelConst.C_SURVEY_TABLE
+            };
+
     /**
      * all table names.
      */
@@ -229,6 +239,7 @@ public class ModelConst {
                     ModelConst.IS_DELETED_COL,
                     ModelConst.IS_UPDATED_COL
             };
+
     /**
      * String for insertion process fails.
      */

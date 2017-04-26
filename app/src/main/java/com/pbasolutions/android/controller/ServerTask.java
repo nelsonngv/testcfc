@@ -18,6 +18,7 @@ import com.pbasolutions.android.syncAdapter.PBSIServerAccessor;
 import com.pbasolutions.android.syncAdapter.PBSServerAccessor;
 import com.pbasolutions.android.utils.CameraUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -366,6 +367,7 @@ public class ServerTask extends Task {
         PBSTableJSON data = new PBSTableJSON();
         data.setTableName(tableName);
         String uuid = "";
+        String attachment = "";
         List<PBSColumnsJSON> columns = new ArrayList<>();
         try {
             //loop through all columns
@@ -400,7 +402,7 @@ public class ServerTask extends Task {
                             Integer.parseInt(_ID));
                     columns.add(column);
                 } else if (tableCursor.getColumnName(x).equalsIgnoreCase("CreatedBy") ||
-                        tableCursor.getColumnName(x).equalsIgnoreCase("UpdatedBy")){
+                        tableCursor.getColumnName(x).equalsIgnoreCase("UpdatedBy")) {
                     String columnName = tableCursor.getColumnName(x);
                     String columnID = ModelConst.AD_USER_TABLE + ModelConst._ID;
                     String columnIDTableName = ModelConst.AD_USER_TABLE;
@@ -416,12 +418,13 @@ public class ServerTask extends Task {
                     if (value == null || value.isEmpty())
                         value = "null";
                     columns.add(new PBSColumnsJSON(tableCursor.getColumnName(x), value));
-                } else if (tableCursor.getColumnName(x).contains("ATTACHMENT_")){
+                } else if (tableCursor.getColumnName(x).contains("ATTACHMENT_")) {
+                    attachment = tableCursor.getString(x);
                     String value = CameraUtil.imageToBase64(tableCursor.getString(x));
                     if (value == null || value.isEmpty())
                         value = "null";
                     columns.add(new PBSColumnsJSON(tableCursor.getColumnName(x), value));
-                } else if (tableCursor.getColumnName(x).equalsIgnoreCase(tableName + "_ID")){
+                } else if (tableCursor.getColumnName(x).equalsIgnoreCase(tableName + "_ID")) {
                     columns.add(new PBSColumnsJSON(tableCursor.getColumnName(x),
                             tableCursor.getInt(x)));
                 }
@@ -436,13 +439,35 @@ public class ServerTask extends Task {
             }
         } catch (Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
+            e.printStackTrace();
         }
         PBSColumnsJSON[] array = columns.toArray(new PBSColumnsJSON[columns.size()]);
         data.setColumns(array);
-        return updateResult(data, resultBundle, contentResolver, tableName,
+        Bundle bundle = updateResult(data, resultBundle, contentResolver, tableName,
                 uuid, inputBundle.getString(PBSAuthenticatorController.USER_PASS_ARG),
                 inputBundle.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
                 inputBundle.getString(PBSAuthenticatorController.SERVER_URL_ARG));
+
+        if (bundle.getBoolean(PandoraConstant.RESULT)) {
+            String tableNames[] = ModelConst.localUpdateIDTables;
+            for (int i = 0; i < tableNames.length; i++) {
+                if (tableName.equals(tableNames[i])) {
+                    String ID = bundle.getString("ID", null);
+                    ContentValues cv = new ContentValues();
+                    cv.put(tableName + ModelConst._ID, ID);
+                    String selection = tableName + ModelConst._UUID;
+                    String[] arg = {uuid};
+                    ModelConst.updateTableRow(cr, tableName, cv, selection, arg);
+
+                    if (tableName.equals(ModelConst.C_SURVEY_TABLE)) {
+                        File sign = new File(attachment);
+                        if (sign.exists()) sign.delete();
+                    }
+                    break;
+                }
+            }
+        }
+        return bundle;
     }
 
 

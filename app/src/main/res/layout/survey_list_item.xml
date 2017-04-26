@@ -40,59 +40,44 @@
                     <TextView
                         style="@style/TableValue"
                         android:layout_marginLeft="@dimen/table_margin_middle"
-                        android:id="@+id/task_project_loc"
+                        android:id="@+id/survey_project_loc"
                         android:text="@{survey.c_ProjectLocation_Name}"
                         />
                 </TableRow>
-                <!--<TableRow
-                    android:divider="?android:attr/dividerVertical"
-                    android:showDividers="middle">
-                    <TextView
-                        style="@style/TableLabelWide"
-                        android:text="@string/label_assignto" />
-                    <TextView
-                        style="@style/TableValue"
-                        android:layout_marginLeft="@dimen/table_margin_middle"
-                        android:id="@+id/task_assignedto"
-                        android:text="@{projTask.assignedToName}"
-                        />
-                </TableRow>
-
                 <TableRow
                     android:divider="?android:attr/dividerVertical"
                     android:showDividers="middle">
                     <TextView
                         style="@style/TableLabelWide"
-                        android:text="@string/label_duedate" />
+                        android:text="@string/label_datedelivery" />
                     <TextView
-                        android:id="@+id/task_duedate"
                         style="@style/TableValue"
                         android:layout_marginLeft="@dimen/table_margin_middle"
-                        android:text="@{projTask.DueDate}"
+                        android:id="@+id/survey_date_delivery"
+                        android:text="@{survey.dateDelivery}"
                         />
                 </TableRow>
-
                 <TableRow
                     android:divider="?android:attr/dividerVertical"
                     android:showDividers="middle">
                     <TextView
                         style="@style/TableLabelWide"
-                        android:text="@string/label_status" />
+                        android:text="@string/app_label_status" />
                     <TextView
-                        android:id="@+id/task_status"
                         style="@style/TableValue"
                         android:layout_marginLeft="@dimen/table_margin_middle"
-                        android:text="@{projTask.Status}"
-                        android:textColor="@{projTask.StatusColor}"
+                        android:id="@+id/survey_status"
+                        android:text="@{survey.status}"
+                        android:textColor="@{survey.statusColor}"
                         />
-                </TableRow>-->
+                </TableRow>
             </TableLayout>
-            <!--<TextView
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:id="@+id/_UUID"
-                android:text="@{projTask._UUID}"
-                android:visibility="invisible"/>-->
+                android:text="@{survey._UUID}"
+                android:visibility="invisible"/>
         </LinearLayout>
         <View style="@style/Line2" android:layout_width="match_parent"/>
     </LinearLayout>

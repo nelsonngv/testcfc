@@ -138,7 +138,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     /**
      * Photo album directory.
      */
-    private AlbumStorageDirFactory mAlbumStorageDirFactory = null;
+    public AlbumStorageDirFactory mAlbumStorageDirFactory = null;
 
     /**
      *  Store current action codes

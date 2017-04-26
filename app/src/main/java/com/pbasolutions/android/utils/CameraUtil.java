@@ -5,7 +5,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
@@ -17,6 +22,7 @@ import android.widget.ImageView;
 import com.pbasolutions.android.PandoraMain;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -196,15 +202,15 @@ public class CameraUtil {
      * @return
      */
     public static String imageToBase64(String path){
-        if (path != null) {
+        if (path != null && new File(path).exists()) {
             Bitmap immagex = BitmapFactory.decodeFile(path);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] b = baos.toByteArray();
             String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
             return imageEncoded;
-       }
-            return null;
+        }
+        return null;
     }
 
     /**
@@ -240,4 +246,53 @@ public class CameraUtil {
         }
     }
 
+    public static String storeSignature(Bitmap image) {
+        String filePath = null;
+        try {
+            int height = image.getHeight();
+            int width = image.getWidth();
+
+            Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(bmpGrayscale);
+            Paint paint = new Paint();
+            ColorMatrix cm = new ColorMatrix();
+            cm.setSaturation(0);
+            ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+            paint.setColorFilter(f);
+            c.drawBitmap(image, 0, 0, paint);
+
+            Matrix m = new Matrix();
+            m.setRectToRect(new RectF(0, 0, width, height), new RectF(0, 0, 500, 500), Matrix.ScaleToFit.CENTER);
+            bmpGrayscale = Bitmap.createBitmap(bmpGrayscale, 0, 0, width, height, m, true);
+
+            String dirPath = Environment.getExternalStorageDirectory() + "/dcim/" + ALBUM_NAME + "/signature";
+            File dirFile = new File(dirPath);
+            if (dirFile != null) {
+                if (!dirFile.mkdirs()) {
+                    if (!dirFile.exists()) {
+                        Log.d("CameraSample", "failed to create directory");
+                        return null;
+                    }
+                }
+            }
+            File noMedia = new File(dirPath + "/.nomedia");
+            if (!noMedia.exists()) {
+                noMedia.createNewFile();
+            }
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
+            File imageF = File.createTempFile(imageFileName, ".png", dirFile);
+            filePath = imageF.getAbsolutePath();
+
+            FileOutputStream fos = new FileOutputStream(imageF);
+            bmpGrayscale.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            Log.d(TAG, "File not found: " + e.getMessage());
+        } catch (IOException e) {
+            Log.d(TAG, "Error accessing file: " + e.getMessage());
+        }
+        return filePath;
+    }
 }

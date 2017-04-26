@@ -575,7 +575,9 @@ public class PBSContentProvider extends ContentProvider {
                         " ON (" + ModelConst.C_SURVEYTEMPLATE_TABLE + "." + ModelConst.C_SURVEYTEMPLATE_TABLE + "_UUID = "
                         + ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + ModelConst.C_SURVEYTEMPLATE_TABLE + "_UUID)"
                         + " INNER JOIN " + ModelConst.C_SURVEYRESPONSE_TABLE +
-                        " ON (" + ModelConst.C_SURVEY_TABLE + "." + ModelConst.C_SURVEY_TABLE + "_UUID = "
+                        " ON (" + ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "_UUID = "
+                        + ModelConst.C_SURVEYRESPONSE_TABLE + "." + ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "_UUID AND "
+                        + ModelConst.C_SURVEY_TABLE + "." + ModelConst.C_SURVEY_TABLE + "_UUID = "
                         + ModelConst.C_SURVEYRESPONSE_TABLE + "." + ModelConst.C_SURVEY_TABLE + "_UUID)");
                 return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
             }
