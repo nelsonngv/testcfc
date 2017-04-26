@@ -3,6 +3,7 @@ package com.pbasolutions.android.controller;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.location.Criteria;
@@ -13,6 +14,8 @@ import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
@@ -181,28 +184,58 @@ public class PBSCheckInController extends ContextWrapper implements PBSIControll
      */
     private Bundle processLocation(Bundle bundle, final Bundle resultBundle, Object object) {
         locationManager = (LocationManager) (context).getSystemService(Context.LOCATION_SERVICE);
-        criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setCostAllowed(false);
+        int locationMode;
+        try {
+            locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            return resultBundle;
+        }
+        gps_enabled = locationMode == Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
 
-        provider = locationManager.getBestProvider(criteria, false);
+        if(!gps_enabled) {
+            // notify user
+            AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+            dialog.setMessage("GPS is disabled or not in High Accuracy mode");
+            dialog.setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    // TODO Auto-generated method stub
+                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    context.startActivity(myIntent);
+                }
+            });
+            dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    // TODO Auto-generated method stub
+                }
+            });
+            dialog.show();
+        } else {
+            criteria = new Criteria();
+            criteria.setAccuracy(Criteria.ACCURACY_FINE);
+            criteria.setCostAllowed(false);
 
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location == null) {
-            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            provider = locationManager.getBestProvider(criteria, false);
+
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location == null) {
-                location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (location == null) {
+                    location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                }
             }
+
+            customlistener = new CustomLocationListener();
+
+            if (location != null) {
+                customlistener.onLocationChanged(location);
+            }
+
+            resultBundle.putDouble(DEVICE_LAT, latitude);
+            resultBundle.putDouble(DEVICE_LONG, longitude);
         }
-
-        customlistener = new CustomLocationListener();
-
-        if (location != null) {
-            customlistener.onLocationChanged(location);
-        }
-
-        resultBundle.putDouble(DEVICE_LAT, latitude);
-        resultBundle.putDouble(DEVICE_LONG, longitude);
         return resultBundle;
     }
 
