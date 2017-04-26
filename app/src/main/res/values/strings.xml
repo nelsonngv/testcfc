@@ -304,6 +304,11 @@
     <string name="title_selecttemplate">Select Template</string>
 
     <!--
+    Survey.
+    !-->
+    <string name="label_surveyname">Survey Name</string>
+
+    <!--
     Signature pad.
     !-->
     <string name="agreement">I agree the survey answers are true.</string>

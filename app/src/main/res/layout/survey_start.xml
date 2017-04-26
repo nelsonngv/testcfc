@@ -38,7 +38,7 @@
                         <TextView
                             android:id="@+id/tvSurveyName"
                             style="@style/TableInfoLabel"
-                            android:text="@string/label_name" />
+                            android:text="@string/label_surveyname" />
 
                         <EditText
                             android:id="@+id/atSurveyName"
