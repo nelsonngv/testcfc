@@ -166,8 +166,8 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 
             if (picturePath != null) {
 //            if (!(picturePath.endsWith(".jpg") || picturePath.endsWith(".jpeg")))
-                if (!picturePath.endsWith(".jpg") && !picturePath.endsWith(".jpg"))
-                    picturePath += ".jpg";
+//                if (!picturePath.endsWith(".jpg") && !picturePath.endsWith(".jpg"))
+//                    picturePath += ".jpg";
 
                 switch (requestCode) {
                     case CameraUtil.CAPTURE_ATTACH_1: {

@@ -394,8 +394,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             String picturePath = CameraUtil.getPicPath(context, data);
 
             if (picturePath != null) {
-                if (!picturePath.endsWith(".jpg") && !picturePath.endsWith(".jpg"))
-                    picturePath += ".jpg";
+//                if (!picturePath.endsWith(".jpg") && !picturePath.endsWith(".jpg"))
+//                    picturePath += ".jpg";
 
                 switch (requestCode) {
                     case CameraUtil.CAPTURE_ATTACH_1: {
