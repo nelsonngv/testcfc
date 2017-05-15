@@ -19,10 +19,10 @@ import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SurveyRVA;
-import com.pbasolutions.android.adapter.TaskRVA;
 import com.pbasolutions.android.controller.PBSSurveyController;
 import com.pbasolutions.android.controller.PBSTaskController;
 import com.pbasolutions.android.listener.FragmentListOnItemClickListener;
+import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.listener.RecyclerItemClickListener;
 import com.pbasolutions.android.model.IModel;
 import com.pbasolutions.android.model.MSurvey;
@@ -30,7 +30,7 @@ import com.pbasolutions.android.model.MSurvey;
 /**
  * Created by pbadell on 10/13/15.
  */
-public class SurveyFragment extends Fragment {
+public class SurveyFragment extends Fragment implements PBABackKeyListener {
     /**
      * Class tag name.
      */
@@ -154,5 +154,10 @@ public class SurveyFragment extends Fragment {
         viewAdapter = new SurveyRVA(pandoraMain, surveyList);
         recyclerView.setAdapter(viewAdapter);
         addRecyclerViewListener(recyclerView);
+    }
+
+    @Override
+    public boolean onBackKeyPressed() {
+        return false;
     }
 }

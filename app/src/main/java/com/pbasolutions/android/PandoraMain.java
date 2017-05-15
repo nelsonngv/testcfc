@@ -249,6 +249,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         if (frag instanceof PBABackKeyListener) {
             if (((PBABackKeyListener)frag).onBackKeyPressed())
                 return true;
+            else return false;
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -938,7 +939,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragment.setRetainInstance(true);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container_body, fragment);
+        fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getName());
         if (isAddToStack == false) {
             fragmentTransaction.addToBackStack(fragment.getClass().getName());
         }

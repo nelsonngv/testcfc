@@ -261,7 +261,7 @@ public class NewSurveySignFragment extends Fragment {
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.container_body, surveyFrag);
-                        fragmentTransaction.addToBackStack(surveyFrag.getClass().getName());
+//                        fragmentTransaction.addToBackStack(surveyFrag.getClass().getName());
                         fragmentTransaction.commit();
                     } else {
                         PandoraHelper.showMessage(getActivity(), output.getString(output.getString(PandoraConstant.TITLE)));

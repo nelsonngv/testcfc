@@ -116,8 +116,8 @@ public class NewCheckInFragment extends Fragment {
                     Bundle resultBundle2 = new Bundle();
                     try {
                         resultBundle2 = checkInController.triggerEvent(PBSCheckInController.PROCESS_NFC, inputBundle, resultBundle2, getNfcIntent());
-                        scanInfo.setText(resultBundle2.getString("NFC_TEXT"));
-                        tagID.setText(resultBundle2.getString("NFC_TAG_ID"));
+                        scanInfo.setText(resultBundle2.getString(PBSCheckInController.NFC_TEXT));
+                        tagID.setText(resultBundle2.getString(PBSCheckInController.NFC_TAG_ID));
                         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
                         progressBar.setVisibility(View.INVISIBLE);
                         //convert

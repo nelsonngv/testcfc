@@ -66,7 +66,9 @@ public class NewSurveyFragment extends Fragment {
             questions = (ArrayList<MSurvey>) bundle.getSerializable(PBSSurveyController.ARG_QUESTIONS);
 
             String sectionName = sections.get(currPosition);
-            section.setText("Section: " + sectionName);
+            if (sectionName == null || sectionName.equals("") || sectionName.equals("null"))
+                section.setVisibility(View.GONE);
+            else section.setText("Section: " + sectionName);
             List<SpinnerPair> ratingList = new ArrayList<>();
             SpinnerPair pair = new SpinnerPair();
             pair.setKey(null);
@@ -88,8 +90,8 @@ public class NewSurveyFragment extends Fragment {
                     Spinner rating = new Spinner(getActivity());
                     EditText etRemarks = new EditText(getActivity());
 
-                    rating.setId(Integer.parseInt(question.getC_SurveyTemplateQuestion_ID()+"1"));
-                    etRemarks.setId(Integer.parseInt(question.getC_SurveyTemplateQuestion_ID()+"2"));
+                    rating.setId(Integer.parseInt(question.getC_SurveyTemplateQuestion_ID() + "1"));
+                    etRemarks.setId(Integer.parseInt(question.getC_SurveyTemplateQuestion_ID() + "2"));
                     subLL.setOrientation(LinearLayout.VERTICAL);
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);

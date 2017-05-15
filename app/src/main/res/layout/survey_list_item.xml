@@ -49,7 +49,7 @@
                     android:showDividers="middle">
                     <TextView
                         style="@style/TableLabelWide"
-                        android:text="@string/label_datedelivery" />
+                        android:text="@string/label_date" />
                     <TextView
                         style="@style/TableValue"
                         android:layout_marginLeft="@dimen/table_margin_middle"

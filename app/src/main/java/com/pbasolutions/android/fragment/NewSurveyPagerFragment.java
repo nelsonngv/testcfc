@@ -3,7 +3,6 @@ package com.pbasolutions.android.fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -19,7 +18,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import com.pbasolutions.android.PandoraHelper;
@@ -27,14 +25,11 @@ import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSSurveyController;
-import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.model.MSurvey;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
-public class NewSurveyPagerFragment extends PBSDetailsFragment implements PBABackKeyListener {
+public class NewSurveyPagerFragment extends PBSDetailsFragment {
     /**
      * Class tag name.
      */
@@ -76,11 +71,6 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment implements PBABac
         setUIListener();
 
         return rootView;
-    }
-
-    @Override
-    public boolean onBackKeyPressed() {
-        return false;
     }
 
     @Override
