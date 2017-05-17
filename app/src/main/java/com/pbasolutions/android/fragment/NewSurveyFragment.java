@@ -125,7 +125,7 @@ public class NewSurveyFragment extends Fragment {
                     etRemarks.setMaxLines(5);
                     etRemarks.setHorizontalScrollBarEnabled(true);
                     etRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                    if (question.getRemarks() != null && !question.getRemarks().equals("") && question.getAmt() != null && !question.getAmt().equals("")) {
+                    if (question.getAmt() != null && !question.getAmt().equals("")) {
                         rating.setEnabled(false);
                         rating.setSelection(Integer.parseInt(question.getAmt()) + 1);
                         etRemarks.setEnabled(false);
