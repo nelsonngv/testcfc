@@ -123,10 +123,10 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
                             promptAlert(spinner, uuid);
                             return;
                         }
-                        if (et.getText().toString().equals("")) {
-                            promptAlert(et, uuid);
-                            return;
-                        }
+//                        if (et.getText().toString().equals("")) {
+//                            promptAlert(et, uuid);
+//                            return;
+//                        }
                         MSurvey answer = new MSurvey();
                         answer.setC_SurveyTemplateQuestion_UUID(uuid);
                         answer.setAmt(((SpinnerPair) spinner.getSelectedItem()).getKey());
@@ -264,7 +264,7 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
     }
 
     private void promptAlert(Object obj, String uuid) {
-        PandoraHelper.showWarningMessage(getActivity(), "Please answer all the questions");
+        PandoraHelper.showWarningMessage(getActivity(), "Please rate all the questions");
         if (obj instanceof Spinner) {
             mPager.setCurrentItem(getQuestionPageNo(uuid));
             ((Spinner) obj).requestFocus();
