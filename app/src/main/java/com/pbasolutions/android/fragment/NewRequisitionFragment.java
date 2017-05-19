@@ -56,9 +56,9 @@ public class NewRequisitionFragment extends Fragment {
     private ObservableArrayList<MPurchaseRequestLine> lines;
 //    private MPurchaseRequest pr;
 
-    private EditText documentNo;
-    private EditText isApproved;
-    private EditText projLoc;
+    private TextView documentNo;
+    private TextView isApproved;
+    private TextView projLoc;
     private TextView requestDate;
     private ImageButton addButton;
     private ImageButton removeButton;
@@ -132,9 +132,9 @@ public class NewRequisitionFragment extends Fragment {
 //    }
 
     private void setUI(View view){
-        documentNo =  (EditText)view.findViewById(R.id.prDocNo) ;
-        isApproved = (EditText)view.findViewById(R.id.prStatus) ;
-        projLoc = (EditText) view.findViewById(R.id.prProjLoc);
+        documentNo =  (TextView)view.findViewById(R.id.prDocNo) ;
+        isApproved = (TextView)view.findViewById(R.id.prStatus) ;
+        projLoc = (TextView) view.findViewById(R.id.prProjLoc);
         requestDate = (TextView) view.findViewById(R.id.prRequestDate);
 //        addButton = (ImageButton)view.findViewById(R.id.addPrLine);
 //        removeButton = (ImageButton) view.findViewById(R.id.removePrLine);

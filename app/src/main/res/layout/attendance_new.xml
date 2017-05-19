@@ -50,6 +50,7 @@
                             <TextView
                                 android:id="@+id/attDeployDate"
                                 style="@style/TableValueDate"
+                                android:textColor="#F000"
                                 android:hint="Press to Select Date"
                                 android:text="@{attendance.DeploymentDate}"
                                 android:layout_marginBottom="@dimen/margin_bottom" />
