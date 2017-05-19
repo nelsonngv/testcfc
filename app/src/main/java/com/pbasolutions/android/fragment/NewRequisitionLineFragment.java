@@ -1,18 +1,11 @@
 package com.pbasolutions.android.fragment;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
@@ -35,8 +28,6 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
     MPurchaseRequestLine tempPRLine;
     String prUUID;
     Fragment requisitionFragment;
-
-    Button saveButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -49,6 +52,7 @@ public class NewAttendanceLineFragment extends Fragment {
      * Class tag name.
      */
     private static final String TAG = "NewAttendanceLineFragment";
+    private static final int SUBMIT_ATTENDANCE = 500;
 
     MAttendanceLine tempATLine;
     String atUUID;
@@ -63,8 +67,6 @@ public class NewAttendanceLineFragment extends Fragment {
     TextView textCheckoutDate;
     TextView textComment;
 
-    Button saveButton;
-
     View rootView;
 
     PBSAttendanceController attendCont;
@@ -77,6 +79,7 @@ public class NewAttendanceLineFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         attendCont = new PBSAttendanceController(getActivity());
     }
 
@@ -104,7 +107,6 @@ public class NewAttendanceLineFragment extends Fragment {
         textCheckinDate = (TextView)rootView.findViewById(R.id.atCheckinDate);
         textCheckoutDate = (TextView)rootView.findViewById(R.id.atCheckoutDate);
         textComment = (TextView)rootView.findViewById(R.id.atComment);
-        saveButton = (Button)rootView.findViewById(R.id.saveATLine);
         setDateTimeFromShift();
         setDateTimeToShift();
     }
@@ -152,13 +154,6 @@ public class NewAttendanceLineFragment extends Fragment {
                 refreshUIState();
             }
         });
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveATLine();
-            }
-        });
     }
 
     protected void setValues() {
@@ -176,7 +171,27 @@ public class NewAttendanceLineFragment extends Fragment {
             attTypeList.add(pair);
         }
         attTypeAdapter = PandoraHelper.addListToSpinner(getActivity(), attTypeSpinner, attTypeList);
+    }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        MenuItem add;
+        add = menu.add(0, SUBMIT_ATTENDANCE, 1, getString(R.string.label_button_save));
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.ic_done);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case SUBMIT_ATTENDANCE: {
+                saveATLine();
+                return true;
+            }
+            default: return false;
+        }
     }
 
     void refreshUIState() {

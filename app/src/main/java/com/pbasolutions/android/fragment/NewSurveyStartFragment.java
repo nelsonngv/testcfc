@@ -5,6 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -37,13 +40,13 @@ public class NewSurveyStartFragment extends Fragment {
     /**
      * Class tag name.
      */
+    private static final int START = 500;
     PBSAttendanceController attendanceCont;
     PBSSurveyController surveyCont;
     ContentResolver cr;
     protected Spinner projLocationSpinner;
     protected EditText etName;
     protected Spinner templateSpinner;
-    protected Button startButton;
     protected ArrayAdapter templateAdapter;
     protected MSurvey survey;
 
@@ -76,7 +79,6 @@ public class NewSurveyStartFragment extends Fragment {
         projLocationSpinner = (Spinner) rootView.findViewById(R.id.atProjLocation);
         etName = (EditText) rootView.findViewById(R.id.atSurveyName);
         templateSpinner = (Spinner) rootView.findViewById(R.id.atTemplate);
-        startButton = (Button) rootView.findViewById(R.id.atStart);
         TextView tvName = (TextView) rootView.findViewById(R.id.tvSurveyName);
         PandoraHelper.setAsterisk(tvName);
 
@@ -110,13 +112,27 @@ public class NewSurveyStartFragment extends Fragment {
 
             }
         });
+    }
 
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        MenuItem add;
+        add = menu.add(0, START, 1, getString(R.string.label_button_start));
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.ic_done);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case START: {
                 startSurvey();
+                return true;
             }
-        });
+            default: return false;
+        }
     }
 
     public List<SpinnerPair> getProjLocList() {

@@ -3,6 +3,9 @@ package com.pbasolutions.android.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -51,14 +54,15 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
     protected ArrayAdapter prodNameAdapter;
     EditText qtyRequested;
     protected static final String EVENT_DATE = "EVENT_DATE";
-    protected static final String EVENT_SAVE_PRLINE = "EVENT_SAVE_PRLINE";
-    protected Button saveButton;
+    private static final int SUBMIT = 500;
     protected String prodName;
     protected String prodUUID;
+    MenuItem add;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         reqCont = new PBSRequisitionController(getActivity());
         context = (PandoraMain)getActivity();
         appContext = context.getGlobalVariable();
@@ -69,7 +73,6 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
         prodNameSpinner = (SearchableSpinnerForRequisition) rootView.findViewById(R.id.prlProdNameSpinner);
         prodNameAdapter = PandoraHelper.addTwoItemListToSpinner(act, prodNameSpinner, getProdList());
         requiredDate = (TextView)rootView.findViewById(R.id.prlDateRequired);
-        saveButton = (Button) rootView.findViewById(R.id.savePRLine);
         qtyRequested = (EditText) rootView.findViewById(R.id.prlQty);
         uom = (TextView) rootView.findViewById(R.id.uom);
         TextView textViewName = (TextView) rootView.findViewById(R.id.textViewName);
@@ -90,7 +93,6 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
     protected void setUIListener() {
 //        setOnItemSelectedListener();
         setOnClickListener(requiredDate, EVENT_DATE);
-        setOnClickListener(saveButton, EVENT_SAVE_PRLINE);
 
         prodNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -119,10 +121,6 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
                 switch (event) {
                     case EVENT_DATE: {
                         PandoraHelper.promptFutureDatePicker((TextView) object, getActivity());
-                        break;
-                    }
-                    case EVENT_SAVE_PRLINE: {
-                        savePRLine();
                         break;
                     }
                     default:
@@ -170,5 +168,25 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
         simpleAdapter.setDropDownViewResource(android.R.layout.simple_list_item_2);
         spinner.setAdapter(simpleAdapter);
         return adapter;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        add = menu.add(0, SUBMIT, 1, getString(R.string.label_button_save));
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.ic_done);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case SUBMIT: {
+                savePRLine();
+                return true;
+            }
+            default: return false;
+        }
     }
 }

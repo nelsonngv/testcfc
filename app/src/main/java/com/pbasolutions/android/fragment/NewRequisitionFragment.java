@@ -62,7 +62,6 @@ public class NewRequisitionFragment extends Fragment {
     private TextView requestDate;
     private ImageButton addButton;
     private ImageButton removeButton;
-    private Button requestButton;
     private String _UUID;
 
     protected static final String EVENT_DATE = "EVENT_DATE";
@@ -73,6 +72,7 @@ public class NewRequisitionFragment extends Fragment {
 
     protected static final int ACTION_ADD_LINE = 300;
     protected static final int ACTION_REMOVE_LINE = 301;
+    protected static final int ACTION_REQUEST = 302;
 
     ContentResolver cr;
 
@@ -138,7 +138,6 @@ public class NewRequisitionFragment extends Fragment {
         requestDate = (TextView) view.findViewById(R.id.prRequestDate);
 //        addButton = (ImageButton)view.findViewById(R.id.addPrLine);
 //        removeButton = (ImageButton) view.findViewById(R.id.removePrLine);
-        requestButton = (Button) view.findViewById(R.id.prRequest);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.requisitionline_rv);
     }
 
@@ -173,7 +172,7 @@ public class NewRequisitionFragment extends Fragment {
         setOnClickListener(requestDate, EVENT_DATE);
 //        setOnClickListener(addButton, EVENT_ADD_LINE);
 //        setOnClickListener(removeButton, EVENT_REMOVE_LINE);
-        setOnClickListener(requestButton, EVENT_REQUEST);
+//        setOnClickListener(requestButton, EVENT_REQUEST);
     }
 
 
@@ -255,8 +254,6 @@ public class NewRequisitionFragment extends Fragment {
         }
         pr.setAD_User_UUID(ad_user_uuid);
 
-        requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtonDisable));
-
         for (MPurchaseRequestLine aLine : lines) {
             String mProductUUID = aLine.getM_Product_UUID();
             if (mProductUUID!= null && !mProductUUID.isEmpty()) {
@@ -291,8 +288,6 @@ public class NewRequisitionFragment extends Fragment {
             @Override
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
-
-                requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
 
                 if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
 //                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -442,6 +437,10 @@ public class NewRequisitionFragment extends Fragment {
         add = menu.add(0, ACTION_REMOVE_LINE, 1, getString(R.string.text_remove_line));
         add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         add.setIcon(R.drawable.minus_white);
+
+        add = menu.add(0, ACTION_REQUEST, 2, getString(R.string.label_button_request));
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.ic_done);
     }
 
     @Override
@@ -455,6 +454,10 @@ public class NewRequisitionFragment extends Fragment {
             }
             case ACTION_REMOVE_LINE: {
                 removeLine();
+                return true;
+            }
+            case ACTION_REQUEST: {
+                requestPR();
                 return true;
             }
         }

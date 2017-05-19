@@ -71,6 +71,7 @@ import com.pbasolutions.android.fragment.NewRequisitionLineFragment;
 import com.pbasolutions.android.fragment.NewSurveyPagerFragment;
 import com.pbasolutions.android.fragment.NewSurveySignFragment;
 import com.pbasolutions.android.fragment.NewSurveyStartFragment;
+import com.pbasolutions.android.fragment.NewSurveySummaryFragment;
 import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
 import com.pbasolutions.android.fragment.ProjTaskFragment;
 import com.pbasolutions.android.fragment.RecruitFragment;
@@ -403,14 +404,16 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             titleID = R.string.title_survey;
         } else if (NewSurveyStartFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_new_survey;
-        } else if (NewSurveyPagerFragment.class.getName().equalsIgnoreCase(fragClassName)){
-            titleID = R.string.title_new_survey;
-        } else if (NewSurveySignFragment.class.getName().equalsIgnoreCase(fragClassName)){
-            titleID = R.string.title_sign_survey;
+//        } else if (NewSurveyPagerFragment.class.getName().equalsIgnoreCase(fragClassName)){
+//            titleID = R.string.title_new_survey;
+//        } else if (NewSurveySummaryFragment.class.getName().equalsIgnoreCase(fragClassName)){
+//            titleID = R.string.title_new_survey;
+//        } else if (NewSurveySignFragment.class.getName().equalsIgnoreCase(fragClassName)){
+//            titleID = R.string.title_sign_survey;
         }
 
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
+        if (actionBar != null && titleID != R.string.title_default)
             actionBar.setTitle(titleID);
     }
 
@@ -909,13 +912,15 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
             case FRAGMENT_NEW_SURVEY: {
                 fragment = new NewSurveyPagerFragment();
-                title = getString(R.string.title_new_survey);
+                title = "";
+//                title = getString(R.string.title_new_survey);
                 break;
             }
 
             case FRAGMENT_SIGN_SURVEY: {
                 fragment = new NewSurveySignFragment();
-                title = getString(R.string.title_sign_survey);
+                title = "";
+//                title = getString(R.string.title_sign_survey);
                 break;
             }
 

@@ -155,11 +155,6 @@
                     </LinearLayout>
                 </TableRow>
             </TableLayout>
-
-            <Button
-                android:id="@+id/saveATLine"
-                style="@style/PLargeButton"
-                android:text="Save" />
         </LinearLayout>
     </ScrollView>
 </layout>

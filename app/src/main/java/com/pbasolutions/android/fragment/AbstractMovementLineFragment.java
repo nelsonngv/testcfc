@@ -168,7 +168,7 @@ public abstract class AbstractMovementLineFragment extends PBSDetailsFragment{
         MenuItem add;
         add = menu.add(0, SAVE_LINE_ID, 0, getString(R.string.text_icon_save));
         add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        add.setIcon(R.drawable.save);
+        add.setIcon(R.drawable.ic_done);
     }
 
     @Override

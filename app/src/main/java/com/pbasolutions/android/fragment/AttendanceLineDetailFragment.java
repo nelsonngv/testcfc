@@ -68,7 +68,7 @@ public class AttendanceLineDetailFragment extends AbstractRequisitionLineFragmen
         isRequested = result.getBoolean(reqCont.ARG_IS_PR_REQUESTED);
         //disable save button:
         if (isRequested)
-            saveButton.setEnabled(false);
+            add.setEnabled(false);
     }
 
     protected void setValues() {

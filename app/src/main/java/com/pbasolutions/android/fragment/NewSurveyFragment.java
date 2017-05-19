@@ -68,7 +68,7 @@ public class NewSurveyFragment extends Fragment {
             String sectionName = sections.get(currPosition);
             if (sectionName == null || sectionName.equals("") || sectionName.equals("null"))
                 section.setVisibility(View.GONE);
-            else section.setText("Section: " + sectionName);
+            else section.setText("Section: " + sectionName + " (" + (currPosition + 1) + "/" + sections.size() + ")");
             List<SpinnerPair> ratingList = new ArrayList<>();
             SpinnerPair pair = new SpinnerPair();
             pair.setKey(null);
@@ -99,10 +99,14 @@ public class NewSurveyFragment extends Fragment {
                     subLL.setLayoutParams(layoutParams);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         tvQuestion.setText(Html.fromHtml(question.getQuestion(), Html.FROM_HTML_MODE_COMPACT));
-                        tvQuestionDesc.setText(Html.fromHtml(question.getQuestionDesc(), Html.FROM_HTML_MODE_COMPACT));
+                        if (question.getQuestionDesc() != null && !question.getQuestionDesc().equals("") && !question.getQuestionDesc().equalsIgnoreCase("null"))
+                            tvQuestionDesc.setText(Html.fromHtml(question.getQuestionDesc(), Html.FROM_HTML_MODE_COMPACT));
+                        else tvQuestionDesc.setVisibility(View.GONE);
                     } else {
                         tvQuestion.setText(Html.fromHtml(question.getQuestion()));
-                        tvQuestionDesc.setText(Html.fromHtml(question.getQuestionDesc()));
+                        if (question.getQuestionDesc() != null && !question.getQuestionDesc().equals("") && !question.getQuestionDesc().equalsIgnoreCase("null"))
+                            tvQuestionDesc.setText(Html.fromHtml(question.getQuestionDesc()));
+                        else tvQuestionDesc.setVisibility(View.GONE);
                     }
                     PandoraHelper.addListToSpinner(getActivity(), rating, ratingList);
                     rating.setTag(question.getC_SurveyTemplateQuestion_UUID());
@@ -131,6 +135,7 @@ public class NewSurveyFragment extends Fragment {
                         etRemarks.setEnabled(false);
                         etRemarks.setText(question.getRemarks());
                     }
+                    else etRemarks.setHint("Remarks");
 
                     subLL.addView(tvQuestion);
                     subLL.addView(tvQuestionDesc);

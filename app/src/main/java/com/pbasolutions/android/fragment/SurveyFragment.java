@@ -115,13 +115,8 @@ public class SurveyFragment extends Fragment implements PBABackKeyListener {
     private void add() {
         Fragment fragment = new NewSurveyStartFragment();
             if (fragment != null) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                fragmentTransaction.commit();
-                ((PandoraMain) getActivity()).getSupportActionBar().setTitle(
-                        getString(R.string.title_new_survey));
+                ((PandoraMain) getActivity()).
+                        displayView(PandoraMain.FRAGMENT_START_SURVEY, false);
             }
     }
 

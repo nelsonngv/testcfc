@@ -36,10 +36,11 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
     private static final String TAG = "NewSurveyPagerFragment";
     private static final int PREV_ID = 1;
     private static final int NEXT_ID = 2;
+    private static final int COOMPLETE_ID = 3;
     private static int NUM_PAGES = 1;
     private MenuItem prev;
     private MenuItem next;
-    private Button complete;
+    private MenuItem complete;
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
     private PBSSurveyController surveyCont;
@@ -77,9 +78,12 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
     protected void setUI(View view) {
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) view.findViewById(R.id.pager);
-        complete = (Button) view.findViewById(R.id.atComplete);
-
         mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
+
+        if (_UUID != null && !_UUID.equals("")) {
+            complete.setVisible(false);
+            complete.setEnabled(false);
+        }
     }
 
     @Override
@@ -92,10 +96,7 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
 
             @Override
             public void onPageSelected(int position) {
-                prev.setEnabled(mPager.getCurrentItem() > 0 ? true : false);
-                prev.getIcon().setAlpha(mPager.getCurrentItem() > 0 ? 255 : 64);
-                next.setEnabled(mPager.getCurrentItem() < NUM_PAGES - 1 ? true : false);
-                next.getIcon().setAlpha(mPager.getCurrentItem() < NUM_PAGES - 1 ? 255 : 64);
+                updateMenuItem();
             }
 
             @Override
@@ -103,51 +104,6 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
 
             }
         });
-
-        if (_UUID != null && !_UUID.equals("")) {
-            complete.setVisibility(View.GONE);
-        } else {
-            complete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    PandoraHelper.hideSoftKeyboard();
-                    ArrayList<View> spinnerList = getAllChildren(mPager, Spinner.class);
-                    ArrayList<View> etList = getAllChildren(mPager, EditText.class);
-                    ArrayList<MSurvey> answerList = new ArrayList<>();
-
-                    for (int i = 0; i < etList.size(); i++) {
-                        Spinner spinner = (Spinner) spinnerList.get(i);
-                        EditText et = (EditText) etList.get(i);
-                        String uuid = spinner.getTag().toString();
-                        if (spinner.getSelectedItemPosition() == 0) {
-                            promptAlert(spinner, uuid);
-                            return;
-                        }
-//                        if (et.getText().toString().equals("")) {
-//                            promptAlert(et, uuid);
-//                            return;
-//                        }
-                        MSurvey answer = new MSurvey();
-                        answer.setC_SurveyTemplateQuestion_UUID(uuid);
-                        answer.setAmt(((SpinnerPair) spinner.getSelectedItem()).getKey());
-                        answer.setRemarks(et.getText().toString());
-                        answerList.add(answer);
-                    }
-
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("answers", answerList);
-                    Fragment fragment = new NewSurveySignFragment();
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    fragment.setArguments(bundle);
-                    fragment.setRetainInstance(true);
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.container_body, fragment);
-                    fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                    fragmentTransaction.commit();
-                    PandoraMain.instance.getSupportActionBar().setTitle(getString(R.string.title_sign_survey));
-                }
-            });
-        }
     }
 
     @Override
@@ -166,10 +122,9 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
         next.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         next.setIcon(R.drawable.navigate_next);
 
-        prev.setEnabled(mPager.getCurrentItem() > 0 ? true : false);
-        prev.getIcon().setAlpha(mPager.getCurrentItem() > 0 ? 255 : 64);
-        next.setEnabled(mPager.getCurrentItem() < NUM_PAGES - 1 ? true : false);
-        next.getIcon().setAlpha(mPager.getCurrentItem() < NUM_PAGES - 1 ? 255 : 64);
+        complete = menu.add(0, COOMPLETE_ID, 2, "Complete");
+        complete.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        complete.setIcon(R.drawable.ic_done);
     }
 
     @Override
@@ -184,12 +139,52 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
                 mPager.setCurrentItem(mPager.getCurrentItem() + 1, true);
                 break;
             }
+            case COOMPLETE_ID: {
+                PandoraHelper.hideSoftKeyboard();
+                ArrayList<View> spinnerList = getAllChildren(mPager, Spinner.class);
+                ArrayList<View> etList = getAllChildren(mPager, EditText.class);
+                ArrayList<MSurvey> answerList = new ArrayList<>();
+
+                for (int i = 0; i < etList.size(); i++) {
+                    Spinner spinner = (Spinner) spinnerList.get(i);
+                    EditText et = (EditText) etList.get(i);
+                    String uuid = spinner.getTag().toString();
+                    if (spinner.getSelectedItemPosition() == 0) {
+                        promptAlert(spinner, uuid);
+                        return true;
+                    }
+//                        if (et.getText().toString().equals("")) {
+//                            promptAlert(et, uuid);
+//                            return;
+//                        }
+                    MSurvey answer = new MSurvey();
+                    answer.setC_SurveyTemplateQuestion_UUID(uuid);
+                    answer.setAmt(((SpinnerPair) spinner.getSelectedItem()).getKey());
+                    answer.setRemarks(et.getText().toString());
+                    answerList.add(answer);
+                }
+                for (int i = 0; i < questions.size(); i++) {
+                    answerList.get(i).setSectionname(questions.get(i).getSectionname());
+                }
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("answers", answerList);
+                bundle.putStringArrayList("sections", sections);
+                Fragment fragment = new NewSurveySummaryFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragment.setArguments(bundle);
+                fragment.setRetainInstance(true);
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container_body, fragment);
+                fragmentTransaction.addToBackStack(fragment.getClass().getName());
+                fragmentTransaction.commit();
+                PandoraMain.instance.getSupportActionBar().setTitle(survey.getName());
+                break;
+            }
             default: break;
         }
-        prev.setEnabled(mPager.getCurrentItem() > 0 ? true : false);
-        prev.getIcon().setAlpha(mPager.getCurrentItem() > 0 ? 255 : 64);
-        next.setEnabled(mPager.getCurrentItem() < NUM_PAGES - 1 ? true : false);
-        next.getIcon().setAlpha(mPager.getCurrentItem() < NUM_PAGES - 1 ? 255 : 64);
+        if (id == PREV_ID || id == NEXT_ID)
+            updateMenuItem();
         return true;
     }
 
@@ -240,6 +235,7 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
             }
             NUM_PAGES = sections.size();
             mPager.setOffscreenPageLimit(NUM_PAGES);
+            updateMenuItem();
 
             if (_UUID == null || _UUID.equals(""))
                 survey.setName(PBSSurveyController.name);
@@ -289,6 +285,13 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
             }
         }
         return 0;
+    }
+
+    private void updateMenuItem() {
+        prev.setEnabled(mPager.getCurrentItem() > 0 ? true : false);
+        prev.getIcon().setAlpha(mPager.getCurrentItem() > 0 ? 255 : 64);
+        next.setEnabled(mPager.getCurrentItem() < NUM_PAGES - 1 ? true : false);
+        next.getIcon().setAlpha(mPager.getCurrentItem() < NUM_PAGES - 1 ? 255 : 64);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

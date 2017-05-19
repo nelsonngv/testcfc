@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -56,12 +55,12 @@ public class NewAttendanceFragment extends Fragment {
 
     private static final int ADD_ATTENDANCE_LINE = 500;
     private static final int REMOVE_ATTENDANCE_LINE = 501;
+    private static final int SUBMIT_ATTENDANCE = 502;
 
     private String _UUID;
 
     MAttendance attendance;
     ContentResolver cr;
-
 
     PBSAttendanceController attendanceCont;
     TextView deployDateView;
@@ -73,7 +72,6 @@ public class NewAttendanceFragment extends Fragment {
 
     RecyclerView recyclerView;
     AttendanceLineRVA linesAdapter;
-    Button requestButton;
 
     private ObservableArrayList<MAttendanceLine> attendanceLines;
 
@@ -108,8 +106,6 @@ public class NewAttendanceFragment extends Fragment {
         projLocNameAdapter = PandoraHelper.addListToSpinner(getActivity(), projLocationSpinner, getProjLocList());
 
         refreshAttendances();
-//        PandoraHelper.addRecyclerViewListener(recyclerView, deployList, getActivity(),
-//                new RequisitionDetailFragment(), getString(R.string.title_deployment_details));
         if (projLocNameAdapter.getCount() > 0)
         {
             PandoraMain pandoraMain = PandoraMain.instance;
@@ -155,9 +151,8 @@ public class NewAttendanceFragment extends Fragment {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         deployDateView.setText(sdf.format(date));
-
-        requestButton = (Button) rootView.findViewById(R.id.atRequest);
     }
+
     void setUIListener() {
         projLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -269,13 +264,13 @@ public class NewAttendanceFragment extends Fragment {
             }
         });
 
-        requestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                saveAttendance();
-                requestAttendance();
-            }
-        });
+//        requestButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                saveAttendance();
+//                requestAttendance();
+//            }
+//        });
     }
 
     private ObservableArrayList<MAttendanceLine> getAttendances() {
@@ -320,16 +315,11 @@ public class NewAttendanceFragment extends Fragment {
         add = menu.add(0, REMOVE_ATTENDANCE_LINE, 1, getString(R.string.text_icon_remove));
         add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         add.setIcon(R.drawable.minus_white);
-    }
 
-//
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        MenuItem sync;
-//        sync = menu.add(0, PandoraMain.SYNC_DEPLOY_ID, 0, "Sync Deploy");
-//        sync.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-//        sync.setIcon(R.drawable.refresh);
-//    }
+        add = menu.add(0, SUBMIT_ATTENDANCE, 1, getString(R.string.label_button_submit));
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.ic_done);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -340,9 +330,13 @@ public class NewAttendanceFragment extends Fragment {
             }
             case REMOVE_ATTENDANCE_LINE: {
                 removeLine();
-                return  true;
+                return true;
             }
-            default:return false;
+            case SUBMIT_ATTENDANCE: {
+                requestAttendance();
+                return true;
+            }
+            default: return false;
         }
     }
 
@@ -467,15 +461,11 @@ public class NewAttendanceFragment extends Fragment {
 
         attendance.setLines(lines.toArray(new MAttendanceLine[lines.size()]));
 
-        requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtonDisable));
-
         Bundle input = new Bundle();
         input.putSerializable(PBSAttendanceController.ARG_ATTENDANCE_REQUEST, attendance);
         input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
 
         new AsyncTask<Bundle, Void, Bundle>() {
-            protected LayoutInflater inflater;
-            protected RecyclerView recyclerView;
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -492,16 +482,9 @@ public class NewAttendanceFragment extends Fragment {
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
 
-                requestButton.setBackgroundColor(getResources().getColor(R.color.colorButtons));
-
                 if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
                     PandoraHelper.showMessage(getActivity(), result.getString(PandoraConstant.RESULT));
                     refreshAttendances();
-//                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                    fragmentManager.popBackStack();
-//                    fragmentManager.popBackStack();
-//                    fragmentTransaction.commit();
                 } else {
                     PandoraHelper.showErrorMessage(getActivity(), result.getString(PandoraConstant.ERROR));
                 }

@@ -39,8 +39,6 @@ public class RequisitionDetailFragment extends PBSDetailsFragment {
 
         private ObservableArrayList<MPurchaseRequestLine> purchaseRequestLineList;
 
-        private Button requestButton;
-
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -51,8 +49,6 @@ public class RequisitionDetailFragment extends PBSDetailsFragment {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.requisition_details, container, false);
-            requestButton = (Button) rootView.findViewById(R.id.prRequest);
-            requestButton.setVisibility(View.INVISIBLE);
 
             binding =  RequisitionDetailsBinding.bind(rootView);
             binding.setPr(getRequisition());

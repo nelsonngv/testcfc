@@ -69,8 +69,8 @@ public class RequisitionLineDetailsFragment extends AbstractRequisitionLineFragm
                 input, new Bundle(), null);
           isRequested = result.getBoolean(reqCont.ARG_IS_PR_REQUESTED);
         //disable save button:
-        if (isRequested)
-        saveButton.setEnabled(false);
+        if (isRequested && add != null)
+            add.setEnabled(false);
     }
 
     protected void setValues() {

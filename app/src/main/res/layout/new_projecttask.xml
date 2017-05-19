@@ -80,7 +80,8 @@
                 style="@style/TableValueDate"
                 android:hint="Press to Select Date" />
         </LinearLayout>
-        <LinearLayout style="@style/PTableVirtRow">
+        <LinearLayout style="@style/PTableVirtRow"
+            android:layout_marginBottom="10dp">
             <TextView
                 style="@style/TableInfoLabel"
                 android:text="@string/label_picture1" />

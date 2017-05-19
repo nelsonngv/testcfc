@@ -110,7 +110,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         MenuItem add;
         add = menu.add(0, ASSIGN_ID, 0, getString(R.string.text_icon_assign));
         add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        add.setIcon(R.drawable.ic_assignment);
+        add.setIcon(R.drawable.ic_done);
     }
 
     protected void setUI(View rootView) {

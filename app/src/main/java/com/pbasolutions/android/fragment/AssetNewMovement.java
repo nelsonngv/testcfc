@@ -41,17 +41,17 @@ public class AssetNewMovement extends AbstractMovementFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         MenuItem add;
-        add = menu.add(0, REMOVE_LINE_ID, 3, getString(R.string.text_icon_remove));
-        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        add.setIcon(R.drawable.minus_white);
-
-        add = menu.add(0, ADD_LINE_ID, 2, getString(R.string.text_icon_add));
+        add = menu.add(0, ADD_LINE_ID, 1, getString(R.string.text_icon_add));
         add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         add.setIcon(R.drawable.add);
 
-        add = menu.add(0, MOVE_LINE_ID, 1, getString(R.string.text_icon_move));
+        add = menu.add(0, REMOVE_LINE_ID, 2, getString(R.string.text_icon_remove));
         add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        add.setIcon(R.drawable.rightarrow);
+        add.setIcon(R.drawable.minus_white);
+
+        add = menu.add(0, MOVE_LINE_ID, 3, getString(R.string.text_icon_move));
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setIcon(R.drawable.ic_done);
     }
 
     @Override
