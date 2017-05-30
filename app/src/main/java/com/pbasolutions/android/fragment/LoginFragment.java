@@ -226,7 +226,7 @@ public class LoginFragment extends Fragment {
                     ((PandoraMain) getActivity()).getSupportActionBar().setTitle("Account");
                 } else {
                     PandoraHelper.showAlertMessage((PandoraMain) getActivity(),
-                            "Invalid user name", PandoraConstant.ERROR, "Retry", "Ok");
+                            "Invalid username or password", PandoraConstant.ERROR, "Retry", "Ok");
                 }
 
             }

@@ -6,7 +6,6 @@ import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -84,11 +82,11 @@ public class NewCheckInFragment extends Fragment {
         timestampInfo = (TextView) rootView.findViewById(R.id.serialTimestamp);
 
         if (mNfcAdapter == null){
-            scanInfo.setText("This device doesn't support NFC!");
+            scanInfo.setText(getString(R.string.nfc_notsupport));
         }
         if  (mNfcAdapter != null){
             if (!mNfcAdapter.isEnabled()) {
-                scanInfo.setText("NFC is disabled");
+                scanInfo.setText(getString(R.string.nfc_disabled));
             } else {
                 scanInfo.setText("Please tap on NFC");
             }

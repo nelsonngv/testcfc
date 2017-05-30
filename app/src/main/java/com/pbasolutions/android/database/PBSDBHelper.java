@@ -1216,6 +1216,23 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                     ");");
 
+//            //HR_ATTENDANCELOG
+//            db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
+//                    "M_ATTENDANCELOG_ID INTEGER NOT NULL, " +
+//                    "M_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
+//                    "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
+//                    "C_BPARTNER_UUID TEXT DEFAULT NULL, " +
+//                    "CHECKINOUTDATE DATETIME, " +
+//                    "CHECKINOUTTYPE CHAR(1) DEFAULT 'I' NOT NULL, " +
+//                    "LONGITUDE NUMBER, " +
+//                    "LATITUDE NUMBER, " +
+//                    "ATTACHMENT_IMAGE VARCHAR2(100), " +
+//                    "AD_USER_UUID TEXT NOT NULL, " +
+//                    "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID), " +
+//                    "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID), " +
+//                    "FOREIGN KEY(AD_USER_UUID) REFERENCES AD_USER(AD_USER_UUID) " +
+//                    ");");
+
             //create index for C_SURVEYRESPONSE_ID_INDEX
             db.execSQL("CREATE INDEX C_SURVEYRESPONSE_ID_INDEX ON C_SURVEYRESPONSE(C_SURVEYRESPONSE_ID)");
             //END added 06/04/2017 by yao
@@ -1444,6 +1461,25 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                 //create index for C_SURVEYRESPONSE_ID_INDEX
                 db.execSQL("CREATE INDEX C_SURVEYRESPONSE_ID_INDEX ON C_SURVEYRESPONSE(C_SURVEYRESPONSE_ID)");
             }
+
+//            if (oldVersion < 14) {
+//                //HR_ATTENDANCELOG
+//                db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
+//                        "M_ATTENDANCELOG_ID INTEGER NOT NULL, " +
+//                        "M_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
+//                        "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
+//                        "C_BPARTNER_UUID TEXT DEFAULT NULL, " +
+//                        "CHECKINOUTDATE DATETIME, " +
+//                        "CHECKINOUTTYPE CHAR(1) DEFAULT 'I' NOT NULL, " +
+//                        "LONGITUDE NUMBER, " +
+//                        "LATITUDE NUMBER, " +
+//                        "ATTACHMENT_IMAGE VARCHAR2(100), " +
+//                        "AD_USER_UUID TEXT NOT NULL, " +
+//                        "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID), " +
+//                        "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID), " +
+//                        "FOREIGN KEY(AD_USER_UUID) REFERENCES AD_USER(AD_USER_UUID) " +
+//                        ");");
+//            }
         } catch (SQLException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE
                     + e.getMessage());

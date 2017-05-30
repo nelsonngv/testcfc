@@ -10,7 +10,6 @@ import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.pbasolutions.android.json.PBSJson;
 
 import org.apache.http.HttpResponse;
@@ -28,22 +27,12 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 /**
  * Created by pbadell on 8/21/15.
@@ -90,13 +79,12 @@ public class PBSServer {
                 }
             };
             stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            stringReq.setShouldCache(false);
 
             // Adding string request to request queue
             RequestQueue queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
             queue.add(stringReq);
             try {
-                String response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 30 seconds
+                String response = future.get(15, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 15 seconds
                 return (PBSJson) new Gson().fromJson(response.toString(), cls);
             } catch (InterruptedException e) {
                 // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
@@ -179,7 +167,7 @@ public class PBSServer {
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> headers = new HashMap<>();
                     headers.put("Content-Type", "application/x-www-form-urlencoded");
-                    headers.put("Accept", "application/json");
+                    headers.put("Accept", "application/x-www-form-urlencoded");
                     return headers;
                 }
 
@@ -191,13 +179,12 @@ public class PBSServer {
                 }
             };
             stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            stringReq.setShouldCache(false);
 
             // Adding string request to request queue
             RequestQueue queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
             queue.add(stringReq);
             try {
-                String response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 30 seconds
+                String response = future.get(15, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 15 seconds
                 return response.toString();
             } catch (InterruptedException e) {
                 // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
@@ -212,52 +199,6 @@ public class PBSServer {
         }
         return null;
     }
-
-//    private static OkHttpClient getUnsafeOkHttpClient(HttpLoggingInterceptor logging, JavaNetCookieJar cookieJar) {
-//        try {
-//            // Create a trust manager that does not validate certificate chains
-//            final TrustManager[] trustAllCerts = new TrustManager[] {
-//                    new X509TrustManager() {
-//                        @Override
-//                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-//                        }
-//
-//                        @Override
-//                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-//                        }
-//
-//                        @Override
-//                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-//                            return new java.security.cert.X509Certificate[]{};
-//                        }
-//                    }
-//            };
-//
-//            // Install the all-trusting trust manager
-//            final SSLContext sslContext = SSLContext.getInstance("SSL");
-//            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-//            // Create an ssl socket factory with our all-trusting manager
-//            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-//
-//            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-//            builder.addInterceptor(logging);
-//            builder.cookieJar(cookieJar);
-//            builder.readTimeout(30, TimeUnit.SECONDS);
-//            builder.connectTimeout(30, TimeUnit.SECONDS);
-//            builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
-//            builder.hostnameVerifier(new HostnameVerifier() {
-//                @Override
-//                public boolean verify(String hostname, SSLSession session) {
-//                    return true;
-//                }
-//            });
-//
-//            OkHttpClient okHttpClient = builder.build();
-//            return okHttpClient;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     /**
      * Return main url path without action and variable parameters.

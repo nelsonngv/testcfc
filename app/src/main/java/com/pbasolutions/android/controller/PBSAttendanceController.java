@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Bundle;
 
-import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -57,6 +56,7 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
 
     public static String deployDate;
     public static String projectLocationId;
+    public static String projectLocationName;
     public static String shiftUUID;
     public static String attType;
 

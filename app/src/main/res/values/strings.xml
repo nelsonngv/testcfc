@@ -314,4 +314,12 @@
     <string name="clear_pad">Clear Pad</string>
     <string name="submit_survey">Submit Survey</string>
 
+    <!--
+    Attandence Tracking.
+    !-->
+    <string name="location_tag">Waiting for location tag...</string>
+    <string name="emp_tag">Waiting for employee tag...</string>
+    <string name="nfc_notsupport">Sorry, this device doesn\'t support NFC!</string>
+    <string name="nfc_disabled">NFC is disabled</string>
+
 </resources>

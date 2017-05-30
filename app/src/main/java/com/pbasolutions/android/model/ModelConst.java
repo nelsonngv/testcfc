@@ -12,6 +12,9 @@ import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.json.PBSTableJSON;
 import com.pbasolutions.android.json.PBSColumnsJSON;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -261,6 +264,8 @@ public class ModelConst {
      */
     public static boolean updateTableRow(ContentResolver contentResolver, String tableName, ContentValues cv, String selectionColumn, String[] arg) {
         if (arg.length != 0) {
+            cv = removeUnavailableColumns(contentResolver, tableName, cv);
+
             //If update, update all other column except primary key
             cv.remove(tableName + ModelConst._UUID);
             int resultReturned = contentResolver.update(ModelConst.uriCustomBuilder(tableName),
@@ -314,6 +319,8 @@ public class ModelConst {
      * @return
      */
     public static boolean insertTableRow(ContentResolver contentResolver, String tableName, ContentValues cv, String selection, String[] arg) {
+        cv = removeUnavailableColumns(contentResolver, tableName, cv);
+
         //add uuid into the cv
         cv.put(tableName + ModelConst._UUID, UUID.randomUUID().toString());
         Uri result = contentResolver.insert(ModelConst.uriCustomBuilder(tableName), cv);
@@ -561,6 +568,20 @@ public class ModelConst {
         return pair;
     }
 
-
+    public static ContentValues removeUnavailableColumns(ContentResolver contentResolver, String tableName, ContentValues cv) {
+        Cursor cursor = contentResolver.query(ModelConst.uriCustomBuilder(tableName), null, null, null, null);
+        String[] columnNames = cursor.getColumnNames();
+        cursor.close();
+        Set<Map.Entry<String, Object>> cvSet = cv.valueSet();
+        ContentValues newCv = new ContentValues();
+        newCv.putAll(cv);
+        for (Map.Entry me : cvSet) {
+            String key = me.getKey().toString();
+            if (!Arrays.asList(columnNames).contains(key.toUpperCase())) {
+                newCv.remove(key);
+            }
+        }
+        return newCv;
+    }
 
 }

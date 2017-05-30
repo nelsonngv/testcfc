@@ -9,7 +9,9 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SyncResult;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -158,6 +160,14 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 if (PandoraMain.instance != null && PandoraMain.instance.getSupportActionBar().isShowing() == true) {
                     PBSProjLocJSON[] projLoc = null;
                     if (isSyncCompleted) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            Settings.Global.getInt(PandoraMain.instance.getContentResolver(), Settings.Global.AUTO_TIME, 1);
+                            Settings.Global.getInt(PandoraMain.instance.getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 1);
+                        } else {
+                            Settings.System.getInt(PandoraMain.instance.getContentResolver(), Settings.System.AUTO_TIME, 1);
+                            Settings.System.getInt(PandoraMain.instance.getContentResolver(), Settings.System.AUTO_TIME_ZONE, 1);
+                        }
+
                         PandoraController cont = new PandoraController(PandoraMain.instance);
                         Bundle input = new Bundle();
                         input.putString(PBSAssetController.ARG_AD_USER_ID, global.getAd_user_id());
@@ -200,6 +210,10 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
             syncResult.hasError();
             syncResult.stats.numIoExceptions++;
         } catch (AuthenticatorException e) {
+            syncResult.hasError();
+            Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
+            syncResult.stats.numAuthExceptions++;
+        } catch (Exception e) {
             syncResult.hasError();
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
             syncResult.stats.numAuthExceptions++;

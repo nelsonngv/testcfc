@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
@@ -377,15 +378,32 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         input.putString(taskCont.ARG_TASKPIC_4, (String)taskPicture4.getTag());
         input.putString(taskCont.ARG_TASKPIC_5, (String)taskPicture5.getTag());
 
-        Bundle result = taskCont.triggerEvent(taskCont.COMPLETE_PROJTASK_EVENT, input, new Bundle(), null);
+        new AsyncTask<Bundle, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
 
-        if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-            PandoraMain.instance.getSupportFragmentManager().popBackStack();
-//            PandoraHelper.redirectToFragment(new ProjTaskFragment(), getActivity());
-        } else {
-            PandoraHelper.showMessage((PandoraMain)getActivity(),
-                    result.getString(result.getString(PandoraConstant.TITLE)));
-        }
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle output = new Bundle();
+                output = taskCont.triggerEvent(taskCont.COMPLETE_PROJTASK_EVENT, params[0], output, null);
+                return output;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                } else {
+                    PandoraHelper.showMessage((PandoraMain)getActivity(),
+                            result.getString(result.getString(PandoraConstant.TITLE)));
+                }
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
     }
 
     @Override

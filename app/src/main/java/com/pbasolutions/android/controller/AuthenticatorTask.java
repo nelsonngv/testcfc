@@ -531,8 +531,8 @@ public class AuthenticatorTask extends Task {
                 } else {
                     output.putBoolean(PBSServerConst.RESULT, false);
                     output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-                    output.putString(PandoraConstant.ERROR, "Invalid username and password." +
-                            " Please re-enter.");
+                    output.putString(PandoraConstant.ERROR, "Invalid username or password." +
+                            " Please try again.");
                 }
             }
 

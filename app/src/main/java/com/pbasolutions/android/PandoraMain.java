@@ -41,6 +41,8 @@ import android.widget.Toast;
 import com.android.volley.toolbox.RequestFuture;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
+//import com.pbasolutions.android.fragment.ATrackScanEmpIDFragment;
+//import com.pbasolutions.android.fragment.ATrackScanLocFragment;
 import com.pbasolutions.android.fragment.ApplicantDetailsFragment;
 import com.pbasolutions.android.fragment.ApplicantFragment;
 import com.pbasolutions.android.fragment.AssetFragment;
@@ -900,6 +902,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
             case FRAGMENT_SURVEY: {
                 fragment = new SurveyFragment();
+//                fragment = new ATrackScanLocFragment();
                 title = getString(R.string.title_survey);
                 break;
             }
@@ -992,11 +995,22 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     if (getGlobalVariable().getAd_user_name() == null) {
                         checkLogin(false);
                     } else {
-                        if (fragment != null) {
+                        fragment = getSupportFragmentManager().findFragmentById(R.id.container_body);
+                        if (fragment != null && fragment instanceof NewCheckInFragment) {
                             fragment = new NewCheckInFragment();
                             ((NewCheckInFragment) fragment).setNfcIntent(intent);
                             updateFragment(fragment, "New Check In", false);
                         }
+//                        else if (fragment != null && fragment instanceof ATrackScanLocFragment) {
+//                            fragment = new ATrackScanLocFragment();
+//                            ((ATrackScanLocFragment) fragment).setNfcIntent(intent);
+//                            updateFragment(fragment, "Attendance Tracking", false);
+//                        }
+//                        else if (fragment != null && fragment instanceof ATrackScanEmpIDFragment) {
+//                            fragment = new ATrackScanEmpIDFragment();
+//                            ((ATrackScanEmpIDFragment) fragment).setNfcIntent(intent);
+//                            updateFragment(fragment, "Attendance Tracking", false);
+//                        }
                     }
                 }
             }else {

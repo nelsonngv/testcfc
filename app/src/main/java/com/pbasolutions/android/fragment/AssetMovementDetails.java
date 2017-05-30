@@ -1,10 +1,9 @@
 package com.pbasolutions.android.fragment;
 
 import android.databinding.ObservableArrayList;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -74,31 +73,35 @@ public class AssetMovementDetails extends AbstractMovementFragment {
         input.putInt(assetCont.ARG_M_MOVEMENT_ID, get_ID());
         input.putString(PBSServerConst.PARAM_URL, appContext.getServer_url());
         input.putString(assetCont.ARG_M_MOVEMENT_UUID, movement.getM_Movement_UUID());
+
         //complete movement
-        Bundle result = assetCont.triggerEvent(
-                assetCont.COMPLETE_MOVEMENT_EVENT, input, new Bundle(), null);
+        new AsyncTask<Bundle, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
 
-        if(PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))){
-            PandoraHelper.showErrorMessage(context,
-                    result.getString(result.getString(PandoraConstant.TITLE)));
-        } else {
-//            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentManager.popBackStack();
-//            fragmentManager.popBackStack();
-//            Fragment frag = new AssetFragment();
-//            //TODO: change set to isMovementFrag?
-//            ((AssetFragment)frag).setIsMovementFrag(true);
-//            frag.setRetainInstance(true);
-//            fragmentTransaction.replace(R.id.container_body, frag);
-//            fragmentTransaction.addToBackStack(frag.getClass().getName());
-//            fragmentTransaction.commit();
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle output = new Bundle();
+                output = assetCont.triggerEvent(assetCont.COMPLETE_MOVEMENT_EVENT, params[0], output, null);
+                return output;
+            }
 
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.popBackStack();
-        }
-
-
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                if(PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))){
+                    PandoraHelper.showErrorMessage(context,
+                            result.getString(result.getString(PandoraConstant.TITLE)));
+                } else {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    fragmentManager.popBackStack();
+                }
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
     }
 
     /**
