@@ -19,8 +19,9 @@ public class MPurchaseRequestLine implements IPBSJson, IModel, Serializable {
     public static String M_PRODUCT_ID_COL = "M_Product_ID";
     public static String M_PRODUCT_UUID_COL = "M_Product_UUID";
     public static String DATEREQUIRED_COL = "DateRequired";
-
     public static String QTYREQUESTED_COL = "QtyRequested";
+    public static String ISEMERGENCY_COL = "IsEmergency";
+    public static String PURCHASEREASON_COL = "PurchaseReason";
 
     /**
      * Column setters getters.
@@ -37,6 +38,8 @@ public class MPurchaseRequestLine implements IPBSJson, IModel, Serializable {
     private String ProductName;
     private String ProductValue;
     private String QtyRequestedString;
+    private String IsEmergency;
+    private String PurchaseReason;
     private boolean isSelected = false;
     String _UUID;
     int _ID;
@@ -126,6 +129,22 @@ public class MPurchaseRequestLine implements IPBSJson, IModel, Serializable {
 
     public void setM_PurchaseRequest_UUID(String m_PurchaseRequest_UUID) {
         M_PurchaseRequest_UUID = m_PurchaseRequest_UUID;
+    }
+
+    public String getIsEmergency() {
+        return IsEmergency;
+    }
+
+    public void setIsEmergency(String isEmergency) {
+        IsEmergency = isEmergency;
+    }
+
+    public String getPurchaseReason() {
+        return PurchaseReason;
+    }
+
+    public void setPurchaseReason(String purchaseReason) {
+        PurchaseReason = purchaseReason;
     }
 
     public boolean isSelected() {

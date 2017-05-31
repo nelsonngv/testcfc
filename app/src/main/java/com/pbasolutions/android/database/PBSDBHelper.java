@@ -28,7 +28,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
     /**
      *
      */
@@ -724,8 +724,10 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "M_PRODUCT_UUID TEXT," +
                     //OTHERS
                     "DATEREQUIRED DATETIME NOT NULL,"+
-                    "LINE NUMBER(10,0), " +
-                    "QTYREQUESTED NUMBER" +
+                    "LINE NUMBER(10,0)," +
+                    "QTYREQUESTED NUMBER," +
+                    "ISEMERGENCY CHAR(1) DEFAULT 'N' NOT NULL," +
+                    "PURCHASEREASON NVARCHAR2(255)" +
                     //--
 //                    "FOREIGN KEY(M_PURCHASEREQUEST_UUID) REFERENCES M_PURCHASEREQUEST(M_PURCHASEREQUEST_UUID)" +
 //                    "FOREIGN KEY(M_PRODUCT_UUID) REFERENCES M_PRODUCT(M_PRODUCT_UUID)" +
@@ -1462,7 +1464,13 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                 db.execSQL("CREATE INDEX C_SURVEYRESPONSE_ID_INDEX ON C_SURVEYRESPONSE(C_SURVEYRESPONSE_ID)");
             }
 
-//            if (oldVersion < 14) {
+            if (oldVersion < 14) {
+                //M_PURCHASEREQUESTLINE
+                db.execSQL("ALTER TABLE M_PURCHASEREQUESTLINE ADD ISEMERGENCY CHAR(1) DEFAULT 'N' NOT NULL");
+                db.execSQL("ALTER TABLE M_PURCHASEREQUESTLINE ADD PURCHASEREASON NVARCHAR2(255) NULL");
+            }
+
+//            if (oldVersion < 15) {
 //                //HR_ATTENDANCELOG
 //                db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
 //                        "M_ATTENDANCELOG_ID INTEGER NOT NULL, " +

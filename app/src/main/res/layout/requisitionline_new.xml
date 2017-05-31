@@ -73,6 +73,39 @@
                         />
                     </LinearLayout>
                 </TableRow>
+                <TableRow>
+                    <LinearLayout style="@style/PTableVirtRowW">
+                        <CheckBox
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:id="@+id/is_emergency"
+                            android:paddingTop="3dp"
+                            android:buttonTint="#707070"
+                            android:textColor="#707070"
+                            android:text="@string/label_emergency"
+                            android:checked="@{prLine.isEmergency.equals(&quot;Y&quot;) ? true : false}"/>
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:id="@+id/reasonRow"
+                    android:visibility="gone">
+                    <LinearLayout style="@style/PTableVirtRowW">
+                        <TextView
+                            android:id="@+id/textViewPurcReason"
+                            android:text="@string/label_purchase_reason"
+                            style="@style/TableInfoLabel"
+                            android:textSize="@dimen/abc_text_size_body_1_material"/>
+                        <EditText
+                            style="@style/TableValueDate"
+                            android:id="@+id/prlPurcReason"
+                            android:singleLine="false"
+                            android:maxLines="5"
+                            android:scrollHorizontally="true"
+                            android:inputType="textMultiLine|textCapSentences|text"
+                            android:text="@{prLine.purchaseReason}"
+                            />
+                    </LinearLayout>
+                </TableRow>
             </TableLayout>
         </LinearLayout>
     </ScrollView>

@@ -66,7 +66,7 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
                 || qtyRequested.getText().toString().isEmpty()
                 || requiredDate.getText().toString().isEmpty())
         {
-            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please fill up all fields");
+            PandoraHelper.showWarningMessage(getActivity(), "Please fill up all fields");
             return;
         }
 
@@ -77,9 +77,17 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
         }
 
         if (nQty < 0) {
-            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please fill up valid Qty.");
+            PandoraHelper.showWarningMessage(getActivity(), "Please fill up valid Qty.");
             return;
         }
+
+        if (isEmergency.isChecked()) {
+            if (purcReason.getText().toString().isEmpty()) {
+                PandoraHelper.showWarningMessage(getActivity(), "Please fill up all fields");
+                return;
+            }
+        }
+
         tempPRLine = new MPurchaseRequestLine();
         tempPRLine.setProductName(prodName);
         //TODO: make choice available. tempPRLine.setProductValue();
@@ -96,6 +104,8 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
         cv.put(MPurchaseRequestLine.DATEREQUIRED_COL, requiredDate.getText().toString());
         cv.put(MPurchaseRequestLine.M_PURCHASEREQUEST_UUID_COL, getPrUUID());
         cv.put(MPurchaseRequestLine.QTYREQUESTED_COL, nQty);
+        cv.put(MPurchaseRequestLine.ISEMERGENCY_COL, isEmergency.isChecked() ? "Y" : "N");
+        cv.put(MPurchaseRequestLine.PURCHASEREASON_COL, purcReason.getText().toString());
 
         Bundle input = new Bundle();
         input.putParcelable(reqCont.ARG_CONTENTVALUES, cv);

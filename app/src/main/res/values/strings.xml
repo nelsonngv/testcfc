@@ -177,19 +177,16 @@
     <!--
    Requisition layout.
    !-->
-
-    <string name="label_required_date">Required Date </string>
-    <string name="label_projloc">Proj. Location </string>
-    <string name="label_requester">Requester
-        </string>
-    <string name="req_label_status">Status
-        </string>
-
-    <string name="req_label_docno">Document No </string>
-    <string name="reqdetails_label_status">Status
-        </string>
-    <string name="reqdetails_label_projloc">Proj. Location </string>
-    <string name="reqdetails_label_requested_date">Requested Date </string>
+    <string name="label_required_date">Required Date</string>
+    <string name="label_projloc">Proj. Location</string>
+    <string name="label_requester">Requester</string>
+    <string name="label_purchase_reason">Purchase Reason</string>
+    <string name="label_emergency">Emergency</string>
+    <string name="req_label_status">Status</string>
+    <string name="req_label_docno">Document No</string>
+    <string name="reqdetails_label_status">Status</string>
+    <string name="reqdetails_label_projloc">Proj. Location</string>
+    <string name="reqdetails_label_requested_date">Requested Date</string>
 
     <string name="label_comment">Comment</string>
     <string name="label_lines">Lines</string>
@@ -199,6 +196,7 @@
     <string name="label_button_save">Save</string>
     <string name="label_button_start">Start</string>
     <string name="label_button_complete">Complete</string>
+
     <!--
     Task layout.
     !-->

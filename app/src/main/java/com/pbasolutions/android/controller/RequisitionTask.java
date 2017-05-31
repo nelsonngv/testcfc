@@ -272,7 +272,8 @@ public class RequisitionTask implements Callable<Bundle> {
     String prlProjection[] = {MPurchaseRequestLine.M_PURCHASEREQUESTLINE_ID_COL, MPurchaseRequestLine.M_PURCHASEREQUESTLINE_UUID_COL,
             MPurchaseRequestLine.M_PURCHASEREQUEST_UUID_COL,
             MPurchaseRequestLine.M_PRODUCT_UUID_COL,
-            MPurchaseRequestLine.DATEREQUIRED_COL, MPurchaseRequestLine.QTYREQUESTED_COL};
+            MPurchaseRequestLine.DATEREQUIRED_COL, MPurchaseRequestLine.QTYREQUESTED_COL,
+            MPurchaseRequestLine.ISEMERGENCY_COL, MPurchaseRequestLine.PURCHASEREASON_COL};
 
     private Bundle getRequisition() {
         String selection = MPurchaseRequest.M_PURCHASEREQUEST_UUID_COL + "=?";
@@ -522,6 +523,10 @@ public class RequisitionTask implements Callable<Bundle> {
 
                             rlcv.put(MPurchaseRequestLine.DATEREQUIRED_COL, prLine.getDateRequired());
 
+                            rlcv.put(MPurchaseRequestLine.ISEMERGENCY_COL, prLine.getIsEmergency());
+
+                            rlcv.put(MPurchaseRequestLine.PURCHASEREASON_COL, prLine.getPurchaseReason());
+
                             String rlSelection = ModelConst.M_PURCHASEREQUESTLINE_TABLE + ModelConst._ID;
                             String[] rlArg = {prLine.getM_PurchaseRequestLine_ID()};
                             tableName = ModelConst.M_PURCHASEREQUESTLINE_TABLE;
@@ -617,6 +622,12 @@ public class RequisitionTask implements Callable<Bundle> {
                     .equalsIgnoreCase(columnName)) {
                 prl.setQtyRequested(Integer.parseInt(rowValue));
                 prl.setQtyRequestedString(rowValue);
+            } else if (MPurchaseRequestLine.ISEMERGENCY_COL
+                    .equalsIgnoreCase(columnName)) {
+                prl.setIsEmergency(rowValue);
+            } else if (MPurchaseRequestLine.PURCHASEREASON_COL
+                    .equalsIgnoreCase(columnName)) {
+                prl.setPurchaseReason(rowValue);
             }
         }
         return prl;

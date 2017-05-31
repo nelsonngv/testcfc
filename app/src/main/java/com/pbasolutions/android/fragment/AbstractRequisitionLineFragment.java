@@ -9,9 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.pbasolutions.android.PandoraContext;
@@ -50,6 +52,9 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
     protected SpinnerOnItemSelected prodNameItem;
     protected TextView requiredDate;
     protected TextView uom;
+    protected TableRow reasonRow;
+    protected CheckBox isEmergency;
+    protected EditText purcReason;
 
     protected ArrayAdapter prodNameAdapter;
     EditText qtyRequested;
@@ -75,10 +80,15 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
         requiredDate = (TextView)rootView.findViewById(R.id.prlDateRequired);
         qtyRequested = (EditText) rootView.findViewById(R.id.prlQty);
         uom = (TextView) rootView.findViewById(R.id.uom);
+        reasonRow = (TableRow) rootView.findViewById(R.id.reasonRow);
+        isEmergency = (CheckBox) rootView.findViewById(R.id.is_emergency);
+        purcReason = (EditText) rootView.findViewById(R.id.prlPurcReason);
         TextView textViewName = (TextView) rootView.findViewById(R.id.textViewName);
         TextView textViewQty = (TextView) rootView.findViewById(R.id.textViewQty);
+        TextView textViewPurcReason = (TextView) rootView.findViewById(R.id.textViewPurcReason);
         PandoraHelper.setAsterisk(textViewName);
         PandoraHelper.setAsterisk(textViewQty);
+        PandoraHelper.setAsterisk(textViewPurcReason);
     }
 
     public List<SpinnerPair> getProdList() {
@@ -110,6 +120,17 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        isEmergency.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) reasonRow.setVisibility(View.VISIBLE);
+                else {
+                    purcReason.setText("");
+                    reasonRow.setVisibility(View.GONE);
+                }
             }
         });
     }
