@@ -147,7 +147,7 @@ public class RoleFragment extends Fragment {
     /**
      *
      */
-    //TODO: check if already set role to server~
+    //check if already set role to server~
     public void roleOkClicked() {
         if (!context.getGlobalVariable().isInitialSynced()) {
             PandoraHelper.showMessage(context, R.string.label_sync);

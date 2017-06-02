@@ -101,7 +101,6 @@ public class AttendanceLineDetailFragment extends AbstractRequisitionLineFragmen
         if (!isRequested) {
             MPurchaseRequestLine tempPRLine = new MPurchaseRequestLine();
             tempPRLine.setProductName(prodNameItem.getPair().getValue());
-            //TODO: make choice available. tempPRLine.setProductValue();
             tempPRLine.setQtyRequestedString(qtyRequested.getText().toString());
             tempPRLine.setM_Product_UUID(prodNameItem.getPair().getKey());
             prodNameItem.getPair().getKey();

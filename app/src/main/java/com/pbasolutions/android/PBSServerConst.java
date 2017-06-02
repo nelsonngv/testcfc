@@ -20,7 +20,6 @@ public class PBSServerConst {
 
     public static final String PATH = "/wstore/";
 
-    //TODO: sync.
     /**
      * Sync JSP Wrapper used.
      */

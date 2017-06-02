@@ -200,7 +200,6 @@ public class PBSCheckInController extends ContextWrapper implements PBSIControll
             dialog.setPositiveButton("Go to settings", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    // TODO Auto-generated method stub
                     Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     context.startActivity(myIntent);
                 }
@@ -208,7 +207,6 @@ public class PBSCheckInController extends ContextWrapper implements PBSIControll
             dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    // TODO Auto-generated method stub
                 }
             });
             dialog.show();

@@ -22,7 +22,6 @@ import com.pbasolutions.android.model.MPurchaseRequestLine;
 /**
  * Created by pbadell on 10/13/15.
  */
-//TODO: not as flexible as movement details fragment. To revisit later.
 public class RequisitionDetailFragment extends PBSDetailsFragment {
         /**
          * PBSRequisitionController.

@@ -44,7 +44,7 @@ public class PreferencesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.preferences, container, false);
-        //TODO: this one is not enable for user view.
+        //this one is not enable for user view.
 //        rootView.findViewById(R.id.exportLogButton).setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -94,7 +94,7 @@ public class PreferencesFragment extends Fragment {
     }
 
     /**
-     * todo : to remove only for testing purpose.
+     * to remove only for testing purpose.
      * @param view
      */
     public void exportData(View view) {

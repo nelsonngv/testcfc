@@ -285,7 +285,6 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "M_CHECKPOINT_UUID TEXT NOT NULL," +
                     //OTHERS
                     "DATETRX DATETIME NOT NULL DEFAULT (DATETIME('NOW'))," +
-                    //todo add not null
                     "LATITUDE DOUBLE ," +
                     "LONGITUDE DOUBLE ," +
                     "DESCRIPTION NVARCHAR2(255)," +

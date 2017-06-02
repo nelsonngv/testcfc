@@ -90,7 +90,6 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
 
         tempPRLine = new MPurchaseRequestLine();
         tempPRLine.setProductName(prodName);
-        //TODO: make choice available. tempPRLine.setProductValue();
         tempPRLine.setQtyRequestedString(qtyRequested.getText().toString());
         tempPRLine.setM_Product_UUID(prodUUID);
         tempPRLine.setM_PurchaseRequestLine_UUID(UUID.randomUUID().toString());

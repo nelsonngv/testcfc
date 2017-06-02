@@ -91,7 +91,6 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
 
     public List<SpinnerPair> getProdList() {
         Bundle input = new Bundle();
-        //TODO: change to selection colum.
         input.putString(reqCont.ARG_PROD_COL_SELECTION, MProduct.NAME_COL);
         Bundle result = reqCont.triggerEvent(reqCont.GET_PRODUCT_LIST_EVENT,
                 input, new Bundle(), null);

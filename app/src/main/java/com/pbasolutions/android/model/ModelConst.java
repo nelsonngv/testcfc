@@ -158,7 +158,7 @@ public class ModelConst {
     public static final int HR_IDENTITY_TOKEN = 4000;
 
     /**
-     * TODO : Evaluate which table to be joined and provide table tokens for that.
+     * Evaluate which table to be joined and provide table tokens for that.
      */
     public static final int CHECKIN_JOIN_CHECKPOINT_TOKEN = 20;
     public static final int CHECKIN_JOIN_CHECKPOINT_DETAILS_TOKEN = 30;

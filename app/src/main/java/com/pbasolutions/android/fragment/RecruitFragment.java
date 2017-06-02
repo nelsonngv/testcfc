@@ -46,7 +46,6 @@ public class RecruitFragment extends Fragment {
         authCont = new PBSAuthenticatorController(getActivity());
         PandoraHelper.setAutoSync(getActivity(), userName, PBSAccountInfo.ACCOUNT_TYPE);
         PandoraContext context = ((PandoraMain) getActivity()).getGlobalVariable();
-        //TODO: check why the projectlocation uuid is not saved.
         if (context.getC_projectlocation_uuid() == null
                 || context.getC_projectlocation_uuid().isEmpty()) {
             PandoraHelper.getProjLocAvailable(getActivity(), true);

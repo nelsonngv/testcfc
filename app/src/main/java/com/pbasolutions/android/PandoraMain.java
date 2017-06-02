@@ -657,7 +657,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                         result.putBundle("syncResult", syncResult);
 
                     } else {
-                        //TODO: test ya.
                         //set the auth token to null.
                         Bundle input = new Bundle();
                         input.putString(authenticatorController.USER_NAME_ARG,

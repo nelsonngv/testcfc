@@ -494,8 +494,6 @@ public class ServerTask extends Task {
             } else {
                 ContentValues cv = new ContentValues();
                 cv.put(ModelConst.IS_SYNCED_COL, "Y");
-                //TODO check if the update is not success.
-                //TODO refactor code to be safer user ? param.
                 String where = tableName + ModelConst._UUID + PandoraConstant.EQUAL
                         + PandoraConstant.QUESTION_MARK;
                 String[] selectionArg = {tableUUID};
