@@ -68,7 +68,7 @@ public class NewSurveyFragment extends Fragment {
             String sectionName = sections.get(currPosition);
             if (sectionName == null || sectionName.equals("") || sectionName.equals("null"))
                 section.setVisibility(View.GONE);
-            else section.setText("Section: " + sectionName + " (" + (currPosition + 1) + "/" + sections.size() + ")");
+            else section.setText(getString(R.string.label_section) + sectionName + " (" + (currPosition + 1) + "/" + sections.size() + ")");
             List<SpinnerPair> ratingList = new ArrayList<>();
             SpinnerPair pair = new SpinnerPair();
             pair.setKey(null);

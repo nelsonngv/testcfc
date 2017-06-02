@@ -41,8 +41,8 @@ import android.widget.Toast;
 import com.android.volley.toolbox.RequestFuture;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
-//import com.pbasolutions.android.fragment.ATrackScanEmpIDFragment;
-//import com.pbasolutions.android.fragment.ATrackScanLocFragment;
+import com.pbasolutions.android.fragment.ATrackScanEmpIDFragment;
+import com.pbasolutions.android.fragment.ATrackScanLocFragment;
 import com.pbasolutions.android.fragment.ApplicantDetailsFragment;
 import com.pbasolutions.android.fragment.ApplicantFragment;
 import com.pbasolutions.android.fragment.AssetFragment;
@@ -162,29 +162,30 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     public static final int FRAGMENT_DEFAULT = -1;
     public static final int FRAGMENT_ATTENDANCE = 0;
-    public static final int FRAGMENT_RECRUIT = 1;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING = 1;
+    public static final int FRAGMENT_RECRUIT = 2;
 //    public static final int FRAGMENT_DEPLOY =1;
-    public static final int FRAGMENT_ASSET = 2;
-    public static final int FRAGMENT_REQUISITION = 3;
-    public static final int FRAGMENT_TASK = 4;
-    public static final int FRAGMENT_SURVEY = 5;
-    public static final int FRAGMENT_CHECKPOINTS = 6;
-    public static final int FRAGMENT_CHECKPOINT_SEQ = 7;
-    public static final int FRAGMENT_BROADCAST = 8;
-    public static final int SETTING_MENU = 9;
+    public static final int FRAGMENT_ASSET = 3;
+    public static final int FRAGMENT_REQUISITION = 4;
+    public static final int FRAGMENT_TASK = 5;
+    public static final int FRAGMENT_SURVEY = 6;
+    public static final int FRAGMENT_CHECKPOINTS = 7;
+    public static final int FRAGMENT_CHECKPOINT_SEQ = 8;
+    public static final int FRAGMENT_BROADCAST = 9;
+    public static final int SETTING_MENU = 10;
     public static final int FRAGMENT_CHECKPOINTS_DETAILS = 50;
     public static final int FRAGMENT_NEW_CHECK_IN = 51;
     public static final int FRAGMENT_ACCOUNT = 80;
-    public static final int FRAGMENT_ADD_APPLICANT = 10;
-    public static final int FRAGMENT_CREATE_REQUISITION = 11;
-    public static final int FRAGMENT_CREATE_REQUISITIONLINE = 12;
-    public static final int FRAGMENT_CREATE_MOVEMENT = 13;
-    public static final int FRAGMENT_CREATE_MOVEMENTLINE = 14;
-    public static final int FRAGMENT_CREATE_ATTENDANCE = 16;
-    public static final int FRAGMENT_CREATE_ATTENDANCELINE = 17;
-    public static final int FRAGMENT_START_SURVEY = 18;
-    public static final int FRAGMENT_NEW_SURVEY = 19;
-    public static final int FRAGMENT_SIGN_SURVEY = 20;
+    public static final int FRAGMENT_ADD_APPLICANT = 21;
+    public static final int FRAGMENT_CREATE_REQUISITION = 22;
+    public static final int FRAGMENT_CREATE_REQUISITIONLINE = 23;
+    public static final int FRAGMENT_CREATE_MOVEMENT = 24;
+    public static final int FRAGMENT_CREATE_MOVEMENTLINE = 25;
+    public static final int FRAGMENT_CREATE_ATTENDANCE = 26;
+    public static final int FRAGMENT_CREATE_ATTENDANCELINE = 27;
+    public static final int FRAGMENT_START_SURVEY = 28;
+    public static final int FRAGMENT_NEW_SURVEY = 29;
+    public static final int FRAGMENT_SIGN_SURVEY = 30;
 
     /**
      * Toolbar menu id.
@@ -218,7 +219,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public String[] menuList = null;
 
     //menu list constant
-    public static final String[] MENU_LIST = {"Attendance", "Recruit", "Asset", "Requisition", "Task",
+    public static final String[] MENU_LIST = {"Attendance", "Attendance Tracking", "Recruit", "Asset", "Requisition", "Task",
             "Survey", "Check In", "Check Point", "Broadcast", "Setting"};
 
     //welcome dialog indicator
@@ -247,15 +248,25 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public void onBackPressed() {
         Fragment frag = getCurrentFragment();
         if (frag instanceof PBABackKeyListener) {
             if (((PBABackKeyListener)frag).onBackKeyPressed())
-                return true;
-            else return false;
+                super.onBackPressed();
         }
-        return super.onKeyDown(keyCode, event);
+        else super.onBackPressed();
     }
+
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        Fragment frag = getCurrentFragment();
+//        if (frag instanceof PBABackKeyListener) {
+//            if (((PBABackKeyListener)frag).onBackKeyPressed() && keyCode == KeyEvent.KEYCODE_BACK)
+//                return true;
+//            else return false;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
     /**
      * Initial.
      */
@@ -406,12 +417,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             titleID = R.string.title_survey;
         } else if (NewSurveyStartFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_new_survey;
-//        } else if (NewSurveyPagerFragment.class.getName().equalsIgnoreCase(fragClassName)){
-//            titleID = R.string.title_new_survey;
-//        } else if (NewSurveySummaryFragment.class.getName().equalsIgnoreCase(fragClassName)){
-//            titleID = R.string.title_new_survey;
-//        } else if (NewSurveySignFragment.class.getName().equalsIgnoreCase(fragClassName)){
-//            titleID = R.string.title_sign_survey;
+        } else if (ATrackScanLocFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_attendance_tracking;
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -765,7 +772,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             String[] titlesList = drawerFragment.titles;
             if (titlesList.length > 0)
                 for (int i = 0; i < MENU_LIST.length; i++) {
-                    if (titlesList[position].contains(MENU_LIST[i])) {
+                    if (titlesList[position].equalsIgnoreCase(MENU_LIST[i])) {
                         position = i;
                         break;
                     }
@@ -902,7 +909,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
             case FRAGMENT_SURVEY: {
                 fragment = new SurveyFragment();
-//                fragment = new ATrackScanLocFragment();
                 title = getString(R.string.title_survey);
                 break;
             }
@@ -924,6 +930,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 fragment = new NewSurveySignFragment();
                 title = "";
 //                title = getString(R.string.title_sign_survey);
+                break;
+            }
+
+            case FRAGMENT_ATTENDANCE_TRACKING: {
+                fragment = new ATrackScanLocFragment();
+                title = getString(R.string.title_survey);
                 break;
             }
 
@@ -991,7 +1003,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         super.onNewIntent(intent);
         if (intent != null){
             if (intent.getAction() != null){
-                if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
+                if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED) || intent.getAction().equals(NfcAdapter.ACTION_TECH_DISCOVERED) || intent.getAction().equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
                     if (getGlobalVariable().getAd_user_name() == null) {
                         checkLogin(false);
                     } else {
@@ -1001,16 +1013,16 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                             ((NewCheckInFragment) fragment).setNfcIntent(intent);
                             updateFragment(fragment, "New Check In", false);
                         }
-//                        else if (fragment != null && fragment instanceof ATrackScanLocFragment) {
-//                            fragment = new ATrackScanLocFragment();
-//                            ((ATrackScanLocFragment) fragment).setNfcIntent(intent);
-//                            updateFragment(fragment, "Attendance Tracking", false);
-//                        }
-//                        else if (fragment != null && fragment instanceof ATrackScanEmpIDFragment) {
-//                            fragment = new ATrackScanEmpIDFragment();
-//                            ((ATrackScanEmpIDFragment) fragment).setNfcIntent(intent);
-//                            updateFragment(fragment, "Attendance Tracking", false);
-//                        }
+                        else if (fragment != null && fragment instanceof ATrackScanLocFragment) {
+                            fragment = new ATrackScanLocFragment();
+                            ((ATrackScanLocFragment) fragment).setNfcIntent(intent);
+                            updateFragment(fragment, "Attendance Tracking", false);
+                        }
+                        else if (fragment != null && fragment instanceof ATrackScanEmpIDFragment) {
+                            fragment = new ATrackScanEmpIDFragment();
+                            ((ATrackScanEmpIDFragment) fragment).setNfcIntent(intent);
+                            updateFragment(fragment, "Attendance Tracking", false);
+                        }
                     }
                 }
             }else {
@@ -1059,6 +1071,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     f = CameraUtil.setUpPhotoFile(mAlbumStorageDirFactory);
                     mCurrentPhotoPath = f.getAbsolutePath();
                     CameraUtil.galleryAddPic(mCurrentPhotoPath, PandoraMain.this);
+//                    takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                 } catch (IOException e) {
                     e.printStackTrace();

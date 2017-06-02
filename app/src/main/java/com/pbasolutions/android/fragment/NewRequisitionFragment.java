@@ -145,7 +145,7 @@ public class NewRequisitionFragment extends Fragment {
         //set predefined values.
         documentNo.setEnabled(false);
         documentNo.setVisibility(View.INVISIBLE);
-        isApproved.setText("Not Approved");
+        isApproved.setText(getString(R.string.label_not_approved));
         PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
         String projLocUUID = globalVar.getC_projectlocation_uuid();
         String locName = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE,

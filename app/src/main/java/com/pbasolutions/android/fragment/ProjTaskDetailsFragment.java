@@ -239,7 +239,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
     @Override
     public boolean onBackKeyPressed() {
         if ("Y".equalsIgnoreCase(projTask.isDone()))
-            return false;
+            return true;
 
         boolean hasChanged = !taskComments.getText().toString().isEmpty();
         hasChanged |= !(taskPicture1.getTag() == null || ((String)taskPicture1.getTag()).isEmpty());
@@ -249,7 +249,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         hasChanged |= !(taskPicture5.getTag() == null || ((String)taskPicture5.getTag()).isEmpty());
 
         if (hasChanged == false)
-            return false;
+            return true;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -265,7 +265,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        return true;
+        return false;
     }
 
     protected void setOnClickListener(final View object, final String event) {

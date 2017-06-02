@@ -86,9 +86,7 @@
                             android:checked="@{prLine.isEmergency.equals(&quot;Y&quot;) ? true : false}"/>
                     </LinearLayout>
                 </TableRow>
-                <TableRow
-                    android:id="@+id/reasonRow"
-                    android:visibility="gone">
+                <TableRow>
                     <LinearLayout style="@style/PTableVirtRowW">
                         <TextView
                             android:id="@+id/textViewPurcReason"

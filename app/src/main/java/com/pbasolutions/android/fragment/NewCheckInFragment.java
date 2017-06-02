@@ -88,7 +88,7 @@ public class NewCheckInFragment extends Fragment {
             if (!mNfcAdapter.isEnabled()) {
                 scanInfo.setText(getString(R.string.nfc_disabled));
             } else {
-                scanInfo.setText("Please tap on NFC");
+                scanInfo.setText(getString(R.string.tap_nfc));
             }
         }
         latitudeInfo = (TextView) rootView.findViewById(R.id.serialLatitude);

@@ -200,7 +200,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         boolean hasChanged = !(taskPicture1.getTag() == null || ((String)taskPicture1.getTag()).isEmpty());
 
         if (hasChanged == false)
-            return false;
+            return true;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -216,7 +216,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        return true;
+        return false;
     }
 
     private List<SpinnerPair> getUserList() {

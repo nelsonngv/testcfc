@@ -52,7 +52,6 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
     protected SpinnerOnItemSelected prodNameItem;
     protected TextView requiredDate;
     protected TextView uom;
-    protected TableRow reasonRow;
     protected CheckBox isEmergency;
     protected EditText purcReason;
 
@@ -80,7 +79,6 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
         requiredDate = (TextView)rootView.findViewById(R.id.prlDateRequired);
         qtyRequested = (EditText) rootView.findViewById(R.id.prlQty);
         uom = (TextView) rootView.findViewById(R.id.uom);
-        reasonRow = (TableRow) rootView.findViewById(R.id.reasonRow);
         isEmergency = (CheckBox) rootView.findViewById(R.id.is_emergency);
         purcReason = (EditText) rootView.findViewById(R.id.prlPurcReason);
         TextView textViewName = (TextView) rootView.findViewById(R.id.textViewName);
@@ -120,17 +118,6 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
-
-        isEmergency.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) reasonRow.setVisibility(View.VISIBLE);
-                else {
-                    purcReason.setText("");
-                    reasonRow.setVisibility(View.GONE);
-                }
             }
         });
     }

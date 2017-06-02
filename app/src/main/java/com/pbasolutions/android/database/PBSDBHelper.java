@@ -1220,11 +1220,11 @@ public class PBSDBHelper extends SQLiteOpenHelper {
 
 //            //HR_ATTENDANCELOG
 //            db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
-//                    "M_ATTENDANCELOG_ID INTEGER NOT NULL, " +
-//                    "M_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
+//                    "HR_ATTENDANCELOG_ID INTEGER NOT NULL, " +
+//                    "HR_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
 //                    "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
-//                    "C_BPARTNER_UUID TEXT DEFAULT NULL, " +
-//                    "CHECKINOUTDATE DATETIME, " +
+//                    "C_BPARTNER_UUID TEXT NOT NULL, " +
+//                    "CHECKINOUTDATE DATETIME NOT NULL, " +
 //                    "CHECKINOUTTYPE CHAR(1) DEFAULT 'I' NOT NULL, " +
 //                    "LONGITUDE NUMBER, " +
 //                    "LATITUDE NUMBER, " +
@@ -1473,11 +1473,11 @@ public class PBSDBHelper extends SQLiteOpenHelper {
 //            if (oldVersion < 15) {
 //                //HR_ATTENDANCELOG
 //                db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
-//                        "M_ATTENDANCELOG_ID INTEGER NOT NULL, " +
-//                        "M_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
+//                        "HR_ATTENDANCELOG_ID INTEGER NOT NULL, " +
+//                        "HR_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
 //                        "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
-//                        "C_BPARTNER_UUID TEXT DEFAULT NULL, " +
-//                        "CHECKINOUTDATE DATETIME, " +
+//                        "C_BPARTNER_UUID TEXT NOT NULL, " +
+//                        "CHECKINOUTDATE DATETIME NOT NULL, " +
 //                        "CHECKINOUTTYPE CHAR(1) DEFAULT 'I' NOT NULL, " +
 //                        "LONGITUDE NUMBER, " +
 //                        "LATITUDE NUMBER, " +

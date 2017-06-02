@@ -94,9 +94,9 @@ public class NewSurveySummaryFragment extends Fragment {
                 String[] ratingPair = rating.second.toString().split("/");
                 tvSection.setTypeface(null, Typeface.BOLD);
                 tvSection.setText(rating.first.toString());
-                tvRating.setText("Rating: " + rating.second.toString());
-                tvAvgRating.setText("Average: " + (ratingPair[0].equals("0") ? "0" : new BigDecimal(ratingPair[0]).divide(new BigDecimal(ratingPair[1]).divide(new BigDecimal(10)), 2, RoundingMode.HALF_UP).toString()) + "/10");
-                tvPercRating.setText("Percentage: " + (ratingPair[0].equals("0") ? "0" : new BigDecimal(ratingPair[0]).divide(new BigDecimal(ratingPair[1]).divide(new BigDecimal(100)), 2, RoundingMode.HALF_UP).toString()) + "%");
+                tvRating.setText(getString(R.string.label_rating) + rating.second.toString());
+                tvAvgRating.setText(getString(R.string.label_average) + (ratingPair[0].equals("0") ? "0" : new BigDecimal(ratingPair[0]).divide(new BigDecimal(ratingPair[1]).divide(new BigDecimal(10)), 2, RoundingMode.HALF_UP).toString()) + "/10");
+                tvPercRating.setText(getString(R.string.label_percentage) + (ratingPair[0].equals("0") ? "0" : new BigDecimal(ratingPair[0]).divide(new BigDecimal(ratingPair[1]).divide(new BigDecimal(100)), 2, RoundingMode.HALF_UP).toString()) + "%");
 
                 subLL.addView(tvSection);
                 subLL.addView(tvRating);

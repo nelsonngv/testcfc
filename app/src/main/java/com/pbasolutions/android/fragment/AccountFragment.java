@@ -54,7 +54,7 @@ public class AccountFragment extends Fragment {
                              Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.account, container, false);
         TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Connection"));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.nav_item_connection)));
         Bundle inputBundle = new Bundle();
         inputBundle.putString(authenticatorController.ARG_AUTH_TYPE, PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
         if (context.getGlobalVariable() != null){
@@ -77,8 +77,8 @@ public class AccountFragment extends Fragment {
             context.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             context.getSupportActionBar().setDisplayShowHomeEnabled(true);
             context.getSupportActionBar().show();
-            tabLayout.addTab(tabLayout.newTab().setText("Defaults"));
-            tabLayout.addTab(tabLayout.newTab().setText("Preferences"));
+            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.nav_item_defaults)));
+            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.nav_item_preferences)));
         }
 
         viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
