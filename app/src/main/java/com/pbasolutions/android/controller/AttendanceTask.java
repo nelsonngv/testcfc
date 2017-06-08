@@ -15,6 +15,7 @@ import android.util.Pair;
 import com.google.gson.JsonObject;
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
+import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.account.PBSAccountInfo;
@@ -26,16 +27,12 @@ import com.pbasolutions.android.model.MAttendanceLine;
 import com.pbasolutions.android.model.MAttendanceLog;
 import com.pbasolutions.android.model.MAttendanceSearchItem;
 import com.pbasolutions.android.model.MDeploy;
-import com.pbasolutions.android.model.MEmployee;
 import com.pbasolutions.android.model.MShift;
 import com.pbasolutions.android.model.ModelConst;
 
 import java.util.ArrayList;
-import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 /**
  * Created by pbadell on 12/15/15.
@@ -97,8 +94,17 @@ public class AttendanceTask implements Callable<Bundle> {
             case PBSAttendanceController.CREATE_ATTENDANCE_EVENT: {
                 return createAttendance();
             }
-            case PBSAttendanceController.GET_PROJECTLOCATIONS_EVENT:{
+            case PBSAttendanceController.GET_PROJECTLOCATIONS_EVENT: {
                 return getProjectLocations();
+            }
+            case PBSAttendanceController.GET_PROJECTLOCATION_BY_TAG_EVENT: {
+                return getProjectLocationByTag();
+            }
+            case PBSAttendanceController.IS_ATTANDENCE_ACTION_DUPLICATE_EVENT: {
+                return isAttendanceActionDuplicate();
+            }
+            case PBSAttendanceController.CREATE_ATTENDANCETRACKING_EVENT: {
+                return createAttendanceTracking();
             }
 
             default:
@@ -569,15 +575,95 @@ public class AttendanceTask implements Callable<Bundle> {
         return pair;
     }
 
+    private Bundle getProjectLocationByTag() {
+        String tagID = (String) input.get(PBSAttendanceController.ARG_TAGID);
+
+        String[] projection = {ModelConst.C_PROJECTLOCATION_ID_COL,
+                ModelConst.NAME_COL, ModelConst.ISKIOSKMODE_COL, ModelConst.ISPHOTO_COL};
+        String[] selectionArg = {tagID};
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
+                projection, ModelConst.TAGID_COL + "=?", selectionArg, "LOWER(" + ModelConst.NAME_COL + ") ASC");
+
+        ArrayList<String> projectLocation = new ArrayList<>();
+        if (cursor != null && cursor.getCount() != 0) {
+            cursor.moveToFirst();
+            do {
+                for (int x = 0; x < cursor.getColumnNames().length; x++) {
+                    projectLocation.add(cursor.getString(x));
+                }
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null)
+            cursor.close();
+        output.putStringArrayList(PBSTaskController.ARG_PROJECTLOCATIONS, projectLocation);
+        return output;
+    }
+
+    private Bundle isAttendanceActionDuplicate() {
+        boolean isDuplicate = true;
+        String empUUID = (String) input.get(PBSRecruitController.ARG_EMP_UUID);
+        String projLocUUID = (String) input.get(PBSAttendanceController.ARG_PROJECTLOCATION_UUID);
+        String type = (String) input.get(PBSAttendanceController.ARG_ATTENDANCE_TRACKING_TYPE);
+
+        String[] projection = {MAttendanceLog.CHECKINOUTTYPE_COL};
+        String selection = ModelConst.C_BPARTNER_UUID_COL + "=? AND " + ModelConst.C_PROJECTLOCATION_UUID_COL + "=?";
+        String[] selectionArg = {empUUID, projLocUUID};
+        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(MAttendanceLog.TABLENAME),
+                projection, selection, selectionArg, MAttendanceLog.HR_ATTENDANCELOG_ID_COL + " DESC LIMIT 1");
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            if (!cursor.getString(0).equals(type))
+                isDuplicate = false;
+        }
+        // if first time
+        else if (type.equals(PBSAttendanceController.ATTENDANCE_TRACKING_TYPE_IN))
+            isDuplicate = false;
+
+        if (cursor != null)
+            cursor.close();
+        output.putBoolean(PBSAttendanceController.ARG_IS_DUPLICATE, isDuplicate);
+        return output;
+    }
+
     private Bundle createAttendanceTracking() {
+        PandoraContext appContext = PandoraMain.instance.getGlobalVariable();
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
         ContentValues cv = input.getParcelable(PBSAttendanceController.ARG_CONTENTVALUES);
+
+        String ad_org_uuid = appContext.getAd_org_uuid();
+        if (ad_org_uuid.isEmpty()) {
+            ad_org_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_ORG_TABLE,
+                    ModelConst.AD_ORG_UUID_COL, appContext.getAd_org_id(),
+                    ModelConst.AD_ORG_TABLE + ModelConst._ID, appContext.getContentResolver());
+            appContext.setAd_org_uuid(ad_org_uuid);
+        }
+
+        String ad_client_uuid = appContext.getAd_client_uuid();
+        if (ad_client_uuid.isEmpty()) {
+            ad_client_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_CLIENT_TABLE,
+                    ModelConst.AD_CLIENT_UUID_COL, appContext.getAd_client_id(),
+                    ModelConst.AD_CLIENT_TABLE + ModelConst._ID, appContext.getContentResolver());
+            appContext.setAd_client_uuid(ad_client_uuid);
+        }
+
+        String ad_user_uuid = appContext.getAd_user_uuid();
+        if (ad_user_uuid.isEmpty()) {
+            ad_user_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
+                    ModelConst.AD_USER_UUID_COL, appContext.getAd_user_id(),
+                    ModelConst.AD_USER_TABLE + ModelConst._ID, appContext.getContentResolver());
+            appContext.setAd_user_uuid(ad_user_uuid);
+        }
+
+        cv.put(ModelConst.AD_ORG_UUID_COL, ad_org_uuid);
+        cv.put(ModelConst.AD_CLIENT_UUID_COL, ad_client_uuid);
         cv.put(MAttendanceLog.HR_ATTENDANCELOG_ID_COL, "(SELECT IFNULL(MAX(" + MAttendanceLog.HR_ATTENDANCELOG_ID_COL + "), 0) + 1 FROM " + MAttendanceLog.TABLENAME + ")");
         cv.put(MAttendanceLog.HR_ATTENDANCELOG_UUID_COL, UUID.randomUUID().toString());
-        cv.put(MAttendanceLog.AD_USER_UUID_COL, PandoraMain.instance.getGlobalVariable().getAd_user_id());
+        cv.put(ModelConst.CREATEDBY_COL, ad_user_uuid);
+        cv.put(ModelConst.UPDATEDBY_COL, ad_user_uuid);
 
         ops.add(ContentProviderOperation
-                .newInsert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
+                .newInsert(ModelConst.uriCustomBuilder(MAttendanceLog.TABLENAME))
                 .withValues(cv)
                 .build());
 
@@ -594,12 +680,12 @@ public class AttendanceTask implements Callable<Bundle> {
                 }
                 if (!resultFlag) {
                     output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-                    output.putString(PandoraConstant.ERROR, "Fail to sync Project Tasks.");
+                    output.putString(PandoraConstant.ERROR, "Fail to create attendance.");
                     return output;
                 }
             }
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-            output.putString(PandoraConstant.RESULT, "Successfully synced Project Task");
+            output.putString(PandoraConstant.RESULT, "Successfully created attendance");
         } catch (RemoteException e) {
             Log.e(TAG, e.getMessage());
         } catch (OperationApplicationException e) {

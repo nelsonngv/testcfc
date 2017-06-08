@@ -69,6 +69,9 @@ public class RecruitTask extends Task {
                 case PBSRecruitController.GET_IDTYPE_EVENT: {
                     return getIdTypes();
                 }
+                case PBSRecruitController.GET_EMPLOYEEBYTAG_EVENT: {
+                    return getEmployeeByTag();
+                }
                 default:
                     return null;
             }
@@ -506,6 +509,47 @@ public class RecruitTask extends Task {
             }
             cursor.close();
             output.putSerializable(PBSRecruitController.ARG_EMPLOYEE, emp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
+
+    /**
+     * Get selected employee by tag id.
+     * @return
+     */
+    private Bundle getEmployeeByTag() {
+        String tagID = (String) input.get(PBSAttendanceController.ARG_TAGID);
+
+        String[] projection = {ModelConst.C_BPARTNER_ID_COL, ModelConst.NAME_COL};
+        String[] selectionArg = {tagID};
+
+        try {
+            PBSDBHelper dbHelper = new PBSDBHelper(PandoraMain.instance);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cursor = db.query(ModelConst.C_BPARTNER_TABLE,
+                    projection, ModelConst.TAGID_COL + "=?", selectionArg, null, null, null);
+
+            ArrayList<SpinnerPair> employeeList = new ArrayList<>();
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                do {
+                    SpinnerPair pair = new SpinnerPair();
+                    for (int x = 0; x < cursor.getColumnNames().length; x++) {
+                        if (ModelConst.NAME_COL
+                                .equalsIgnoreCase(cursor.getColumnName(x))) {
+                            pair.setValue(cursor.getString(x));
+                        } else if (ModelConst.C_BPARTNER_UUID_COL
+                                .equalsIgnoreCase(cursor.getColumnName(x))) {
+                            pair.setKey(cursor.getString(x));
+                        }
+                    }
+                    employeeList.add(pair);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            output.putParcelableArrayList(PBSRecruitController.ARG_EMPLOYEE, employeeList);
         } catch (Exception e) {
             e.printStackTrace();
         }

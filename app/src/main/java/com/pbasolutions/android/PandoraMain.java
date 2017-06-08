@@ -41,6 +41,8 @@ import android.widget.Toast;
 import com.android.volley.toolbox.RequestFuture;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
+import com.pbasolutions.android.fragment.ATrackCheckInOutFragment;
+import com.pbasolutions.android.fragment.ATrackDoneFragment;
 import com.pbasolutions.android.fragment.ATrackScanEmpIDFragment;
 import com.pbasolutions.android.fragment.ATrackScanLocFragment;
 import com.pbasolutions.android.fragment.ApplicantDetailsFragment;
@@ -73,7 +75,6 @@ import com.pbasolutions.android.fragment.NewRequisitionLineFragment;
 import com.pbasolutions.android.fragment.NewSurveyPagerFragment;
 import com.pbasolutions.android.fragment.NewSurveySignFragment;
 import com.pbasolutions.android.fragment.NewSurveyStartFragment;
-import com.pbasolutions.android.fragment.NewSurveySummaryFragment;
 import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
 import com.pbasolutions.android.fragment.ProjTaskFragment;
 import com.pbasolutions.android.fragment.RecruitFragment;
@@ -186,6 +187,9 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public static final int FRAGMENT_START_SURVEY = 28;
     public static final int FRAGMENT_NEW_SURVEY = 29;
     public static final int FRAGMENT_SIGN_SURVEY = 30;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING_INOUT = 31;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING_EMPID = 32;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING_DONE = 33;
 
     /**
      * Toolbar menu id.
@@ -417,7 +421,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             titleID = R.string.title_survey;
         } else if (NewSurveyStartFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_new_survey;
-        } else if (ATrackScanLocFragment.class.getName().equalsIgnoreCase(fragClassName)){
+        } else if (ATrackScanLocFragment.class.getName().equalsIgnoreCase(fragClassName)
+                || ATrackCheckInOutFragment.class.getName().equalsIgnoreCase(fragClassName)
+                || ATrackScanEmpIDFragment.class.getName().equalsIgnoreCase(fragClassName)
+                || ATrackDoneFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_attendance_tracking;
         }
 
@@ -934,7 +941,25 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
             case FRAGMENT_ATTENDANCE_TRACKING: {
                 fragment = new ATrackScanLocFragment();
-                title = getString(R.string.title_survey);
+                title = getString(R.string.title_attendance_tracking);
+                break;
+            }
+
+            case FRAGMENT_ATTENDANCE_TRACKING_INOUT: {
+                fragment = new ATrackCheckInOutFragment();
+                title = getString(R.string.title_attendance_tracking);
+                break;
+            }
+
+            case FRAGMENT_ATTENDANCE_TRACKING_EMPID: {
+                fragment = new ATrackScanEmpIDFragment();
+                title = getString(R.string.title_attendance_tracking);
+                break;
+            }
+
+            case FRAGMENT_ATTENDANCE_TRACKING_DONE: {
+                fragment = new ATrackDoneFragment();
+                title = getString(R.string.title_attendance_tracking);
                 break;
             }
 
@@ -1070,7 +1095,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     f = CameraUtil.setUpPhotoFile(mAlbumStorageDirFactory);
                     mCurrentPhotoPath = f.getAbsolutePath();
                     CameraUtil.galleryAddPic(mCurrentPhotoPath, PandoraMain.this);
-//                    takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
+//                    if (getCurrentFragment() instanceof ATrackScanEmpIDFragment)
+//                        takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                 } catch (IOException e) {
                     e.printStackTrace();

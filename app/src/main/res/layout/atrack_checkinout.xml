@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    <TextView
+        android:id="@+id/tvProjLocLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:textSize="8pt"
+        android:text="@string/label_projloc" />
+    <TextView
+        android:id="@+id/tvProjLoc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:textSize="14pt"
+        android:layout_below="@id/tvProjLocLabel" />
+    <Button
+        android:id="@+id/btnCheckIn"
+        style="@style/PLargeButton"
+        android:text="Check In"
+        android:layout_below="@id/tvProjLoc" />
+    <Button
+        android:id="@+id/btnCheckOut"
+        style="@style/PLargeButton"
+        android:text="Check Out"
+        android:layout_below="@id/btnCheckIn" />
+</RelativeLayout>

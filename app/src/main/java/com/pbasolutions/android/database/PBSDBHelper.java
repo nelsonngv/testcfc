@@ -28,7 +28,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
     /**
      *
      */
@@ -177,7 +177,9 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     //OTHERS
                     "NAME NVARCHAR2(300) NOT NULL," +
                     "VALUE NVARCHAR2(60) NOT NULL," +
-//                    "CONSTRAINT PROJLOC_UNIQCONS UNIQUE (C_PROJECTLOCATION_ID)," +
+                    "IsKioskMode CHAR(1) DEFAULT 'N' NOT NULL," +
+                    "IsPhoto CHAR(1) DEFAULT 'N' NOT NULL," +
+                    "TAGID TEXT NULL," +
                     "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                     "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                     "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
@@ -549,6 +551,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "ISEMPLOYEE CHAR(1) ," +
                     "ICNo VARCHAR2(20) ," +
                     "WorkPermit VARCHAR2(20) ," +
+                    "TAGID TEXT NULL," +
                     //--
                     //--
                     "CONSTRAINT BIZPART_UNIQCONS UNIQUE (C_BPARTNER_ID)," +
@@ -1217,22 +1220,32 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                     ");");
 
-//            //HR_ATTENDANCELOG
-//            db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
-//                    "HR_ATTENDANCELOG_ID INTEGER NOT NULL, " +
-//                    "HR_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
-//                    "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
-//                    "C_BPARTNER_UUID TEXT NOT NULL, " +
-//                    "CHECKINOUTDATE DATETIME NOT NULL, " +
-//                    "CHECKINOUTTYPE CHAR(1) DEFAULT 'I' NOT NULL, " +
-//                    "LONGITUDE NUMBER, " +
-//                    "LATITUDE NUMBER, " +
-//                    "ATTACHMENT_IMAGE VARCHAR2(100), " +
-//                    "AD_USER_UUID TEXT NOT NULL, " +
-//                    "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID), " +
-//                    "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID), " +
-//                    "FOREIGN KEY(AD_USER_UUID) REFERENCES AD_USER(AD_USER_UUID) " +
-//                    ");");
+            //HR_ATTENDANCELOG
+            db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
+                    "HR_ATTENDANCELOG_ID INTEGER NOT NULL, " +
+                    "HR_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
+                    "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
+                    "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
+                    "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
+                    "C_BPARTNER_UUID TEXT NOT NULL, " +
+                    "CHECKINOUTDATE DATETIME NOT NULL, " +
+                    "CHECKINOUTTYPE CHAR(1) DEFAULT 'I' NOT NULL, " +
+                    "LONGITUDE NUMBER, " +
+                    "LATITUDE NUMBER, " +
+                    "ATTACHMENT_IMAGE VARCHAR2(100), " +
+                    "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW')), " +
+                    "CREATEDBY NUMBER(10, 0) NOT NULL, " +
+                    "UPDATED DATETIME NOT NULL DEFAULT (DATETIME('NOW')), " +
+                    "UPDATEDBY NUMBER(10, 0) NOT NULL, " +
+                    "ISUPDATED BOOLEAN DEFAULT 'N', " +
+                    "ISSYNCED BOOLEAN DEFAULT 'N', " +
+                    "ISDELETED BOOLEAN DEFAULT 'N', " +
+                    "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
+                    "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
+                    "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID), " +
+                    "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID), " +
+                    "FOREIGN KEY(AD_USER_UUID) REFERENCES AD_USER(AD_USER_UUID) " +
+                    ");");
 
             //create index for C_SURVEYRESPONSE_ID_INDEX
             db.execSQL("CREATE INDEX C_SURVEYRESPONSE_ID_INDEX ON C_SURVEYRESPONSE(C_SURVEYRESPONSE_ID)");
@@ -1469,24 +1482,39 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE M_PURCHASEREQUESTLINE ADD PURCHASEREASON NVARCHAR2(255) NULL");
             }
 
-//            if (oldVersion < 15) {
-//                //HR_ATTENDANCELOG
-//                db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
-//                        "HR_ATTENDANCELOG_ID INTEGER NOT NULL, " +
-//                        "HR_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
-//                        "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
-//                        "C_BPARTNER_UUID TEXT NOT NULL, " +
-//                        "CHECKINOUTDATE DATETIME NOT NULL, " +
-//                        "CHECKINOUTTYPE CHAR(1) DEFAULT 'I' NOT NULL, " +
-//                        "LONGITUDE NUMBER, " +
-//                        "LATITUDE NUMBER, " +
-//                        "ATTACHMENT_IMAGE VARCHAR2(100), " +
-//                        "AD_USER_UUID TEXT NOT NULL, " +
-//                        "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID), " +
-//                        "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID), " +
-//                        "FOREIGN KEY(AD_USER_UUID) REFERENCES AD_USER(AD_USER_UUID) " +
-//                        ");");
-//            }
+            if (oldVersion < 15) {
+                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD IsKioskMode CHAR(1) DEFAULT 'N' NOT NULL");
+                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD IsPhoto CHAR(1) DEFAULT 'N' NOT NULL");
+                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD TAGID TEXT NULL");
+                db.execSQL("ALTER TABLE C_BPARTNER ADD TAGID TEXT NULL");
+
+                //HR_ATTENDANCELOG
+                db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
+                        "HR_ATTENDANCELOG_ID INTEGER NOT NULL, " +
+                        "HR_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
+                        "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
+                        "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
+                        "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
+                        "C_BPARTNER_UUID TEXT NOT NULL, " +
+                        "CHECKINOUTDATE DATETIME NOT NULL, " +
+                        "CHECKINOUTTYPE CHAR(1) DEFAULT 'I' NOT NULL, " +
+                        "LONGITUDE NUMBER, " +
+                        "LATITUDE NUMBER, " +
+                        "ATTACHMENT_IMAGE VARCHAR2(100), " +
+                        "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW')), " +
+                        "CREATEDBY NUMBER(10, 0) NOT NULL, " +
+                        "UPDATED DATETIME NOT NULL DEFAULT (DATETIME('NOW')), " +
+                        "UPDATEDBY NUMBER(10, 0) NOT NULL, " +
+                        "ISUPDATED BOOLEAN DEFAULT 'N', " +
+                        "ISSYNCED BOOLEAN DEFAULT 'N', " +
+                        "ISDELETED BOOLEAN DEFAULT 'N', " +
+                        "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
+                        "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
+                        "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID), " +
+                        "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID), " +
+                        "FOREIGN KEY(AD_USER_UUID) REFERENCES AD_USER(AD_USER_UUID) " +
+                        ");");
+            }
         } catch (SQLException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE
                     + e.getMessage());

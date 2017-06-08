@@ -75,6 +75,7 @@ public class PBSRecruitController extends PBSController {
     public static final String ARG_EMPLOYEE = "ARG_EMPLOYEE";
     public static final String GET_IDTYPE_EVENT = "GET_IDTYPE_EVENT";
     public static final String IDTYPE_LIST = "IDTYPE_LIST";
+    public static final String GET_EMPLOYEEBYTAG_EVENT = "GET_EMPLOYEEBYTAG_EVENT";
     /**
      *
      * @param base
