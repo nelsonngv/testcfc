@@ -23,7 +23,6 @@ import com.pbasolutions.android.api.PBSIServerAPI;
 import com.pbasolutions.android.api.PBSServerAPI;
 import com.pbasolutions.android.model.MAttendance;
 import com.pbasolutions.android.model.MAttendanceLine;
-import com.pbasolutions.android.model.MAttendanceLog;
 import com.pbasolutions.android.model.MAttendanceSearchItem;
 import com.pbasolutions.android.model.MDeploy;
 import com.pbasolutions.android.model.MEmployee;
@@ -567,45 +566,6 @@ public class AttendanceTask implements Callable<Bundle> {
             }
         }
         return pair;
-    }
-
-    private Bundle createAttendanceTracking() {
-        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-        ContentValues cv = input.getParcelable(PBSAttendanceController.ARG_CONTENTVALUES);
-        cv.put(MAttendanceLog.HR_ATTENDANCELOG_ID_COL, "(SELECT IFNULL(MAX(" + MAttendanceLog.HR_ATTENDANCELOG_ID_COL + "), 0) + 1 FROM " + MAttendanceLog.TABLENAME + ")");
-        cv.put(MAttendanceLog.HR_ATTENDANCELOG_UUID_COL, UUID.randomUUID().toString());
-        cv.put(MAttendanceLog.AD_USER_UUID_COL, PandoraMain.instance.getGlobalVariable().getAd_user_id());
-
-        ops.add(ContentProviderOperation
-                .newInsert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
-                .withValues(cv)
-                .build());
-
-        try {
-            ContentProviderResult results[] = cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops);
-            for(ContentProviderResult result : results) {
-                boolean resultFlag = false;
-                if (result.uri != null) {
-                    resultFlag = ModelConst.getURIResult(result.uri);
-                } else {
-                    if (result.count != null && result.count != 0) {
-                        resultFlag = true;
-                    }
-                }
-                if (!resultFlag) {
-                    output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-                    output.putString(PandoraConstant.ERROR, "Fail to sync Project Tasks.");
-                    return output;
-                }
-            }
-            output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-            output.putString(PandoraConstant.RESULT, "Successfully synced Project Task");
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
-        } catch (OperationApplicationException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        return output;
     }
 
 
