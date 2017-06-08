@@ -79,11 +79,6 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) view.findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
-
-        if (_UUID != null && !_UUID.equals("")) {
-            complete.setVisible(false);
-            complete.setEnabled(false);
-        }
     }
 
     @Override
@@ -125,6 +120,11 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
         complete = menu.add(0, COOMPLETE_ID, 2, "Complete");
         complete.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         complete.setIcon(R.drawable.ic_done);
+
+        if (_UUID != null && !_UUID.equals("")) {
+            complete.setVisible(false);
+            complete.setEnabled(false);
+        }
     }
 
     @Override
