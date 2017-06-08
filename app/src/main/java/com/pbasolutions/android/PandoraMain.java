@@ -41,8 +41,6 @@ import android.widget.Toast;
 import com.android.volley.toolbox.RequestFuture;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
-import com.pbasolutions.android.fragment.ATrackScanEmpIDFragment;
-import com.pbasolutions.android.fragment.ATrackScanLocFragment;
 import com.pbasolutions.android.fragment.ApplicantDetailsFragment;
 import com.pbasolutions.android.fragment.ApplicantFragment;
 import com.pbasolutions.android.fragment.AssetFragment;
@@ -73,7 +71,6 @@ import com.pbasolutions.android.fragment.NewRequisitionLineFragment;
 import com.pbasolutions.android.fragment.NewSurveyPagerFragment;
 import com.pbasolutions.android.fragment.NewSurveySignFragment;
 import com.pbasolutions.android.fragment.NewSurveyStartFragment;
-import com.pbasolutions.android.fragment.NewSurveySummaryFragment;
 import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
 import com.pbasolutions.android.fragment.ProjTaskFragment;
 import com.pbasolutions.android.fragment.RecruitFragment;
@@ -153,7 +150,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      *  Progress Indicator
      */
     private ProgressDialog progressDialog;
-    private int             progressShowCount = 0;
+    private int progressShowCount = 0;
 
     public static PandoraMain instance;
 
@@ -162,17 +159,16 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     public static final int FRAGMENT_DEFAULT = -1;
     public static final int FRAGMENT_ATTENDANCE = 0;
-    public static final int FRAGMENT_ATTENDANCE_TRACKING = 1;
-    public static final int FRAGMENT_RECRUIT = 2;
+    public static final int FRAGMENT_RECRUIT = 1;
 //    public static final int FRAGMENT_DEPLOY =1;
-    public static final int FRAGMENT_ASSET = 3;
-    public static final int FRAGMENT_REQUISITION = 4;
-    public static final int FRAGMENT_TASK = 5;
-    public static final int FRAGMENT_SURVEY = 6;
-    public static final int FRAGMENT_CHECKPOINTS = 7;
-    public static final int FRAGMENT_CHECKPOINT_SEQ = 8;
-    public static final int FRAGMENT_BROADCAST = 9;
-    public static final int SETTING_MENU = 10;
+    public static final int FRAGMENT_ASSET = 2;
+    public static final int FRAGMENT_REQUISITION = 3;
+    public static final int FRAGMENT_TASK = 4;
+    public static final int FRAGMENT_SURVEY = 5;
+    public static final int FRAGMENT_CHECKPOINTS = 6;
+    public static final int FRAGMENT_CHECKPOINT_SEQ = 7;
+    public static final int FRAGMENT_BROADCAST = 8;
+    public static final int SETTING_MENU = 9;
     public static final int FRAGMENT_CHECKPOINTS_DETAILS = 50;
     public static final int FRAGMENT_NEW_CHECK_IN = 51;
     public static final int FRAGMENT_ACCOUNT = 80;
@@ -219,7 +215,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public String[] menuList = null;
 
     //menu list constant
-    public static final String[] MENU_LIST = {"Attendance", "Attendance Tracking", "Recruit", "Asset", "Requisition", "Task",
+    public static final String[] MENU_LIST = {"Attendance", "Recruit", "Asset", "Requisition", "Task",
             "Survey", "Check In", "Check Point", "Broadcast", "Setting"};
 
     //welcome dialog indicator
@@ -417,8 +413,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             titleID = R.string.title_survey;
         } else if (NewSurveyStartFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_new_survey;
-        } else if (ATrackScanLocFragment.class.getName().equalsIgnoreCase(fragClassName)){
-            titleID = R.string.title_attendance_tracking;
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -932,12 +926,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 break;
             }
 
-            case FRAGMENT_ATTENDANCE_TRACKING: {
-                fragment = new ATrackScanLocFragment();
-                title = getString(R.string.title_survey);
-                break;
-            }
-
             default:
                 break;
         }
@@ -1011,16 +999,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                             fragment = new NewCheckInFragment();
                             ((NewCheckInFragment) fragment).setNfcIntent(intent);
                             updateFragment(fragment, "New Check In", false);
-                        }
-                        else if (fragment != null && fragment instanceof ATrackScanLocFragment) {
-                            fragment = new ATrackScanLocFragment();
-                            ((ATrackScanLocFragment) fragment).setNfcIntent(intent);
-                            updateFragment(fragment, "Attendance Tracking", false);
-                        }
-                        else if (fragment != null && fragment instanceof ATrackScanEmpIDFragment) {
-                            fragment = new ATrackScanEmpIDFragment();
-                            ((ATrackScanEmpIDFragment) fragment).setNfcIntent(intent);
-                            updateFragment(fragment, "Attendance Tracking", false);
                         }
                     }
                 }
