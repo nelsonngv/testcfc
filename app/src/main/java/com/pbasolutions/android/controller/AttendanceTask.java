@@ -100,9 +100,6 @@ public class AttendanceTask implements Callable<Bundle> {
             case PBSAttendanceController.GET_PROJECTLOCATION_BY_TAG_EVENT: {
                 return getProjectLocationByTag();
             }
-            case PBSAttendanceController.IS_ATTANDENCE_ACTION_DUPLICATE_EVENT: {
-                return isAttendanceActionDuplicate();
-            }
             case PBSAttendanceController.CREATE_ATTENDANCETRACKING_EVENT: {
                 return createAttendanceTracking();
             }
@@ -599,33 +596,6 @@ public class AttendanceTask implements Callable<Bundle> {
         return output;
     }
 
-    private Bundle isAttendanceActionDuplicate() {
-        boolean isDuplicate = true;
-        String empUUID = (String) input.get(PBSRecruitController.ARG_EMP_UUID);
-        String projLocUUID = (String) input.get(PBSAttendanceController.ARG_PROJECTLOCATION_UUID);
-        String type = (String) input.get(PBSAttendanceController.ARG_ATTENDANCE_TRACKING_TYPE);
-
-        String[] projection = {MAttendanceLog.CHECKINOUTTYPE_COL};
-        String selection = ModelConst.C_BPARTNER_UUID_COL + "=? AND " + ModelConst.C_PROJECTLOCATION_UUID_COL + "=?";
-        String[] selectionArg = {empUUID, projLocUUID};
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(MAttendanceLog.TABLENAME),
-                projection, selection, selectionArg, MAttendanceLog.HR_ATTENDANCELOG_ID_COL + " DESC LIMIT 1");
-
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            if (!cursor.getString(0).equals(type))
-                isDuplicate = false;
-        }
-        // if first time
-        else if (type.equals(PBSAttendanceController.ATTENDANCE_TRACKING_TYPE_IN))
-            isDuplicate = false;
-
-        if (cursor != null)
-            cursor.close();
-        output.putBoolean(PBSAttendanceController.ARG_IS_DUPLICATE, isDuplicate);
-        return output;
-    }
-
     private Bundle createAttendanceTracking() {
         PandoraContext appContext = PandoraMain.instance.getGlobalVariable();
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
@@ -657,8 +627,7 @@ public class AttendanceTask implements Callable<Bundle> {
 
         cv.put(ModelConst.AD_ORG_UUID_COL, ad_org_uuid);
         cv.put(ModelConst.AD_CLIENT_UUID_COL, ad_client_uuid);
-        cv.put(MAttendanceLog.HR_ATTENDANCELOG_ID_COL, "(SELECT IFNULL(MAX(" + MAttendanceLog.HR_ATTENDANCELOG_ID_COL + "), 0) + 1 FROM " + MAttendanceLog.TABLENAME + ")");
-        cv.put(MAttendanceLog.HR_ATTENDANCELOG_UUID_COL, UUID.randomUUID().toString());
+        cv.put(MAttendanceLog.HR_ENTRYLOG_UUID_COL, UUID.randomUUID().toString());
         cv.put(ModelConst.CREATEDBY_COL, ad_user_uuid);
         cv.put(ModelConst.UPDATEDBY_COL, ad_user_uuid);
 

@@ -55,10 +55,10 @@ public class ATrackScanLocFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
-        checkInController = new PBSCheckInController(getActivity());
-        attendanceCont = new PBSAttendanceController(getActivity());
         context = (PandoraMain) getActivity();
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(context);
+        checkInController = new PBSCheckInController(context);
+        attendanceCont = new PBSAttendanceController(context);
     }
 
     @Override
@@ -89,6 +89,7 @@ public class ATrackScanLocFragment extends Fragment {
                         resultBundle2 = checkInController.triggerEvent(PBSCheckInController.PROCESS_NFC, inputBundle, resultBundle2, getNfcIntent());
                         String tagID = resultBundle2.getString(PBSCheckInController.NFC_TAG_ID);
                         startCheckInOut(tagID);
+                        setNfcIntent(null);
                     } catch (Exception e) {
                         Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
                     }
@@ -111,7 +112,7 @@ public class ATrackScanLocFragment extends Fragment {
             PBSAttendanceController.isKioskMode = projLocations.get(2).equals("Y") ? true : false;
             PBSAttendanceController.isPhoto = projLocations.get(3).equals("Y") ? true : false;
             ((PandoraMain) getActivity()).
-                    displayView(PandoraMain.FRAGMENT_NEW_SURVEY, false);
+                    displayView(PandoraMain.FRAGMENT_ATTENDANCE_TRACKING_EMPID, false);
         }
         else PandoraHelper.showWarningMessage(getActivity(), getString(R.string.invalid_tag));
     }

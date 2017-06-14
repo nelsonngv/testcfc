@@ -128,6 +128,7 @@
     <string name="label_leavetype">Leave Type</string>
     <string name="label_daytype">Day Type</string>
     <string name="label_ok">OK</string>
+    <string name="label_cancel">Cancel</string>
     <string name="label_sync">Initial Syncing. Please wait</string>
     <!--
      Asset list

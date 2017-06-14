@@ -6,44 +6,44 @@ import com.pbasolutions.android.json.PBSJson;
  * Created by tinker on 4/24/16.
  */
 public class MAttendanceLog extends PBSJson {
-    public static final String TABLENAME = "HR_AttendanceLog";
-    public static final String HR_ATTENDANCELOG_ID_COL = "HR_AttendanceLog_ID";
-    public static final String HR_ATTENDANCELOG_UUID_COL = "HR_AttendanceLog_UUID";
+    public static final String TABLENAME = "HR_EntryLog";
+    public static final String HR_ENTRYLOG_ID_COL = "HR_EntryLog_ID";
+    public static final String HR_ENTRYLOG_UUID_COL = "HR_EntryLog_UUID";
     public static final String C_PROJECTLOCATION_ID_COL = "C_ProjectLocation_ID";
     public static final String C_PROJECTLOCATION_UUID_COL = "C_ProjectLocation_UUID";
     public static final String C_BPARTNER_UUID_COL = "C_BPartner_UUID";
-    public static final String CHECKINOUTDATE_COL = "CheckInOutDate";
-    public static final String CHECKINOUTTYPE_COL = "CheckInOutType";
+    public static final String DATETRX_COL = "DateTrx";
     public static final String LONGITUDE_COL = "Longitude";
     public static final String LATITUDE_COL = "Latitude";
     public static final String ATTACHMENT_IMAGE_COL = "Attachment_Image";
+    public static final String NFCTAG_COL = "NfcTag";
+    public static final String DEVICENO_COL = "DeviceNo";
 
-    private String HR_AttendanceLog_ID;
-    private String HR_AttendanceLog_UUID;
+    private String HR_EntryLog_ID;
+    private String HR_EntryLog_UUID;
     private int C_ProjectLocation_ID;
     private String C_ProjectLocation_UUID;
     private String C_BPartner_UUID;
-    private String CheckInOutDate;
-    private String CheckInOutType;
+    private String DateTrx;
     private String Longitude;
     private String Latitude;
     private String Attachment_Image;
 
 
-    public String getHR_AttendanceLog_ID() {
-        return HR_AttendanceLog_ID;
+    public String getHR_EntryLog_ID() {
+        return HR_EntryLog_ID;
     }
 
-    public void setHR_AttendanceLog_ID(String HR_AttendanceLog_ID) {
-        this.HR_AttendanceLog_ID = HR_AttendanceLog_ID;
+    public void setHR_EntryLog_ID(String HR_EntryLog_ID) {
+        this.HR_EntryLog_ID = HR_EntryLog_ID;
     }
 
-    public String getHR_AttendanceLog_UUID() {
-        return HR_AttendanceLog_UUID;
+    public String getHR_EntryLog_UUID() {
+        return HR_EntryLog_UUID;
     }
 
-    public void setHR_AttendanceLog_UUID(String HR_AttendanceLog_UUID) {
-        this.HR_AttendanceLog_UUID = HR_AttendanceLog_UUID;
+    public void setHR_EntryLog_UUID(String HR_EntryLog_UUID) {
+        this.HR_EntryLog_UUID = HR_EntryLog_UUID;
     }
 
     public int getC_ProjectLocation_ID() {
@@ -70,20 +70,12 @@ public class MAttendanceLog extends PBSJson {
         C_BPartner_UUID = c_BPartner_UUID;
     }
 
-    public String getCheckInOutDate() {
-        return CheckInOutDate;
+    public String getDateTrx() {
+        return DateTrx;
     }
 
-    public void setCheckInOutDate(String checkInOutDate) {
-        CheckInOutDate = checkInOutDate;
-    }
-
-    public String getCheckInOutType() {
-        return CheckInOutType;
-    }
-
-    public void setCheckInOutType(String checkInOutType) {
-        CheckInOutType = checkInOutType;
+    public void setDateTrx(String dateTrx) {
+        DateTrx = dateTrx;
     }
 
     public String getLongitude() {

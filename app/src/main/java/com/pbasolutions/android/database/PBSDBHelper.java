@@ -1220,18 +1220,19 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                     ");");
 
-            //HR_ATTENDANCELOG
-            db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
-                    "HR_ATTENDANCELOG_ID INTEGER NOT NULL, " +
-                    "HR_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
+            //HR_ENTRYLOG
+            db.execSQL("CREATE TABLE HR_ENTRYLOG( " +
+                    "HR_ENTRYLOG_ID NUMBER(10, 0) DEFAULT NULL, " +
+                    "HR_ENTRYLOG_UUID TEXT PRIMARY KEY NOT NULL, " +
                     "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
                     "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
                     "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
                     "C_BPARTNER_UUID TEXT NOT NULL, " +
-                    "CHECKINOUTDATE DATETIME NOT NULL, " +
-                    "CHECKINOUTTYPE CHAR(1) DEFAULT 'I' NOT NULL, " +
+                    "DATETRX DATETIME NOT NULL, " +
                     "LONGITUDE NUMBER, " +
                     "LATITUDE NUMBER, " +
+                    "NFCTAG TEXT, " +
+                    "DEVICENO VARCHAR2(20), " +
                     "ATTACHMENT_IMAGE VARCHAR2(100), " +
                     "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW')), " +
                     "CREATEDBY NUMBER(10, 0) NOT NULL, " +
@@ -1489,18 +1490,19 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD TAGID TEXT NULL");
                 db.execSQL("ALTER TABLE C_BPARTNER ADD TAGID TEXT NULL");
 
-                //HR_ATTENDANCELOG
-                db.execSQL("CREATE TABLE HR_ATTENDANCELOG( " +
-                        "HR_ATTENDANCELOG_ID INTEGER NOT NULL, " +
-                        "HR_ATTENDANCELOG_UUID TEXT PRIMARY KEY NOT NULL, " +
+                //HR_ENTRYLOG
+                db.execSQL("CREATE TABLE HR_ENTRYLOG( " +
+                        "HR_ENTRYLOG_ID NUMBER(10, 0) DEFAULT NULL, " +
+                        "HR_ENTRYLOG_UUID TEXT PRIMARY KEY NOT NULL, " +
                         "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
                         "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
                         "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
                         "C_BPARTNER_UUID TEXT NOT NULL, " +
-                        "CHECKINOUTDATE DATETIME NOT NULL, " +
-                        "CHECKINOUTTYPE CHAR(1) DEFAULT 'I' NOT NULL, " +
+                        "DATETRX DATETIME NOT NULL, " +
                         "LONGITUDE NUMBER, " +
                         "LATITUDE NUMBER, " +
+                        "NFCTAG TEXT, " +
+                        "DEVICENO VARCHAR2(20), " +
                         "ATTACHMENT_IMAGE VARCHAR2(100), " +
                         "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW')), " +
                         "CREATEDBY NUMBER(10, 0) NOT NULL, " +

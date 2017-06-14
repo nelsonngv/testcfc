@@ -186,6 +186,9 @@ public class PBSContentProvider extends ContentProvider {
             // C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE
             matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TABLE, ModelConst.C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TOKEN);
 
+            // HR_ENTRYLOG
+            matcher.addURI(PBSAccountInfo.ACCOUNT_AUTHORITY, ModelConst.HR_ENTRYLOG_TABLE, ModelConst.HR_ENTRYLOG_TOKEN);
+
         } catch(Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
         }
@@ -582,6 +585,12 @@ public class PBSContentProvider extends ContentProvider {
                 return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
             }
 
+            case ModelConst.HR_ENTRYLOG_TOKEN: {
+                SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+                builder.setTables(ModelConst.HR_ENTRYLOG_TABLE);
+                return builder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+
             default:
                 return null;
         }
@@ -644,6 +653,7 @@ public class PBSContentProvider extends ContentProvider {
             case ModelConst.C_SURVEYRESPONSE_TOKEN:
             case ModelConst.C_SURVEYTEMPLATE_TOKEN:
             case ModelConst.C_SURVEYTEMPLATEQUESTION_TOKEN:
+            case ModelConst.HR_ENTRYLOG_TOKEN:
                 return ModelConst.CONTENT_TYPE_DIR;
             default: {
                 Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + "URI " + uri + " is not supported.");
@@ -826,6 +836,10 @@ public class PBSContentProvider extends ContentProvider {
             }
             case ModelConst.C_SURVEYTEMPLATEQUESTION_TOKEN: {
                 id = db.insert(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE, null, values);
+                break;
+            }
+            case ModelConst.HR_ENTRYLOG_TOKEN: {
+                id = db.insert(ModelConst.HR_ENTRYLOG_TABLE, null, values);
                 break;
             }
             default: {
@@ -1012,6 +1026,10 @@ public class PBSContentProvider extends ContentProvider {
                 rowsDeleted = db.delete(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE, selection, selectionArgs);
                 break;
             }
+            case ModelConst.HR_ENTRYLOG_TOKEN: {
+                rowsDeleted = db.delete(ModelConst.HR_ENTRYLOG_TABLE, selection, selectionArgs);
+                break;
+            }
 
             default:{
                 Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + "URI " + uri + " is not supported.");
@@ -1191,6 +1209,10 @@ public class PBSContentProvider extends ContentProvider {
             }
             case ModelConst.C_SURVEYTEMPLATEQUESTION_TOKEN: {
                 rowsUpdated = db.update(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE, values, selection, selectionArgs);
+                break;
+            }
+            case ModelConst.HR_ENTRYLOG_TOKEN: {
+                rowsUpdated = db.update(ModelConst.HR_ENTRYLOG_TABLE, values, selection, selectionArgs);
                 break;
             }
             default:{

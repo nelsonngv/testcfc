@@ -59,12 +59,6 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
 
     public static final String CREATE_ATTENDANCETRACKING_EVENT = "CREATE_ATTENDANCETRACKING_EVENT";
 
-    public static final String IS_ATTANDENCE_ACTION_DUPLICATE_EVENT = "IS_ATTANDENCE_ACTION_DUPLICATE_EVENT";
-    public static final String ARG_ATTENDANCE_TRACKING_TYPE = "ARG_ATTENDANCE_TRACKING_TYPE";
-    public static final String ARG_IS_DUPLICATE = "ARG_IS_DUPLICATE";
-    public static final String ATTENDANCE_TRACKING_TYPE_IN = "I";
-    public static final String ATTENDANCE_TRACKING_TYPE_OUT = "O";
-
     public static String deployDate;
     public static String projectLocationId;
     public static String projectLocationName;

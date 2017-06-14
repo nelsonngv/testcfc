@@ -3,6 +3,8 @@ package com.pbasolutions.android.fragment;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,7 @@ public class ATrackDoneFragment extends Fragment {
      * Class tag name.
      */
     private static final String TAG = ATrackDoneFragment.class.getSimpleName();
-    private TextView tvName, tvCheckInOut;
+    private TextView tvName, tvLocation;
 
     /**
      * Constructor method.
@@ -38,16 +40,10 @@ public class ATrackDoneFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.atrack_done, container, false);
         tvName = (TextView) rootView.findViewById(R.id.tvName);
-        tvCheckInOut = (TextView) rootView.findViewById(R.id.tvCheckInOut);
+        tvLocation = (TextView) rootView.findViewById(R.id.tvLocation);
 
         tvName.setText(PBSAttendanceController.empName);
-        Bundle bundle = getArguments();
-        if (bundle == null || bundle.get(ATrackCheckInOutFragment.ARG_ATTENDANCETYPE) == null) {
-            String inOutType = bundle.get(ATrackCheckInOutFragment.ARG_ATTENDANCETYPE).toString();
-            if (inOutType.equals(PBSAttendanceController.ATTENDANCE_TRACKING_TYPE_IN))
-                tvCheckInOut.setText(getString(R.string.checked_in_at, PBSAttendanceController.projectLocationName));
-            else tvCheckInOut.setText(getString(R.string.checked_out_at, PBSAttendanceController.projectLocationName));
-        }
+        tvLocation.setText(PBSAttendanceController.projectLocationName);
         redirect();
 
         return rootView;
@@ -59,9 +55,15 @@ public class ATrackDoneFragment extends Fragment {
             }
 
             public void onFinish() {
-                if (PBSAttendanceController.isKioskMode)
-                    ((PandoraMain) getActivity()).displayView(PandoraMain.FRAGMENT_ATTENDANCE_TRACKING_INOUT, false);
-
+                PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.popBackStack();
+                fragmentManager.popBackStack();
+                //go back 1st attendance tracking loc tag page else emp tag page
+                if (!PBSAttendanceController.isKioskMode) {
+                    fragmentManager.popBackStack();
+                    fragmentManager.popBackStack();
+                }
             }
         }.start();
     }

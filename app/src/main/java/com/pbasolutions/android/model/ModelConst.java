@@ -111,6 +111,7 @@ public class ModelConst {
     public static final String C_SURVEYTEMPLATEQUESTION_TABLE = "C_SurveyTemplateQuestion";
     public static final String C_SURVEY_JOIN_TEMPLATE_TABLE = "C_Survey_Join_Template";
     public static final String C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TABLE = "C_Survey_Join_Template_Join_Question_Join_Response";
+    public static final String HR_ENTRYLOG_TABLE = "HR_EntryLog";
 
 
 
@@ -159,6 +160,7 @@ public class ModelConst {
     public static final int C_SURVEYTEMPLATE_TOKEN = 3800;
     public static final int C_SURVEYTEMPLATEQUESTION_TOKEN = 3900;
     public static final int HR_IDENTITY_TOKEN = 4000;
+    public static final int HR_ENTRYLOG_TOKEN = 4100;
 
     /**
      * Evaluate which table to be joined and provide table tokens for that.
@@ -214,7 +216,8 @@ public class ModelConst {
                     ModelConst.C_SURVEY_TABLE,
                     ModelConst.C_SURVEYRESPONSE_TABLE,
                     ModelConst.C_SURVEYTEMPLATE_TABLE,
-                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE
+                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE,
+                    ModelConst.HR_ENTRYLOG_TABLE
             };
 
     /**
@@ -225,7 +228,8 @@ public class ModelConst {
                     ModelConst.M_CHECKIN_TABLE,
                     ModelConst.HR_JOBAPPLICATION_TABLE,
                     ModelConst.C_SURVEY_TABLE,
-                    ModelConst.C_SURVEYRESPONSE_TABLE
+                    ModelConst.C_SURVEYRESPONSE_TABLE,
+                    ModelConst.HR_ENTRYLOG_TABLE
             };
 
     /**

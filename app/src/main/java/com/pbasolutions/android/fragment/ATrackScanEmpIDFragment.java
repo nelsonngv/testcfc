@@ -1,17 +1,28 @@
 package com.pbasolutions.android.fragment;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,10 +30,14 @@ import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
+import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSAttendanceController;
+import com.pbasolutions.android.controller.PBSAuthenticatorController;
 import com.pbasolutions.android.controller.PBSCheckInController;
 import com.pbasolutions.android.controller.PBSRecruitController;
+import com.pbasolutions.android.json.PBSLoginJSON;
+import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.model.MAttendanceLog;
 import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
@@ -37,22 +52,23 @@ import java.util.TimeZone;
 /**
  * Created by pbadell on 10/5/15.
  */
-public class ATrackScanEmpIDFragment extends PBSDetailsFragment {
+public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABackKeyListener {
     /**
      * Class tag name.
      */
     private static final String TAG = ATrackScanEmpIDFragment.class.getSimpleName();
+    private static final int CANCEL_ID = 1;
     private Intent nfcIntent = null;
     private NfcAdapter mNfcAdapter;
     private PBSCheckInController checkInController;
     private PBSRecruitController recruitCont;
     private PBSAttendanceController attendanceCont;
+    private PBSAuthenticatorController authController;
     private PandoraMain context;
     private ProgressBar progressBar;
     private TextView tvDesc;
     private String picturePath;
     private ContentValues cv;
-    private Bundle bundle;
 
     /**
      * Constructor method.
@@ -71,11 +87,16 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(getActivity());
-        checkInController = new PBSCheckInController(getActivity());
-        recruitCont = new PBSRecruitController(getActivity());
-        attendanceCont = new PBSAttendanceController(getActivity());
+        if (PBSAttendanceController.isKioskMode) {
+            setHasOptionsMenu(true);
+            PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
         context = (PandoraMain) getActivity();
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(context);
+        checkInController = new PBSCheckInController(context);
+        recruitCont = new PBSRecruitController(context);
+        attendanceCont = new PBSAttendanceController(context);
+        authController = new PBSAuthenticatorController(context);
     }
 
     @Override
@@ -105,6 +126,7 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment {
                         resultBundle2 = checkInController.triggerEvent(PBSCheckInController.PROCESS_NFC, inputBundle, resultBundle2, getNfcIntent());
                         String tagID = resultBundle2.getString(PBSCheckInController.NFC_TAG_ID);
                         checkInOut(tagID);
+                        setNfcIntent(null);
                     } catch (Exception e) {
                         Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
                     }
@@ -130,12 +152,114 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment {
 
     }
 
-    protected void checkInOut(String tagID) {
-        bundle = getArguments();
-        if (bundle == null || bundle.get(ATrackCheckInOutFragment.ARG_ATTENDANCETYPE) == null)
-            return;
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        MenuItem exit;
+        exit = menu.add(0, CANCEL_ID, 0, getString(R.string.label_cancel));
+        exit.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        exit.setIcon(R.drawable.x);
+    }
 
-        String inOutType = bundle.get(ATrackCheckInOutFragment.ARG_ATTENDANCETYPE).toString();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case CANCEL_ID: {
+                try {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getString(R.string.label_password));
+
+                    LinearLayout ll = new LinearLayout(getActivity());
+                    final EditText input = new EditText(getActivity());
+                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(50, 0, 50, 0);
+                    input.setLayoutParams(layoutParams);
+                    ll.addView(input);
+                    builder.setView(ll);
+
+                    builder.setPositiveButton(getString(R.string.label_ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final Bundle bundle = new Bundle();
+                            bundle.putString(PBSAuthenticatorController.ARG_ACCOUNT_NAME, context.getGlobalVariable().getAd_user_name());
+                            bundle.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
+                            bundle.putString(PBSAuthenticatorController.USER_PASS_ARG, input.getText().toString());
+                            bundle.putString(PBSAuthenticatorController.ARG_AUTH_TYPE, PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
+                            bundle.putString(PBSAuthenticatorController.SERIAL_ARG, context.getGlobalVariable().getSerial());
+                            bundle.putString(PBSAuthenticatorController.SERVER_URL_ARG, context.getGlobalVariable().getServer_url());
+
+                            new LoginAsyncTask().execute(bundle);
+                        }
+                    });
+
+                    builder.setNegativeButton(getString(R.string.label_cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                } catch (Exception e) {
+                    Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
+                }
+                return  true;
+            }
+            default: return false;
+        }
+    }
+
+    @Override
+    public boolean onBackKeyPressed() {
+        if (PBSAttendanceController.isKioskMode)
+            return false;
+        else {
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.popBackStack();
+            return true;
+        }
+    }
+
+    private class LoginAsyncTask extends AsyncTask<Bundle, Void, Bundle> {
+        @Override
+        protected void onPreExecute() {
+            context.showProgressDialog("Loading...");
+        }
+
+        @Override
+        protected Bundle doInBackground(Bundle... params) {
+            Bundle resultBundle = new Bundle();
+            resultBundle = authController.triggerEvent(PBSAuthenticatorController.SUBMIT_LOGIN,
+                    params[0], resultBundle, null);
+            return resultBundle;
+        }
+
+        protected void onPostExecute(Bundle resultBundle) {
+            context.dismissProgressDialog();
+            if (resultBundle.getString(PandoraConstant.ERROR) != null) {
+                PandoraHelper.showMessage(PandoraMain.instance, resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)));
+                return;
+            }
+
+            final PBSLoginJSON loginJSON = (PBSLoginJSON) resultBundle.getSerializable(authController.PBS_LOGIN_JSON);
+            if (loginJSON != null) {
+                if (loginJSON.getSuccess().equals("TRUE")) {
+                    PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    fragmentManager.popBackStack();
+                    fragmentManager.popBackStack();
+                } else {
+                    PandoraHelper.showAlertMessage((PandoraMain) getActivity(),
+                            "Invalid username or password", PandoraConstant.ERROR, "Retry", "Ok");
+                }
+            }
+        }
+    }
+
+    protected void checkInOut(String tagID) {
         Date date = new Date();
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dt.setTimeZone(TimeZone.getDefault());
@@ -158,34 +282,16 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment {
                 String projLocUUID = ModelConst.mapIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_UUID_COL, PBSAttendanceController.projectLocationId,
                         ModelConst.C_PROJECTLOCATION_ID_COL, getActivity().getContentResolver());
 
-                // check if check in/out action is duplicate, example check out before check in
-                input = new Bundle();
-                input.putString(PBSRecruitController.ARG_EMP_UUID, empUUID);
-                input.putString(PBSAttendanceController.ARG_PROJECTLOCATION_UUID, projLocUUID);
-                input.putString(PBSAttendanceController.ARG_ATTENDANCE_TRACKING_TYPE, inOutType);
-                result = attendanceCont.triggerEvent(PBSAttendanceController.IS_ATTANDENCE_ACTION_DUPLICATE_EVENT,
-                        input, new Bundle(), null);
+                cv = new ContentValues();
+                cv.put(MAttendanceLog.C_PROJECTLOCATION_UUID_COL, projLocUUID);
+                cv.put(MAttendanceLog.C_BPARTNER_UUID_COL, empUUID);
+                cv.put(MAttendanceLog.DATETRX_COL, time);
+                cv.put(MAttendanceLog.LONGITUDE_COL, longitude);
+                cv.put(MAttendanceLog.LATITUDE_COL, latitude);
 
-                if (!result.getBoolean(PBSAttendanceController.ARG_IS_DUPLICATE)) {
-                    cv = new ContentValues();
-                    cv.put(MAttendanceLog.C_PROJECTLOCATION_UUID_COL, projLocUUID);
-                    cv.put(MAttendanceLog.C_BPARTNER_UUID_COL, empUUID);
-                    cv.put(MAttendanceLog.CHECKINOUTDATE_COL, time);
-                    cv.put(MAttendanceLog.CHECKINOUTTYPE_COL, inOutType);
-                    cv.put(MAttendanceLog.LONGITUDE_COL, longitude);
-                    cv.put(MAttendanceLog.LATITUDE_COL, latitude);
-
-                    if (PBSAttendanceController.isPhoto)
-                        takePhoto();
-                    else insertAttendance();
-                } else {
-                    if (inOutType.equals(PBSAttendanceController.ATTENDANCE_TRACKING_TYPE_IN))
-                        PandoraHelper.showWarningMessage(getActivity(), getString(R.string.pls_checkout_before_checkin));
-                    else PandoraHelper.showWarningMessage(getActivity(), getString(R.string.pls_checkin_before_checkout));
-
-                    Fragment fragment = new ATrackCheckInOutFragment();
-                    ((PandoraMain) getActivity()).updateFragment(fragment, getString(R.string.title_survey), false);
-                }
+                if (PBSAttendanceController.isPhoto)
+                    takePhoto();
+                else insertAttendance();
             }
             else PandoraHelper.showWarningMessage(getActivity(), getString(R.string.invalid_tag));
         }
@@ -232,7 +338,6 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment {
                 input, new Bundle(), null);
 
         Fragment fragment = new ATrackDoneFragment();
-        fragment.setArguments(bundle);
-        ((PandoraMain) getActivity()).updateFragment(fragment, getString(R.string.title_survey), false);
+        ((PandoraMain) getActivity()).updateFragment(fragment, getString(R.string.title_attendance_tracking), false);
     }
 }

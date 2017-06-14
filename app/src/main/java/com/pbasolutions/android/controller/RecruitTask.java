@@ -522,7 +522,7 @@ public class RecruitTask extends Task {
     private Bundle getEmployeeByTag() {
         String tagID = (String) input.get(PBSAttendanceController.ARG_TAGID);
 
-        String[] projection = {ModelConst.C_BPARTNER_ID_COL, ModelConst.NAME_COL};
+        String[] projection = {ModelConst.C_BPARTNER_UUID_COL, ModelConst.NAME_COL};
         String[] selectionArg = {tagID};
 
         try {

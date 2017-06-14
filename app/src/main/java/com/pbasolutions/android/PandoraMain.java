@@ -4,11 +4,9 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.MediaScannerConnection;
@@ -30,7 +28,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,10 +35,8 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 //import com.google.firebase.iid.FirebaseInstanceId;
-import com.android.volley.toolbox.RequestFuture;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
-import com.pbasolutions.android.fragment.ATrackCheckInOutFragment;
 import com.pbasolutions.android.fragment.ATrackDoneFragment;
 import com.pbasolutions.android.fragment.ATrackScanEmpIDFragment;
 import com.pbasolutions.android.fragment.ATrackScanLocFragment;
@@ -94,9 +89,6 @@ import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by pbadell on 6/29/15.
@@ -187,9 +179,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public static final int FRAGMENT_START_SURVEY = 28;
     public static final int FRAGMENT_NEW_SURVEY = 29;
     public static final int FRAGMENT_SIGN_SURVEY = 30;
-    public static final int FRAGMENT_ATTENDANCE_TRACKING_INOUT = 31;
-    public static final int FRAGMENT_ATTENDANCE_TRACKING_EMPID = 32;
-    public static final int FRAGMENT_ATTENDANCE_TRACKING_DONE = 33;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING_EMPID = 31;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING_DONE = 32;
 
     /**
      * Toolbar menu id.
@@ -422,7 +413,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         } else if (NewSurveyStartFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_new_survey;
         } else if (ATrackScanLocFragment.class.getName().equalsIgnoreCase(fragClassName)
-                || ATrackCheckInOutFragment.class.getName().equalsIgnoreCase(fragClassName)
                 || ATrackScanEmpIDFragment.class.getName().equalsIgnoreCase(fragClassName)
                 || ATrackDoneFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_attendance_tracking;
@@ -945,12 +935,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 break;
             }
 
-            case FRAGMENT_ATTENDANCE_TRACKING_INOUT: {
-                fragment = new ATrackCheckInOutFragment();
-                title = getString(R.string.title_attendance_tracking);
-                break;
-            }
-
             case FRAGMENT_ATTENDANCE_TRACKING_EMPID: {
                 fragment = new ATrackScanEmpIDFragment();
                 title = getString(R.string.title_attendance_tracking);
@@ -1218,8 +1202,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    if(!isLoop)
+                    if(!isLoop) {
                         directToFragment();
+                        return;
+                    }
                 }
 
                 @Override
@@ -1278,6 +1264,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
     public void setGlobalVariable(PandoraContext globalVariable) {
         this.globalVariable = globalVariable;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PBSServerConst.cookieStore = null;
     }
 
 //    private class ReceiveMessages extends BroadcastReceiver

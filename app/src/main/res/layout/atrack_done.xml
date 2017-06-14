@@ -13,7 +13,7 @@
         android:paddingRight="30dp"
         android:textSize="14pt" />
     <TextView
-        android:id="@+id/tvCheckInOut"
+        android:id="@+id/tvLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -30,5 +30,5 @@
         android:paddingRight="30dp"
         android:textSize="14pt"
         android:text="@string/attendance_done"
-        android:layout_below="@id/tvCheckInOut" />
+        android:layout_below="@id/tvLocation" />
 </RelativeLayout>
