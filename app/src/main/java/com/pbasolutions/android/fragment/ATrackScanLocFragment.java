@@ -111,8 +111,7 @@ public class ATrackScanLocFragment extends Fragment {
             PBSAttendanceController.projectLocationName = projLocations.get(1);
             PBSAttendanceController.isKioskMode = projLocations.get(2).equals("Y") ? true : false;
             PBSAttendanceController.isPhoto = projLocations.get(3).equals("Y") ? true : false;
-            ((PandoraMain) getActivity()).
-                    displayView(PandoraMain.FRAGMENT_ATTENDANCE_TRACKING_EMPID, false);
+            ((PandoraMain) getActivity()).displayView(PandoraMain.FRAGMENT_ATTENDANCE_TRACKING_EMPID, false);
         }
         else PandoraHelper.showWarningMessage(getActivity(), getString(R.string.invalid_tag));
     }

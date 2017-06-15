@@ -13,11 +13,12 @@ import android.widget.TextView;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.controller.PBSAttendanceController;
+import com.pbasolutions.android.listener.PBABackKeyListener;
 
 /**
  * Created by pbadell on 10/5/15.
  */
-public class ATrackDoneFragment extends Fragment {
+public class ATrackDoneFragment extends Fragment implements PBABackKeyListener {
     /**
      * Class tag name.
      */
@@ -47,6 +48,11 @@ public class ATrackDoneFragment extends Fragment {
         redirect();
 
         return rootView;
+    }
+
+    @Override
+    public boolean onBackKeyPressed() {
+        return false;
     }
 
     protected void redirect() {
