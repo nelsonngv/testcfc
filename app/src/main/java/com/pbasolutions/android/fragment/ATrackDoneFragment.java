@@ -23,7 +23,7 @@ public class ATrackDoneFragment extends Fragment implements PBABackKeyListener {
      * Class tag name.
      */
     private static final String TAG = ATrackDoneFragment.class.getSimpleName();
-    private TextView tvName, tvLocation;
+    private TextView tvText;
 
     /**
      * Constructor method.
@@ -40,11 +40,8 @@ public class ATrackDoneFragment extends Fragment implements PBABackKeyListener {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.atrack_done, container, false);
-        tvName = (TextView) rootView.findViewById(R.id.tvName);
-        tvLocation = (TextView) rootView.findViewById(R.id.tvLocation);
-
-        tvName.setText(PBSAttendanceController.empName);
-        tvLocation.setText(PBSAttendanceController.projectLocationName);
+        tvText = (TextView) rootView.findViewById(R.id.tvText);
+        tvText.setText(getString(R.string.attendance_done1, PBSAttendanceController.empName, PBSAttendanceController.projectLocationName));
         redirect();
 
         return rootView;

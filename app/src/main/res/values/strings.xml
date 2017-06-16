@@ -330,11 +330,8 @@
     <string name="nfc_notsupport">Sorry, this device doesn\'t support NFC!</string>
     <string name="nfc_disabled">NFC is disabled</string>
     <string name="tap_nfc">Please tap on NFC</string>
-    <string name="checked_in_at">Checked in at %1$s</string>
-    <string name="checked_out_at">Checked out at %1$s</string>
-    <string name="attendance_done">Thank you for using our service!</string>
     <string name="invalid_tag">Invalid tag detected</string>
-    <string name="pls_checkout_before_checkin">Please check out before check in</string>
-    <string name="pls_checkin_before_checkout">Please check in before check out</string>
+    <string name="attendance_done1">Hi %1$s, you have marked an attendance at %2$s.</string>
+    <string name="attendance_done2">Thank you for using our service!</string>
 
 </resources>

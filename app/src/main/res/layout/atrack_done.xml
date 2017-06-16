@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center">
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/tvText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -13,22 +13,14 @@
         android:paddingRight="30dp"
         android:textSize="14pt" />
     <TextView
-        android:id="@+id/tvLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:textSize="14pt"
-        android:layout_below="@id/tvName" />
-    <TextView
         android:id="@+id/tvDone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:paddingTop="20dp"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:textSize="14pt"
-        android:text="@string/attendance_done"
-        android:layout_below="@id/tvLocation" />
+        android:text="@string/attendance_done2"
+        android:layout_below="@id/tvText" />
 </RelativeLayout>
