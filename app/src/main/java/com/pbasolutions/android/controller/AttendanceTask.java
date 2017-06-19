@@ -573,13 +573,13 @@ public class AttendanceTask implements Callable<Bundle> {
     }
 
     private Bundle getProjectLocationByTag() {
-        String tagID = (String) input.get(PBSAttendanceController.ARG_TAGID);
+        String nfcTagID = (String) input.get(PBSAttendanceController.ARG_NFCTAG);
 
         String[] projection = {ModelConst.C_PROJECTLOCATION_ID_COL,
                 ModelConst.NAME_COL, ModelConst.ISKIOSKMODE_COL, ModelConst.ISPHOTO_COL};
-        String[] selectionArg = {tagID};
+        String[] selectionArg = {nfcTagID};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
-                projection, ModelConst.TAGID_COL + "=?", selectionArg, "LOWER(" + ModelConst.NAME_COL + ") ASC");
+                projection, ModelConst.NFCTAG_COL + "=?", selectionArg, "LOWER(" + ModelConst.NAME_COL + ") ASC");
 
         ArrayList<String> projectLocation = new ArrayList<>();
         if (cursor != null && cursor.getCount() != 0) {

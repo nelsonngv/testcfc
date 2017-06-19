@@ -179,7 +179,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "VALUE NVARCHAR2(60) NOT NULL," +
                     "IsKioskMode CHAR(1) DEFAULT 'N' NOT NULL," +
                     "IsPhoto CHAR(1) DEFAULT 'N' NOT NULL," +
-                    "TAGID TEXT NULL," +
+                    "NFCTAG TEXT NULL," +
                     "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                     "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                     "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
@@ -551,7 +551,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "ISEMPLOYEE CHAR(1) ," +
                     "ICNo VARCHAR2(20) ," +
                     "WorkPermit VARCHAR2(20) ," +
-                    "TAGID TEXT NULL," +
+                    "NFCTAG TEXT NULL," +
                     //--
                     //--
                     "CONSTRAINT BIZPART_UNIQCONS UNIQUE (C_BPARTNER_ID)," +
@@ -1487,8 +1487,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
             if (oldVersion < 15) {
                 db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD IsKioskMode CHAR(1) DEFAULT 'N' NOT NULL");
                 db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD IsPhoto CHAR(1) DEFAULT 'N' NOT NULL");
-                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD TAGID TEXT NULL");
-                db.execSQL("ALTER TABLE C_BPARTNER ADD TAGID TEXT NULL");
+                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD NFCTAG TEXT NULL");
+                db.execSQL("ALTER TABLE C_BPARTNER ADD NFCTAG TEXT NULL");
 
                 //HR_ENTRYLOG
                 db.execSQL("CREATE TABLE HR_ENTRYLOG( " +

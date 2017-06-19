@@ -57,7 +57,7 @@ public class ModelConst {
     public static final String INTERVIEWER_NOTES_COL = "INTERVIEWER_NOTES";
     public static final String C_BPARTNER_ID_COL = "C_BPartner_ID";
     public static final String C_BPARTNER_UUID_COL = "C_BPartner_UUID";
-    public static final String TAGID_COL = "TAGID";
+    public static final String NFCTAG_COL = "NFCTAG";
     public static final String ISKIOSKMODE_COL = "IsKioskMode";
     public static final String ISPHOTO_COL = "IsPhoto";
 

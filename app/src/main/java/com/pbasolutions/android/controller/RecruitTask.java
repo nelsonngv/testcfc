@@ -520,16 +520,16 @@ public class RecruitTask extends Task {
      * @return
      */
     private Bundle getEmployeeByTag() {
-        String tagID = (String) input.get(PBSAttendanceController.ARG_TAGID);
+        String nfcTagID = (String) input.get(PBSAttendanceController.ARG_NFCTAG);
 
         String[] projection = {ModelConst.C_BPARTNER_UUID_COL, ModelConst.NAME_COL};
-        String[] selectionArg = {tagID};
+        String[] selectionArg = {nfcTagID};
 
         try {
             PBSDBHelper dbHelper = new PBSDBHelper(PandoraMain.instance);
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             Cursor cursor = db.query(ModelConst.C_BPARTNER_TABLE,
-                    projection, ModelConst.TAGID_COL + "=?", selectionArg, null, null, null);
+                    projection, ModelConst.NFCTAG_COL + "=?", selectionArg, null, null, null);
 
             ArrayList<SpinnerPair> employeeList = new ArrayList<>();
             if (cursor != null && cursor.getCount() != 0) {

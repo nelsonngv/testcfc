@@ -54,7 +54,7 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
     public static final String GET_PROJECTLOCATIONS_EVENT = "GET_PROJECTLOCATIONS_EVENT";
     public static final String ARG_PROJECTLOCATIONS = "ARG_PROJECTLOCATIONS";
 
-    public static final String ARG_TAGID = "ARG_TAGID";
+    public static final String ARG_NFCTAG = "ARG_NFCTAG";
     public static final String GET_PROJECTLOCATION_BY_TAG_EVENT = "GET_PROJECTLOCATION_BY_TAG_EVENT";
 
     public static final String CREATE_ATTENDANCETRACKING_EVENT = "CREATE_ATTENDANCETRACKING_EVENT";

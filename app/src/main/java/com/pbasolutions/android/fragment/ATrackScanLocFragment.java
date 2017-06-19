@@ -87,8 +87,8 @@ public class ATrackScanLocFragment extends Fragment {
                     Bundle resultBundle2 = new Bundle();
                     try {
                         resultBundle2 = checkInController.triggerEvent(PBSCheckInController.PROCESS_NFC, inputBundle, resultBundle2, getNfcIntent());
-                        String tagID = resultBundle2.getString(PBSCheckInController.NFC_TAG_ID);
-                        startCheckInOut(tagID);
+                        String nfcTagID = resultBundle2.getString(PBSCheckInController.NFC_TAG_ID);
+                        startCheckInOut(nfcTagID);
                         setNfcIntent(null);
                     } catch (Exception e) {
                         Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
@@ -99,10 +99,10 @@ public class ATrackScanLocFragment extends Fragment {
         return rootView;
     }
 
-    public void startCheckInOut(String tagID) {
+    public void startCheckInOut(String nfcTagID) {
         // verify tag by searching project location table
         Bundle input = new Bundle();
-        input.putString(PBSAttendanceController.ARG_TAGID, tagID);
+        input.putString(PBSAttendanceController.ARG_NFCTAG, nfcTagID);
         Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.GET_PROJECTLOCATION_BY_TAG_EVENT,
                 input, new Bundle(), null);
         List<String> projLocations = result.getStringArrayList(PBSAttendanceController.ARG_PROJECTLOCATIONS);

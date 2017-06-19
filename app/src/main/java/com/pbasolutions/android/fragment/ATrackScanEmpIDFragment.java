@@ -124,8 +124,8 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
                     Bundle resultBundle2 = new Bundle();
                     try {
                         resultBundle2 = checkInController.triggerEvent(PBSCheckInController.PROCESS_NFC, inputBundle, resultBundle2, getNfcIntent());
-                        String tagID = resultBundle2.getString(PBSCheckInController.NFC_TAG_ID);
-                        checkInOut(tagID);
+                        String nfcTagID = resultBundle2.getString(PBSCheckInController.NFC_TAG_ID);
+                        checkInOut(nfcTagID);
                         setNfcIntent(null);
                     } catch (Exception e) {
                         Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
@@ -259,7 +259,7 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
         }
     }
 
-    protected void checkInOut(String tagID) {
+    protected void checkInOut(String nfcTagID) {
         Date date = new Date();
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dt.setTimeZone(TimeZone.getDefault());
@@ -272,7 +272,7 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
         if (!latitude.equals("0.0") && !longitude.equals("0.0")) {
             // get employee info by tag
             Bundle input = new Bundle();
-            input.putString(PBSAttendanceController.ARG_TAGID, tagID);
+            input.putString(PBSAttendanceController.ARG_NFCTAG, nfcTagID);
             Bundle result = recruitCont.triggerEvent(PBSRecruitController.GET_EMPLOYEEBYTAG_EVENT,
                     input, new Bundle(), null);
             List<SpinnerPair> employees = result.getParcelableArrayList(PBSRecruitController.ARG_EMPLOYEE);
