@@ -469,10 +469,10 @@ public class AuthenticatorTask extends Task {
                     Account arrayAccounts[] = getAccounts(accType);
 
                     // clear db and account if connects to another server
-                    if (!((PandoraMain) ctx).getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(((PandoraMain) ctx).getGlobalVariable().getServer_url())) {
+                    if (!PandoraMain.instance.getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(PandoraMain.instance.getGlobalVariable().getServer_url())) {
                         PBSDBHelper.reCreateDatabase(ctx.getApplicationContext());
-                        ((PandoraMain) ctx).resetServerData(serverURL);
-                        ((PandoraMain) ctx).setGlobalVariable(null);
+                        PandoraMain.instance.resetServerData(serverURL);
+                        PandoraMain.instance.setGlobalVariable(null);
                         PandoraHelper.populateMenuForms(null);
 
                         // remove all accounts
@@ -502,7 +502,7 @@ public class AuthenticatorTask extends Task {
                                     userPass, authType, user.getToken());
                         }
                     } else {
-                        ((PandoraMain) ctx).resetServerData(serverURL);
+                        PandoraMain.instance.resetServerData(serverURL);
                         createNewAccount(userName, accType, deviceID, serverURL,
                                 userPass, authType, user.getToken());
                     }

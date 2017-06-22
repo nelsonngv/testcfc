@@ -42,6 +42,7 @@ public class PBSServer {
      * Class name tag.
      */
     private static final String TAG = "PBSServer";
+    private RequestQueue queue;
 
     /**
      * This method for sending request to server and returning json result object.
@@ -80,11 +81,16 @@ public class PBSServer {
             };
             stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-            // Adding string request to request queue
-            RequestQueue queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
+            if (queue == null) {
+                // Adding string request to request queue
+                queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
+            }
             queue.add(stringReq);
             try {
-                String response = future.get(15, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 15 seconds
+                int timeout = 15;
+                if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced())
+                    timeout = 180;
+                String response = future.get(timeout, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 15 seconds
                 return (PBSJson) new Gson().fromJson(response.toString(), cls);
             } catch (InterruptedException e) {
                 // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
@@ -180,8 +186,10 @@ public class PBSServer {
             };
             stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-            // Adding string request to request queue
-            RequestQueue queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
+            if (queue == null) {
+                // Adding string request to request queue
+                queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
+            }
             queue.add(stringReq);
             try {
                 String response = future.get(15, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 15 seconds

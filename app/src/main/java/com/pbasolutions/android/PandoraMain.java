@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 //import com.google.firebase.iid.FirebaseInstanceId;
 import com.pbasolutions.android.account.PBSAccountInfo;
+import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
 import com.pbasolutions.android.fragment.ATrackDoneFragment;
 import com.pbasolutions.android.fragment.ATrackScanEmpIDFragment;
@@ -412,10 +413,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             titleID = R.string.title_survey;
         } else if (NewSurveyStartFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_new_survey;
-        } else if (ATrackScanLocFragment.class.getName().equalsIgnoreCase(fragClassName)
-                || ATrackScanEmpIDFragment.class.getName().equalsIgnoreCase(fragClassName)
-                || ATrackDoneFragment.class.getName().equalsIgnoreCase(fragClassName)){
+        } else if (ATrackScanLocFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_attendance_tracking;
+        } else if (ATrackScanEmpIDFragment.class.getName().equalsIgnoreCase(fragClassName)
+                || ATrackDoneFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            if (PBSAttendanceController.isKioskMode)
+                titleID = R.string.title_attendance_tracking_kiosk;
+            else titleID = R.string.title_attendance_tracking;
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -1019,17 +1023,19 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                         if (fragment != null && fragment instanceof NewCheckInFragment) {
                             fragment = new NewCheckInFragment();
                             ((NewCheckInFragment) fragment).setNfcIntent(intent);
-                            updateFragment(fragment, "New Check In", false);
+                            updateFragment(fragment, getString(R.string.title_newcheckin), false);
                         }
                         else if (fragment != null && fragment instanceof ATrackScanLocFragment) {
                             fragment = new ATrackScanLocFragment();
                             ((ATrackScanLocFragment) fragment).setNfcIntent(intent);
-                            updateFragment(fragment, "Attendance Tracking", false);
+                            updateFragment(fragment, getString(R.string.title_attendance_tracking), false);
                         }
                         else if (fragment != null && fragment instanceof ATrackScanEmpIDFragment) {
                             fragment = new ATrackScanEmpIDFragment();
                             ((ATrackScanEmpIDFragment) fragment).setNfcIntent(intent);
-                            updateFragment(fragment, "Attendance Tracking", false);
+                            if (PBSAttendanceController.isKioskMode)
+                                updateFragment(fragment, getString(R.string.title_attendance_tracking_kiosk), false);
+                            else updateFragment(fragment, getString(R.string.title_attendance_tracking), false);
                         }
                     }
                 }

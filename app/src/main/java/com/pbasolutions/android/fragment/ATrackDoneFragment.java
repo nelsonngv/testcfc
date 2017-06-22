@@ -64,6 +64,7 @@ public class ATrackDoneFragment extends Fragment implements PBABackKeyListener {
                 fragmentManager.popBackStack();
                 //go back 1st attendance tracking loc tag page else emp tag page
                 if (!PBSAttendanceController.isKioskMode) {
+                    ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_attendance_tracking));
                     fragmentManager.popBackStack();
                     fragmentManager.popBackStack();
                 }

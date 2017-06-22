@@ -13,6 +13,7 @@ import com.pbasolutions.android.json.PBSTableJSON;
 import com.pbasolutions.android.json.PBSColumnsJSON;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -578,13 +579,16 @@ public class ModelConst {
     public static ContentValues removeUnavailableColumns(ContentResolver contentResolver, String tableName, ContentValues cv) {
         Cursor cursor = contentResolver.query(ModelConst.uriCustomBuilder(tableName), null, null, null, null);
         String[] columnNames = cursor.getColumnNames();
+        String asString = Arrays.toString(columnNames).toUpperCase();
+        columnNames = asString.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+        List columnNamesList = Arrays.asList(columnNames);
         cursor.close();
         Set<Map.Entry<String, Object>> cvSet = cv.valueSet();
         ContentValues newCv = new ContentValues();
         newCv.putAll(cv);
         for (Map.Entry me : cvSet) {
             String key = me.getKey().toString();
-            if (!Arrays.asList(columnNames).contains(key.toUpperCase())) {
+            if (!columnNamesList.contains(key.toUpperCase())) {
                 newCv.remove(key);
             }
         }

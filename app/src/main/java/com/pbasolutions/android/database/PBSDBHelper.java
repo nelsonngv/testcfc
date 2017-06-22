@@ -177,8 +177,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     //OTHERS
                     "NAME NVARCHAR2(300) NOT NULL," +
                     "VALUE NVARCHAR2(60) NOT NULL," +
-                    "IsKioskMode CHAR(1) DEFAULT 'N' NOT NULL," +
-                    "IsPhoto CHAR(1) DEFAULT 'N' NOT NULL," +
+                    "ISKIOSKMODE CHAR(1) DEFAULT 'N' NOT NULL," +
+                    "ISPHOTO CHAR(1) DEFAULT 'N' NOT NULL," +
                     "NFCTAG TEXT NULL," +
                     "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                     "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
@@ -1485,8 +1485,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
             }
 
             if (oldVersion < 15) {
-                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD IsKioskMode CHAR(1) DEFAULT 'N' NOT NULL");
-                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD IsPhoto CHAR(1) DEFAULT 'N' NOT NULL");
+                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD ISKIOSKMODE CHAR(1) DEFAULT 'N' NOT NULL");
+                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD ISPHOTO CHAR(1) DEFAULT 'N' NOT NULL");
                 db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD NFCTAG TEXT NULL");
                 db.execSQL("ALTER TABLE C_BPARTNER ADD NFCTAG TEXT NULL");
 

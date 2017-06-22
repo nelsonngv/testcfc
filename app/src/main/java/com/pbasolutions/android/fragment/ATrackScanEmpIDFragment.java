@@ -248,6 +248,7 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
             if (loginJSON != null) {
                 if (loginJSON.getSuccess().equals("TRUE")) {
                     PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_attendance_tracking));
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     fragmentManager.popBackStack();
                     fragmentManager.popBackStack();

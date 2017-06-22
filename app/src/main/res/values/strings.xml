@@ -325,6 +325,7 @@
     Attandence Tracking.
     !-->
     <string name="title_attendance_tracking">Attendance Tracking</string>
+    <string name="title_attendance_tracking_kiosk">(Kiosk) Attendance Tracking</string>
     <string name="location_tag">Waiting for location tag...</string>
     <string name="emp_tag">Waiting for employee tag...</string>
     <string name="nfc_notsupport">Sorry, this device doesn\'t support NFC!</string>

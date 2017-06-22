@@ -157,6 +157,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 }
 
                 boolean isSyncCompleted = syncResultBundle.getInt(PandoraConstant.SYNC_COUNT) == 0;
+                PandoraMain.instance.getGlobalVariable().setIsFirstBatchSynced(true);
                 if (PandoraMain.instance != null && PandoraMain.instance.getSupportActionBar().isShowing() == true) {
                     PBSProjLocJSON[] projLoc = null;
                     if (isSyncCompleted) {

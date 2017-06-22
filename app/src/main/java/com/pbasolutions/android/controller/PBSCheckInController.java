@@ -146,7 +146,15 @@ public class PBSCheckInController extends ContextWrapper implements PBSIControll
             Tag tag = nfcIntent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
             String s = action + "\n\n" + tag.toString();
-            String tagID = bytesToHexString(tag.getId());
+            String tagID = bytesToHexString(tag.getId()).substring(2).toUpperCase();
+            StringBuilder str = new StringBuilder(tagID);
+            int idx = str.length() - 2;
+            while (idx > 0) {
+                str.insert(idx, ":");
+                idx = idx - 2;
+            }
+            tagID = str.toString();
+
             resultBundle.putString(NFC_TEXT, s);
             resultBundle.putString(NFC_TAG_ID, tagID);
         }
