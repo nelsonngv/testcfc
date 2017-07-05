@@ -125,6 +125,7 @@ public class PBSServerConst {
     public static final String GET_DEPLOYMENTS = "getDeployments";
     public static final String UPDATE_ATTENDANCE = "updateAttendance";
     public static final String SEARCH_ATTENDANCE = "getAttendance";
+    public static final String ATTACH_TO_PROJTASK = "attachToProjTask";
 
 
     public static CookieStore cookieStore;

@@ -105,10 +105,10 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
             warnToFill(imm, expSalary);
             return;
         }
-        if((shiftSpinner.getSelectedItem()) == null || ((SpinnerPair)shiftSpinner.getSelectedItem()).getValue().equals("")) {
-            warnToFill(imm, shiftSpinner);
-            return;
-        }
+//        if((shiftSpinner.getSelectedItem()) == null || ((SpinnerPair)shiftSpinner.getSelectedItem()).getValue().equals("")) {
+//            warnToFill(imm, shiftSpinner);
+//            return;
+//        }
 
         //insertion values.
         ContentValues cv = new ContentValues();
@@ -179,8 +179,11 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         pair = nationalityItem.getPair();
         cv.put(MApplicant.HR_NATIONALITY_UUID_COL, pair.getKey());
 
-        pair = shiftItem.getPair();
-        cv.put(MApplicant.HR_PROJLOCATION_SHIFT_UUID_COL, pair.getKey());
+        if (shiftItem != null && shiftItem.getPair() != null) {
+            pair = shiftItem.getPair();
+            cv.put(MApplicant.HR_PROJLOCATION_SHIFT_UUID_COL, pair.getKey());
+        }
+        else cv.put(MApplicant.HR_PROJLOCATION_SHIFT_UUID_COL, "");
 
         pair = genderItem.getPair();
         cv.put(MApplicant.SEX_COL, pair.getKey());
@@ -201,17 +204,17 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         cv.put(MApplicant.QUALIFICATION_HIGHEST_COL, qualHigh.getText().toString());
         cv.put(MApplicant.QUALIFICATION_OTHER_COL, qualOther.getText().toString());
 
-        cv.put(MApplicant.ATTACHMENT_APPLICANTPICTURE_COL, (String) profileImage.getTag());
-        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_1, (String) cert1Pic.getTag());
-        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_2, (String) cert2Pic.getTag());
-        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_3, (String) cert3Pic.getTag());
-        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_4, (String) cert4Pic.getTag());
-        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_5, (String) cert5Pic.getTag());
-        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_6, (String) cert6Pic.getTag());
-        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_7, (String) cert7Pic.getTag());
-        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_8, (String) cert8Pic.getTag());
-        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_9, (String) cert9Pic.getTag());
-        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_10, (String) cert10Pic.getTag());
+        cv.put(MApplicant.ATTACHMENT_APPLICANTPICTURE_COL, (String) profileImage.getTag(R.string.tag_imageview_path));
+        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_1, (String) cert1Pic.getTag(R.string.tag_imageview_path));
+        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_2, (String) cert2Pic.getTag(R.string.tag_imageview_path));
+        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_3, (String) cert3Pic.getTag(R.string.tag_imageview_path));
+        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_4, (String) cert4Pic.getTag(R.string.tag_imageview_path));
+        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_5, (String) cert5Pic.getTag(R.string.tag_imageview_path));
+        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_6, (String) cert6Pic.getTag(R.string.tag_imageview_path));
+        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_7, (String) cert7Pic.getTag(R.string.tag_imageview_path));
+        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_8, (String) cert8Pic.getTag(R.string.tag_imageview_path));
+        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_9, (String) cert9Pic.getTag(R.string.tag_imageview_path));
+        cv.put(MApplicant.ATTACHMENT_CERTPICTURE_10, (String) cert10Pic.getTag(R.string.tag_imageview_path));
         cv.put(ModelConst.INTERVIEWER_NOTES_COL, interviewerNotes.getText().toString());
         cv.put(ModelConst.IS_SYNCED_COL, PandoraConstant.NO);
         cv.put(ModelConst.IS_UPDATED_COL, PandoraConstant.NO);

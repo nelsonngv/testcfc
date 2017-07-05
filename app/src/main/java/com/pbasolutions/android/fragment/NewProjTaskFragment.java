@@ -3,14 +3,8 @@ package com.pbasolutions.android.fragment;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -197,7 +191,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 
     @Override
     public boolean onBackKeyPressed() {
-        boolean hasChanged = !(taskPicture1.getTag() == null || ((String)taskPicture1.getTag()).isEmpty());
+        boolean hasChanged = !(taskPicture1.getTag(R.string.tag_imageview_path) == null || ((String)taskPicture1.getTag(R.string.tag_imageview_path)).isEmpty());
 
         if (hasChanged == false)
             return true;
@@ -290,11 +284,11 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         pt.setPriority(nSeqNo);
         pt.setIsDone("N");
         pt.setDueDate(dueDate);
-        if (taskPicture1.getTag() != null && !((String)taskPicture1.getTag()).isEmpty()) {
+        if (taskPicture1.getTag(R.string.tag_imageview_path) != null && !((String)taskPicture1.getTag(R.string.tag_imageview_path)).isEmpty()) {
 //            String pic1 = CameraUtil
 //                    .imageToBase64(taskPicture1.getTag().toString());
 //            pt.setATTACHMENT_BEFORETASKPICTURE_1(pic1);
-            pt.setATTACHMENT_BEFORETASKPICTURE_1(taskPicture1.getTag().toString());
+            pt.setATTACHMENT_BEFORETASKPICTURE_1(taskPicture1.getTag(R.string.tag_imageview_path).toString());
         }
 
         PandoraMain context = (PandoraMain) getActivity();

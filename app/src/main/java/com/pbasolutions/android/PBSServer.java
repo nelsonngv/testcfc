@@ -79,7 +79,10 @@ public class PBSServer {
                     return headers;
                 }
             };
-            stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            int timeout = 30;
+            if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced())
+                timeout = 180;
+            stringReq.setRetryPolicy(new DefaultRetryPolicy(timeout * 1000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
             if (queue == null) {
                 // Adding string request to request queue
@@ -87,10 +90,7 @@ public class PBSServer {
             }
             queue.add(stringReq);
             try {
-                int timeout = 15;
-                if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced())
-                    timeout = 180;
-                String response = future.get(timeout, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 15 seconds
+                String response = future.get(timeout, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after n seconds
                 return (PBSJson) new Gson().fromJson(response.toString(), cls);
             } catch (InterruptedException e) {
                 // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
@@ -184,7 +184,7 @@ public class PBSServer {
                     return params;
                 }
             };
-            stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            stringReq.setRetryPolicy(new DefaultRetryPolicy(30000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
             if (queue == null) {
                 // Adding string request to request queue
@@ -192,7 +192,7 @@ public class PBSServer {
             }
             queue.add(stringReq);
             try {
-                String response = future.get(15, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 15 seconds
+                String response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after n seconds
                 return response.toString();
             } catch (InterruptedException e) {
                 // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)

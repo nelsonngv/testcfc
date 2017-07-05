@@ -88,7 +88,55 @@
                         android:id="@+id/taskDueDate"
                         style="@style/Value" />
                 </TableRow>
-                <include layout="@layout/task_attachments" />
+                <TableLayout android:id="@+id/tlPics"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:divider="?android:attr/dividerHorizontal"
+                             android:showDividers="beginning|middle|end">
+                    <TableRow android:layout_marginTop="10dp"
+                              android:layout_marginBottom="10dp">
+                        <TextView
+                            style="@style/TableLabel"
+                            android:text="@string/label_pretaskpicture" />
+
+                        <ImageView
+                            android:id="@+id/pretaskPicture"
+                            android:layout_width="@dimen/dimen_small_pic"
+                            android:layout_height="@dimen/dimen_small_pic"
+                            android:layout_column="1"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/camera" />
+                    </TableRow>
+                    <TableRow android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp">
+                        <TextView
+                            style="@style/TableLabel"
+                            android:text="@string/label_picture1" />
+
+                        <ImageView
+                            android:id="@+id/taskPicture1"
+                            android:layout_width="@dimen/dimen_small_pic"
+                            android:layout_height="@dimen/dimen_small_pic"
+                            android:layout_column="1"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/camera" />
+                    </TableRow>
+                </TableLayout>
+                <TableLayout
+                    android:id="@+id/tlMorePic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TableRow>
+                        <TextView
+                            style="@style/TableLabel" />
+                        <Button
+                            android:id="@+id/btnMorePic"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Add More Picture"/>
+                    </TableRow>
+                </TableLayout>
+                <!--<include layout="@layout/task_attachments" />-->
                 <TableRow>
                     <TextView
                         android:id="@+id/textViewTaskComments"

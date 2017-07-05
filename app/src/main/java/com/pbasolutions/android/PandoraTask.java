@@ -71,18 +71,10 @@ public class PandoraTask implements Callable<Bundle> {
      * @return
      */
     public Bundle getProjLoc() {
-        String ad_user_uuid = "";
         String ad_user_id = input.getString(PBSAssetController.ARG_AD_USER_ID);
-        String projection2 [] = {ModelConst.AD_USER_UUID_COL};
-        Cursor dependencyCursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.AD_USER_TABLE),
-                projection2, ModelConst.AD_USER_ID_COL + " = " + ad_user_id, null, null);
-        if (dependencyCursor != null)  {
-            dependencyCursor.moveToFirst();
-            if (dependencyCursor.getCount() > 0) {
-                ad_user_uuid = dependencyCursor.getString(0);
-            }
-            dependencyCursor.close();
-        }
+        String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
+                ad_user_id, ModelConst.AD_USER_UUID_COL, cr);
+
         String projection [] = {ModelConst.C_PROJECTLOCATION_UUID_COL, ModelConst.NAME_COL, ModelConst.C_PROJECTLOCATION_ID_COL};
         String selection = "hr_cluster_uuid='null' or hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
         String selectionArgs [] = {"Y", ad_user_uuid};

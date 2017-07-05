@@ -206,6 +206,7 @@
     Task layout.
     !-->
     <string name="label_pretaskpicture">Pre-Task Picture </string>
+    <string name="label_picture">Picture [%1$s] </string>
     <string name="label_picture1">Picture [1] </string>
     <string name="label_picture2">Picture [2] </string>
     <string name="label_picture3">Picture [3] </string>
@@ -334,5 +335,12 @@
     <string name="invalid_tag">Invalid tag detected</string>
     <string name="attendance_done1">Hi %1$s, you have marked an attendance at %2$s.</string>
     <string name="attendance_done2">Thank you for using our service!</string>
+
+    <!--
+    ImageView Tag Key.
+    !-->
+    <string name="tag_imageview_path">tag_imageview_path</string>
+    <string name="tag_imageview_count">tag_imageview_count</string>
+    <string name="warning_add_pic_first">Please attach picture first before adding new one</string>
 
 </resources>
