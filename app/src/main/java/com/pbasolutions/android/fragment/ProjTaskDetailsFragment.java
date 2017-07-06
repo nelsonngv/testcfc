@@ -173,6 +173,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
                 if (i > 0) addPicField();
                 CameraUtil.loadPicture(picPath[i], taskPictures[i]);
+                CameraUtil.addPathToPic(taskPictures[i], picPath[i]);
             }
 
             String buttonText;
@@ -358,9 +359,12 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                     }
                     case EVENT_PIC1: {
                         if ("Y".equalsIgnoreCase(projTask.isDone())) {
-                            if (projTask.getATTACHMENT_TASKPICTURE_1() != null && !projTask.getATTACHMENT_TASKPICTURE_1().equals("")) {
-                                intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_TASKPICTURE_1())), "image/*");
-                                PandoraMain.instance.startActivity(intent);
+                            if (object != null && object.getTag(R.string.tag_imageview_path) != null) {
+                                String path = object.getTag(R.string.tag_imageview_path).toString();
+                                if (path != null && !path.equals("")) {
+                                    intent.setDataAndType(Uri.fromFile(new File(path)), "image/*");
+                                    PandoraMain.instance.startActivity(intent);
+                                }
                             }
                         }
                         else takePicture(Integer.parseInt(object.getTag(R.string.tag_imageview_count).toString()), object);

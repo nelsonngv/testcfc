@@ -143,7 +143,7 @@ public class CameraUtil {
         }
     }
 
-    private static void addPathToPic(ImageView imageView, String mCurrentPhotoPath) {
+    public static void addPathToPic(ImageView imageView, String mCurrentPhotoPath) {
         imageView.setTag(R.string.tag_imageview_path, mCurrentPhotoPath);
     }
 
