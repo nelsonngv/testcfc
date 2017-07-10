@@ -241,7 +241,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
     private MProjectTask getProjTask() {
         Bundle input = new Bundle();
-        input.putSerializable(taskCont.ARG_TASK_LIST, modelList);
+//        input.putSerializable(taskCont.ARG_TASK_LIST, modelList);
         input.putString(taskCont.ARG_C_PROJECTTASK_UUID, _UUID);
         Bundle result = taskCont.triggerEvent(taskCont.GET_PROJTASK_EVENT, input, new Bundle(), null);
         return (MProjectTask)result.getSerializable(taskCont.ARG_PROJTASK);

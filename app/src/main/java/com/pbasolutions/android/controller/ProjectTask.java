@@ -5,6 +5,7 @@ import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.databinding.ObservableArrayList;
 import android.net.Uri;
@@ -19,10 +20,12 @@ import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
+import com.pbasolutions.android.R;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.api.PBSIServerAPI;
 import com.pbasolutions.android.api.PBSServerAPI;
+import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
 import com.pbasolutions.android.json.PBSProjTaskJSON;
 import com.pbasolutions.android.json.PBSProjTasksJSON;
 import com.pbasolutions.android.model.MProjectTask;
@@ -30,8 +33,10 @@ import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -390,6 +395,7 @@ public class ProjectTask implements Callable<Bundle> {
                 Log.e(TAG, e.getMessage());
             }
 
+            boolean isShowNotification = input.getBoolean("isShowNotification", false);
             String projTaskIDs = "";
             for (PBSProjTaskJSON projTask : projTasks.getProjTasks()){
                 ContentValues cv = new ContentValues();
@@ -414,11 +420,15 @@ public class ProjectTask implements Callable<Bundle> {
                 String[] arg = {cv.getAsString(selection)};
                 String tableName = ModelConst.C_PROJECTTASK_TABLE;
                 if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
-                    cv.put(MProjectTask.C_PROJECTTASK_UUID_COL, UUID.randomUUID().toString());
+                    String uuid = UUID.randomUUID().toString();
+                    cv.put(MProjectTask.C_PROJECTTASK_UUID_COL, uuid);
                     ops.add(ContentProviderOperation
                             .newInsert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
                             .withValues(cv)
                             .build());
+
+                    if (!projTask.getIsDone() && isShowNotification)
+                        PandoraHelper.sendNotification(uuid, Resources.getSystem().getString(R.string.notification_new_proj_task), ProjTaskDetailsFragment.class.getSimpleName());
                 } else {
                     selection = selection + "=?";
                     ops.add(ContentProviderOperation
@@ -426,6 +436,26 @@ public class ProjectTask implements Callable<Bundle> {
                             .withValues(cv)
                             .withSelection(selection, arg)
                             .build());
+
+                    if (!projTask.getIsDone() && isShowNotification) {
+                        String uuid = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE, MProjectTask.C_PROJECTTASK_ID_COL,
+                                projTask.getC_ProjectTask_ID(), MProjectTask.C_PROJECTTASK_UUID_COL, cr);
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            Date dueDate = sdf.parse(projTask.getDueDate());
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(dueDate);
+                            cal.add(Calendar.HOUR, -2);
+                            Date expiringDueDate = cal.getTime();
+                            if (new Date().after(dueDate)) {
+                                PandoraHelper.sendNotification(uuid, PandoraMain.instance.getApplicationContext().getResources().getString(R.string.notification_proj_task_expired), ProjTaskDetailsFragment.class.getSimpleName());
+                            } else if (new Date().after(expiringDueDate)) {
+                                PandoraHelper.sendNotification(uuid, Resources.getSystem().getString(R.string.notification_proj_task_expiring), ProjTaskDetailsFragment.class.getSimpleName());
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
 

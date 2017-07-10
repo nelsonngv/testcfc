@@ -4,24 +4,32 @@ package com.pbasolutions.android;
 import android.accounts.Account;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.SyncInfo;
 import android.databinding.ObservableArrayList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
@@ -907,5 +915,32 @@ public class PandoraHelper  {
         SpannableString ss = new SpannableString(tv.getText() + asterisk);
         ss.setSpan(new ForegroundColorSpan(Color.RED), tv.getText().length(), tv.getText().length()+2, 0);
         tv.setText(ss);
+    }
+
+    public static void sendNotification(String uuid, String content, String className) {
+        Intent intent = new Intent(PandoraMain.instance, PandoraMain.class);
+        intent.putExtra("isNotification", true);
+        intent.putExtra("uuid", uuid);
+        intent.putExtra("className", className);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(PandoraMain.instance, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(PandoraMain.instance)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("PandoraCFC")
+                .setContentText(content)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setPriority(Notification.PRIORITY_HIGH);
+        if (Build.VERSION.SDK_INT < 26) notificationBuilder.setVibrate(new long[0]);
+
+        NotificationManager notificationManager =
+                (NotificationManager) PandoraMain.instance.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify((int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE) /* ID of notification */, notificationBuilder.build());
     }
 }

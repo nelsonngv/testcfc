@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
+import com.pbasolutions.android.controller.PBSTaskController;
 import com.pbasolutions.android.fragment.ATrackDoneFragment;
 import com.pbasolutions.android.fragment.ATrackScanEmpIDFragment;
 import com.pbasolutions.android.fragment.ATrackScanLocFragment;
@@ -71,6 +72,7 @@ import com.pbasolutions.android.fragment.NewRequisitionLineFragment;
 import com.pbasolutions.android.fragment.NewSurveyPagerFragment;
 import com.pbasolutions.android.fragment.NewSurveySignFragment;
 import com.pbasolutions.android.fragment.NewSurveyStartFragment;
+import com.pbasolutions.android.fragment.PBSDetailsFragment;
 import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
 import com.pbasolutions.android.fragment.ProjTaskFragment;
 import com.pbasolutions.android.fragment.RecruitFragment;
@@ -204,9 +206,11 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     /**
      * Handler.
      */
-    private Handler handler = new Handler();
-    private Runnable runnable;
-    private int delay = 600000; //10 mins
+    private Handler checkLoginHandler = new Handler();
+    private Handler checkProjTaskHandler = new Handler();
+    private Runnable checkLoginRunnable, checkProjTaskRunnable;
+    private int checkLoginDelay = 600000; //10 mins
+    private int checkProjTaskDelay = 1800000; //30 mins
 
     // to check sync result
     public static final String GOTO_RECRUIT = "GotoRecruit";
@@ -300,21 +304,46 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
         instance = this;
 //        Log.d(TAG, "Refreshed token: " + FirebaseInstanceId.getInstance().getToken());
-//        registerReceiver(myReceiver, new IntentFilter("Received.Mpay.Push.Notification"));
-//
 //        //receive push notification broadcast
 //        myReceiver = new ReceiveMessages();
+//        registerReceiver(myReceiver, new IntentFilter("Received.PandoraCFC.Push.Notification"));
 
-        runnable = new Runnable(){
-            public void run(){
+        //check login
+        checkLoginRunnable = new Runnable(){
+            public void run() {
                 if(getSupportActionBar().isShowing() == true) {
                     checkLogin(true);
                 }
 
-                handler.postDelayed(this, delay);
+                checkLoginHandler.postDelayed(this, checkLoginDelay);
             }
         };
-        handler.postDelayed(runnable, delay);
+        checkLoginHandler.postDelayed(checkLoginRunnable, checkLoginDelay);
+
+        //check proj task
+        checkProjTaskRunnable = new Runnable(){
+            public void run() {
+                if(getSupportActionBar().isShowing() == true) {
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (PBSServerConst.cookieStore != null) {
+                                Bundle input = new Bundle();
+                                input.putString(PBSTaskController.ARG_PROJLOC_UUID, getGlobalVariable().getC_projectlocation_uuid());
+                                input.putString(PBSTaskController.ARG_AD_USER_ID, getGlobalVariable().getAd_user_id());
+                                input.putString(PBSServerConst.PARAM_URL, getGlobalVariable().getServer_url());
+                                input.putBoolean("isShowNotification", true);
+                                PBSTaskController taskCont = new PBSTaskController(PandoraMain.instance);
+                                Bundle result = taskCont.triggerEvent(PBSTaskController.SYNC_PROJTASKS_EVENT, input, new Bundle(), null);
+                            }
+                        }
+                    });
+                }
+
+                checkProjTaskHandler.postDelayed(this, checkProjTaskDelay);
+            }
+        };
+        checkProjTaskHandler.postDelayed(checkProjTaskRunnable, checkProjTaskDelay);
     }
 
     /**
@@ -580,7 +609,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 showLogOutDialog(PBSAuthenticatorController.SUCCESSFULLY_LOGGED_OUT_TXT);
 
                 dismissProgressDialog();
-                handler.removeCallbacks(runnable);
+                checkLoginHandler.removeCallbacks(checkLoginRunnable);
+                checkProjTaskHandler.removeCallbacks(checkProjTaskRunnable);
             }
         }.execute(inputBundle);
     }
@@ -1013,8 +1043,15 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent != null){
-            if (intent.getAction() != null){
+        if (intent != null) {
+            if (intent.getExtras().get("isNotification") != null && (boolean)intent.getExtras().get("isNotification") == true) {
+                if (intent.getExtras().get("className") != null && intent.getExtras().get("className").equals(ProjTaskDetailsFragment.class.getSimpleName())) {
+                    Fragment fragment = new ProjTaskDetailsFragment();
+                    ((PBSDetailsFragment) fragment).set_UUID(intent.getExtras().getString("uuid"));
+                    updateFragment(fragment, getString(R.string.title_projtaskdetails), false);
+                }
+            }
+            else if (intent.getAction() != null) {
                 if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED) || intent.getAction().equals(NfcAdapter.ACTION_TECH_DISCOVERED) || intent.getAction().equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
                     if (getGlobalVariable().getAd_user_name() == null) {
                         checkLogin(false);
@@ -1051,7 +1088,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         invalidateOptionsMenu();
         checkLogin(false);
 //        if (!myReceiverIsRegistered) {
-//            registerReceiver(myReceiver, new IntentFilter("Received.Mpay.Push.Notification"));
+//            registerReceiver(myReceiver, new IntentFilter("Received.PandoraCFC.Push.Notification"));
 //            myReceiverIsRegistered = true;
 //        }
     }
@@ -1210,7 +1247,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     super.onPreExecute();
                     if(!isLoop) {
                         directToFragment();
-                        return;
+                        cancel(true);
                     }
                 }
 
@@ -1287,7 +1324,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 //            String action = intent.getAction();
 //            Log.d(TAG, "...............action: " + action);
 //            if(action.equalsIgnoreCase("Received.PandoraCFC.Push.Notification")){
-//                displayView(FRAGMENT_TASK, false);
+//                displayView(FRAGMENT_ATTENDANCE, false);
 //            }
 //        }
 //    }

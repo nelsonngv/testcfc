@@ -343,4 +343,11 @@
     <string name="tag_imageview_count">tag_imageview_count</string>
     <string name="warning_add_pic_first">Please attach picture first before adding new one</string>
 
+    <!--
+    Proj task notification.
+    !-->
+    <string name="notification_new_proj_task">Received new project task</string>
+    <string name="notification_proj_task_expired">Project task has expired</string>
+    <string name="notification_proj_task_expiring">Project task is expiring</string>
+
 </resources>
