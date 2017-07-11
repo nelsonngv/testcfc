@@ -428,7 +428,7 @@ public class ProjectTask implements Callable<Bundle> {
                             .build());
 
                     if (!projTask.getIsDone() && isShowNotification)
-                        PandoraHelper.sendNotification(uuid, Resources.getSystem().getString(R.string.notification_new_proj_task), ProjTaskDetailsFragment.class.getSimpleName());
+                        PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_new_proj_task), ProjTaskDetailsFragment.class.getSimpleName());
                 } else {
                     selection = selection + "=?";
                     ops.add(ContentProviderOperation
@@ -441,7 +441,7 @@ public class ProjectTask implements Callable<Bundle> {
                         String uuid = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE, MProjectTask.C_PROJECTTASK_ID_COL,
                                 projTask.getC_ProjectTask_ID(), MProjectTask.C_PROJECTTASK_UUID_COL, cr);
                         try {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
                             Calendar cal = Calendar.getInstance();
                             cal.setTime(sdf.parse(projTask.getDueDate()));
                             cal.add(Calendar.DATE, 1);
@@ -449,9 +449,9 @@ public class ProjectTask implements Callable<Bundle> {
                             cal.add(Calendar.HOUR, -2);
                             Date expiringDueDate = cal.getTime();
                             if (new Date().after(dueDate)) {
-                                PandoraHelper.sendNotification(uuid, PandoraMain.instance.getApplicationContext().getResources().getString(R.string.notification_proj_task_expired), ProjTaskDetailsFragment.class.getSimpleName());
+                                PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_proj_task_expired), ProjTaskDetailsFragment.class.getSimpleName());
                             } else if (new Date().after(expiringDueDate)) {
-                                PandoraHelper.sendNotification(uuid, Resources.getSystem().getString(R.string.notification_proj_task_expiring), ProjTaskDetailsFragment.class.getSimpleName());
+                                PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_proj_task_expiring), ProjTaskDetailsFragment.class.getSimpleName());
                             }
                         } catch (ParseException e) {
                             e.printStackTrace();
