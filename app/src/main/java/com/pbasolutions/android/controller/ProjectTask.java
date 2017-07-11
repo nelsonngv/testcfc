@@ -442,9 +442,10 @@ public class ProjectTask implements Callable<Bundle> {
                                 projTask.getC_ProjectTask_ID(), MProjectTask.C_PROJECTTASK_UUID_COL, cr);
                         try {
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            Date dueDate = sdf.parse(projTask.getDueDate());
                             Calendar cal = Calendar.getInstance();
-                            cal.setTime(dueDate);
+                            cal.setTime(sdf.parse(projTask.getDueDate()));
+                            cal.add(Calendar.DATE, 1);
+                            Date dueDate = cal.getTime();
                             cal.add(Calendar.HOUR, -2);
                             Date expiringDueDate = cal.getTime();
                             if (new Date().after(dueDate)) {
