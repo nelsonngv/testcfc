@@ -80,8 +80,8 @@ public class PBSServer {
                 }
             };
             int timeout = 30;
-            if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced())
-                timeout = 180;
+//            if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced())
+//                timeout = 180;
             stringReq.setRetryPolicy(new DefaultRetryPolicy(timeout * 1000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
             if (queue == null) {

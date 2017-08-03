@@ -109,6 +109,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
             inputAuth.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
             inputAuth.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
 
+            Bundle getUnsyncCountBundle = new Bundle();
             Bundle updateResultBundle = new Bundle();
             Bundle deleteRetentionPeriod = new Bundle();
             Bundle syncResultBundle = new Bundle();
@@ -140,6 +141,15 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
             }
             if (isAuthSuccess) {
+                if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced()) {
+                    getUnsyncCountBundle = serverController.
+                            triggerEvent(PBSServerController.GET_UNSYNC_COUNT,
+                                    inputAuth, getUnsyncCountBundle, null);
+                    if (getUnsyncCountBundle.get(PandoraConstant.RESULT) != null && !((boolean) getUnsyncCountBundle.get(PandoraConstant.RESULT))) {
+                        return;
+                    }
+                }
+
                 deleteRetentionPeriod = serverController.
                         triggerEvent(PBSServerController.DELETE_RETENTION_RECORD,
                                 inputAuth, deleteRetentionPeriod,null);

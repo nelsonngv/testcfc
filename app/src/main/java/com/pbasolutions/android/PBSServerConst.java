@@ -77,6 +77,11 @@ public class PBSServerConst {
      * Action update
      */
     public static final String SYNC = "Sync";
+
+    /**
+     * Action update
+     */
+    public static final String ACTION_GET_UNSYNC_COUNT= "GetUnsyncCount";
     /**
      *
      */

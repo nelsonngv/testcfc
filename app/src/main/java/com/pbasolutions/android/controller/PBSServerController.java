@@ -38,9 +38,13 @@ public class PBSServerController extends PBSController {
      */
     public static final String UPDATE_LOCAL_TABLES = "UPDATE_LOCAL_TABLES";
     /**
-     *
+     * Static string that hold event string for delete outdated retention local tables
      */
     public static final String DELETE_RETENTION_RECORD = "DELETE_RETENTION_RECORD";
+    /**
+     * Static string that hold event string for checking server unsync count
+     */
+    public static final String GET_UNSYNC_COUNT = "GET_UNSYNC_COUNT";
 
     public static final String SYNCED_COUNT = "SYNCED_COUNT";
     /**

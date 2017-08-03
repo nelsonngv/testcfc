@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -868,10 +869,14 @@ public class PandoraHelper  {
         fragmentTransaction.commit();
     }
 
-
     public static String getDeviceID(Activity act) {
+        String deviceId = "";
         TelephonyManager tm = (TelephonyManager) act.getSystemService(Context.TELEPHONY_SERVICE);
-        String deviceId = tm.getDeviceId();
+        if (tm.getDeviceId() != null) {
+            deviceId = tm.getDeviceId();
+        } else {
+            deviceId = Settings.Secure.getString(act.getContentResolver(), Settings.Secure.ANDROID_ID);
+        }
         Log.d("Information", "Device Id = " + deviceId);
         return deviceId;
     }

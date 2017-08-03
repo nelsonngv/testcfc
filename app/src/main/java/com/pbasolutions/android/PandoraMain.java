@@ -80,6 +80,7 @@ import com.pbasolutions.android.fragment.RequisitionDetailFragment;
 import com.pbasolutions.android.fragment.RequisitionFragment;
 import com.pbasolutions.android.fragment.RequisitionLineDetailsFragment;
 import com.pbasolutions.android.fragment.SurveyFragment;
+import com.pbasolutions.android.json.PBSLoginJSON;
 import com.pbasolutions.android.json.PBSResultJSON;
 import com.pbasolutions.android.utils.AlbumStorageDirFactory;
 import com.pbasolutions.android.utils.BaseAlbumDirFactory;
@@ -1279,24 +1280,73 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     }
 
                     boolean isAuthToken = (!getGlobalVariable().getAuth_token().isEmpty());
-                    // request sync if is not finish syncing
-                    if (isLoop && isAuthToken && !getGlobalVariable().isInitialSynced()) {
-                        Bundle extras = new Bundle();
-                        AccountManager accountManager = AccountManager.get(getApplicationContext());
-                        Account[] acc = accountManager.getAccountsByType(PBSAccountInfo.ACCOUNT_TYPE);
-                        for (Account account : acc) {
-                            if (account.name.equals(getGlobalVariable().getAd_user_name())) {
-                                ContentResolver.requestSync(account, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
-                                break;
-                            }
-                        }
+                    if (!isAuthToken) {
+                        new LoginAsyncTask().execute();
                     }
-                    if (!(isLoop && isAuthToken))
-                        directToFragment();
+
+//                    // request sync if is not finish syncing
+//                    if (isLoop && isAuthToken && !getGlobalVariable().isInitialSynced()) {
+//                        Bundle extras = new Bundle();
+//                        AccountManager accountManager = AccountManager.get(getApplicationContext());
+//                        Account[] acc = accountManager.getAccountsByType(PBSAccountInfo.ACCOUNT_TYPE);
+//                        for (Account account : acc) {
+//                            if (account.name.equals(getGlobalVariable().getAd_user_name())) {
+//                                ContentResolver.requestSync(account, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    if (!(isLoop && isAuthToken))
+//                        directToFragment();
                 }
             }.execute();
         }
         else directToFragment();
+    }
+
+    private class LoginAsyncTask extends AsyncTask<Bundle, Void, Bundle> {
+
+        @Override
+        protected Bundle doInBackground(Bundle... params) {
+            String deviceID = PandoraHelper.getDeviceID(PandoraMain.this);
+            if (deviceID == null || deviceID.isEmpty()) {
+                return new Bundle();
+            }
+
+            PBSAuthenticatorController authController = new PBSAuthenticatorController(PandoraMain.this);
+            Bundle resultBundle = new Bundle();
+            Bundle bundle = new Bundle();
+            bundle.putString(PBSServerConst.VERSION, getGlobalVariable().getServer_url());
+            resultBundle = authController.triggerEvent(PBSAuthenticatorController.AUTHENTICATE_SERVER, bundle, resultBundle, null);
+
+            if (resultBundle.getBoolean(PBSServerConst.RESULT)) {
+                resultBundle = new Bundle();
+                bundle = new Bundle();
+                bundle.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
+                bundle.putString(PBSAuthenticatorController.ARG_ACCOUNT_NAME, getGlobalVariable().getAd_user_name());
+                bundle.putString(PBSAuthenticatorController.USER_PASS_ARG, getGlobalVariable().getAd_user_password());
+                bundle.putString(PBSAuthenticatorController.ARG_AUTH_TYPE, PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
+                bundle.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
+                bundle.putString(PBSAuthenticatorController.SERVER_URL_ARG, getGlobalVariable().getServer_url());
+                resultBundle = authController.triggerEvent(PBSAuthenticatorController.SUBMIT_LOGIN,
+                        bundle, resultBundle, null);
+            }
+            return resultBundle;
+        }
+
+        protected void onPostExecute(Bundle resultBundle) {
+            if (resultBundle.getString(PandoraConstant.ERROR) != null) {
+                return;
+            }
+
+            final PBSLoginJSON loginJSON = (PBSLoginJSON)
+                    resultBundle.getSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON);
+            if (loginJSON != null) {
+                if (loginJSON.getSuccess().equals("TRUE")) {
+                    getGlobalVariable().setAuth_token(loginJSON.getToken());
+                }
+            }
+        }
     }
 
     public PandoraContext getGlobalVariable() {

@@ -111,8 +111,14 @@ public class LoginFragment extends Fragment {
                 .getText().toString();
         deviceID = PandoraHelper.getDeviceID(getActivity());
 
+        if (deviceID == null || deviceID.isEmpty()) {
+            PandoraHelper.showWarningMessage(getActivity(),
+                    "Unable to obtain device ID. Please contact the administrator.");
+            return;
+        }
+
         if (accountName.isEmpty() || accountPassword.isEmpty() || serverURL.isEmpty()) {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
+            PandoraHelper.showWarningMessage(getActivity(),
                     "Please fill up all the fields");
             return;
         }
@@ -137,7 +143,7 @@ public class LoginFragment extends Fragment {
         new LoginAsyncTask().execute(bundle);
     }
 
-    private boolean isServer(String serverURL) {
+    public boolean isServer(String serverURL) {
         final Bundle bundle = new Bundle();
         bundle.putString(PBSServerConst.VERSION, serverURL);
         Bundle resultBundle = new Bundle();
