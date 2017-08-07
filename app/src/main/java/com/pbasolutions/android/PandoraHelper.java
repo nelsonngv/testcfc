@@ -568,6 +568,7 @@ public class PandoraHelper  {
         Bundle inputAccount = new Bundle();
         inputAccount.putString(authController.SERVER_URL_ARG, pandoraContext.getServer_url());
         inputAccount.putString(authController.USER_NAME_ARG, pandoraContext.getAd_user_name());
+        inputAccount.putString(authController.AUTH_TOKEN_ARG, pandoraContext.getAuth_token());
         inputAccount.putString(authController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
         inputAccount.putString(authController.ROLE_ARG, pandoraContext.getAd_role_id());
         inputAccount.putString(authController.ORG_ARG, pandoraContext.getAd_org_id());

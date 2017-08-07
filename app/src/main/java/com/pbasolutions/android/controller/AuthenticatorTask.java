@@ -145,6 +145,8 @@ public class AuthenticatorTask extends Task {
                     input.getString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE));
             am.setUserData(account, PBSAuthenticatorController.SERVER_URL_ARG,
                     input.getString(PBSAuthenticatorController.SERVER_URL_ARG));
+            am.setUserData(account, PBSAuthenticatorController.AUTH_TOKEN_ARG,
+                    input.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG));
             am.setUserData(account, PBSAuthenticatorController.ROLE_ARG,
                     input.getString(PBSAuthenticatorController.ROLE_ARG));
             am.setUserData(account, PBSAuthenticatorController.ORG_ARG,
@@ -221,9 +223,12 @@ public class AuthenticatorTask extends Task {
         output.putParcelable(PBSAuthenticatorController.USER_ACC_ARG,
                 getAccount(acc.name,
                         input.getString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE)));
+//        output.putString(PBSAuthenticatorController.AUTH_TOKEN_ARG,
+//                getAuthToken(acc, input.getString(
+//                        PBSAuthenticatorController.ARG_AUTH_TYPE)));
         output.putString(PBSAuthenticatorController.AUTH_TOKEN_ARG,
-                getAuthToken(acc, input.getString(
-                        PBSAuthenticatorController.ARG_AUTH_TYPE)));
+                am.getUserData(acc,
+                        PBSAuthenticatorController.AUTH_TOKEN_ARG));
         output.putString(PBSAuthenticatorController.USER_NAME_ARG,
                 acc.name);
         output.putString(PBSAuthenticatorController.USER_PASS_ARG,
