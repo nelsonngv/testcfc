@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.OperationApplicationException;
+import android.content.SharedPreferences;
 import android.content.SyncInfo;
 import android.databinding.ObservableArrayList;
 import android.graphics.Bitmap;
@@ -605,12 +606,15 @@ public class PandoraHelper  {
         if(((PandoraMain)activity).getGlobalVariable() == null)
             ((PandoraMain)activity).setGlobalVariable((PandoraContext) activity.getApplicationContext());
         PandoraContext var = ((PandoraMain)activity).getGlobalVariable();
+
+        SharedPreferences prefs = activity.getSharedPreferences(
+                BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        var.setServer_url(prefs.getString("serverURL", ""));
+
         if (result.getString(authCont.USER_NAME_ARG) != null){
             var.setAd_user_name(result.getString(authCont.USER_NAME_ARG));
             var.setAd_user_password(
                     result.getString(authCont.USER_PASS_ARG));
-            var.setServer_url(
-                    result.getString(authCont.SERVER_URL_ARG));
 
             String synced = result.getString(authCont.INITIALSYNC_ARG);
             if (synced != null)

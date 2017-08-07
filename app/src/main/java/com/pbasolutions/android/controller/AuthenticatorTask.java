@@ -7,6 +7,7 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.pbasolutions.android.BuildConfig;
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
@@ -209,7 +211,8 @@ public class AuthenticatorTask extends Task {
                 }
             });
         } else if (userAccount.length == 1) {
-           populateUserAccountData(userAccount[SINGLE_ACCOUNT]);
+            populateUserAccountData(userAccount[SINGLE_ACCOUNT]);
+            restoreGlobalVariables();
         }
         return output;
     }
@@ -225,9 +228,13 @@ public class AuthenticatorTask extends Task {
                 acc.name);
         output.putString(PBSAuthenticatorController.USER_PASS_ARG,
                 am.getPassword(acc));
+//        output.putString(PBSAuthenticatorController.SERVER_URL_ARG,
+//                am.getUserData(acc,
+//                        PBSAuthenticatorController.SERVER_URL_ARG));
+        SharedPreferences prefs = ctx.getSharedPreferences(
+                BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         output.putString(PBSAuthenticatorController.SERVER_URL_ARG,
-                am.getUserData(acc,
-                        PBSAuthenticatorController.SERVER_URL_ARG));
+                prefs.getString("serverURL", ""));
         output.putString(PBSAuthenticatorController.SERIAL_ARG,
                 am.getUserData(acc,
                         PBSAuthenticatorController.SERIAL_ARG));
@@ -377,6 +384,8 @@ public class AuthenticatorTask extends Task {
 //            am.removeAccount(userAccount, null, null);
 
 //            ((PandoraMain) ctx).globalVariable = null;
+            Account userAccount = getAccount(((PandoraMain) ctx).globalVariable.getAd_user_name(), PBSAccountInfo.ACCOUNT_TYPE);
+            am.removeAccount(userAccount, null, null);
             ((PandoraMain) ctx).globalVariable.setAd_user_name("");
             ((PandoraMain) ctx).globalVariable.setAd_user_password("");
             ((PandoraMain) ctx).globalVariable.setAuth_token("");
@@ -469,7 +478,7 @@ public class AuthenticatorTask extends Task {
                     Account arrayAccounts[] = getAccounts(accType);
 
                     // clear db and account if connects to another server
-                    if (!PandoraMain.instance.getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(PandoraMain.instance.getGlobalVariable().getServer_url())) {
+                    if (PandoraMain.instance.getGlobalVariable().getServer_url() != null && !PandoraMain.instance.getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(PandoraMain.instance.getGlobalVariable().getServer_url())) {
                         PBSDBHelper.reCreateDatabase(ctx.getApplicationContext());
                         PandoraMain.instance.resetServerData(serverURL);
                         PandoraMain.instance.setGlobalVariable(null);
@@ -520,11 +529,13 @@ public class AuthenticatorTask extends Task {
                         }
                     }
                     Bundle extras = new Bundle();
+                    extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                    extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                     Account userAccount = getAccount(userName, accType);
                     ContentResolver.setIsSyncable(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, 1);
                     ContentResolver.setSyncAutomatically(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, true);
                     ContentResolver.requestSync(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
-                    ContentResolver.addPeriodicSync(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, extras, user.getSyncInterval());
+                    ContentResolver.addPeriodicSync(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, new Bundle(), user.getSyncInterval());
 
                     output.putSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON, user);
                     output.putBoolean(PBSServerConst.RESULT, true);
@@ -661,7 +672,10 @@ public class AuthenticatorTask extends Task {
 
         ((PandoraMain)ctx).runOnUiThread(new Runnable() {
             public void run() {
-                if (((PandoraMain)ctx).getGlobalVariable() != null) {
+                if (((PandoraMain)ctx).getGlobalVariable() != null
+                        && ((PandoraMain) ctx).findViewById(R.id.accountName) != null
+                        && ((PandoraMain) ctx).findViewById(R.id.accountPassword) != null
+                        && ((PandoraMain) ctx).findViewById(R.id.serverURL) != null) {
                     if (((PandoraMain)ctx).getGlobalVariable().getAd_user_name() != null) {
                         ((TextView) ((PandoraMain) ctx).findViewById(R.id.accountName))
                                 .setText(((PandoraMain) ctx).getGlobalVariable().getAd_user_name());

@@ -40,6 +40,8 @@ public class PBSController extends ContextWrapper implements PBSIController{
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }

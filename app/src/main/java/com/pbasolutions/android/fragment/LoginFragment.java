@@ -1,6 +1,8 @@
 package com.pbasolutions.android.fragment;
 
 import android.accounts.AccountManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.pbasolutions.android.BuildConfig;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
@@ -208,8 +211,11 @@ public class LoginFragment extends Fragment {
                     context.getGlobalVariable().setSerial(deviceID);
                     context.getGlobalVariable().setRoleJSON(loginJSON.getRoles());
                     context.getGlobalVariable().setIsAuth(true);
-                    context.getGlobalVariable().setServer_url(serverURL);
+//                    context.getGlobalVariable().setServer_url(serverURL);
                     context.getGlobalVariable().setAuth_token(loginJSON.getToken());
+                    SharedPreferences prefs = context.getSharedPreferences(
+                            BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+                    prefs.edit().putString("serverURL", serverURL).commit();
 
                     PandoraHelper.getProjLocAvailable(PandoraMain.instance, false);
 

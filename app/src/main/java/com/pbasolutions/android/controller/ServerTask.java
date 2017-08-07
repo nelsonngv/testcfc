@@ -278,7 +278,7 @@ public class ServerTask extends Task {
                 input.getString(PBSAuthenticatorController.SERVER_URL_ARG));
         if (json != null) {
             if (json.getSuccess().toLowerCase().equals(PandoraConstant.TRUE.toLowerCase())
-                    && json.getCount() > 0) {
+                    && json.getTotal() > 0) {
                 output.putBoolean(PandoraConstant.RESULT, true);
             } else {
                 output.putBoolean(PandoraConstant.RESULT, false);

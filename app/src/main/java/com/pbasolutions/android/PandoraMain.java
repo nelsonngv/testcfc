@@ -460,7 +460,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     /**
      * Redirect the screen view depending on the authToken state.
      */
-    public void directToFragment() {
+    public void directToFragment(boolean isShowDialog) {
         try {
             //check from account manager. no request send to server.
             Bundle inputBundle = new Bundle();
@@ -479,12 +479,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     defaultFragment = FRAGMENT_ACCOUNT;
 //                    if (dialog != null && !dialog.isShowing()) {
                         if (!isWelcomeDisplayed) {
-                            PandoraHelper.showAlertMessage(this, "Welcome to Pandora, " +
-                                            "Please login to use this app.",
-                                    PandoraConstant.LOGIN, "Ok", null);
+                            if (isShowDialog)
+                                PandoraHelper.showAlertMessage(this, "Welcome to Pandora, " +
+                                                "Please login to use this app.",
+                                        PandoraConstant.LOGIN, "Ok", null);
                             isWelcomeDisplayed = true;
                         } else {
-                            if (dialog != null && !dialog.isShowing()) {
+                            if (isShowDialog && dialog != null && !dialog.isShowing()) {
                                 PandoraHelper.showAlertMessage(this, "Session timeout, " +
                                                 "Please login again to use this app.",
                                         PandoraConstant.LOGIN, "Ok", null);
@@ -493,7 +494,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 //                    }
                 } else {
                     PandoraHelper.getProjLocAvailable(this, false);
-                    if (!getGlobalVariable().isInitialSynced())
+//                    if (!getGlobalVariable().isInitialSynced())
 //                        defaultFragment = FRAGMENT_ATTENDANCE;
 //                    else
                         defaultFragment = FRAGMENT_ACCOUNT;
@@ -612,6 +613,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 dismissProgressDialog();
                 checkLoginHandler.removeCallbacks(checkLoginRunnable);
                 checkProjTaskHandler.removeCallbacks(checkProjTaskRunnable);
+
+                directToFragment(false);
             }
         }.execute(inputBundle);
     }
@@ -1035,6 +1038,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 input, new Bundle(), null);
         if (accountBundle != null) {
             Account acc = accountBundle.getParcelable(authController.USER_ACC_ARG);
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
             ContentResolver.requestSync(acc, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
             Toast.makeText(this, "Synced", Toast.LENGTH_SHORT).show();
         }
@@ -1246,10 +1251,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    if(!isLoop) {
-                        directToFragment();
-                        cancel(true);
-                    }
+//                    if(!isLoop) {
+//                        directToFragment();
+//                        cancel(true);
+//                    }
                 }
 
                 @Override
@@ -1277,31 +1282,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     super.onPostExecute(result);
                     if (!result.getBoolean(PandoraConstant.RESULT)) {
                         getGlobalVariable().setAuth_token("");
-                    }
-
-                    boolean isAuthToken = (!getGlobalVariable().getAuth_token().isEmpty());
-                    if (!isAuthToken) {
                         new LoginAsyncTask().execute();
                     }
-
-//                    // request sync if is not finish syncing
-//                    if (isLoop && isAuthToken && !getGlobalVariable().isInitialSynced()) {
-//                        Bundle extras = new Bundle();
-//                        AccountManager accountManager = AccountManager.get(getApplicationContext());
-//                        Account[] acc = accountManager.getAccountsByType(PBSAccountInfo.ACCOUNT_TYPE);
-//                        for (Account account : acc) {
-//                            if (account.name.equals(getGlobalVariable().getAd_user_name())) {
-//                                ContentResolver.requestSync(account, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
-//                                break;
-//                            }
-//                        }
-//                    }
-//                    if (!(isLoop && isAuthToken))
-//                        directToFragment();
                 }
             }.execute();
         }
-        else directToFragment();
+//        else directToFragment(true);
     }
 
     private class LoginAsyncTask extends AsyncTask<Bundle, Void, Bundle> {
@@ -1343,7 +1329,26 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     resultBundle.getSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON);
             if (loginJSON != null) {
                 if (loginJSON.getSuccess().equals("TRUE")) {
+                    getGlobalVariable().setRoleJSON(loginJSON.getRoles());
                     getGlobalVariable().setAuth_token(loginJSON.getToken());
+
+                    boolean isAuthToken = (!getGlobalVariable().getAuth_token().isEmpty());
+                    // request sync if is not finish syncing
+                    if (isAuthToken && !getGlobalVariable().isInitialSynced()) {
+                        Bundle extras = new Bundle();
+                        AccountManager accountManager = AccountManager.get(getApplicationContext());
+                        Account[] acc = accountManager.getAccountsByType(PBSAccountInfo.ACCOUNT_TYPE);
+                        for (Account account : acc) {
+                            if (account.name.equals(getGlobalVariable().getAd_user_name())) {
+                                extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                                extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                                ContentResolver.requestSync(account, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
+                                break;
+                            }
+                        }
+                    }
+//                    if (!isAuthToken)
+//                        directToFragment(true);
                 }
             }
         }

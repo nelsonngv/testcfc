@@ -141,14 +141,14 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
             }
             if (isAuthSuccess) {
-                if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced()) {
+//                if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced()) {
                     getUnsyncCountBundle = serverController.
                             triggerEvent(PBSServerController.GET_UNSYNC_COUNT,
                                     inputAuth, getUnsyncCountBundle, null);
                     if (getUnsyncCountBundle.get(PandoraConstant.RESULT) != null && !((boolean) getUnsyncCountBundle.get(PandoraConstant.RESULT))) {
                         return;
                     }
-                }
+//                }
 
                 deleteRetentionPeriod = serverController.
                         triggerEvent(PBSServerController.DELETE_RETENTION_RECORD,
@@ -198,6 +198,8 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                     if(!global.isInitialSynced() || (global.isInitialSynced() && isSyncCompleted && projLoc != null))
                         PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
                     if (!isSyncCompleted) {
+                        extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                        extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                         ContentResolver.requestSync(account, authority, extras);
                         PandoraMain.instance.runOnUiThread(new Runnable() {
                             public void run() {
