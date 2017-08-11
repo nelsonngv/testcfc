@@ -62,6 +62,7 @@
                 <TableRow>
                     <LinearLayout style="@style/PTableVirtRowW">
                     <TextView
+                        android:id="@+id/textViewDateRequired"
                         android:text="@string/label_required_date"
                         style="@style/TableInfoLabel"
                         android:textSize="@dimen/abc_text_size_body_1_material"/>

@@ -54,11 +54,19 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
     public static final String GET_PROJECTLOCATIONS_EVENT = "GET_PROJECTLOCATIONS_EVENT";
     public static final String ARG_PROJECTLOCATIONS = "ARG_PROJECTLOCATIONS";
 
+    public static final String ARG_NFCTAG = "ARG_NFCTAG";
+    public static final String GET_PROJECTLOCATION_BY_TAG_EVENT = "GET_PROJECTLOCATION_BY_TAG_EVENT";
+
+    public static final String CREATE_ATTENDANCETRACKING_EVENT = "CREATE_ATTENDANCETRACKING_EVENT";
+
     public static String deployDate;
     public static String projectLocationId;
     public static String projectLocationName;
     public static String shiftUUID;
     public static String attType;
+    public static String empName;
+    public static boolean isKioskMode;
+    public static boolean isPhoto;
 
     ContentResolver cr;
     ExecutorService exec = Executors.newSingleThreadExecutor();
@@ -73,49 +81,12 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
 
     @Override
     public Bundle triggerEvent(String eventName, Bundle input, Bundle result, Object object) {
-        switch (eventName) {
-            case GET_ATTENDANCES_EVENT: {
-                getAttendances(input, result, object);
-                break;
-            }
-            case SEARCH_ATTENDANCE_EVENT: {
-                searchAttendances(input, result, object);
-                break;
-            }
-            case GET_SHIFTS_EVENT: {
-                getShifts(input, result, object);
-                break;
-            }
-            case GET_EMPLOYEES_EVENT: {
-                getEmploys(input, result, object);
-                break;
-            }
-            case GET_LEAVETYPES_EVENT: {
-                getLeaveTypes(input, result, object);
-                break;
-            }
-            case SAVE_ATTENDANCELINE_EVENT: {
-                saveAttendanceLine(input, result, object);
-                break;
-            }
-            case REMOVE_ATTDLINES_EVENT: {
-                removeLines(input, result, object);
-                break;
-            }
-            case CREATE_ATTENDANCE_EVENT: {
-                createAttendance(input, result, object);
-                break;
-            }
-            case GET_PROJECTLOCATIONS_EVENT: {
-                getProjectLocations(input, result, object);
-                break;
-            }
-        }
+        callTask(input, result, eventName);
         return result;
     }
 
-    private Bundle getAttendances(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, GET_ATTENDANCES_EVENT);
+    private Bundle callTask(Bundle input, Bundle result, String event) {
+        input.putString(ARG_TASK_EVENT, event);
         attendanceTask.setInput(input);
         attendanceTask.setOutput(result);
         taskResult = new FutureTask (attendanceTask);
@@ -129,135 +100,4 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
         }
         return result;
     }
-
-    private Bundle searchAttendances(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, SEARCH_ATTENDANCE_EVENT);
-        attendanceTask.setInput(input);
-        attendanceTask.setOutput(result);
-        taskResult = new FutureTask (attendanceTask);
-        exec.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-
-    private Bundle getShifts(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, GET_SHIFTS_EVENT);
-        attendanceTask.setInput(input);
-        attendanceTask.setOutput(result);
-        taskResult = new FutureTask (attendanceTask);
-        exec.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private Bundle getEmploys(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, GET_EMPLOYEES_EVENT);
-        attendanceTask.setInput(input);
-        attendanceTask.setOutput(result);
-        taskResult = new FutureTask (attendanceTask);
-        exec.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private Bundle getLeaveTypes(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, GET_LEAVETYPES_EVENT);
-        attendanceTask.setInput(input);
-        attendanceTask.setOutput(result);
-        taskResult = new FutureTask (attendanceTask);
-        exec.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private Bundle saveAttendanceLine(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, SAVE_ATTENDANCELINE_EVENT);
-        attendanceTask.setInput(input);
-        attendanceTask.setOutput(result);
-        taskResult = new FutureTask (attendanceTask);
-        exec.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private Bundle removeLines(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, REMOVE_ATTDLINES_EVENT);
-        attendanceTask.setInput(input);
-        attendanceTask.setOutput(result);
-        taskResult = new FutureTask (attendanceTask);
-        exec.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private Bundle createAttendance(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, CREATE_ATTENDANCE_EVENT);
-        attendanceTask.setInput(input);
-        attendanceTask.setOutput(result);
-        taskResult = new FutureTask(attendanceTask);
-        exec.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    private Bundle getProjectLocations(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, GET_PROJECTLOCATIONS_EVENT);
-        attendanceTask.setInput(input);
-        attendanceTask.setOutput(result);
-        taskResult = new FutureTask(attendanceTask);
-        exec.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-
 }

@@ -11,6 +11,7 @@ import android.util.Pair;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.json.PBSColumnsJSON;
+import com.pbasolutions.android.json.PBSJson;
 import com.pbasolutions.android.json.PBSSyncJSON;
 import com.pbasolutions.android.json.PBSTableJSON;
 import com.pbasolutions.android.model.ModelConst;
@@ -51,9 +52,11 @@ public class ServerTask extends Task {
             case PBSServerController.UPDATE_LOCAL_TABLES: {
                 return updateLocalTables();
             }
-
             case PBSServerController.DELETE_RETENTION_RECORD: {
                 return deleteRetentionRecord();
+            }
+            case PBSServerController.GET_UNSYNC_COUNT: {
+                return getUnsyncCount();
             }
             default:
                 return null;
@@ -265,6 +268,23 @@ public class ServerTask extends Task {
                 output.putBoolean(PandoraConstant.RESULT, false);
                 output.putInt(PandoraConstant.SYNC_COUNT, -1);
             }
+        }
+        return output;
+    }
+
+    private Bundle getUnsyncCount() {
+        PBSIServerAccessor serverAccessor = new PBSServerAccessor();
+        PBSJson json = serverAccessor.getUnsyncCount(
+                input.getString(PBSAuthenticatorController.SERVER_URL_ARG));
+        if (json != null) {
+            if (json.getSuccess().toLowerCase().equals(PandoraConstant.TRUE.toLowerCase())
+                    && json.getTotal() > 0) {
+                output.putBoolean(PandoraConstant.RESULT, true);
+            } else {
+                output.putBoolean(PandoraConstant.RESULT, false);
+            }
+        } else {
+            output.putBoolean(PandoraConstant.RESULT, false);
         }
         return output;
     }

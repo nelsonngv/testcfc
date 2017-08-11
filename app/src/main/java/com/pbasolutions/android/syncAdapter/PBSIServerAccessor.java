@@ -2,6 +2,7 @@ package com.pbasolutions.android.syncAdapter;
 
 import android.os.Bundle;
 
+import com.pbasolutions.android.json.PBSJson;
 import com.pbasolutions.android.json.PBSResultJSON;
 import com.pbasolutions.android.json.PBSSyncJSON;
 import com.pbasolutions.android.json.PBSTableJSON;
@@ -18,4 +19,6 @@ public interface PBSIServerAccessor {
     public Bundle updateTables(final PBSTableJSON updateJSON, final String username, final String authToken, final String serverURL) throws Exception;
 
     public PBSSyncJSON syncTables(final String username, String authToken,final String serverURL);
+
+    public PBSJson getUnsyncCount(final String serverURL);
 }

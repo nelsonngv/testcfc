@@ -20,6 +20,8 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.pbasolutions.android.PandoraMain;
+import com.pbasolutions.android.R;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -141,8 +143,8 @@ public class CameraUtil {
         }
     }
 
-    private static void addPathToPic(ImageView imageView, String mCurrentPhotoPath) {
-        imageView.setTag(mCurrentPhotoPath);
+    public static void addPathToPic(ImageView imageView, String mCurrentPhotoPath) {
+        imageView.setTag(R.string.tag_imageview_path, mCurrentPhotoPath);
     }
 
     private static File getAlbumDir(AlbumStorageDirFactory mAlbumStorageDirFactory) {

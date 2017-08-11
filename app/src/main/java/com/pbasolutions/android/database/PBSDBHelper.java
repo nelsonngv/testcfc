@@ -28,7 +28,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 16;
     /**
      *
      */
@@ -177,7 +177,9 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     //OTHERS
                     "NAME NVARCHAR2(300) NOT NULL," +
                     "VALUE NVARCHAR2(60) NOT NULL," +
-//                    "CONSTRAINT PROJLOC_UNIQCONS UNIQUE (C_PROJECTLOCATION_ID)," +
+                    "ISKIOSKMODE CHAR(1) DEFAULT 'N' NOT NULL," +
+                    "ISPHOTO CHAR(1) DEFAULT 'N' NOT NULL," +
+                    "NFCTAG TEXT NULL," +
                     "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
                     "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
                     "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
@@ -549,6 +551,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "ISEMPLOYEE CHAR(1) ," +
                     "ICNo VARCHAR2(20) ," +
                     "WorkPermit VARCHAR2(20) ," +
+                    "NFCTAG TEXT NULL," +
                     //--
                     //--
                     "CONSTRAINT BIZPART_UNIQCONS UNIQUE (C_BPARTNER_ID)," +
@@ -764,6 +767,26 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "ATTACHMENT_TASKPICTURE_3 VARCHAR2(100) , " +
                     "ATTACHMENT_TASKPICTURE_4 VARCHAR2(100) , " +
                     "ATTACHMENT_TASKPICTURE_5 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_6 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_7 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_8 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_9 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_10 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_11 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_12 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_13 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_14 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_15 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_16 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_17 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_18 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_19 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_20 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_21 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_22 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_23 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_24 VARCHAR2(100) , " +
+                    "ATTACHMENT_TASKPICTURE_25 VARCHAR2(100) , " +
                     //--
 //                    "CONSTRAINT PROJTASKID_UNIQCONS UNIQUE (C_PROJECTTASK_ID)," +
                     "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
@@ -1217,6 +1240,35 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
                     ");");
 
+            //HR_ENTRYLOG
+            db.execSQL("CREATE TABLE HR_ENTRYLOG( " +
+                    "HR_ENTRYLOG_ID NUMBER(10, 0) DEFAULT NULL, " +
+                    "HR_ENTRYLOG_UUID TEXT PRIMARY KEY NOT NULL, " +
+                    "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
+                    "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
+                    "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
+                    "C_BPARTNER_UUID TEXT NOT NULL, " +
+                    "DATETRX DATETIME NOT NULL, " +
+                    "LONGITUDE NUMBER, " +
+                    "LATITUDE NUMBER, " +
+                    "NFCTAG TEXT, " +
+                    "DEVICENO VARCHAR2(20), " +
+                    "ATTACHMENT_IMAGE VARCHAR2(100), " +
+                    "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW')), " +
+                    "CREATEDBY NUMBER(10, 0) NOT NULL, " +
+                    "UPDATED DATETIME NOT NULL DEFAULT (DATETIME('NOW')), " +
+                    "UPDATEDBY NUMBER(10, 0) NOT NULL, " +
+                    "ISUPDATED BOOLEAN DEFAULT 'N', " +
+                    "ISSYNCED BOOLEAN DEFAULT 'N', " +
+                    "ISDELETED BOOLEAN DEFAULT 'N', " +
+                    "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
+                    "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
+                    "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID), " +
+                    "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID), " +
+                    "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
+                    "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
+                    ");");
+
             //create index for C_SURVEYRESPONSE_ID_INDEX
             db.execSQL("CREATE INDEX C_SURVEYRESPONSE_ID_INDEX ON C_SURVEYRESPONSE(C_SURVEYRESPONSE_ID)");
             //END added 06/04/2017 by yao
@@ -1450,6 +1502,66 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                 //M_PURCHASEREQUESTLINE
                 db.execSQL("ALTER TABLE M_PURCHASEREQUESTLINE ADD ISEMERGENCY CHAR(1) DEFAULT 'N' NOT NULL");
                 db.execSQL("ALTER TABLE M_PURCHASEREQUESTLINE ADD PURCHASEREASON NVARCHAR2(255) NULL");
+            }
+
+            if (oldVersion < 15) {
+                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD ISKIOSKMODE CHAR(1) DEFAULT 'N' NOT NULL");
+                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD ISPHOTO CHAR(1) DEFAULT 'N' NOT NULL");
+                db.execSQL("ALTER TABLE C_PROJECTLOCATION ADD NFCTAG TEXT NULL");
+                db.execSQL("ALTER TABLE C_BPARTNER ADD NFCTAG TEXT NULL");
+
+                //HR_ENTRYLOG
+                db.execSQL("CREATE TABLE HR_ENTRYLOG( " +
+                        "HR_ENTRYLOG_ID NUMBER(10, 0) DEFAULT NULL, " +
+                        "HR_ENTRYLOG_UUID TEXT PRIMARY KEY NOT NULL, " +
+                        "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
+                        "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
+                        "C_PROJECTLOCATION_UUID TEXT NOT NULL, " +
+                        "C_BPARTNER_UUID TEXT NOT NULL, " +
+                        "DATETRX DATETIME NOT NULL, " +
+                        "LONGITUDE NUMBER, " +
+                        "LATITUDE NUMBER, " +
+                        "NFCTAG TEXT, " +
+                        "DEVICENO VARCHAR2(20), " +
+                        "ATTACHMENT_IMAGE VARCHAR2(100), " +
+                        "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW')), " +
+                        "CREATEDBY NUMBER(10, 0) NOT NULL, " +
+                        "UPDATED DATETIME NOT NULL DEFAULT (DATETIME('NOW')), " +
+                        "UPDATEDBY NUMBER(10, 0) NOT NULL, " +
+                        "ISUPDATED BOOLEAN DEFAULT 'N', " +
+                        "ISSYNCED BOOLEAN DEFAULT 'N', " +
+                        "ISDELETED BOOLEAN DEFAULT 'N', " +
+                        "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
+                        "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
+                        "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID), " +
+                        "FOREIGN KEY(C_BPARTNER_UUID) REFERENCES C_BPARTNER(C_BPARTNER_UUID), " +
+                        "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
+                        "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
+                        ");");
+            }
+
+            if (oldVersion < 16) {
+                //C_PROJECTTASK
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_6 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_7 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_8 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_9 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_10 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_11 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_12 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_13 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_14 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_15 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_16 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_17 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_18 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_19 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_20 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_21 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_22 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_23 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_24 VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_25 VARCHAR2(100)");
             }
         } catch (SQLException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE

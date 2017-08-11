@@ -77,6 +77,11 @@ public class PBSServerConst {
      * Action update
      */
     public static final String SYNC = "Sync";
+
+    /**
+     * Action update
+     */
+    public static final String ACTION_GET_UNSYNC_COUNT= "GetUnsyncCount";
     /**
      *
      */
@@ -125,6 +130,7 @@ public class PBSServerConst {
     public static final String GET_DEPLOYMENTS = "getDeployments";
     public static final String UPDATE_ATTENDANCE = "updateAttendance";
     public static final String SEARCH_ATTENDANCE = "getAttendance";
+    public static final String ATTACH_TO_PROJTASK = "attachToProjTask";
 
 
     public static CookieStore cookieStore;

@@ -13,6 +13,7 @@ import com.pbasolutions.android.json.PBSTableJSON;
 import com.pbasolutions.android.json.PBSColumnsJSON;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -57,6 +58,9 @@ public class ModelConst {
     public static final String INTERVIEWER_NOTES_COL = "INTERVIEWER_NOTES";
     public static final String C_BPARTNER_ID_COL = "C_BPartner_ID";
     public static final String C_BPARTNER_UUID_COL = "C_BPartner_UUID";
+    public static final String NFCTAG_COL = "NFCTAG";
+    public static final String ISKIOSKMODE_COL = "IsKioskMode";
+    public static final String ISPHOTO_COL = "IsPhoto";
 
     /**
      * table names.
@@ -108,6 +112,7 @@ public class ModelConst {
     public static final String C_SURVEYTEMPLATEQUESTION_TABLE = "C_SurveyTemplateQuestion";
     public static final String C_SURVEY_JOIN_TEMPLATE_TABLE = "C_Survey_Join_Template";
     public static final String C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TABLE = "C_Survey_Join_Template_Join_Question_Join_Response";
+    public static final String HR_ENTRYLOG_TABLE = "HR_EntryLog";
 
 
 
@@ -156,6 +161,7 @@ public class ModelConst {
     public static final int C_SURVEYTEMPLATE_TOKEN = 3800;
     public static final int C_SURVEYTEMPLATEQUESTION_TOKEN = 3900;
     public static final int HR_IDENTITY_TOKEN = 4000;
+    public static final int HR_ENTRYLOG_TOKEN = 4100;
 
     /**
      * Evaluate which table to be joined and provide table tokens for that.
@@ -211,7 +217,8 @@ public class ModelConst {
                     ModelConst.C_SURVEY_TABLE,
                     ModelConst.C_SURVEYRESPONSE_TABLE,
                     ModelConst.C_SURVEYTEMPLATE_TABLE,
-                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE
+                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE,
+                    ModelConst.HR_ENTRYLOG_TABLE
             };
 
     /**
@@ -222,7 +229,8 @@ public class ModelConst {
                     ModelConst.M_CHECKIN_TABLE,
                     ModelConst.HR_JOBAPPLICATION_TABLE,
                     ModelConst.C_SURVEY_TABLE,
-                    ModelConst.C_SURVEYRESPONSE_TABLE
+                    ModelConst.C_SURVEYRESPONSE_TABLE,
+                    ModelConst.HR_ENTRYLOG_TABLE
             };
 
     /**
@@ -571,13 +579,16 @@ public class ModelConst {
     public static ContentValues removeUnavailableColumns(ContentResolver contentResolver, String tableName, ContentValues cv) {
         Cursor cursor = contentResolver.query(ModelConst.uriCustomBuilder(tableName), null, null, null, null);
         String[] columnNames = cursor.getColumnNames();
+        String asString = Arrays.toString(columnNames).toUpperCase();
+        columnNames = asString.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+        List columnNamesList = Arrays.asList(columnNames);
         cursor.close();
         Set<Map.Entry<String, Object>> cvSet = cv.valueSet();
         ContentValues newCv = new ContentValues();
         newCv.putAll(cv);
         for (Map.Entry me : cvSet) {
             String key = me.getKey().toString();
-            if (!Arrays.asList(columnNames).contains(key.toUpperCase())) {
+            if (!columnNamesList.contains(key.toUpperCase())) {
                 newCv.remove(key);
             }
         }

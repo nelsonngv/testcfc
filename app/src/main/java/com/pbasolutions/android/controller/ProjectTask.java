@@ -5,9 +5,11 @@ import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.OperationApplicationException;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.databinding.ObservableArrayList;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
@@ -17,10 +19,13 @@ import com.google.gson.JsonParser;
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
+import com.pbasolutions.android.PandoraMain;
+import com.pbasolutions.android.R;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.api.PBSIServerAPI;
 import com.pbasolutions.android.api.PBSServerAPI;
+import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
 import com.pbasolutions.android.json.PBSProjTaskJSON;
 import com.pbasolutions.android.json.PBSProjTasksJSON;
 import com.pbasolutions.android.model.MProjectTask;
@@ -28,8 +33,10 @@ import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -146,11 +153,15 @@ public class ProjectTask implements Callable<Bundle> {
     }
 
     private Bundle getProjectLocations() {
+        String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
+                PandoraMain.instance.getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
         String projection[] = {ModelConst.C_PROJECTLOCATION_ID_COL,
                 ModelConst.NAME_COL};
+        String selection = "hr_cluster_uuid='null' or hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
+        String selectionArgs [] = {"Y", ad_user_uuid};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
-                projection, null,
-                null, "LOWER(" + ModelConst.NAME_COL + ") ASC");
+                projection, selection,
+                selectionArgs, "LOWER(" + ModelConst.NAME_COL + ") ASC");
 
         //get the projectLocations list.
         ArrayList<SpinnerPair> projectLocations = new ArrayList<>();
@@ -231,7 +242,7 @@ public class ProjectTask implements Callable<Bundle> {
     private Bundle completeProjectTask() {
         String projLocId = input.getString(PBSTaskController.ARG_PROJLOC_ID);
         String taskUUID = input.getString(PBSTaskController.ARG_TASK_UUID);
-        String taskID = input.getString(PBSTaskController.ARG_TASK_ID);
+        final String taskID = input.getString(PBSTaskController.ARG_TASK_ID);
         String comments = input.getString(PBSTaskController.ARG_COMMENTS);
         String assignedTo = input.getString(PBSTaskController.ARG_AD_USER_ID);
         String dueDate = input.getString(PBSTaskController.ARG_DUEDATE);
@@ -243,56 +254,79 @@ public class ProjectTask implements Callable<Bundle> {
         projTask.setAssignedTo(assignedTo);
         projTask.setDueDate(dueDate);
 
-        String pic1 = CameraUtil
-                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_1));
-            projTask.setAttachment_Pic1(pic1);
+//        String pic1 = CameraUtil
+//                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_1));
+//            projTask.setAttachment_Pic1(pic1);
+//
+//        String pic2 = CameraUtil
+//                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_2));
+//            projTask.setAttachment_Pic2(pic2);
+//
+//        String pic3 = CameraUtil
+//                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_3));
+//            projTask.setAttachment_Pic3(pic3);
+//
+//        String pic4 = CameraUtil
+//                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_4));
+//            projTask.setAttachment_Pic4(pic4);
+//
+//        String pic5 = CameraUtil
+//                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_5));
+//            projTask.setAttachment_Pic5(pic5);
 
-        String pic2 = CameraUtil
-                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_2));
-            projTask.setAttachment_Pic2(pic2);
-
-        String pic3 = CameraUtil
-                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_3));
-            projTask.setAttachment_Pic3(pic3);
-
-        String pic4 = CameraUtil
-                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_4));
-            projTask.setAttachment_Pic4(pic4);
-
-        String pic5 = CameraUtil
-                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_5));
-            projTask.setAttachment_Pic5(pic5);
-
-        PBSIServerAPI serverAPI = new PBSServerAPI();
+        final PBSIServerAPI serverAPI = new PBSServerAPI();
         PBSProjTasksJSON projTasks = serverAPI.completeProjTask(projTask, input.getString(PBSServerConst.PARAM_URL));
 
-        if (PBSServerConst.TRUE.equalsIgnoreCase(projTasks.getSuccess())){
+        if (PBSServerConst.TRUE.equalsIgnoreCase(projTasks.getSuccess())) {
+            if (input.getString(PBSTaskController.ARG_TASKPIC_1) != null) {
+                for (int i = 1; i <= 25; i += 5) {
+                    final int finalI = i;
+                    if (input.getString(PBSTaskController.ARG_TASKPIC + i) == null)
+                        break;
+
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            JsonObject object = new JsonObject();
+                            object.addProperty(MProjectTask.C_PROJECTTASK_ID_COL, taskID);
+                            for (int j = 0; j < 5; j++) {
+                                if (input.getString(PBSTaskController.ARG_TASKPIC + (finalI + j)) == null)
+                                    break;
+                                object.addProperty(MProjectTask.ATTACHMENT_PIC + (finalI + j), CameraUtil.imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC + (finalI + j))));
+                            }
+                            PBSIServerAPI serverAPI = new PBSServerAPI();
+                            serverAPI.attachToProjTask(object, input.getString(PBSServerConst.PARAM_URL));
+                            return null;
+                        }
+                    }.execute();
+                }
+            }
 
             String[] selectionArgs = {taskUUID};
-
 //            boolean result = ModelConst.deleteTableRow(cr, MProjectTask.TABLENAME, MProjectTask.C_PROJECTTASK_UUID_COL, selectionArgs);
             ContentValues cv = new ContentValues();
             cv.put(MProjectTask.COMMENTS_COL, comments);
             cv.put(MProjectTask.ISDONE_COL, "Y");
-            cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_1_COL, input.getString(PBSTaskController.ARG_TASKPIC_1));
-            cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_2_COL, input.getString(PBSTaskController.ARG_TASKPIC_2));
-            cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_3_COL, input.getString(PBSTaskController.ARG_TASKPIC_3));
-            cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_4_COL, input.getString(PBSTaskController.ARG_TASKPIC_4));
-            cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_5_COL, input.getString(PBSTaskController.ARG_TASKPIC_5));
+            for (int i = 1; i <= 25; i++) {
+                if (input.getString(PBSTaskController.ARG_TASKPIC + i) == null)
+                    break;
+                cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_COL + i, input.getString(PBSTaskController.ARG_TASKPIC + i));
+            }
+//                cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_1_COL, input.getString(PBSTaskController.ARG_TASKPIC_1));
+//                cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_2_COL, input.getString(PBSTaskController.ARG_TASKPIC_2));
+//                cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_3_COL, input.getString(PBSTaskController.ARG_TASKPIC_3));
+//                cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_4_COL, input.getString(PBSTaskController.ARG_TASKPIC_4));
+//                cv.put(MProjectTask.ATTACHMENT_TASKPICTURE_5_COL, input.getString(PBSTaskController.ARG_TASKPIC_5));
             boolean result = ModelConst.updateTableRow(cr, MProjectTask.TABLENAME, cv, MProjectTask.C_PROJECTTASK_UUID_COL, selectionArgs);
 
-            if (!result) {
-                output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-                output.putString(PandoraConstant.ERROR, "Fail to update Project Tasks.");
-            } else {
+            if (result) {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
                 output.putString(PandoraConstant.RESULT, "Successfully update Project Task");
+                return output;
             }
-        } else {
-            output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-            output.putString(PandoraConstant.ERROR, "Fail to update Project Tasks.");
-            return output;
         }
+        output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+        output.putString(PandoraConstant.ERROR, "Fail to update Project Tasks.");
         return output;
     }
 
@@ -361,6 +395,7 @@ public class ProjectTask implements Callable<Bundle> {
                 Log.e(TAG, e.getMessage());
             }
 
+            boolean isShowNotification = input.getBoolean("isShowNotification", false);
             String projTaskIDs = "";
             for (PBSProjTaskJSON projTask : projTasks.getProjTasks()){
                 ContentValues cv = new ContentValues();
@@ -385,11 +420,15 @@ public class ProjectTask implements Callable<Bundle> {
                 String[] arg = {cv.getAsString(selection)};
                 String tableName = ModelConst.C_PROJECTTASK_TABLE;
                 if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
-                    cv.put(MProjectTask.C_PROJECTTASK_UUID_COL, UUID.randomUUID().toString());
+                    String uuid = UUID.randomUUID().toString();
+                    cv.put(MProjectTask.C_PROJECTTASK_UUID_COL, uuid);
                     ops.add(ContentProviderOperation
                             .newInsert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
                             .withValues(cv)
                             .build());
+
+                    if (!projTask.getIsDone() && isShowNotification)
+                        PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_new_proj_task), ProjTaskDetailsFragment.class.getSimpleName());
                 } else {
                     selection = selection + "=?";
                     ops.add(ContentProviderOperation
@@ -397,6 +436,27 @@ public class ProjectTask implements Callable<Bundle> {
                             .withValues(cv)
                             .withSelection(selection, arg)
                             .build());
+
+                    if (!projTask.getIsDone() && isShowNotification) {
+                        String uuid = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE, MProjectTask.C_PROJECTTASK_ID_COL,
+                                projTask.getC_ProjectTask_ID(), MProjectTask.C_PROJECTTASK_UUID_COL, cr);
+                        try {
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(sdf.parse(projTask.getDueDate()));
+                            cal.add(Calendar.DATE, 1);
+                            Date dueDate = cal.getTime();
+                            cal.add(Calendar.HOUR, -2);
+                            Date expiringDueDate = cal.getTime();
+                            if (new Date().after(dueDate)) {
+                                PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_proj_task_expired), ProjTaskDetailsFragment.class.getSimpleName());
+                            } else if (new Date().after(expiringDueDate)) {
+                                PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_proj_task_expiring), ProjTaskDetailsFragment.class.getSimpleName());
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
 
@@ -451,6 +511,26 @@ public class ProjectTask implements Callable<Bundle> {
             MProjectTask.ATTACHMENT_TASKPICTURE_3_COL,
             MProjectTask.ATTACHMENT_TASKPICTURE_4_COL,
             MProjectTask.ATTACHMENT_TASKPICTURE_5_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_6_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_7_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_8_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_9_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_10_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_11_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_12_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_13_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_14_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_15_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_16_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_17_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_18_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_19_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_20_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_21_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_22_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_23_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_24_COL,
+            MProjectTask.ATTACHMENT_TASKPICTURE_25_COL,
             MProjectTask.DUEDATE_COL
     };
 
@@ -548,6 +628,66 @@ public class ProjectTask implements Callable<Bundle> {
             } else if (MProjectTask.ATTACHMENT_TASKPICTURE_5_COL
                     .equalsIgnoreCase(columnName)) {
                 projTask.setATTACHMENT_TASKPICTURE_5(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_6_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_6(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_7_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_7(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_8_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_8(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_9_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_9(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_10_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_10(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_11_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_11(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_12_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_12(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_13_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_13(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_14_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_14(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_15_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_15(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_16_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_16(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_17_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_17(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_18_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_18(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_19_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_19(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_20_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_20(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_21_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_21(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_22_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_22(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_23_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_23(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_24_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_24(rowValue);
+            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_25_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setATTACHMENT_TASKPICTURE_25(rowValue);
             } else if (MProjectTask.DUEDATE_COL
                     .equalsIgnoreCase(columnName)) {
                 if (rowValue != null) {

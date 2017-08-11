@@ -8,6 +8,7 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.pbasolutions.android.BuildConfig;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 
@@ -88,8 +90,11 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
 
             //work around to get latest serverURL after serverURL has been changed.
 //            String globalServerURL = global.getServer_url();
-            String serverURL = accountManager.getUserData(account,
-                    PBSAuthenticatorController.SERVER_URL_ARG);
+//            String serverURL = accountManager.getUserData(account,
+//                    PBSAuthenticatorController.SERVER_URL_ARG);
+            SharedPreferences prefs = context.getSharedPreferences(
+                    BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+            String serverURL = prefs.getString("serverURL", "");
 //            if (!serverURL.equalsIgnoreCase(globalServerURL) && !globalServerURL.isEmpty()) {
 //                serverURL = globalServerURL;
 //            }
@@ -109,6 +114,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
             inputAuth.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
             inputAuth.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
 
+            Bundle getUnsyncCountBundle = new Bundle();
             Bundle updateResultBundle = new Bundle();
             Bundle deleteRetentionPeriod = new Bundle();
             Bundle syncResultBundle = new Bundle();
@@ -140,6 +146,15 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
             }
             if (isAuthSuccess) {
+//                if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced()) {
+                    getUnsyncCountBundle = serverController.
+                            triggerEvent(PBSServerController.GET_UNSYNC_COUNT,
+                                    inputAuth, getUnsyncCountBundle, null);
+                    if (getUnsyncCountBundle.get(PandoraConstant.RESULT) != null && !((boolean) getUnsyncCountBundle.get(PandoraConstant.RESULT))) {
+                        return;
+                    }
+//                }
+
                 deleteRetentionPeriod = serverController.
                         triggerEvent(PBSServerController.DELETE_RETENTION_RECORD,
                                 inputAuth, deleteRetentionPeriod,null);
@@ -156,7 +171,9 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                     syncResult.hasError();
                 }
 
-                boolean isSyncCompleted = syncResultBundle.getInt(PandoraConstant.SYNC_COUNT) == 0;
+                int syncCount = syncResultBundle.getInt(PandoraConstant.SYNC_COUNT);
+                boolean isSyncCompleted = syncCount == 0;
+                PandoraMain.instance.getGlobalVariable().setIsFirstBatchSynced(true);
                 if (PandoraMain.instance != null && PandoraMain.instance.getSupportActionBar().isShowing() == true) {
                     PBSProjLocJSON[] projLoc = null;
                     if (isSyncCompleted) {
@@ -176,7 +193,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                         if (projLoc == null) {
                             PandoraMain.instance.runOnUiThread(new Runnable() {
                                 public void run() {
-                                    Toast.makeText(PandoraMain.instance.getBaseContext(), "Please login again. Connection disrupted.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(PandoraMain.instance.getBaseContext(), "Done syncing but incomplete of data detected. Please contact admin for assistance.", Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
@@ -187,16 +204,22 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                     if(!global.isInitialSynced() || (global.isInitialSynced() && isSyncCompleted && projLoc != null))
                         PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
                     if (!isSyncCompleted) {
-                        ContentResolver.requestSync(account, authority, extras);
-                        PandoraMain.instance.runOnUiThread(new Runnable() {
-                            public void run() {
-                                String text;
-                                if (PandoraMain.instance.getGlobalVariable().isInitialSynced())
-                                    text = "Syncing...";
-                                else text = "Initial syncing...";
-                                Toast.makeText(PandoraMain.instance.getBaseContext(), text, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        if (syncCount != -1) {
+                            extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                            ContentResolver.requestSync(account, authority, extras);
+                            PandoraMain.instance.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    String text;
+                                    if (PandoraMain.instance.getGlobalVariable().isInitialSynced())
+                                        text = "Syncing...";
+                                    else text = "Initial syncing...";
+                                    Toast.makeText(PandoraMain.instance.getBaseContext(), text, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            Toast.makeText(PandoraMain.instance.getBaseContext(), "Could not receive data when sync. Please contact admin for assistance", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             } else{

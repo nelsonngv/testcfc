@@ -41,6 +41,7 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
     public static final String ARG_DUEDATE = "ARG_DUEDATE";
 
 
+    public static final String ARG_TASKPIC = "ARG_TASKPIC_";
     public static final String ARG_TASKPIC_1 = "ARG_TASKPIC_1";
     public static final String ARG_TASKPIC_2 = "ARG_TASKPIC_2";
     public static final String ARG_TASKPIC_3 = "ARG_TASKPIC_3";

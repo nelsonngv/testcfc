@@ -128,6 +128,7 @@
     <string name="label_leavetype">Leave Type</string>
     <string name="label_daytype">Day Type</string>
     <string name="label_ok">OK</string>
+    <string name="label_cancel">Cancel</string>
     <string name="label_sync">Initial Syncing. Please wait</string>
     <!--
      Asset list
@@ -205,6 +206,7 @@
     Task layout.
     !-->
     <string name="label_pretaskpicture">Pre-Task Picture </string>
+    <string name="label_picture">Picture [%1$s] </string>
     <string name="label_picture1">Picture [1] </string>
     <string name="label_picture2">Picture [2] </string>
     <string name="label_picture3">Picture [3] </string>
@@ -318,16 +320,34 @@
     !-->
     <string name="agreement">I agree the survey answers are true.</string>
     <string name="clear_pad">Clear Pad</string>
-    <string name="submit_survey">Submit Survey</string>
+    <string name="submit">Submit</string>
 
     <!--
     Attandence Tracking.
     !-->
     <string name="title_attendance_tracking">Attendance Tracking</string>
+    <string name="title_attendance_tracking_kiosk">(Kiosk) Attendance Tracking</string>
     <string name="location_tag">Waiting for location tag...</string>
     <string name="emp_tag">Waiting for employee tag...</string>
     <string name="nfc_notsupport">Sorry, this device doesn\'t support NFC!</string>
     <string name="nfc_disabled">NFC is disabled</string>
     <string name="tap_nfc">Please tap on NFC</string>
+    <string name="invalid_tag">Invalid tag detected</string>
+    <string name="attendance_done1">Hi %1$s, you have marked an attendance at %2$s.</string>
+    <string name="attendance_done2">Thank you for using our service!</string>
+
+    <!--
+    ImageView Tag Key.
+    !-->
+    <string name="tag_imageview_path">tag_imageview_path</string>
+    <string name="tag_imageview_count">tag_imageview_count</string>
+    <string name="warning_add_pic_first">Please attach picture first before adding new one</string>
+
+    <!--
+    Proj task notification.
+    !-->
+    <string name="notification_new_proj_task">Received new project task</string>
+    <string name="notification_proj_task_expired">Project task has expired</string>
+    <string name="notification_proj_task_expiring">Project task is expiring</string>
 
 </resources>

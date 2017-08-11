@@ -148,8 +148,8 @@ public class ProjTaskFragment extends Fragment {
      * Sync project task from server.
      */
     private Bundle syncProjTasks() {
-        if (PBSServerConst.cookieStore !=null){
-            Bundle input = new Bundle();
+        Bundle input = new Bundle();
+        if (PBSServerConst.cookieStore != null) {
             input.putString(PBSTaskController.ARG_PROJLOC_UUID, globalVar.getC_projectlocation_uuid());
             input.putString(PBSTaskController.ARG_AD_USER_ID, globalVar.getAd_user_id());
             input.putString(PBSServerConst.PARAM_URL, globalVar.getServer_url());
@@ -158,7 +158,7 @@ public class ProjTaskFragment extends Fragment {
             return result;
         }
 
-        return null;
+        return input;
     }
 
     /**

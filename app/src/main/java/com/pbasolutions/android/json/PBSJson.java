@@ -16,6 +16,7 @@ public class PBSJson
 
     String _UUID;
     int _ID;
+    int Count, Total;
     private boolean isSelected = false;
     public PBSJson() {
     }
@@ -61,10 +62,6 @@ public class PBSJson
         return _UUID;
     }
 
-    public int get_ID() {
-        return _ID;
-    }
-
     @Override
     public void setIsSelected(boolean flag) {
         this.isSelected = flag;
@@ -77,5 +74,25 @@ public class PBSJson
 
     public void set_ID(int _ID) {
         this._ID = _ID;
+    }
+
+    public int get_ID() {
+        return _ID;
+    }
+
+    public void setCount(int Count) {
+        this.Count = Count;
+    }
+
+    public int getCount() {
+        return Count;
+    }
+
+    public void setTotal(int Total) {
+        this.Total = Total;
+    }
+
+    public int getTotal() {
+        return Total;
     }
 }

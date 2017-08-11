@@ -4,11 +4,9 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.MediaScannerConnection;
@@ -30,7 +28,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,9 +35,13 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 //import com.google.firebase.iid.FirebaseInstanceId;
-import com.android.volley.toolbox.RequestFuture;
 import com.pbasolutions.android.account.PBSAccountInfo;
+import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
+import com.pbasolutions.android.controller.PBSTaskController;
+import com.pbasolutions.android.fragment.ATrackDoneFragment;
+import com.pbasolutions.android.fragment.ATrackScanEmpIDFragment;
+import com.pbasolutions.android.fragment.ATrackScanLocFragment;
 import com.pbasolutions.android.fragment.ApplicantDetailsFragment;
 import com.pbasolutions.android.fragment.ApplicantFragment;
 import com.pbasolutions.android.fragment.AssetFragment;
@@ -71,6 +72,7 @@ import com.pbasolutions.android.fragment.NewRequisitionLineFragment;
 import com.pbasolutions.android.fragment.NewSurveyPagerFragment;
 import com.pbasolutions.android.fragment.NewSurveySignFragment;
 import com.pbasolutions.android.fragment.NewSurveyStartFragment;
+import com.pbasolutions.android.fragment.PBSDetailsFragment;
 import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
 import com.pbasolutions.android.fragment.ProjTaskFragment;
 import com.pbasolutions.android.fragment.RecruitFragment;
@@ -78,6 +80,7 @@ import com.pbasolutions.android.fragment.RequisitionDetailFragment;
 import com.pbasolutions.android.fragment.RequisitionFragment;
 import com.pbasolutions.android.fragment.RequisitionLineDetailsFragment;
 import com.pbasolutions.android.fragment.SurveyFragment;
+import com.pbasolutions.android.json.PBSLoginJSON;
 import com.pbasolutions.android.json.PBSResultJSON;
 import com.pbasolutions.android.utils.AlbumStorageDirFactory;
 import com.pbasolutions.android.utils.BaseAlbumDirFactory;
@@ -90,9 +93,6 @@ import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Created by pbadell on 6/29/15.
@@ -150,7 +150,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      *  Progress Indicator
      */
     private ProgressDialog progressDialog;
-    private int progressShowCount = 0;
+    private int             progressShowCount = 0;
 
     public static PandoraMain instance;
 
@@ -159,16 +159,17 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     public static final int FRAGMENT_DEFAULT = -1;
     public static final int FRAGMENT_ATTENDANCE = 0;
-    public static final int FRAGMENT_RECRUIT = 1;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING = 1;
+    public static final int FRAGMENT_RECRUIT = 2;
 //    public static final int FRAGMENT_DEPLOY =1;
-    public static final int FRAGMENT_ASSET = 2;
-    public static final int FRAGMENT_REQUISITION = 3;
-    public static final int FRAGMENT_TASK = 4;
-    public static final int FRAGMENT_SURVEY = 5;
-    public static final int FRAGMENT_CHECKPOINTS = 6;
-    public static final int FRAGMENT_CHECKPOINT_SEQ = 7;
-    public static final int FRAGMENT_BROADCAST = 8;
-    public static final int SETTING_MENU = 9;
+    public static final int FRAGMENT_ASSET = 3;
+    public static final int FRAGMENT_REQUISITION = 4;
+    public static final int FRAGMENT_TASK = 5;
+    public static final int FRAGMENT_SURVEY = 6;
+    public static final int FRAGMENT_CHECKPOINTS = 7;
+    public static final int FRAGMENT_CHECKPOINT_SEQ = 8;
+    public static final int FRAGMENT_BROADCAST = 9;
+    public static final int SETTING_MENU = 10;
     public static final int FRAGMENT_CHECKPOINTS_DETAILS = 50;
     public static final int FRAGMENT_NEW_CHECK_IN = 51;
     public static final int FRAGMENT_ACCOUNT = 80;
@@ -182,6 +183,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public static final int FRAGMENT_START_SURVEY = 28;
     public static final int FRAGMENT_NEW_SURVEY = 29;
     public static final int FRAGMENT_SIGN_SURVEY = 30;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING_EMPID = 31;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING_DONE = 32;
 
     /**
      * Toolbar menu id.
@@ -204,9 +207,11 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     /**
      * Handler.
      */
-    private Handler handler = new Handler();
-    private Runnable runnable;
-    private int delay = 600000; //10 mins
+    private Handler checkLoginHandler = new Handler();
+    private Handler checkProjTaskHandler = new Handler();
+    private Runnable checkLoginRunnable, checkProjTaskRunnable;
+    private int checkLoginDelay = 600000; //10 mins
+    private int checkProjTaskDelay = 1800000; //30 mins
 
     // to check sync result
     public static final String GOTO_RECRUIT = "GotoRecruit";
@@ -215,7 +220,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public String[] menuList = null;
 
     //menu list constant
-    public static final String[] MENU_LIST = {"Attendance", "Recruit", "Asset", "Requisition", "Task",
+    public static final String[] MENU_LIST = {"Attendance", "Attendance Tracking", "Recruit", "Asset", "Requisition", "Task",
             "Survey", "Check In", "Check Point", "Broadcast", "Setting"};
 
     //welcome dialog indicator
@@ -298,23 +303,52 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             }
         });
 
+        if (PBSServerConst.cookieStore == null) {
+            PBSServerConst.instantiateCookie();
+        }
+
         instance = this;
 //        Log.d(TAG, "Refreshed token: " + FirebaseInstanceId.getInstance().getToken());
-//        registerReceiver(myReceiver, new IntentFilter("Received.Mpay.Push.Notification"));
-//
 //        //receive push notification broadcast
 //        myReceiver = new ReceiveMessages();
+//        registerReceiver(myReceiver, new IntentFilter("Received.PandoraCFC.Push.Notification"));
 
-        runnable = new Runnable(){
-            public void run(){
+        //check login
+        checkLoginRunnable = new Runnable(){
+            public void run() {
                 if(getSupportActionBar().isShowing() == true) {
                     checkLogin(true);
                 }
 
-                handler.postDelayed(this, delay);
+                checkLoginHandler.postDelayed(this, checkLoginDelay);
             }
         };
-        handler.postDelayed(runnable, delay);
+        checkLoginHandler.postDelayed(checkLoginRunnable, checkLoginDelay);
+
+        //check proj task
+        checkProjTaskRunnable = new Runnable(){
+            public void run() {
+                if(getSupportActionBar().isShowing() == true) {
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (PBSServerConst.cookieStore != null) {
+                                Bundle input = new Bundle();
+                                input.putString(PBSTaskController.ARG_PROJLOC_UUID, getGlobalVariable().getC_projectlocation_uuid());
+                                input.putString(PBSTaskController.ARG_AD_USER_ID, getGlobalVariable().getAd_user_id());
+                                input.putString(PBSServerConst.PARAM_URL, getGlobalVariable().getServer_url());
+                                input.putBoolean("isShowNotification", true);
+                                PBSTaskController taskCont = new PBSTaskController(PandoraMain.instance);
+                                Bundle result = taskCont.triggerEvent(PBSTaskController.SYNC_PROJTASKS_EVENT, input, new Bundle(), null);
+                            }
+                        }
+                    });
+                }
+
+                checkProjTaskHandler.postDelayed(this, checkProjTaskDelay);
+            }
+        };
+        checkProjTaskHandler.postDelayed(checkProjTaskRunnable, checkProjTaskDelay);
     }
 
     /**
@@ -413,6 +447,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             titleID = R.string.title_survey;
         } else if (NewSurveyStartFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_new_survey;
+        } else if (ATrackScanLocFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_attendance_tracking;
+        } else if (ATrackScanEmpIDFragment.class.getName().equalsIgnoreCase(fragClassName)
+                || ATrackDoneFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            if (PBSAttendanceController.isKioskMode)
+                titleID = R.string.title_attendance_tracking_kiosk;
+            else titleID = R.string.title_attendance_tracking;
         }
 
         ActionBar actionBar = getSupportActionBar();
@@ -423,7 +464,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     /**
      * Redirect the screen view depending on the authToken state.
      */
-    public void directToFragment() {
+    public void directToFragment(boolean isShowDialog) {
         try {
             //check from account manager. no request send to server.
             Bundle inputBundle = new Bundle();
@@ -442,12 +483,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     defaultFragment = FRAGMENT_ACCOUNT;
 //                    if (dialog != null && !dialog.isShowing()) {
                         if (!isWelcomeDisplayed) {
-                            PandoraHelper.showAlertMessage(this, "Welcome to Pandora, " +
-                                            "Please login to use this app.",
-                                    PandoraConstant.LOGIN, "Ok", null);
+                            if (isShowDialog)
+                                PandoraHelper.showAlertMessage(this, "Welcome to Pandora, " +
+                                                "Please login to use this app.",
+                                        PandoraConstant.LOGIN, "Ok", null);
                             isWelcomeDisplayed = true;
                         } else {
-                            if (dialog != null && !dialog.isShowing()) {
+                            if (isShowDialog && dialog != null && !dialog.isShowing()) {
                                 PandoraHelper.showAlertMessage(this, "Session timeout, " +
                                                 "Please login again to use this app.",
                                         PandoraConstant.LOGIN, "Ok", null);
@@ -456,7 +498,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 //                    }
                 } else {
                     PandoraHelper.getProjLocAvailable(this, false);
-                    if (!getGlobalVariable().isInitialSynced())
+//                    if (!getGlobalVariable().isInitialSynced())
 //                        defaultFragment = FRAGMENT_ATTENDANCE;
 //                    else
                         defaultFragment = FRAGMENT_ACCOUNT;
@@ -573,7 +615,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 showLogOutDialog(PBSAuthenticatorController.SUCCESSFULLY_LOGGED_OUT_TXT);
 
                 dismissProgressDialog();
-                handler.removeCallbacks(runnable);
+                checkLoginHandler.removeCallbacks(checkLoginRunnable);
+                checkProjTaskHandler.removeCallbacks(checkProjTaskRunnable);
+
+                directToFragment(false);
             }
         }.execute(inputBundle);
     }
@@ -926,6 +971,24 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 break;
             }
 
+            case FRAGMENT_ATTENDANCE_TRACKING: {
+                fragment = new ATrackScanLocFragment();
+                title = getString(R.string.title_attendance_tracking);
+                break;
+            }
+
+            case FRAGMENT_ATTENDANCE_TRACKING_EMPID: {
+                fragment = new ATrackScanEmpIDFragment();
+                title = getString(R.string.title_attendance_tracking);
+                break;
+            }
+
+            case FRAGMENT_ATTENDANCE_TRACKING_DONE: {
+                fragment = new ATrackDoneFragment();
+                title = getString(R.string.title_attendance_tracking);
+                break;
+            }
+
             default:
                 break;
         }
@@ -979,6 +1042,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 input, new Bundle(), null);
         if (accountBundle != null) {
             Account acc = accountBundle.getParcelable(authController.USER_ACC_ARG);
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
             ContentResolver.requestSync(acc, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
             Toast.makeText(this, "Synced", Toast.LENGTH_SHORT).show();
         }
@@ -988,8 +1053,15 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent != null){
-            if (intent.getAction() != null){
+        if (intent != null) {
+            if (intent.getExtras() != null && intent.getExtras().get("isNotification") != null && (boolean)intent.getExtras().get("isNotification") == true) {
+                if (intent.getExtras().get("className") != null && intent.getExtras().get("className").equals(ProjTaskDetailsFragment.class.getSimpleName())) {
+                    Fragment fragment = new ProjTaskDetailsFragment();
+                    ((PBSDetailsFragment) fragment).set_UUID(intent.getExtras().getString("uuid"));
+                    updateFragment(fragment, getString(R.string.title_projtaskdetails), false);
+                }
+            }
+            else if (intent.getAction() != null) {
                 if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED) || intent.getAction().equals(NfcAdapter.ACTION_TECH_DISCOVERED) || intent.getAction().equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
                     if (getGlobalVariable().getAd_user_name() == null) {
                         checkLogin(false);
@@ -998,11 +1070,23 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                         if (fragment != null && fragment instanceof NewCheckInFragment) {
                             fragment = new NewCheckInFragment();
                             ((NewCheckInFragment) fragment).setNfcIntent(intent);
-                            updateFragment(fragment, "New Check In", false);
+                            updateFragment(fragment, getString(R.string.title_newcheckin), false);
+                        }
+                        else if (fragment != null && fragment instanceof ATrackScanLocFragment) {
+                            fragment = new ATrackScanLocFragment();
+                            ((ATrackScanLocFragment) fragment).setNfcIntent(intent);
+                            updateFragment(fragment, getString(R.string.title_attendance_tracking), false);
+                        }
+                        else if (fragment != null && fragment instanceof ATrackScanEmpIDFragment) {
+                            fragment = new ATrackScanEmpIDFragment();
+                            ((ATrackScanEmpIDFragment) fragment).setNfcIntent(intent);
+                            if (PBSAttendanceController.isKioskMode)
+                                updateFragment(fragment, getString(R.string.title_attendance_tracking_kiosk), false);
+                            else updateFragment(fragment, getString(R.string.title_attendance_tracking), false);
                         }
                     }
                 }
-            }else {
+            } else {
                 checkLogin(false);
             }
         }
@@ -1014,7 +1098,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         invalidateOptionsMenu();
         checkLogin(false);
 //        if (!myReceiverIsRegistered) {
-//            registerReceiver(myReceiver, new IntentFilter("Received.Mpay.Push.Notification"));
+//            registerReceiver(myReceiver, new IntentFilter("Received.PandoraCFC.Push.Notification"));
 //            myReceiverIsRegistered = true;
 //        }
     }
@@ -1048,7 +1132,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     f = CameraUtil.setUpPhotoFile(mAlbumStorageDirFactory);
                     mCurrentPhotoPath = f.getAbsolutePath();
                     CameraUtil.galleryAddPic(mCurrentPhotoPath, PandoraMain.this);
-//                    takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
+//                    if (getCurrentFragment() instanceof ATrackScanEmpIDFragment)
+//                        takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -1170,8 +1255,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    if(!isLoop)
-                        directToFragment();
+//                    if(!isLoop) {
+//                        directToFragment();
+//                        cancel(true);
+//                    }
                 }
 
                 @Override
@@ -1199,27 +1286,76 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     super.onPostExecute(result);
                     if (!result.getBoolean(PandoraConstant.RESULT)) {
                         getGlobalVariable().setAuth_token("");
+                        new LoginAsyncTask().execute();
                     }
+                }
+            }.execute();
+        }
+//        else directToFragment(true);
+    }
+
+    private class LoginAsyncTask extends AsyncTask<Bundle, Void, Bundle> {
+
+        @Override
+        protected Bundle doInBackground(Bundle... params) {
+            String deviceID = PandoraHelper.getDeviceID(PandoraMain.this);
+            if (deviceID == null || deviceID.isEmpty()) {
+                return new Bundle();
+            }
+
+            PBSAuthenticatorController authController = new PBSAuthenticatorController(PandoraMain.this);
+            Bundle resultBundle = new Bundle();
+            Bundle bundle = new Bundle();
+            bundle.putString(PBSServerConst.VERSION, getGlobalVariable().getServer_url());
+            resultBundle = authController.triggerEvent(PBSAuthenticatorController.AUTHENTICATE_SERVER, bundle, resultBundle, null);
+
+            if (resultBundle.getBoolean(PBSServerConst.RESULT)) {
+                resultBundle = new Bundle();
+                bundle = new Bundle();
+                bundle.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
+                bundle.putString(PBSAuthenticatorController.ARG_ACCOUNT_NAME, getGlobalVariable().getAd_user_name());
+                bundle.putString(PBSAuthenticatorController.USER_PASS_ARG, getGlobalVariable().getAd_user_password());
+                bundle.putString(PBSAuthenticatorController.ARG_AUTH_TYPE, PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
+                bundle.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
+                bundle.putString(PBSAuthenticatorController.SERVER_URL_ARG, getGlobalVariable().getServer_url());
+                resultBundle = authController.triggerEvent(PBSAuthenticatorController.SUBMIT_LOGIN,
+                        bundle, resultBundle, null);
+            }
+            return resultBundle;
+        }
+
+        protected void onPostExecute(Bundle resultBundle) {
+            if (resultBundle.getString(PandoraConstant.ERROR) != null) {
+                return;
+            }
+
+            final PBSLoginJSON loginJSON = (PBSLoginJSON)
+                    resultBundle.getSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON);
+            if (loginJSON != null) {
+                if (loginJSON.getSuccess().equals("TRUE")) {
+                    getGlobalVariable().setRoleJSON(loginJSON.getRoles());
+                    getGlobalVariable().setAuth_token(loginJSON.getToken());
 
                     boolean isAuthToken = (!getGlobalVariable().getAuth_token().isEmpty());
                     // request sync if is not finish syncing
-                    if (isLoop && isAuthToken && !getGlobalVariable().isInitialSynced()) {
+                    if (isAuthToken && !getGlobalVariable().isInitialSynced()) {
                         Bundle extras = new Bundle();
                         AccountManager accountManager = AccountManager.get(getApplicationContext());
                         Account[] acc = accountManager.getAccountsByType(PBSAccountInfo.ACCOUNT_TYPE);
                         for (Account account : acc) {
                             if (account.name.equals(getGlobalVariable().getAd_user_name())) {
+                                extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                                extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                                 ContentResolver.requestSync(account, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
                                 break;
                             }
                         }
                     }
-                    if (!(isLoop && isAuthToken))
-                        directToFragment();
+//                    if (!isAuthToken)
+//                        directToFragment(true);
                 }
-            }.execute();
+            }
         }
-        else directToFragment();
     }
 
     public PandoraContext getGlobalVariable() {
@@ -1232,6 +1368,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         this.globalVariable = globalVariable;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PBSServerConst.cookieStore = null;
+    }
+
 //    private class ReceiveMessages extends BroadcastReceiver
 //    {
 //        @Override
@@ -1241,7 +1383,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 //            String action = intent.getAction();
 //            Log.d(TAG, "...............action: " + action);
 //            if(action.equalsIgnoreCase("Received.PandoraCFC.Push.Notification")){
-//                displayView(FRAGMENT_TASK, false);
+//                displayView(FRAGMENT_ATTENDANCE, false);
 //            }
 //        }
 //    }

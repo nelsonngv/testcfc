@@ -1,6 +1,8 @@
 package com.pbasolutions.android.fragment;
 
 import android.accounts.AccountManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.pbasolutions.android.BuildConfig;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
@@ -111,8 +114,14 @@ public class LoginFragment extends Fragment {
                 .getText().toString();
         deviceID = PandoraHelper.getDeviceID(getActivity());
 
+        if (deviceID == null || deviceID.isEmpty()) {
+            PandoraHelper.showWarningMessage(getActivity(),
+                    "Unable to obtain device ID. Please contact the administrator.");
+            return;
+        }
+
         if (accountName.isEmpty() || accountPassword.isEmpty() || serverURL.isEmpty()) {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
+            PandoraHelper.showWarningMessage(getActivity(),
                     "Please fill up all the fields");
             return;
         }
@@ -137,7 +146,7 @@ public class LoginFragment extends Fragment {
         new LoginAsyncTask().execute(bundle);
     }
 
-    private boolean isServer(String serverURL) {
+    public boolean isServer(String serverURL) {
         final Bundle bundle = new Bundle();
         bundle.putString(PBSServerConst.VERSION, serverURL);
         Bundle resultBundle = new Bundle();
@@ -204,6 +213,9 @@ public class LoginFragment extends Fragment {
                     context.getGlobalVariable().setIsAuth(true);
                     context.getGlobalVariable().setServer_url(serverURL);
                     context.getGlobalVariable().setAuth_token(loginJSON.getToken());
+                    SharedPreferences prefs = context.getSharedPreferences(
+                            BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+                    prefs.edit().putString("serverURL", serverURL).commit();
 
                     PandoraHelper.getProjLocAvailable(PandoraMain.instance, false);
 

@@ -45,8 +45,11 @@ public class PBSHttpsTrustManager implements X509TrustManager {
     public static void allowAllSSL() {
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
             @Override
-            public boolean verify(String arg0, SSLSession arg1) {
-                return true;
+            public boolean verify(String hostname, SSLSession arg1) {
+                if (!hostname.equalsIgnoreCase("www.anywebsiteurl.com"))
+                    return true;
+                else
+                    return false;
             }
         });
 

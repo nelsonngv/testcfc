@@ -1,5 +1,6 @@
 package com.pbasolutions.android.fragment;
 
+import android.accounts.AccountManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -67,9 +68,11 @@ public class AccountFragment extends Fragment {
         boolean isAuthToken = false;
         if (context.getGlobalVariable() != null)
         isAuthToken = (!context.getGlobalVariable().getAuth_token().isEmpty());
-        //|| (authenticateToken !=null);
 
-        if (!isAuthToken) {
+        AccountManager am = AccountManager.get(context);
+
+//        if (!isAuthToken) {
+        if (am.getAccountsByType(PBSAccountInfo.ACCOUNT_TYPE).length == 0) {
             context.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             context.getSupportActionBar().hide();
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

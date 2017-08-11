@@ -54,6 +54,7 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
     protected TextView uom;
     protected CheckBox isEmergency;
     protected EditText purcReason;
+    protected TextView textViewPurcReason;
 
     protected ArrayAdapter prodNameAdapter;
     EditText qtyRequested;
@@ -83,10 +84,11 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
         purcReason = (EditText) rootView.findViewById(R.id.prlPurcReason);
         TextView textViewName = (TextView) rootView.findViewById(R.id.textViewName);
         TextView textViewQty = (TextView) rootView.findViewById(R.id.textViewQty);
-        TextView textViewPurcReason = (TextView) rootView.findViewById(R.id.textViewPurcReason);
+        TextView textViewDateRequired = (TextView) rootView.findViewById(R.id.textViewDateRequired);
+        textViewPurcReason = (TextView) rootView.findViewById(R.id.textViewPurcReason);
+        PandoraHelper.setAsterisk(textViewDateRequired);
         PandoraHelper.setAsterisk(textViewName);
         PandoraHelper.setAsterisk(textViewQty);
-        PandoraHelper.setAsterisk(textViewPurcReason);
     }
 
     public List<SpinnerPair> getProdList() {
@@ -117,6 +119,15 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        isEmergency.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked)
+                    PandoraHelper.setAsterisk(textViewPurcReason);
+                else textViewPurcReason.setText(getString(R.string.label_purchase_reason));
             }
         });
     }

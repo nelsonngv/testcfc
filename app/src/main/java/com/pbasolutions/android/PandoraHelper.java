@@ -4,24 +4,34 @@ package com.pbasolutions.android;
 import android.accounts.Account;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.OperationApplicationException;
+import android.content.SharedPreferences;
 import android.content.SyncInfo;
 import android.databinding.ObservableArrayList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
@@ -558,6 +568,7 @@ public class PandoraHelper  {
         Bundle inputAccount = new Bundle();
         inputAccount.putString(authController.SERVER_URL_ARG, pandoraContext.getServer_url());
         inputAccount.putString(authController.USER_NAME_ARG, pandoraContext.getAd_user_name());
+        inputAccount.putString(authController.AUTH_TOKEN_ARG, pandoraContext.getAuth_token());
         inputAccount.putString(authController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
         inputAccount.putString(authController.ROLE_ARG, pandoraContext.getAd_role_id());
         inputAccount.putString(authController.ORG_ARG, pandoraContext.getAd_org_id());
@@ -596,12 +607,15 @@ public class PandoraHelper  {
         if(((PandoraMain)activity).getGlobalVariable() == null)
             ((PandoraMain)activity).setGlobalVariable((PandoraContext) activity.getApplicationContext());
         PandoraContext var = ((PandoraMain)activity).getGlobalVariable();
+
+        SharedPreferences prefs = activity.getSharedPreferences(
+                BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        var.setServer_url(prefs.getString("serverURL", ""));
+
         if (result.getString(authCont.USER_NAME_ARG) != null){
             var.setAd_user_name(result.getString(authCont.USER_NAME_ARG));
             var.setAd_user_password(
                     result.getString(authCont.USER_PASS_ARG));
-            var.setServer_url(
-                    result.getString(authCont.SERVER_URL_ARG));
 
             String synced = result.getString(authCont.INITIALSYNC_ARG);
             if (synced != null)
@@ -860,10 +874,14 @@ public class PandoraHelper  {
         fragmentTransaction.commit();
     }
 
-
     public static String getDeviceID(Activity act) {
+        String deviceId = "";
         TelephonyManager tm = (TelephonyManager) act.getSystemService(Context.TELEPHONY_SERVICE);
-        String deviceId = tm.getDeviceId();
+        if (tm.getDeviceId() != null) {
+            deviceId = tm.getDeviceId();
+        } else {
+            deviceId = Settings.Secure.getString(act.getContentResolver(), Settings.Secure.ANDROID_ID);
+        }
         Log.d("Information", "Device Id = " + deviceId);
         return deviceId;
     }
@@ -907,5 +925,32 @@ public class PandoraHelper  {
         SpannableString ss = new SpannableString(tv.getText() + asterisk);
         ss.setSpan(new ForegroundColorSpan(Color.RED), tv.getText().length(), tv.getText().length()+2, 0);
         tv.setText(ss);
+    }
+
+    public static void sendNotification(String uuid, String content, String className) {
+        Intent intent = new Intent(PandoraMain.instance, PandoraMain.class);
+        intent.putExtra("isNotification", true);
+        intent.putExtra("uuid", uuid);
+        intent.putExtra("className", className);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(PandoraMain.instance, 0 /* Request code */, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(PandoraMain.instance)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("PandoraCFC")
+                .setContentText(content)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setPriority(Notification.PRIORITY_HIGH);
+        if (Build.VERSION.SDK_INT < 26) notificationBuilder.setVibrate(new long[0]);
+
+        NotificationManager notificationManager =
+                (NotificationManager) PandoraMain.instance.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify((int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE) /* ID of notification */, notificationBuilder.build());
     }
 }

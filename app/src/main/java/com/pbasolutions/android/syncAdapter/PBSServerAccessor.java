@@ -78,4 +78,17 @@ public class PBSServerAccessor extends PBSServer implements PBSIServerAccessor {
         //   "/wstore/Sync.jsp?action=Sync
         return (PBSSyncJSON) callServer(url, PBSSyncJSON.class.getName());
     }
+
+    @Override
+    public PBSJson getUnsyncCount(final String serverURL) {
+        String url = getURL(serverURL, PBSServerConst.PATH, PBSServerConst.SYNC_JSP);
+        String query = null;
+        try {
+            query = String.format("%s=%s", PBSServerConst.ACTION, URLEncoder.encode(PBSServerConst.ACTION_GET_UNSYNC_COUNT, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        url += query;
+        return callServer(url, PBSJson.class.getName());
+    }
 }
