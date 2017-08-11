@@ -303,6 +303,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             }
         });
 
+        if (PBSServerConst.cookieStore == null) {
+            PBSServerConst.instantiateCookie();
+        }
+
         instance = this;
 //        Log.d(TAG, "Refreshed token: " + FirebaseInstanceId.getInstance().getToken());
 //        //receive push notification broadcast
@@ -1050,7 +1054,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent != null) {
-            if (intent.getExtras().get("isNotification") != null && (boolean)intent.getExtras().get("isNotification") == true) {
+            if (intent.getExtras() != null && intent.getExtras().get("isNotification") != null && (boolean)intent.getExtras().get("isNotification") == true) {
                 if (intent.getExtras().get("className") != null && intent.getExtras().get("className").equals(ProjTaskDetailsFragment.class.getSimpleName())) {
                     Fragment fragment = new ProjTaskDetailsFragment();
                     ((PBSDetailsFragment) fragment).set_UUID(intent.getExtras().getString("uuid"));
@@ -1082,7 +1086,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                         }
                     }
                 }
-            }else {
+            } else {
                 checkLogin(false);
             }
         }

@@ -4,6 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -222,41 +225,15 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         Bundle input = new Bundle();
         input.putParcelable(recCont.APPLICANT_VALUES, cv);
 
-        new AsyncTask<Bundle, Void, Bundle>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                ((PandoraMain) getActivity()).showProgressDialog("Loading...");
-            }
-
-            @Override
-            protected Bundle doInBackground(Bundle... params) {
-                Bundle output = recCont.triggerEvent(recCont.INSERT_APPLICANT_EVENT, params[0], new Bundle(), null);
-                return output;
-            }
-
-            @Override
-            protected void onPostExecute(Bundle output) {
-                super.onPostExecute(output);
-                ((PandoraMain) getActivity()).dismissProgressDialog();
-                if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
-                    PandoraHelper.hideSoftKeyboard();
-                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
-//                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                    fragmentManager.popBackStack();
-//                    fragmentManager.popBackStack();
-//                    Fragment frag = new RecruitFragment();
-//                    frag.setRetainInstance(true);
-//                    ((RecruitFragment) frag).setIsAddApplicant(true);
-//                    fragmentTransaction.replace(R.id.container_body, frag);
-//                    fragmentTransaction.addToBackStack(frag.getClass().getName());
-//                    fragmentTransaction.commit();
-                } else {
-                    PandoraHelper.showMessage(context, output.getString(output.getString(PandoraConstant.TITLE)));
-                }
-            }
-        }.execute(input);
+        PandoraHelper.hideSoftKeyboard();
+        Fragment fragment = new NewApplicantSignFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragment.setArguments(input);
+        fragment.setRetainInstance(true);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_body, fragment);
+        fragmentTransaction.addToBackStack(fragment.getClass().getName());
+        fragmentTransaction.commit();
     }
 
     private void warnToFill(InputMethodManager imm, Object obj) {

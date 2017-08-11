@@ -320,7 +320,7 @@
     !-->
     <string name="agreement">I agree the survey answers are true.</string>
     <string name="clear_pad">Clear Pad</string>
-    <string name="submit_survey">Submit Survey</string>
+    <string name="submit">Submit</string>
 
     <!--
     Attandence Tracking.

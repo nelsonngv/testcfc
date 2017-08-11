@@ -482,6 +482,9 @@ public class AuthenticatorTask extends Task {
 //                    PandoraHelper.populateMenuForms(user.getForms());
                     Account arrayAccounts[] = getAccounts(accType);
 
+//                    SharedPreferences prefs = ctx.getSharedPreferences(
+//                            BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+//                    PandoraMain.instance.getGlobalVariable().setServer_url(prefs.getString("serverURL", ""));
                     // clear db and account if connects to another server
                     if (PandoraMain.instance.getGlobalVariable().getServer_url() != null && !PandoraMain.instance.getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(PandoraMain.instance.getGlobalVariable().getServer_url())) {
                         PBSDBHelper.reCreateDatabase(ctx.getApplicationContext());

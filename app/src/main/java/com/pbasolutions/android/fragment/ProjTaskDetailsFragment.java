@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -486,32 +489,15 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 //        input.putString(taskCont.ARG_TASKPIC_4, (String)taskPicture4.getTag(R.string.tag_imageview_path));
 //        input.putString(taskCont.ARG_TASKPIC_5, (String)taskPicture5.getTag(R.string.tag_imageview_path));
 
-        new AsyncTask<Bundle, Void, Bundle>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
-            }
-
-            @Override
-            protected Bundle doInBackground(Bundle... params) {
-                Bundle output = new Bundle();
-                output = taskCont.triggerEvent(taskCont.COMPLETE_PROJTASK_EVENT, params[0], output, null);
-                return output;
-            }
-
-            @Override
-            protected void onPostExecute(Bundle result) {
-                super.onPostExecute(result);
-                if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
-                } else {
-                    PandoraHelper.showMessage((PandoraMain)getActivity(),
-                            result.getString(result.getString(PandoraConstant.TITLE)));
-                }
-                ((PandoraMain)getActivity()).dismissProgressDialog();
-            }
-        }.execute(input);
+        PandoraHelper.hideSoftKeyboard();
+        Fragment fragment = new ProjTaskSignFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragment.setArguments(input);
+        fragment.setRetainInstance(true);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_body, fragment);
+        fragmentTransaction.addToBackStack(fragment.getClass().getName());
+        fragmentTransaction.commit();
     }
 
     @Override

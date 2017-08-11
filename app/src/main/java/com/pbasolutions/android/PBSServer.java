@@ -99,6 +99,8 @@ public class PBSServer {
                 Log.e(TAG, "Error: " + e.toString());
             } catch (TimeoutException e) {
                 Log.e(TAG, "Error: " + e.toString());
+            } catch (Exception e) {
+                Log.e(TAG, "Error: " + e.toString());
             }
         } catch (Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
@@ -200,6 +202,8 @@ public class PBSServer {
             } catch (ExecutionException e) {
                 Log.e(TAG, "Error: " + e.toString());
             } catch (TimeoutException e) {
+                Log.e(TAG, "Error: " + e.toString());
+            } catch (Exception e) {
                 Log.e(TAG, "Error: " + e.toString());
             }
         }  catch (Exception e) {

@@ -211,7 +211,7 @@ public class LoginFragment extends Fragment {
                     context.getGlobalVariable().setSerial(deviceID);
                     context.getGlobalVariable().setRoleJSON(loginJSON.getRoles());
                     context.getGlobalVariable().setIsAuth(true);
-//                    context.getGlobalVariable().setServer_url(serverURL);
+                    context.getGlobalVariable().setServer_url(serverURL);
                     context.getGlobalVariable().setAuth_token(loginJSON.getToken());
                     SharedPreferences prefs = context.getSharedPreferences(
                             BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
