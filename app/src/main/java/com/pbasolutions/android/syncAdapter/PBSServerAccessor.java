@@ -66,11 +66,13 @@ public class PBSServerAccessor extends PBSServer implements PBSIServerAccessor {
     }
 
     @Override
-    public PBSSyncJSON syncTables(final String username, final String authToken, final String serverURL) {
+    public PBSSyncJSON syncTables(final String username, final String authToken, final String serverURL, int syncIdentifier) {
         String url = getURL(serverURL, PBSServerConst.PATH, PBSServerConst.SYNC_JSP);
         String query = null;
         try {
             query = String.format("%s=%s", PBSServerConst.ACTION, URLEncoder.encode(PBSServerConst.SYNC, "UTF-8"));
+            query += PBSServerConst.AND +
+                    String.format("%s=%s", PBSServerConst.IDENTIFIER, syncIdentifier);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

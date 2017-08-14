@@ -2,12 +2,12 @@ package com.pbasolutions.android.controller;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 
+import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.json.PBSColumnsJSON;
@@ -184,7 +184,8 @@ public class ServerTask extends Task {
             PBSSyncJSON syncJSON = serverAccessor.syncTables(
                     input.getString(PBSAuthenticatorController.USER_NAME_ARG),
                     input.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
-                    input.getString(PBSAuthenticatorController.SERVER_URL_ARG));
+                    input.getString(PBSAuthenticatorController.SERVER_URL_ARG),
+                    input.getInt(PBSServerConst.IDENTIFIER));
             int syncedCount = 0;
             if (syncJSON != null) {
                 if (syncJSON.getNew() != null) {

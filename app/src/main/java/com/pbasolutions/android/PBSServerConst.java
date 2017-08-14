@@ -99,6 +99,11 @@ public class PBSServerConst {
      */
     public static final String CLIENT = "client";
     /**
+     * Identifier for sync to handle missed out sync batch
+     */
+    public static final String IDENTIFIER = "identifier";
+
+    /**
      * UT8 String.
      */
     public static final String UTF_8 = "UTF-8";

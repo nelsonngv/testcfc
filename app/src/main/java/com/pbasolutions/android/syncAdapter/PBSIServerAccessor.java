@@ -18,7 +18,7 @@ public interface PBSIServerAccessor {
      **/
     public Bundle updateTables(final PBSTableJSON updateJSON, final String username, final String authToken, final String serverURL) throws Exception;
 
-    public PBSSyncJSON syncTables(final String username, String authToken,final String serverURL);
+    public PBSSyncJSON syncTables(final String username, String authToken, final String serverURL, int syncIdentifier);
 
     public PBSJson getUnsyncCount(final String serverURL);
 }

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.pbasolutions.android.BuildConfig;
+import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 
@@ -29,6 +30,8 @@ import com.pbasolutions.android.controller.PBSServerController;
 import com.pbasolutions.android.json.PBSProjLocJSON;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Class that handle syncing in accounts.
@@ -39,9 +42,10 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
     /**
      * Class name tag.
      */
-    private static final String TAG = "PBSServer";
+    private static final String TAG = "PBSSyncAdapter";
     private final AccountManager accountManager;
     private Context context;
+    private int syncIdentifier = 0;
 
     /**
      *
@@ -108,7 +112,14 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
             }
             String userName = account.name;
 
+            if (syncIdentifier == 0) {
+                Date date = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("ddHHmmss");
+                syncIdentifier = Integer.parseInt(sdf.format(date));
+            }
+
             Bundle inputAuth = new Bundle();
+            inputAuth.putInt(PBSServerConst.IDENTIFIER, syncIdentifier);
             inputAuth.putString(PBSAuthenticatorController.USER_NAME_ARG, userName);
             inputAuth.putString(PBSAuthenticatorController.AUTH_TOKEN_ARG, authToken);
             inputAuth.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
@@ -177,6 +188,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 if (PandoraMain.instance != null && PandoraMain.instance.getSupportActionBar().isShowing() == true) {
                     PBSProjLocJSON[] projLoc = null;
                     if (isSyncCompleted) {
+                        syncIdentifier = 0;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                             Settings.Global.getInt(PandoraMain.instance.getContentResolver(), Settings.Global.AUTO_TIME, 1);
                             Settings.Global.getInt(PandoraMain.instance.getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 1);
@@ -205,6 +217,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                         PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
                     if (!isSyncCompleted) {
                         if (syncCount != -1) {
+                            syncIdentifier = 0;
                             extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
                             extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                             ContentResolver.requestSync(account, authority, extras);
@@ -217,9 +230,14 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                                     Toast.makeText(PandoraMain.instance.getBaseContext(), text, Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        } else {
-                            Toast.makeText(PandoraMain.instance.getBaseContext(), "Could not receive data when sync. Please contact admin for assistance", Toast.LENGTH_SHORT).show();
                         }
+//                        else {
+//                            PandoraMain.instance.runOnUiThread(new Runnable() {
+//                                public void run() {
+//                                    Toast.makeText(PandoraMain.instance.getBaseContext(), "Could not receive data when sync. Please contact admin for assistance", Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
+//                        }
                     }
                 }
             } else{
