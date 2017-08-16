@@ -28,7 +28,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int DATABASE_VERSION = 16;
+    private static final int DATABASE_VERSION = 17;
     /**
      *
      */
@@ -514,6 +514,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "ATTACHMENT_CERTPICTURE_8 VARCHAR2(100)," +
                     "ATTACHMENT_CERTPICTURE_9 VARCHAR2(100)," +
                     "ATTACHMENT_CERTPICTURE_10 VARCHAR2(100)," +
+                    "ATTACHMENT_SIGNATURE VARCHAR2(100)," +
                     "INTERVIEWER_NOTES TEXT," +
                     //--
                     "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
@@ -787,6 +788,9 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "ATTACHMENT_TASKPICTURE_23 VARCHAR2(100) , " +
                     "ATTACHMENT_TASKPICTURE_24 VARCHAR2(100) , " +
                     "ATTACHMENT_TASKPICTURE_25 VARCHAR2(100) , " +
+                    "ATTACHMENT_SIGNATURE VARCHAR2(100) , " +
+                    "LATITUDE NUMBER , " +
+                    "LONGITUDE NUMBER , " +
                     //--
 //                    "CONSTRAINT PROJTASKID_UNIQCONS UNIQUE (C_PROJECTTASK_ID)," +
                     "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
@@ -1562,6 +1566,15 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_23 VARCHAR2(100)");
                 db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_24 VARCHAR2(100)");
                 db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_TASKPICTURE_25 VARCHAR2(100)");
+            }
+
+            if (oldVersion < 17) {
+                //HR_JOBAPPLICATION
+                db.execSQL("ALTER TABLE HR_JOBAPPLICATION ADD ATTACHMENT_SIGNATURE VARCHAR2(100)");
+                //C_PROJECTTASK
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD LATITUDE NUMBER");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD LONGITUDE NUMBER");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ATTACHMENT_SIGNATURE VARCHAR2(100)");
             }
         } catch (SQLException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE

@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -78,9 +79,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -199,17 +203,8 @@ public class PandoraHelper  {
         ConnectivityManager connec =
                 (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
         // Check for network connections
-        if (connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTED ||
-                connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.CONNECTING ||
-                connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTING ||
-                connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.CONNECTED) {
-            return true;
-        } else if (
-                connec.getNetworkInfo(0).getState() == android.net.NetworkInfo.State.DISCONNECTED ||
-                        connec.getNetworkInfo(1).getState() == android.net.NetworkInfo.State.DISCONNECTED) {
-            return false;
-        }
-        return false;
+        NetworkInfo activeNetworkInfo = connec.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     /**
@@ -893,7 +888,7 @@ public class PandoraHelper  {
         }
     }
 
-    public static void populateMenuForms(String[] forms) {
+    public static void populateMenuForms(Context ctx, String[] forms) {
         if (forms != null && forms.length > 0) {
             //sorting menu items
             ArrayList<String> oriMenuList = new ArrayList<>(Arrays.asList(forms));
@@ -910,12 +905,16 @@ public class PandoraHelper  {
                     }
                 }
             }
+            SharedPreferences prefs = ctx.getSharedPreferences(
+                    BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+            prefs.edit().putString("forms", new Gson().toJson(tmpMenuList)).commit();
+
             Object[] objectList = tmpMenuList.toArray();
             PandoraMain.instance.menuList = Arrays.copyOf(objectList, objectList.length, String[].class);
         } else PandoraMain.instance.menuList = null;
         PandoraMain.instance.runOnUiThread(new Runnable() {
             public void run() {
-                PandoraMain.instance.updateDrawer();
+                PandoraMain.instance.updateDrawer(null);
             }
         });
     }

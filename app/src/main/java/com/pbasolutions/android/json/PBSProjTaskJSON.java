@@ -20,6 +20,9 @@ public class PBSProjTaskJSON extends PBSJson {
     private String Attachment_Pic4;
     private String Attachment_Pic5;
     private String DueDate;
+    private String Latitude;
+    private String Longitude;
+    private String Attachment_Signature;
     //private String
 
 
@@ -149,5 +152,29 @@ public class PBSProjTaskJSON extends PBSJson {
 
     public void setDueDate(String dueDate) {
         DueDate = dueDate;
+    }
+
+    public String getLatitude() {
+        return Latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        Latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return Longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        Longitude = longitude;
+    }
+
+    public String getAttachment_Signature() {
+        return Attachment_Signature;
+    }
+
+    public void setAttachment_Signature(String attachment_Signature) {
+        Attachment_Signature = attachment_Signature;
     }
 }

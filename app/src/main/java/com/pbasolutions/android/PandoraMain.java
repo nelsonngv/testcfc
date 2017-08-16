@@ -5,8 +5,10 @@ import android.accounts.AccountManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.media.MediaScannerConnection;
@@ -35,6 +37,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 //import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
@@ -92,7 +95,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by pbadell on 6/29/15.
@@ -303,6 +309,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             }
         });
 
+        SharedPreferences prefs = getSharedPreferences(
+                BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        String formString = prefs.getString("forms", "");
+        menuList = new Gson().fromJson(formString, String[].class);
+        updateDrawer(menuList);
+
         if (PBSServerConst.cookieStore == null) {
             PBSServerConst.instantiateCookie();
         }
@@ -367,10 +379,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     /**
      * Update drawer fragment.
      */
-    public void updateDrawer() {
+    public void updateDrawer(String[] list) {
         drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(
                 R.id.fragment_navigation_drawer);
-        drawerFragment.updateDrawer();
+        drawerFragment.updateDrawer(list);
     }
 
     /**

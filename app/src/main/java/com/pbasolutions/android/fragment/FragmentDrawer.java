@@ -230,15 +230,22 @@ public class FragmentDrawer extends Fragment {
     }
 
     public void updateDrawer() {
-        if (PandoraMain.instance != null) {
+        updateDrawer(null);
+    }
+
+    public void updateDrawer(String[] list) {
+        if (list != null && list.length > 0) {
+            titles = list;
+        } else {
+            if (PandoraMain.instance != null) {
 //            if (PandoraMain.instance == null || PandoraMain.instance.menuList == null || PandoraMain.instance.menuList.length == 0)
 //                titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
 //            else titles = PandoraMain.instance.menuList;
-            if (PandoraMain.instance.menuList == null)
-                titles = EMPTY_ARRAY;
-            else titles = PandoraMain.instance.menuList;
+                if (PandoraMain.instance.menuList == null)
+                    titles = EMPTY_ARRAY;
+                else titles = PandoraMain.instance.menuList;
+            } else titles = EMPTY_ARRAY;
         }
-        else titles = EMPTY_ARRAY;
         adapter = new MenuDrawerRVA(getActivity(), getData());
         recyclerView.setAdapter(adapter);
     }

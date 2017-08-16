@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.pbasolutions.android.PandoraConstant;
@@ -85,6 +86,8 @@ public class NewApplicantSignFragment extends AbstractApplicantFragment {
         mSignaturePad = (SignaturePad) rootView.findViewById(R.id.signature_pad);
         mClearButton = (Button) rootView.findViewById(R.id.clear_button);
         mSaveButton = (Button) rootView.findViewById(R.id.save_button);
+        TextView mDesc = (TextView) rootView.findViewById(R.id.signature_pad_description);
+        mDesc.setText(getString(R.string.applicant_agreement));
     }
 
     protected void setUIListener() {

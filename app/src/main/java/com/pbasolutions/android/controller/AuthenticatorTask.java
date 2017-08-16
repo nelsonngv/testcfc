@@ -352,7 +352,7 @@ public class AuthenticatorTask extends Task {
                 input.getString(PBSAuthenticatorController.CLIENT_ARG),
                 input.getString(PBSAuthenticatorController.SERVER_URL_ARG));
         if (status != null && status.getSuccess().equals("TRUE")) {
-            PandoraHelper.populateMenuForms(status.getForms());
+            PandoraHelper.populateMenuForms(ctx, status.getForms());
             output.putBoolean(PBSServerConst.RESULT, true);
         } else {
             output.putBoolean(PBSServerConst.RESULT, false);
@@ -394,7 +394,7 @@ public class AuthenticatorTask extends Task {
             ((PandoraMain) ctx).globalVariable.setAd_user_name("");
             ((PandoraMain) ctx).globalVariable.setAd_user_password("");
             ((PandoraMain) ctx).globalVariable.setAuth_token("");
-            PandoraHelper.populateMenuForms(null);
+            PandoraHelper.populateMenuForms(ctx, null);
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully logged out");
         } else {
@@ -490,7 +490,7 @@ public class AuthenticatorTask extends Task {
                         PBSDBHelper.reCreateDatabase(ctx.getApplicationContext());
                         PandoraMain.instance.resetServerData(serverURL);
                         PandoraMain.instance.setGlobalVariable(null);
-                        PandoraHelper.populateMenuForms(null);
+                        PandoraHelper.populateMenuForms(ctx, null);
 
                         // remove all accounts
                         for (int i = 0; i < arrayAccounts.length; i++) {

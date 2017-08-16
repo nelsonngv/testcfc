@@ -29,6 +29,7 @@ import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
 import com.pbasolutions.android.json.PBSProjTaskJSON;
 import com.pbasolutions.android.json.PBSProjTasksJSON;
 import com.pbasolutions.android.model.MProjectTask;
+import com.pbasolutions.android.model.MSurvey;
 import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
 
@@ -246,6 +247,9 @@ public class ProjectTask implements Callable<Bundle> {
         String comments = input.getString(PBSTaskController.ARG_COMMENTS);
         String assignedTo = input.getString(PBSTaskController.ARG_AD_USER_ID);
         String dueDate = input.getString(PBSTaskController.ARG_DUEDATE);
+        String latitude = input.getString(MSurvey.LATITUDE_COL);
+        String longitude = input.getString(MSurvey.LONGITUDE_COL);
+        String signature = input.getString(MSurvey.ATTACHMENT_SIGNATURE_COL);
 
         PBSProjTaskJSON projTask = new PBSProjTaskJSON();
         projTask.setC_ProjectLocation_ID(projLocId);
@@ -253,6 +257,9 @@ public class ProjectTask implements Callable<Bundle> {
         projTask.setComments(comments);
         projTask.setAssignedTo(assignedTo);
         projTask.setDueDate(dueDate);
+        projTask.setLatitude(latitude);
+        projTask.setLongitude(longitude);
+        projTask.setAttachment_Signature(signature);
 
 //        String pic1 = CameraUtil
 //                .imageToBase64(input.getString(PBSTaskController.ARG_TASKPIC_1));
@@ -307,6 +314,8 @@ public class ProjectTask implements Callable<Bundle> {
             ContentValues cv = new ContentValues();
             cv.put(MProjectTask.COMMENTS_COL, comments);
             cv.put(MProjectTask.ISDONE_COL, "Y");
+            cv.put(MSurvey.LATITUDE_COL, latitude);
+            cv.put(MSurvey.LONGITUDE_COL, longitude);
             for (int i = 1; i <= 25; i++) {
                 if (input.getString(PBSTaskController.ARG_TASKPIC + i) == null)
                     break;

@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.pbasolutions.android.PandoraConstant;
@@ -94,6 +95,8 @@ public class NewSurveySignFragment extends Fragment {
         mSignaturePad = (SignaturePad) rootView.findViewById(R.id.signature_pad);
         mClearButton = (Button) rootView.findViewById(R.id.clear_button);
         mSaveButton = (Button) rootView.findViewById(R.id.save_button);
+        TextView mDesc = (TextView) rootView.findViewById(R.id.signature_pad_description);
+        mDesc.setText(getString(R.string.survey_agreement));
     }
 
     void setUIListener() {
