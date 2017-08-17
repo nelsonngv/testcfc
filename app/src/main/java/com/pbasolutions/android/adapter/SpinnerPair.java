@@ -3,8 +3,6 @@ package com.pbasolutions.android.adapter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 /**
  * Created by pbadell on 10/19/15.
  */

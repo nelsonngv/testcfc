@@ -1,21 +1,14 @@
 package com.pbasolutions.android.listener;
 
-import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
-import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinnerPair;
-import com.pbasolutions.android.controller.PBSAssetController;
 import com.pbasolutions.android.fragment.NewMovementLineFragment;
-import com.pbasolutions.android.fragment.RequisitionFragment;
-import com.pbasolutions.android.model.MUOM;
 
 /**
  * Created by pbadell on 10/20/15.

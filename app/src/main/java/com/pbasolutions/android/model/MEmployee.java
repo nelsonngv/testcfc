@@ -6,12 +6,7 @@ package com.pbasolutions.android.model;
 
 //C_BPARTNER
 
-import android.databinding.BaseObservable;
-
 import com.pbasolutions.android.json.PBSJson;
-
-import java.io.Serializable;
-import java.sql.Blob;
 
 public class MEmployee extends PBSJson{
 

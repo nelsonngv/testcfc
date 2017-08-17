@@ -515,7 +515,6 @@ public class ModelConst {
 
         String columnIdName;
         //first check whether the table_id == null ?
-        tableName = tableName;
         if (cv.getAsString(tableName + ModelConst._ID) != null){
             columnIdName = tableName + ModelConst._ID;
         }

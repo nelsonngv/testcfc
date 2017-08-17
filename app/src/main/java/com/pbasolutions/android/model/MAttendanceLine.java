@@ -1,9 +1,6 @@
 package com.pbasolutions.android.model;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.pbasolutions.android.json.IPBSJson;
-import com.pbasolutions.android.json.PBSJson;
 
 import java.io.Serializable;
 

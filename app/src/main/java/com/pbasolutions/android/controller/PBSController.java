@@ -36,8 +36,6 @@ public class PBSController extends ContextWrapper implements PBSIController{
             result = taskResult.get();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -52,8 +50,6 @@ public class PBSController extends ContextWrapper implements PBSIController{
         try {
             result = task.call();
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();

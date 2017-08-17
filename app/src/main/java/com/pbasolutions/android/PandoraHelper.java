@@ -79,12 +79,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
 
 /**
@@ -201,7 +197,7 @@ public class PandoraHelper  {
     public static boolean isInternetOn(Context context) {
         // get Connectivity Manager object to check connection
         ConnectivityManager connec =
-                (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         // Check for network connections
         NetworkInfo activeNetworkInfo = connec.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
@@ -253,28 +249,28 @@ public class PandoraHelper  {
     }
 
     public static List<SpinnerPair> getGenderList() {
-        List<SpinnerPair> gender = new ArrayList<SpinnerPair>();
+        List<SpinnerPair> gender = new ArrayList<>();
         gender.add(new SpinnerPair("M", "Male"));
         gender.add(new SpinnerPair("F", "Female"));
         return gender;
     }
 
     public static List<SpinnerPair> getStatusList() {
-        List<SpinnerPair> status = new ArrayList<SpinnerPair>();
+        List<SpinnerPair> status = new ArrayList<>();
         status.add(new SpinnerPair("Y", "Approved"));
         status.add(new SpinnerPair("N", "Not Approved"));
         return status;
     }
 
     public static List<SpinnerPair> getExpList() {
-        List<SpinnerPair> isExp = new ArrayList<SpinnerPair>();
+        List<SpinnerPair> isExp = new ArrayList<>();
         isExp.add(new SpinnerPair("Y", "Is Approved"));
         isExp.add(new SpinnerPair("N", "Not Approved"));
         return isExp;
     }
 
     public static List<SpinnerPair> getMaritalStatList() {
-        List<SpinnerPair> marStat = new ArrayList<SpinnerPair>();
+        List<SpinnerPair> marStat = new ArrayList<>();
         marStat.add(new SpinnerPair("M", "Married"));
         marStat.add(new SpinnerPair("S", "Single"));
         return marStat;
@@ -283,7 +279,7 @@ public class PandoraHelper  {
     public static ArrayAdapter addListToSpinner(Activity activity, Spinner spinner, List<SpinnerPair> list) {
         ArrayAdapter adapter;
         if (list == null) {
-            adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_dropdown_item);
+            adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item);
         } else {
             adapter = new SpinAdapter(activity,
                     android.R.layout.simple_spinner_dropdown_item, list);
@@ -500,15 +496,15 @@ public class PandoraHelper  {
     public static void setAutoSync(Activity activity, String userName, String accountType){
         PBSAuthenticatorController authController = new PBSAuthenticatorController(activity);
         Bundle input = new Bundle();
-        input.putString(authController.USER_NAME_ARG, userName);
-        input.putString(authController.ARG_ACCOUNT_TYPE, accountType);
+        input.putString(PBSAuthenticatorController.USER_NAME_ARG, userName);
+        input.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE, accountType);
         Bundle result = authController
-                .triggerEvent(authController.GET_USER_ACCOUNT_EVENT,
+                .triggerEvent(PBSAuthenticatorController.GET_USER_ACCOUNT_EVENT,
                         input, new Bundle(), null);
 
         boolean hasAccount = false;
         if (result != null) {
-            Account userAccount = result.getParcelable(authController.USER_ACC_ARG);
+            Account userAccount = result.getParcelable(PBSAuthenticatorController.USER_ACC_ARG);
             if (userAccount != null) {
                 ContentResolver.setSyncAutomatically(userAccount,
                         PBSAccountInfo.ACCOUNT_AUTHORITY, true);
@@ -523,17 +519,17 @@ public class PandoraHelper  {
             //find in database.
             Bundle input = new Bundle();
             input.putString(PBSAssetController.ARG_AD_USER_ID, globalVar.getAd_user_id());
-            Bundle result = cont.triggerEvent(cont.GET_PROJLOC_EVENT, input,
+            Bundle result = cont.triggerEvent(PandoraController.GET_PROJLOC_EVENT, input,
                     new Bundle(), null);
             PBSProjLocJSON[] projLocJSONs = (PBSProjLocJSON[]) result
-                    .getSerializable(cont.ARG_PROJECT_LOCATION_JSON);
+                    .getSerializable(PandoraController.ARG_PROJECT_LOCATION_JSON);
 //            isInitialSyncCompleted = projLocJSONs != null;
             if (projLocJSONs != null) {
                 setProjLocUserData(globalVar, projLocJSONs, activity);
             }
             if (showResult)
             {
-                PandoraHelper.showMessage((PandoraMain) activity, result.getString(result.getString(PandoraConstant.TITLE)));
+                PandoraHelper.showMessage(activity, result.getString(result.getString(PandoraConstant.TITLE)));
 //                PandoraHelper.showAlertMessage((PandoraMain) activity, result
 //                                .getString(result.getString(PandoraConstant.TITLE)),
 //                        result.getString(PandoraConstant.TITLE), "Ok", null);
@@ -547,12 +543,12 @@ public class PandoraHelper  {
         context.setProjLocJSON(projLocJSONs);
         PBSAuthenticatorController authCont = new PBSAuthenticatorController(activity);
         Bundle input = new Bundle();
-        String args[] = {authCont.PROJLOCS_ARG};
-        input.putStringArray(authCont.ARRAY_ARG, args);
-        input.putString(authCont.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
-        input.putString(authCont.USER_NAME_ARG, context.getAd_user_name());
-        input.putString(authCont.PROJLOCS_ARG, new Gson().toJson(projLocJSONs));
-        authCont.triggerEvent(authCont.SET_ACCOUNT_USERDATA_EVENT, input, new Bundle(), null);
+        String args[] = {PBSAuthenticatorController.PROJLOCS_ARG};
+        input.putStringArray(PBSAuthenticatorController.ARRAY_ARG, args);
+        input.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
+        input.putString(PBSAuthenticatorController.USER_NAME_ARG, context.getAd_user_name());
+        input.putString(PBSAuthenticatorController.PROJLOCS_ARG, new Gson().toJson(projLocJSONs));
+        authCont.triggerEvent(PBSAuthenticatorController.SET_ACCOUNT_USERDATA_EVENT, input, new Bundle(), null);
     }
 
     public static void setAccountData(Activity activity){
@@ -561,43 +557,43 @@ public class PandoraHelper  {
 
         PandoraContext pandoraContext = ((PandoraMain) activity).getGlobalVariable();
         Bundle inputAccount = new Bundle();
-        inputAccount.putString(authController.SERVER_URL_ARG, pandoraContext.getServer_url());
-        inputAccount.putString(authController.USER_NAME_ARG, pandoraContext.getAd_user_name());
-        inputAccount.putString(authController.AUTH_TOKEN_ARG, pandoraContext.getAuth_token());
-        inputAccount.putString(authController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
-        inputAccount.putString(authController.ROLE_ARG, pandoraContext.getAd_role_id());
-        inputAccount.putString(authController.ORG_ARG, pandoraContext.getAd_org_id());
-        inputAccount.putString(authController.CLIENT_ARG, pandoraContext.getAd_client_id());
+        inputAccount.putString(PBSAuthenticatorController.SERVER_URL_ARG, pandoraContext.getServer_url());
+        inputAccount.putString(PBSAuthenticatorController.USER_NAME_ARG, pandoraContext.getAd_user_name());
+        inputAccount.putString(PBSAuthenticatorController.AUTH_TOKEN_ARG, pandoraContext.getAuth_token());
+        inputAccount.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
+        inputAccount.putString(PBSAuthenticatorController.ROLE_ARG, pandoraContext.getAd_role_id());
+        inputAccount.putString(PBSAuthenticatorController.ORG_ARG, pandoraContext.getAd_org_id());
+        inputAccount.putString(PBSAuthenticatorController.CLIENT_ARG, pandoraContext.getAd_client_id());
         //save the project uuid in account manager.
-        inputAccount.putString(authController.PROJLOC_ARG, pandoraContext.getC_projectlocation_uuid());
-        inputAccount.putString(authController.PROJLOC_ID_ARG, pandoraContext.getC_projectlocation_id());
-        inputAccount.putString(authController.PROJLOC_UUID_ARG, pandoraContext.getC_projectlocation_uuid());
+        inputAccount.putString(PBSAuthenticatorController.PROJLOC_ARG, pandoraContext.getC_projectlocation_uuid());
+        inputAccount.putString(PBSAuthenticatorController.PROJLOC_ID_ARG, pandoraContext.getC_projectlocation_id());
+        inputAccount.putString(PBSAuthenticatorController.PROJLOC_UUID_ARG, pandoraContext.getC_projectlocation_uuid());
         String roleJSON = new Gson().toJson(pandoraContext.getRoleJSON());
-        inputAccount.putString(authController.ROLES_ARG, roleJSON);
-        inputAccount.putString(authController.ROLE_INDEX_ARG, String.valueOf(pandoraContext.getAd_role_spinner_index()));
-        inputAccount.putString(authController.ORG_INDEX_ARG, String.valueOf(pandoraContext.getAd_org_spinner_index()));
-        inputAccount.putString(authController.CLIENT_INDEX_ARG, String.valueOf(pandoraContext.getAd_client_spinner_index()));
-        inputAccount.putString(authController.PROJLOC_INDEX_ARG, String.valueOf(pandoraContext.getC_ProjectLocation_Index()));
+        inputAccount.putString(PBSAuthenticatorController.ROLES_ARG, roleJSON);
+        inputAccount.putString(PBSAuthenticatorController.ROLE_INDEX_ARG, String.valueOf(pandoraContext.getAd_role_spinner_index()));
+        inputAccount.putString(PBSAuthenticatorController.ORG_INDEX_ARG, String.valueOf(pandoraContext.getAd_org_spinner_index()));
+        inputAccount.putString(PBSAuthenticatorController.CLIENT_INDEX_ARG, String.valueOf(pandoraContext.getAd_client_spinner_index()));
+        inputAccount.putString(PBSAuthenticatorController.PROJLOC_INDEX_ARG, String.valueOf(pandoraContext.getC_ProjectLocation_Index()));
 
-        inputAccount.putString(authController.INITIALSYNC_ARG, pandoraContext.isInitialSynced()? "1" : "0");
+        inputAccount.putString(PBSAuthenticatorController.INITIALSYNC_ARG, pandoraContext.isInitialSynced()? "1" : "0");
 
         if (pandoraContext.getProjLocJSON() != null) {
             String projLocJSON = new Gson().toJson(pandoraContext.getProjLocJSON());
-            inputAccount.putString(authController.PROJLOCS_ARG, projLocJSON);
+            inputAccount.putString(PBSAuthenticatorController.PROJLOCS_ARG, projLocJSON);
         }
 
-        inputAccount.putString(authController.AD_USER_ARG, pandoraContext.getAd_user_id());
-        authController.triggerEvent(authController.SET_ACCOUNT_DATA_EVENT, inputAccount, new Bundle(), null);
+        inputAccount.putString(PBSAuthenticatorController.AD_USER_ARG, pandoraContext.getAd_user_id());
+        authController.triggerEvent(PBSAuthenticatorController.SET_ACCOUNT_DATA_EVENT, inputAccount, new Bundle(), null);
     }
 
 
     public static void restoreGlobalVariables(Activity activity) {
         PBSAuthenticatorController authCont = new PBSAuthenticatorController(activity);
         Bundle input = new Bundle();
-        input.putString(authCont.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
-        input.putString(authCont.ARG_AUTH_TYPE, PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
+        input.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
+        input.putString(PBSAuthenticatorController.ARG_AUTH_TYPE, PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
         //input.putSerializable(authenticatorController.GET_ACCOUNT_DATA_EVENT, getGlobalVariable());
-        Bundle result = authCont.triggerEvent(authCont.GET_ACCOUNT_DATA_EVENT, input, new Bundle(), null);
+        Bundle result = authCont.triggerEvent(PBSAuthenticatorController.GET_ACCOUNT_DATA_EVENT, input, new Bundle(), null);
 
         if(((PandoraMain)activity).getGlobalVariable() == null)
             ((PandoraMain)activity).setGlobalVariable((PandoraContext) activity.getApplicationContext());
@@ -607,63 +603,63 @@ public class PandoraHelper  {
                 BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         var.setServer_url(prefs.getString("serverURL", ""));
 
-        if (result.getString(authCont.USER_NAME_ARG) != null){
-            var.setAd_user_name(result.getString(authCont.USER_NAME_ARG));
+        if (result.getString(PBSAuthenticatorController.USER_NAME_ARG) != null){
+            var.setAd_user_name(result.getString(PBSAuthenticatorController.USER_NAME_ARG));
             var.setAd_user_password(
-                    result.getString(authCont.USER_PASS_ARG));
+                    result.getString(PBSAuthenticatorController.USER_PASS_ARG));
 
-            String synced = result.getString(authCont.INITIALSYNC_ARG);
+            String synced = result.getString(PBSAuthenticatorController.INITIALSYNC_ARG);
             if (synced != null)
                 var.setIsInitialSynced(Integer.parseInt(synced) != 0);
         }
 
-        if (result.getString(authCont.AUTH_TOKEN_ARG) != null) {
+        if (result.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG) != null) {
             //   resultBundle.putString(AUTH_TOKEN_ARG, getAuthToken(userAccount[which], inputBundle.getString(ARG_AUTH_TYPE)));
             var.setAd_user_password(
-                    result.getString(authCont.USER_PASS_ARG));
+                    result.getString(PBSAuthenticatorController.USER_PASS_ARG));
             var.setServer_url(
-                    result.getString(authCont.SERVER_URL_ARG));
+                    result.getString(PBSAuthenticatorController.SERVER_URL_ARG));
             var.setSerial(
-                    result.getString(authCont.SERIAL_ARG));
+                    result.getString(PBSAuthenticatorController.SERIAL_ARG));
             var.setAuth_token(
-                    result.getString(authCont.AUTH_TOKEN_ARG));
+                    result.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG));
             var.setAd_role_id(
-                    result.getString(authCont.ROLE_ARG));
+                    result.getString(PBSAuthenticatorController.ROLE_ARG));
             var.setAd_org_id(
-                    result.getString(authCont.ORG_ARG));
+                    result.getString(PBSAuthenticatorController.ORG_ARG));
             var.setAd_client_id(
-                    result.getString(authCont.CLIENT_ARG));
+                    result.getString(PBSAuthenticatorController.CLIENT_ARG));
             var.setAd_user_id(
-                    result.getString(authCont.AD_USER_ARG));
+                    result.getString(PBSAuthenticatorController.AD_USER_ARG));
             var.setC_projectlocation_uuid(
-                    result.getString(authCont.PROJLOC_ARG));
+                    result.getString(PBSAuthenticatorController.PROJLOC_ARG));
             var.setC_projectlocation_id(
-                    result.getString(authCont.PROJLOC_ID_ARG));
+                    result.getString(PBSAuthenticatorController.PROJLOC_ID_ARG));
             var.setC_projectlocation_name(
-                    result.getString(authCont.PROJLOC_NAME_ARG)
+                    result.getString(PBSAuthenticatorController.PROJLOC_NAME_ARG)
             );
 
-            String projLoc = result.getString(authCont.PROJLOCS_ARG);
+            String projLoc = result.getString(PBSAuthenticatorController.PROJLOCS_ARG);
             if(projLoc != null && !projLoc.equalsIgnoreCase("null")) {
                 PBSProjLocJSON projLocs[] = new Gson().fromJson(projLoc, PBSProjLocJSON [].class);
                 var.setProjLocJSON(projLocs);
             }
             //Convert the role json to string.
-            PBSRoleJSON role[] = (PBSRoleJSON[]) new Gson().fromJson(result.getString(authCont.ROLES_ARG), PBSRoleJSON[].class);
+            PBSRoleJSON role[] = new Gson().fromJson(result.getString(PBSAuthenticatorController.ROLES_ARG), PBSRoleJSON[].class);
             var.setRoleJSON(role);
-            if (result.getString(authCont.ROLE_INDEX_ARG) != null) {
-                var.setAd_role_spinner_index(Integer.parseInt(result.getString(authCont.ROLE_INDEX_ARG)));
+            if (result.getString(PBSAuthenticatorController.ROLE_INDEX_ARG) != null) {
+                var.setAd_role_spinner_index(Integer.parseInt(result.getString(PBSAuthenticatorController.ROLE_INDEX_ARG)));
             }
 
-            if (result.getString(authCont.ORG_INDEX_ARG) != null) {
-                var.setAd_org_spinner_index(Integer.parseInt(result.getString(authCont.ORG_INDEX_ARG)));
+            if (result.getString(PBSAuthenticatorController.ORG_INDEX_ARG) != null) {
+                var.setAd_org_spinner_index(Integer.parseInt(result.getString(PBSAuthenticatorController.ORG_INDEX_ARG)));
             }
 
-            if (result.getString(authCont.CLIENT_INDEX_ARG) != null) {
-                var.setAd_client_spinner_index(Integer.parseInt(result.getString(authCont.CLIENT_INDEX_ARG)));
+            if (result.getString(PBSAuthenticatorController.CLIENT_INDEX_ARG) != null) {
+                var.setAd_client_spinner_index(Integer.parseInt(result.getString(PBSAuthenticatorController.CLIENT_INDEX_ARG)));
             }
 
-            String projLocIndex = result.getString(authCont.PROJLOC_INDEX_ARG);
+            String projLocIndex = result.getString(PBSAuthenticatorController.PROJLOC_INDEX_ARG);
             if (projLocIndex != null)
                 var.setC_ProjectLocation_Spinner_Index(Integer.parseInt(projLocIndex));
         }
@@ -675,9 +671,8 @@ public class PandoraHelper  {
      */
     public static void addRecyclerViewListener(RecyclerView rv, ObservableArrayList list,
                                            FragmentActivity context, PBSDetailsFragment targetFragment, String fragmentTitle) {
-        ObservableArrayList<IModel> modelList = list;
         rv.addOnItemTouchListener(new RecyclerItemClickListener(context,
-                new FragmentListOnItemClickListener(modelList, targetFragment,
+                new FragmentListOnItemClickListener(list, targetFragment,
                         context, fragmentTitle)));
     }
 
@@ -721,9 +716,7 @@ public class PandoraHelper  {
             }
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully " + msg);
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
-        } catch (OperationApplicationException e) {
+        } catch (RemoteException | OperationApplicationException e) {
             Log.e(TAG, e.getMessage());
         }
         return output;
@@ -779,9 +772,7 @@ public class PandoraHelper  {
             }
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully deleted selected " +itemName+"(s)");
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
-        } catch (OperationApplicationException e) {
+        } catch (RemoteException | OperationApplicationException e) {
             Log.e(TAG, e.getMessage());
         }
         return output;
@@ -862,10 +853,9 @@ public class PandoraHelper  {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentManager.popBackStack();
         fragmentManager.popBackStack();
-        Fragment frag = targetFragment;
-        frag.setRetainInstance(true);
-        fragmentTransaction.replace(R.id.container_body, frag);
-        fragmentTransaction.addToBackStack(frag.getClass().getName());
+        targetFragment.setRetainInstance(true);
+        fragmentTransaction.replace(R.id.container_body, targetFragment);
+        fragmentTransaction.addToBackStack(targetFragment.getClass().getName());
         fragmentTransaction.commit();
     }
 
@@ -883,7 +873,7 @@ public class PandoraHelper  {
 
     public static void hideSoftKeyboard() {
         if(PandoraMain.instance != null && PandoraMain.instance.getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) PandoraMain.instance.getSystemService(PandoraMain.instance.INPUT_METHOD_SERVICE);
+            InputMethodManager inputMethodManager = (InputMethodManager) PandoraMain.instance.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(PandoraMain.instance.getCurrentFocus().getWindowToken(), 0);
         }
     }
@@ -894,7 +884,7 @@ public class PandoraHelper  {
             ArrayList<String> oriMenuList = new ArrayList<>(Arrays.asList(forms));
             ArrayList<String> tmpMenuList = new ArrayList<>();
             String name;
-            String[] MENU_LIST = PandoraMain.instance.MENU_LIST;
+            String[] MENU_LIST = PandoraMain.MENU_LIST;
             for (int i = 0; i < MENU_LIST.length && oriMenuList.size() > 0; i++) {
                 for (int j = 0; j < oriMenuList.size(); j++) {
                     name = oriMenuList.get(j).substring("MOB_".length());

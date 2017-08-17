@@ -1,7 +1,6 @@
 package com.pbasolutions.android.controller;
 
 import android.content.Context;
-import android.os.Bundle;
 
 /**
  * Created by pbadell on 10/9/15.

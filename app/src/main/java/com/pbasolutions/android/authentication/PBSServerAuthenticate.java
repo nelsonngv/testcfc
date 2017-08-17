@@ -51,12 +51,8 @@ public class PBSServerAuthenticate extends PBSServer implements PBSIServerAuthen
         PBSResultJSON resultJSON = null;
         resultJSON = (PBSResultJSON)callServer(url,PBSResultJSON.class.getName());
         if (resultJSON !=null){
-            if (resultJSON.getVersion()!=null) {
-                return true;
-            } else {
-                //invalid server request will return false.
-                return false;
-            }
+            //invalid server request will return false.
+            return resultJSON.getVersion() != null;
         } else {
             //invalid server address will return false.
             return false;
@@ -79,12 +75,8 @@ public class PBSServerAuthenticate extends PBSServer implements PBSIServerAuthen
         PBSResultJSON resultJSON;
         resultJSON = (PBSResultJSON)callServer(url,PBSResultJSON.class.getName());
         boolean result = false;
-        if (resultJSON != null){
-            if (resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT)) {
-                return result;
-            } else {
-                return true;
-            }
+        if (resultJSON != null) {
+            return !resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT) || result;
         } else {
             return false;
         }
@@ -107,11 +99,7 @@ public class PBSServerAuthenticate extends PBSServer implements PBSIServerAuthen
         boolean result;
         resultJSON = (PBSResultJSON)callServer(url, PBSResultJSON.class.getName());
         if (resultJSON != null) {
-            if (resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT)) {
-                result = false;
-            } else {
-                result = true;
-            }
+            result = !resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT);
         } else {
             result = false;
         }

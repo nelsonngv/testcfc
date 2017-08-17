@@ -18,7 +18,6 @@ import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.DeployRVA;
 import com.pbasolutions.android.controller.PBSDeployController;
 import com.pbasolutions.android.model.MDeploy;
-import com.pbasolutions.android.model.MResourceAlloc;
 
 /**
  * Created by pbadell on 10/8/15.
@@ -59,8 +58,8 @@ public class DeploymentFragment extends Fragment {
     private ObservableArrayList<MDeploy> getDeploys() {
         Bundle input = new Bundle();
        // input.putString();
-        Bundle result = deployCont.triggerEvent(deployCont.GET_DEPLOYS_EVENT, input, new Bundle(), null);
-        return (ObservableArrayList<MDeploy>)result.get(deployCont.ARG_DEPLOYS);
+        Bundle result = deployCont.triggerEvent(PBSDeployController.GET_DEPLOYS_EVENT, input, new Bundle(), null);
+        return (ObservableArrayList<MDeploy>)result.get(PBSDeployController.ARG_DEPLOYS);
     }
 
     @Override

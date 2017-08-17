@@ -82,7 +82,7 @@ public class PBSRoleJSON implements Serializable{
     }
 
     public List<String> getNames(PBSRoleJSON[] roleArray){
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for(PBSRoleJSON role : roleArray){
             list.add(role.getName());
         }
@@ -90,7 +90,7 @@ public class PBSRoleJSON implements Serializable{
     }
 
     public static List<String> getOrgNames(PBSOrgJSON[] orgArray){
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for(PBSOrgJSON org : orgArray){
             list.add(org.getOrgName());
         }
@@ -98,7 +98,7 @@ public class PBSRoleJSON implements Serializable{
     }
 
     public static List<String> getClientNames(PBSClientJSON[] clientArray){
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for(PBSClientJSON client : clientArray){
             list.add(client.getName());
         }
@@ -106,7 +106,7 @@ public class PBSRoleJSON implements Serializable{
     }
 
     public static List<String> getProjLoc(PBSProjLocJSON[] projArray) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (PBSProjLocJSON projLoc:projArray) {
             list.add(projLoc.getName());
         }

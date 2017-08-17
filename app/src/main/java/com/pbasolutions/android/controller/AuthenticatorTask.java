@@ -325,11 +325,7 @@ public class AuthenticatorTask extends Task {
                         authToken = output.getString(AccountManager.KEY_AUTHTOKEN);
                     }
                 }
-            } catch (OperationCanceledException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (AuthenticatorException e) {
+            } catch (OperationCanceledException | AuthenticatorException | IOException e) {
                 e.printStackTrace();
             }
         }
@@ -381,7 +377,7 @@ public class AuthenticatorTask extends Task {
                         PBSAuthenticatorController.USER_NAME_ARG),
                 input.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
                 input.getString(PBSAuthenticatorController.SERVER_URL_ARG));
-        if (logOutResult == true) {
+        if (logOutResult) {
             // remove account
 //            String userName = ((PandoraMain) ctx).globalVariable.getAd_user_name();
 //            String accType = PBSAccountInfo.ACCOUNT_TYPE;
@@ -658,7 +654,7 @@ public class AuthenticatorTask extends Task {
                 var.setProjLocJSON(projLocs);
             }
             //Convert the role json to string.
-            PBSRoleJSON role[] = (PBSRoleJSON[]) new Gson().fromJson(output.getString(PBSAuthenticatorController.ROLES_ARG), PBSRoleJSON[].class);
+            PBSRoleJSON role[] = new Gson().fromJson(output.getString(PBSAuthenticatorController.ROLES_ARG), PBSRoleJSON[].class);
             var.setRoleJSON(role);
             if (output.getString(PBSAuthenticatorController.ROLE_INDEX_ARG) != null) {
                 var.setAd_role_spinner_index(Integer.parseInt(output.getString(PBSAuthenticatorController.ROLE_INDEX_ARG)));

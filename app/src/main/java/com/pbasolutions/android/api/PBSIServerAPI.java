@@ -8,11 +8,7 @@ import com.pbasolutions.android.json.PBSProjTasksJSON;
 
 import com.pbasolutions.android.model.MAttendance;
 import com.pbasolutions.android.model.MMovement;
-import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.model.MPurchaseRequest;
-import com.pbasolutions.android.model.MStorage;
-
-import org.json.JSONObject;
 
 /**
  * Created by pbadell on 10/30/15.

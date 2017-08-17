@@ -61,13 +61,11 @@ public class PBSBroadcastController extends ContextWrapper implements PBSIContro
         input.putString(ARG_TASK_EVENT, GET_NOTES_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         BroadcastTask task = new BroadcastTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -77,13 +75,11 @@ public class PBSBroadcastController extends ContextWrapper implements PBSIContro
         input.putString(ARG_TASK_EVENT, SYNC_NOTES_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         BroadcastTask task = new BroadcastTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -93,13 +89,11 @@ public class PBSBroadcastController extends ContextWrapper implements PBSIContro
         input.putString(ARG_TASK_EVENT, DELETE_NOTES_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         BroadcastTask task = new BroadcastTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -109,13 +103,11 @@ public class PBSBroadcastController extends ContextWrapper implements PBSIContro
         input.putString(ARG_TASK_EVENT, GET_NOTE_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         BroadcastTask task = new BroadcastTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;

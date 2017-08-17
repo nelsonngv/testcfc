@@ -2,7 +2,6 @@ package com.pbasolutions.android.json;
 
 import android.databinding.BaseObservable;
 
-import com.google.gson.annotations.Expose;
 import com.pbasolutions.android.model.IModel;
 
 import java.io.Serializable;

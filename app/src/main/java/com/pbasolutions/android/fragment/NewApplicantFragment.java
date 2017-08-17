@@ -2,7 +2,6 @@ package com.pbasolutions.android.fragment;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,13 +12,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinnerPair;
+import com.pbasolutions.android.controller.PBSRecruitController;
 import com.pbasolutions.android.model.MApplicant;
 import com.pbasolutions.android.model.ModelConst;
 
@@ -166,7 +165,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         }
 
         if (isError) {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), "Please ensure " +
+            PandoraHelper.showWarningMessage(getActivity(), "Please ensure " +
                     "that Name/Job/Nationality/Shift is not empty");
             return;
         }
@@ -223,7 +222,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         cv.put(ModelConst.IS_UPDATED_COL, PandoraConstant.NO);
 
         Bundle input = new Bundle();
-        input.putParcelable(recCont.APPLICANT_VALUES, cv);
+        input.putParcelable(PBSRecruitController.APPLICANT_VALUES, cv);
 
         PandoraHelper.hideSoftKeyboard();
         Fragment fragment = new NewApplicantSignFragment();

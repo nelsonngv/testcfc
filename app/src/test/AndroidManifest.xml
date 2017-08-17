@@ -33,8 +33,8 @@
     <!--
     Specifies the instrumentation test runner used to run the tests.
     -->
-    <instrumentation
+    <!--<instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:targetPackage="com.pbasolutions.android"
-        android:label="Tests for com.example.android.testingfun" />
+        android:label="Tests for com.example.android.testingfun" />-->
 </manifest>

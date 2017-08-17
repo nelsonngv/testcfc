@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.RequisitionLineRVA;
@@ -63,22 +62,21 @@ public class AttendanceDetailFragment extends PBSDetailsFragment {
 
     private ObservableArrayList<MPurchaseRequestLine> getRequisitionLines() {
         Bundle input = new Bundle();
-        input.putString(reqCont.ARG_PURCHASEREQUEST_UUID, _UUID);
-        Bundle result = reqCont.triggerEvent(reqCont.GET_REQUISITIONLINES_EVENT, input, new Bundle(), null);
-        return (ObservableArrayList<MPurchaseRequestLine>)result.getSerializable(reqCont.ARG_PURCHASEREQUESTLINE_LIST);
+        input.putString(PBSRequisitionController.ARG_PURCHASEREQUEST_UUID, _UUID);
+        Bundle result = reqCont.triggerEvent(PBSRequisitionController.GET_REQUISITIONLINES_EVENT, input, new Bundle(), null);
+        return (ObservableArrayList<MPurchaseRequestLine>)result.getSerializable(PBSRequisitionController.ARG_PURCHASEREQUESTLINE_LIST);
     }
 
     private MPurchaseRequest getRequisition() {
         Bundle input = new Bundle();
-        input.putString(reqCont.ARG_PURCHASEREQUEST_UUID, _UUID);
-        Bundle result = reqCont.triggerEvent(reqCont.GET_REQUISITION_EVENT, input, new Bundle(), null);
+        input.putString(PBSRequisitionController.ARG_PURCHASEREQUEST_UUID, _UUID);
+        Bundle result = reqCont.triggerEvent(PBSRequisitionController.GET_REQUISITION_EVENT, input, new Bundle(), null);
 
-        MPurchaseRequest req = (MPurchaseRequest)result.getSerializable(reqCont.ARG_PURCHASEREQUEST);
-//            String status = req.getStatus();
+        //            String status = req.getStatus();
 //            boolean showRequestBtn = status == null || status.isEmpty();
 //            if (requestButton != null)
 //                requestButton.setVisibility(showRequestBtn? View.VISIBLE : View.INVISIBLE);
-        return req;
+        return (MPurchaseRequest)result.getSerializable(reqCont.ARG_PURCHASEREQUEST);
     }
 
     @Override

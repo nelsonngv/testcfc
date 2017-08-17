@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -281,11 +280,11 @@ public class MovementListFragment extends Fragment {
     private ObservableArrayList<MMovement> getMovements() {
         PandoraContext pc = ((PandoraMain)getActivity()).getGlobalVariable();
         Bundle input = new Bundle();
-        input.putInt(assetCont.ARG_PROJECTLOCATION_ID, Integer.parseInt(pc.getC_projectlocation_id()));
-        input.putInt(assetCont.ARG_AD_USER_ID, Integer.parseInt(pc.getAd_user_id()));
+        input.putInt(PBSAssetController.ARG_PROJECTLOCATION_ID, Integer.parseInt(pc.getC_projectlocation_id()));
+        input.putInt(PBSAssetController.ARG_AD_USER_ID, Integer.parseInt(pc.getAd_user_id()));
         input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
-        Bundle result = assetCont.triggerEvent(assetCont.GET_MOVEMENTS_FROM_SERVER_EVENT, input, new Bundle(), null);
-        return (ObservableArrayList)result.getSerializable(assetCont.ARG_MOVEMENT);
+        Bundle result = assetCont.triggerEvent(PBSAssetController.GET_MOVEMENTS_FROM_SERVER_EVENT, input, new Bundle(), null);
+        return (ObservableArrayList)result.getSerializable(PBSAssetController.ARG_MOVEMENT);
     }
 
 }

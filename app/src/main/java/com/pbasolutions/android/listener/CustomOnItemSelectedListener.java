@@ -15,7 +15,6 @@ import com.pbasolutions.android.json.PBSClientJSON;
 import com.pbasolutions.android.json.PBSOrgJSON;
 import com.pbasolutions.android.json.PBSProjLocJSON;
 import com.pbasolutions.android.json.PBSRoleJSON;
-import com.pbasolutions.android.model.ModelConst;
 
 /**
  * Created by pbadell on 7/30/15.
@@ -68,7 +67,7 @@ public class CustomOnItemSelectedListener implements AdapterView.OnItemSelectedL
                     this.orgSpinner.setVisibility(View.VISIBLE);
                     this.clientSpinner.setVisibility(View.VISIBLE);
 
-                    fragment.addItemsOnSpinner(this.orgSpinner, role.getOrgNames(role.getOrgs()), "orgSpinner");
+                    fragment.addItemsOnSpinner(this.orgSpinner, PBSRoleJSON.getOrgNames(role.getOrgs()), "orgSpinner");
                     orgSpinner.setOnItemSelectedListener(new CustomOnItemSelectedListener(fragment, role.getOrgs(), orgSpinner, clientSpinner, projectSpinner));
                     return;
                 }
@@ -123,15 +122,15 @@ public class CustomOnItemSelectedListener implements AdapterView.OnItemSelectedL
 
                     PBSAuthenticatorController controller = new PBSAuthenticatorController(context);
                     Bundle input = new Bundle ();
-                    String arrayArgs[] = {controller.PROJLOC_ARG, controller.PROJLOC_INDEX_ARG, controller.PROJLOCS_ARG};
-                    input.putStringArray(controller.ARRAY_ARG, arrayArgs);
-                    input.putString(controller.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
-                    input.putString(controller.USER_NAME_ARG, globalVariable.getAd_user_name());
+                    String arrayArgs[] = {PBSAuthenticatorController.PROJLOC_ARG, PBSAuthenticatorController.PROJLOC_INDEX_ARG, PBSAuthenticatorController.PROJLOCS_ARG};
+                    input.putStringArray(PBSAuthenticatorController.ARRAY_ARG, arrayArgs);
+                    input.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
+                    input.putString(PBSAuthenticatorController.USER_NAME_ARG, globalVariable.getAd_user_name());
                     input.putString(arrayArgs[0], projloc.getC_ProjectLocation_UUID());
                     input.putString(arrayArgs[1], String.valueOf(x));
                     String json = new Gson().toJson(objectArray);
                     input.putSerializable(arrayArgs[2], json);
-                    controller.triggerEvent(controller.SET_ACCOUNT_USERDATA_EVENT, input, new Bundle(), null);
+                    controller.triggerEvent(PBSAuthenticatorController.SET_ACCOUNT_USERDATA_EVENT, input, new Bundle(), null);
 
                     this.projectSpinner.setVisibility(View.VISIBLE);
                     return;

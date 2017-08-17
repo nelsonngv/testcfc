@@ -1,19 +1,12 @@
 package com.pbasolutions.android.fragment;
 
-import android.accounts.Account;
-import android.content.ContentResolver;
-import android.content.SyncStatusObserver;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;

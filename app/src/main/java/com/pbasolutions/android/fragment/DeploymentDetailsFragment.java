@@ -63,10 +63,10 @@ public class DeploymentDetailsFragment extends Fragment {
      */
     public MResourceAlloc getDeploy() {
         Bundle inputBundle = new Bundle();
-        inputBundle.putString(deployCont.ARG_RESOURCEALLOC_UUID, resourcealloc_uuid);
+        inputBundle.putString(PBSDeployController.ARG_RESOURCEALLOC_UUID, resourcealloc_uuid);
         Bundle resultBundle = new Bundle();
-        resultBundle = deployCont.triggerEvent(deployCont.NOTE_DETAILS_EVENT, inputBundle, resultBundle, null);
-        return (MResourceAlloc)resultBundle.getSerializable(deployCont.ARG_NOTE);
+        resultBundle = deployCont.triggerEvent(PBSDeployController.NOTE_DETAILS_EVENT, inputBundle, resultBundle, null);
+        return (MResourceAlloc)resultBundle.getSerializable(PBSDeployController.ARG_NOTE);
     }
 
     @Override

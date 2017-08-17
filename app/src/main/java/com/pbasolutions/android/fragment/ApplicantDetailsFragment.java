@@ -3,12 +3,12 @@ package com.pbasolutions.android.fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinAdapter;
+import com.pbasolutions.android.controller.PBSRecruitController;
 import com.pbasolutions.android.model.MApplicant;
 import com.pbasolutions.android.utils.CameraUtil;
 
@@ -116,10 +116,10 @@ public class ApplicantDetailsFragment extends AbstractApplicantFragment {
 
     private MApplicant getApplicant(){
         Bundle input = new Bundle();
-        input.putString(recCont.ARG_JOBAPP_UUID, _UUID);
-        input.putSerializable(recCont.APPLICANT_LIST, modelList);
-        Bundle result = recCont.triggerEvent(recCont.GET_APPLICANT_EVENT, input, new Bundle(), null);
-        return (MApplicant)result.getSerializable(recCont.ARG_APPLICANT);
+        input.putString(PBSRecruitController.ARG_JOBAPP_UUID, _UUID);
+        input.putSerializable(PBSRecruitController.APPLICANT_LIST, modelList);
+        Bundle result = recCont.triggerEvent(PBSRecruitController.GET_APPLICANT_EVENT, input, new Bundle(), null);
+        return (MApplicant)result.getSerializable(PBSRecruitController.ARG_APPLICANT);
     }
 
 }

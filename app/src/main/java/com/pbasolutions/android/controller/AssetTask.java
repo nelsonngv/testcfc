@@ -12,7 +12,6 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.util.Pair;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.pbasolutions.android.PBSServerConst;
@@ -257,9 +256,7 @@ public class AssetTask extends Task {
             }
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully delete line(s)");
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
-        } catch (OperationApplicationException e) {
+        } catch (RemoteException | OperationApplicationException e) {
             Log.e(TAG, e.getMessage());
         }
         return output;

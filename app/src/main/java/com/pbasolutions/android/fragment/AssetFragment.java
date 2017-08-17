@@ -50,7 +50,7 @@ public class AssetFragment extends Fragment{
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         if (!PandoraHelper.isInternetOn(getActivity())) {
-            PandoraHelper.showMessage((PandoraMain)getActivity(),"Please turn on internet" +
+            PandoraHelper.showMessage(getActivity(),"Please turn on internet" +
                     " connection to view latest assets and movements");
 //            PandoraHelper.showAlertMessage((PandoraMain)getActivity(),"Please turn on internet" +
 //                            " connection to view latest assets and movements",

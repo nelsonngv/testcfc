@@ -2,7 +2,6 @@ package com.pbasolutions.android.fragment;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -14,11 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
@@ -27,7 +22,6 @@ import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
-import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.controller.PBSCheckInController;
 import com.pbasolutions.android.controller.PBSSurveyController;
@@ -38,7 +32,6 @@ import com.pbasolutions.android.utils.CameraUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -247,8 +240,7 @@ public class NewSurveySignFragment extends Fragment {
 
                 @Override
                 protected Bundle doInBackground(Bundle... params) {
-                    Bundle output = surveyCont.triggerEvent(surveyCont.INSERT_SURVEY_EVENT, params[0], new Bundle(), null);
-                    return output;
+                    return surveyCont.triggerEvent(surveyCont.INSERT_SURVEY_EVENT, params[0], new Bundle(), null);
                 }
 
                 @Override

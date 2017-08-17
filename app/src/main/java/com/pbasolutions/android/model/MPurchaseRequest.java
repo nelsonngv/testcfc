@@ -2,7 +2,6 @@ package com.pbasolutions.android.model;
 
 import android.graphics.Color;
 
-import com.google.gson.annotations.Expose;
 import com.pbasolutions.android.json.PBSJson;
 
 import java.text.ParseException;

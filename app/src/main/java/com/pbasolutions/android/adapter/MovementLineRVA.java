@@ -43,7 +43,7 @@ public class MovementLineRVA extends RecyclerView.Adapter<MovementLineRVA.Moveme
         AssetMovementlineItemBinding binding = AssetMovementlineItemBinding.inflate(inflater);
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.asset_movementline_item, null);
-        MovementLineVH viewHolder = new MovementLineVH(binding, view, new BroadcastRVA.IViewHolderOnClicks(){
+        return new MovementLineVH(binding, view, new BroadcastRVA.IViewHolderOnClicks(){
             @Override
             public void onCheckbox(CheckBox cb, int pos) {
                 MMovementLine line = (MMovementLine) cb.getTag();
@@ -86,7 +86,6 @@ public class MovementLineRVA extends RecyclerView.Adapter<MovementLineRVA.Moveme
                         (FragmentActivity)mContext, mContext.getString(R.string.title_requisitionline));
             }
         });
-        return viewHolder;
     }
 
     @Override

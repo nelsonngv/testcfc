@@ -19,9 +19,11 @@ import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinAdapter;
 import com.pbasolutions.android.adapter.SpinnerPair;
+import com.pbasolutions.android.controller.PBSAssetController;
 import com.pbasolutions.android.model.MMovement;
 import com.pbasolutions.android.model.MMovementLine;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,8 +34,7 @@ public class AssetMovementDetails extends AbstractMovementFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-      View rootView = super.onCreateView(inflater, container, savedInstanceState);
-      return rootView;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -70,9 +71,9 @@ public class AssetMovementDetails extends AbstractMovementFragment {
     @Override
     protected void move() {
         Bundle input = new Bundle();
-        input.putInt(assetCont.ARG_M_MOVEMENT_ID, get_ID());
+        input.putInt(PBSAssetController.ARG_M_MOVEMENT_ID, get_ID());
         input.putString(PBSServerConst.PARAM_URL, appContext.getServer_url());
-        input.putString(assetCont.ARG_M_MOVEMENT_UUID, movement.getM_Movement_UUID());
+        input.putString(PBSAssetController.ARG_M_MOVEMENT_UUID, movement.getM_Movement_UUID());
 
         //complete movement
         new AsyncTask<Bundle, Void, Bundle>() {
@@ -85,7 +86,7 @@ public class AssetMovementDetails extends AbstractMovementFragment {
             @Override
             protected Bundle doInBackground(Bundle... params) {
                 Bundle output = new Bundle();
-                output = assetCont.triggerEvent(assetCont.COMPLETE_MOVEMENT_EVENT, params[0], output, null);
+                output = assetCont.triggerEvent(PBSAssetController.COMPLETE_MOVEMENT_EVENT, params[0], output, null);
                 return output;
             }
 
@@ -139,12 +140,12 @@ public class AssetMovementDetails extends AbstractMovementFragment {
     @Override
     protected void setValues() {
         Bundle input = new Bundle();
-        input.putSerializable(assetCont.ARG_MOVEMENT, movement);
-        Bundle result = assetCont.triggerEvent(assetCont.UPDATE_MOVEMENT_INFO_EVENT, input,
+        input.putSerializable(PBSAssetController.ARG_MOVEMENT, movement);
+        Bundle result = assetCont.triggerEvent(PBSAssetController.UPDATE_MOVEMENT_INFO_EVENT, input,
                 new Bundle(), null);
 
         if (result != null) {
-            movement = (MMovement) result.getSerializable(assetCont.ARG_MOVEMENT);
+            movement = (MMovement) result.getSerializable(PBSAssetController.ARG_MOVEMENT);
             getActivity().invalidateOptionsMenu();
             projectLocation.setText(movement.getProjectLocation());
             projectLocation.setTag(movement.getProjectLocation_UUID());
@@ -153,9 +154,7 @@ public class AssetMovementDetails extends AbstractMovementFragment {
             movementDate.setText(movement.getMovementDate());
             documentNo.setText(movement.getDocumentNo());
             ObservableArrayList<MMovementLine> movementLines = new ObservableArrayList();
-            for (MMovementLine mvl : movement.getLines() ) {
-                movementLines.add(mvl);
-            }
+            Collections.addAll(movementLines, movement.getLines());
             lines = movementLines;
         }
         toProjectLocation.setEnabled(false);
@@ -165,9 +164,9 @@ public class AssetMovementDetails extends AbstractMovementFragment {
     protected List<SpinnerPair> getProjectLocationsTo() {
         Bundle input = new Bundle();
         Bundle result = assetCont
-                .triggerEvent(assetCont.GET_PROJECTLOCATIONS_EVENT,
+                .triggerEvent(PBSAssetController.GET_PROJECTLOCATIONS_EVENT,
                         input, new Bundle(), null);
         return result
-                .getParcelableArrayList(assetCont.ARG_PROJECTLOCATIONS);
+                .getParcelableArrayList(PBSAssetController.ARG_PROJECTLOCATIONS);
     }
 }

@@ -74,10 +74,9 @@ public class CheckPointFragment extends Fragment {
             String projectLocationUUID = globalVar.getC_projectlocation_uuid();
             if (projectLocationUUID != null) {
                 Bundle input = new Bundle();
-                input.putString(checkpointController.ARG_PROJECT_LOCATION_UUID, projectLocationUUID);
-                Bundle result = checkpointController.triggerEvent(checkpointController.CHECKPOINT_SEQ_ROWS_EVENT, input, new Bundle(), null);
-                ObservableArrayList<MCheckPoint>  mCheckPointSeq =  (ObservableArrayList<MCheckPoint>) result.getSerializable(checkpointController.ARG_CHECKPOINT_SEQ);
-                return mCheckPointSeq;
+                input.putString(PBSCheckpointController.ARG_PROJECT_LOCATION_UUID, projectLocationUUID);
+                Bundle result = checkpointController.triggerEvent(PBSCheckpointController.CHECKPOINT_SEQ_ROWS_EVENT, input, new Bundle(), null);
+                return (ObservableArrayList<MCheckPoint>) result.getSerializable(checkpointController.ARG_CHECKPOINT_SEQ);
             } else {
 //                PandoraHelper.showAlertMessage((PandoraMain)getActivity(), "Project Location is not selected. Please select the project location in defaults setting tab.", PandoraConstant.ERROR, "Ok", null);
             }
@@ -107,18 +106,18 @@ public class CheckPointFragment extends Fragment {
                 //check the global varialble is null or not.
                 if (globalVar != null && globalVar.getProjLocJSON() == null) {
                     //find in database.
-                    result = checkpointController.triggerEvent(checkpointController.GET_PROJECT_LOCATION_DATA, new Bundle(), new Bundle(), null);
-                    PBSProjLocJSON[] projLocJSONs = (PBSProjLocJSON[])result.getSerializable(checkpointController.ARG_PROJECT_LOCATION_JSON);
+                    result = checkpointController.triggerEvent(PBSCheckpointController.GET_PROJECT_LOCATION_DATA, new Bundle(), new Bundle(), null);
+                    PBSProjLocJSON[] projLocJSONs = (PBSProjLocJSON[])result.getSerializable(PBSCheckpointController.ARG_PROJECT_LOCATION_JSON);
                     if (projLocJSONs  != null) {
                         globalVar.setProjLocJSON(projLocJSONs);
                         PBSAuthenticatorController authCont = new PBSAuthenticatorController(getActivity());
                         Bundle input = new Bundle();
-                        String args[] = {authCont.PROJLOCS_ARG};
-                        input.putStringArray(authCont.ARRAY_ARG, args);
-                        input.putString(authCont.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
-                        input.putString(authCont.USER_NAME_ARG, globalVar.getAd_user_name());
-                        input.putString(authCont.PROJLOCS_ARG, new Gson().toJson(projLocJSONs));
-                        authCont.triggerEvent(authCont.SET_ACCOUNT_USERDATA_EVENT, input, new Bundle(), null);
+                        String args[] = {PBSAuthenticatorController.PROJLOCS_ARG};
+                        input.putStringArray(PBSAuthenticatorController.ARRAY_ARG, args);
+                        input.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
+                        input.putString(PBSAuthenticatorController.USER_NAME_ARG, globalVar.getAd_user_name());
+                        input.putString(PBSAuthenticatorController.PROJLOCS_ARG, new Gson().toJson(projLocJSONs));
+                        authCont.triggerEvent(PBSAuthenticatorController.SET_ACCOUNT_USERDATA_EVENT, input, new Bundle(), null);
                     }
 
                     checkPoints = null;
@@ -132,13 +131,13 @@ public class CheckPointFragment extends Fragment {
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
                 if (result != null) {
-                    PandoraHelper.showMessage((PandoraMain) getActivity(),
+                    PandoraHelper.showMessage(getActivity(),
                             result.getString(result.getString(PandoraConstant.TITLE)));
                 } else {
                     PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
                     if (globalVar != null && checkPoints == null)
                         if (showMsg)
-                            PandoraHelper.showWarningMessage((PandoraMain)getActivity(),
+                            PandoraHelper.showWarningMessage(getActivity(),
                             "No check point for the current Project Location. Please select another project location in defaults setting tab.");
                 }
 

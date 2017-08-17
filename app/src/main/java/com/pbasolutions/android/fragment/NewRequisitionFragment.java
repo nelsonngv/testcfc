@@ -17,8 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -108,11 +106,11 @@ public class NewRequisitionFragment extends Fragment {
     private void populatePRLines() {
         if (_UUID != null && !_UUID.isEmpty()) {
             Bundle input = new Bundle();
-            input.putString(reqCont.ARG_PURCHASEREQUEST_UUID, get_UUID());
-            Bundle result = reqCont.triggerEvent(reqCont.GET_REQUISITIONLINES_EVENT,
+            input.putString(PBSRequisitionController.ARG_PURCHASEREQUEST_UUID, get_UUID());
+            Bundle result = reqCont.triggerEvent(PBSRequisitionController.GET_REQUISITIONLINES_EVENT,
                     input, new Bundle(), null);
             lines = (ObservableArrayList<MPurchaseRequestLine>)result
-                    .getSerializable(reqCont.ARG_PURCHASEREQUESTLINE_LIST);
+                    .getSerializable(PBSRequisitionController.ARG_PURCHASEREQUESTLINE_LIST);
             recyclerView.setLayoutManager(new LinearLayoutManager(activity));
             viewAdapter = new RequisitionLineRVA(getActivity(), lines);
             recyclerView.setAdapter(viewAdapter);
@@ -222,7 +220,7 @@ public class NewRequisitionFragment extends Fragment {
 //        }
 
         if (lines == null || lines.size() == 0) {
-            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), getString(
+            PandoraHelper.showWarningMessage(getActivity(), getString(
                     R.string.no_line_error,getString(R.string.request)));
             return;
         }
@@ -267,7 +265,7 @@ public class NewRequisitionFragment extends Fragment {
         pr.setLines(lines.toArray(lines.toArray(new MPurchaseRequestLine[lines.size()])));
 
         final Bundle input = new Bundle();
-        input.putSerializable(reqCont.ARG_PURCHASEREQUEST, pr);
+        input.putSerializable(PBSRequisitionController.ARG_PURCHASEREQUEST, pr);
         input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
 
         new AsyncTask<Bundle, Void, Bundle>() {
@@ -281,8 +279,7 @@ public class NewRequisitionFragment extends Fragment {
 
             @Override
             protected Bundle doInBackground(Bundle... params) {
-                Bundle result = reqCont.triggerEvent(reqCont.CREATE_REQUISITION_EVENT, params[0], new Bundle(), null);
-                return result;
+                return reqCont.triggerEvent(reqCont.CREATE_REQUISITION_EVENT, params[0], new Bundle(), null);
             }
 
             @Override
@@ -302,12 +299,11 @@ public class NewRequisitionFragment extends Fragment {
                     new AsyncTask<Bundle, Void, Bundle>() {
                         @Override
                         protected Bundle doInBackground(Bundle... params) {
-                            Bundle result = reqCont.triggerEvent(reqCont.REMOVE_REQ_EVENT, params[0], new Bundle(), null);
-                            return result;
+                            return reqCont.triggerEvent(reqCont.REMOVE_REQ_EVENT, params[0], new Bundle(), null);
                         }
                     }.execute(input);
 
-                    PandoraHelper.showWarningMessage((PandoraMain) getActivity(), "Failed to request!");
+                    PandoraHelper.showWarningMessage(getActivity(), "Failed to request!");
                 }
 
                 ((PandoraMain)getActivity()).dismissProgressDialog();
@@ -339,7 +335,7 @@ public class NewRequisitionFragment extends Fragment {
                     getActivity().getContentResolver());
         }
         cv.put(ModelConst.AD_USER_UUID_COL, ad_user_uuid);
-        input.putParcelable(reqCont.ARG_CONTENTVALUES, cv);
+        input.putParcelable(PBSRequisitionController.ARG_CONTENTVALUES, cv);
 
         new AsyncTask<Bundle, Void, Void>() {
             protected LayoutInflater inflater;
@@ -352,7 +348,7 @@ public class NewRequisitionFragment extends Fragment {
 
             @Override
             protected Void doInBackground(Bundle... params) {
-                reqCont.triggerEvent(reqCont.INSERT_REQ_EVENT, params[0], new Bundle(), null);
+                reqCont.triggerEvent(PBSRequisitionController.INSERT_REQ_EVENT, params[0], new Bundle(), null);
                 return null;
             }
 
@@ -366,7 +362,7 @@ public class NewRequisitionFragment extends Fragment {
 
     private void removeLine() {
         if (lines == null || lines.size() == 0) {
-            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), getString(
+            PandoraHelper.showWarningMessage(getActivity(), getString(
                     R.string.no_list_error, "line"));
             return;
         }
@@ -383,9 +379,8 @@ public class NewRequisitionFragment extends Fragment {
             @Override
             protected Bundle doInBackground(Void... params) {
                 Bundle input = new Bundle();
-                input.putSerializable(reqCont.ARG_REQUISITIONLINE_LIST, viewAdapter.getLines());
-                Bundle result = reqCont.triggerEvent(reqCont.REMOVE_REQLINES_EVENT, input, new Bundle(), null);
-                return result;
+                input.putSerializable(PBSRequisitionController.ARG_REQUISITIONLINE_LIST, viewAdapter.getLines());
+                return reqCont.triggerEvent(reqCont.REMOVE_REQLINES_EVENT, input, new Bundle(), null);
             }
 
             @Override

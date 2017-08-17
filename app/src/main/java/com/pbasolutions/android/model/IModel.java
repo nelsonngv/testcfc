@@ -1,7 +1,5 @@
 package com.pbasolutions.android.model;
 
-import java.io.Serializable;
-
 /**
  * Created by pbadell on 10/29/15.
  */

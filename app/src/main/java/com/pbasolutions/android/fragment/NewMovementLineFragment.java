@@ -4,9 +4,7 @@ import android.content.ContentValues;
 import android.databinding.ObservableArrayList;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
@@ -15,6 +13,7 @@ import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSAssetController;
+import com.pbasolutions.android.controller.PBSController;
 import com.pbasolutions.android.model.MMovementLine;
 import com.pbasolutions.android.model.MStorage;
 import com.pbasolutions.android.model.MUOM;
@@ -46,10 +45,10 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
             cv.put(MMovementLine.MOVEMENTQTY_COL, movementQty.getText().toString());
 
             Bundle input = new Bundle();
-            input.putParcelable(assetCont.ARG_CONTENTVALUES, cv);
-            input.putString(assetCont.ARG_PROJECTLOCATION_ID, appContext.getC_projectlocation_id());
+            input.putParcelable(PBSController.ARG_CONTENTVALUES, cv);
+            input.putString(PBSAssetController.ARG_PROJECTLOCATION_ID, appContext.getC_projectlocation_id());
             input.putString(PBSServerConst.PARAM_URL, appContext.getServer_url());
-            Bundle output = assetCont.triggerEvent(assetCont.SAVE_MOVEMENTLINE_EVENT, input, new Bundle(), null);
+            Bundle output = assetCont.triggerEvent(PBSAssetController.SAVE_MOVEMENTLINE_EVENT, input, new Bundle(), null);
             if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
                 PandoraHelper.hideSoftKeyboard();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -90,17 +89,17 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
                 BigDecimal quantityOnHand = new BigDecimal(qtyOnHd);
                 BigDecimal moveQty = new BigDecimal(movementQuantity);
                 if (moveQty.compareTo(quantityOnHand) == 1) {
-                    PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
+                    PandoraHelper.showWarningMessage(getActivity(),
                             getString(R.string.movement_greater_than));
                 } else {
                     result = true;
                 }
             } else {
-                PandoraHelper.showWarningMessage((PandoraMain) getActivity(),
+                PandoraHelper.showWarningMessage(getActivity(),
                         getString(R.string.no_value_movement_qty));
             }
         } else {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+            PandoraHelper.showWarningMessage(getActivity(), getString(
                     R.string.no_list_error, "Product"));
         }
         return result;
@@ -109,22 +108,22 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
     @Override
     protected List<SpinnerPair> getAsi() {
         Bundle input = new Bundle();
-        input.putString(assetCont.ARG_M_PRODUCT_UUID, ((String) (prodName.getTag())));
-        input.putBoolean(assetCont.ARG_IS_GET_ASI, true);
-        input.putString(assetCont.ARG_PROJECTLOCATION_ID, appContext.getC_projectlocation_id());
+        input.putString(PBSAssetController.ARG_M_PRODUCT_UUID, ((String) (prodName.getTag())));
+        input.putBoolean(PBSAssetController.ARG_IS_GET_ASI, true);
+        input.putString(PBSAssetController.ARG_PROJECTLOCATION_ID, appContext.getC_projectlocation_id());
         input.putString(PBSServerConst.PARAM_URL, appContext.getServer_url());
-        Bundle result = assetCont.triggerEvent(assetCont.GET_ASI_EVENT,
+        Bundle result = assetCont.triggerEvent(PBSAssetController.GET_ASI_EVENT,
                 input, new Bundle(), null);
-        return result.getParcelableArrayList(assetCont.ARG_ASI);
+        return result.getParcelableArrayList(PBSAssetController.ARG_ASI);
     }
 
     @Override
     protected List<SpinnerPair> getProdList(boolean isName) {
         Bundle input = new Bundle();
-        input.putBoolean(assetCont.ARG_ISNAME, isName);
-        Bundle result = assetCont.triggerEvent(assetCont.GET_ASSET_PRODUCT_EVENT,
+        input.putBoolean(PBSAssetController.ARG_ISNAME, isName);
+        Bundle result = assetCont.triggerEvent(PBSAssetController.GET_ASSET_PRODUCT_EVENT,
                 input, new Bundle(), null);
-        return result.getParcelableArrayList(assetCont.ARG_ASSET_PRODUCTS);
+        return result.getParcelableArrayList(PBSAssetController.ARG_ASSET_PRODUCTS);
     }
 
     @Override
@@ -135,13 +134,13 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
         if (R.id.prodName == id) {
             //get values from uom table.
             Bundle input = new Bundle();
-            input.putString(assetCont.ARG_M_PRODUCT_UUID, pair.getKey());
-            Bundle result = assetCont.triggerEvent(assetCont.GET_UOM_EVENT, input, new Bundle(), null);
-            MUOM mUOM = (MUOM)result.getSerializable(assetCont.ARG_UOM);
+            input.putString(PBSAssetController.ARG_M_PRODUCT_UUID, pair.getKey());
+            Bundle result = assetCont.triggerEvent(PBSAssetController.GET_UOM_EVENT, input, new Bundle(), null);
+            MUOM mUOM = (MUOM)result.getSerializable(PBSAssetController.ARG_UOM);
             uom.setText(mUOM.getName());
             uom.setTag(mUOM);
 
-            input.putString(assetCont.ARG_PROJECTLOCATION_ID, appContext.getC_projectlocation_id());
+            input.putString(PBSAssetController.ARG_PROJECTLOCATION_ID, appContext.getC_projectlocation_id());
             input.putString(PBSServerConst.PARAM_URL, appContext.getServer_url());
 
             new AsyncTask<Bundle, Void, Bundle>() {
@@ -152,15 +151,14 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
 
                 @Override
                 protected Bundle doInBackground(Bundle... params) {
-                    Bundle result = assetCont.triggerEvent(assetCont.GET_ASI_EVENT, params[0], new Bundle(), null);
-                    return result;
+                    return assetCont.triggerEvent(assetCont.GET_ASI_EVENT, params[0], new Bundle(), null);
                 }
 
                 @Override
                 protected void onPostExecute(Bundle result) {
                     super.onPostExecute(result);
                     storages = (ObservableArrayList<MStorage>)result.getSerializable(PBSAssetController.ARG_STORAGE);
-                    List<SpinnerPair> asiPair = result.getParcelableArrayList(assetCont.ARG_ASI);
+                    List<SpinnerPair> asiPair = result.getParcelableArrayList(PBSAssetController.ARG_ASI);
                     asiAdapter.clear();
                     //asiAdapter.addAll(asiPair);
                     asiAdapter = PandoraHelper.addListToSpinner(getActivity(), asi, asiPair);
@@ -183,14 +181,13 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
 
                 @Override
                 protected Bundle doInBackground(Bundle... params) {
-                    Bundle result = assetCont.triggerEvent(assetCont.GET_QTYONHAND_EVENT, params[0], new Bundle(), null);
-                    return result;
+                    return assetCont.triggerEvent(assetCont.GET_QTYONHAND_EVENT, params[0], new Bundle(), null);
                 }
 
                 @Override
                 protected void onPostExecute(Bundle result) {
                     super.onPostExecute(result);
-                    Number quantityOnHand = result.getDouble(assetCont.ARG_QTYONHAND);
+                    Number quantityOnHand = result.getDouble(PBSAssetController.ARG_QTYONHAND);
                     qtyOnHand.setText(String.valueOf(quantityOnHand));
 
                     ((PandoraMain)getActivity()).dismissProgressDialog();

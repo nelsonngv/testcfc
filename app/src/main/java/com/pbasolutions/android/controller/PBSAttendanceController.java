@@ -93,9 +93,7 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;

@@ -152,15 +152,11 @@ public class LoginFragment extends Fragment {
         Bundle resultBundle = new Bundle();
         resultBundle = authController.triggerEvent(
                 PBSAuthenticatorController.AUTHENTICATE_SERVER, bundle, resultBundle, null);
-        if (resultBundle.getBoolean(PBSServerConst.RESULT)) {
-            return true;
-        } else {
-//            commented by danny 20160121. will process on out side
+        //            commented by danny 20160121. will process on out side
 //            PandoraHelper.showAlertMessage((PandoraMain)getActivity(),
 //                    resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)),
 //                    resultBundle.getString(PandoraConstant.TITLE), PandoraConstant.OK_BUTTON, null);
-            return false;
-        }
+        return resultBundle.getBoolean(PBSServerConst.RESULT);
     }
 
     private class LoginAsyncTask extends AsyncTask<Bundle, Void, Bundle> {
@@ -192,7 +188,7 @@ public class LoginFragment extends Fragment {
             }
 
             final PBSLoginJSON loginJSON = (PBSLoginJSON)
-                    resultBundle.getSerializable(authController.PBS_LOGIN_JSON);
+                    resultBundle.getSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON);
             if (loginJSON != null) {
                 if (loginJSON.getSuccess().equals("TRUE")) {
                     // final PandoraContext globalVariable = ((PandoraMain)getActivity())

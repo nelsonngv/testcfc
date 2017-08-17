@@ -1,31 +1,16 @@
 package com.pbasolutions.android.controller;
 
-import android.content.ContentProviderOperation;
-import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.OperationApplicationException;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.databinding.ObservableArrayList;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.util.Log;
 
-import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
-import com.pbasolutions.android.PandoraHelper;
-import com.pbasolutions.android.PandoraMain;
-import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.adapter.SpinnerPair;
-import com.pbasolutions.android.api.PBSIServerAPI;
-import com.pbasolutions.android.api.PBSServerAPI;
-import com.pbasolutions.android.database.PBSDBHelper;
-import com.pbasolutions.android.model.IModel;
-import com.pbasolutions.android.model.MApplicant;
-import com.pbasolutions.android.model.MEmployee;
 import com.pbasolutions.android.model.MSurvey;
 import com.pbasolutions.android.model.ModelConst;
 
@@ -33,7 +18,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Created by pbadell on 12/30/15.

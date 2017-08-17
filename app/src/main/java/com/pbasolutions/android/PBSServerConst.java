@@ -1,9 +1,5 @@
 package com.pbasolutions.android;
 
-import android.net.Uri;
-
-import com.pbasolutions.android.model.ModelConst;
-
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
 

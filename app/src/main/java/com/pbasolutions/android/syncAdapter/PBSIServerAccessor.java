@@ -3,7 +3,6 @@ package com.pbasolutions.android.syncAdapter;
 import android.os.Bundle;
 
 import com.pbasolutions.android.json.PBSJson;
-import com.pbasolutions.android.json.PBSResultJSON;
 import com.pbasolutions.android.json.PBSSyncJSON;
 import com.pbasolutions.android.json.PBSTableJSON;
 

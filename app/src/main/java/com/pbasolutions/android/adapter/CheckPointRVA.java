@@ -29,8 +29,7 @@ public class CheckPointRVA extends RecyclerView.Adapter<CheckPointRVA.CheckPoint
     public CheckPointRVA.CheckPointSeqVH onCreateViewHolder(ViewGroup parent, int viewType) {
         CheckpointSeqItemBinding binding = CheckpointSeqItemBinding.inflate(inflater);
 
-        CheckPointSeqVH viewHolder = new CheckPointSeqVH(binding);
-        return viewHolder;
+        return new CheckPointSeqVH(binding);
     }
 
     @Override

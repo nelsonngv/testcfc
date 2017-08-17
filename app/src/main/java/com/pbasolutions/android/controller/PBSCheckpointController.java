@@ -14,7 +14,6 @@ import com.pbasolutions.android.model.MCheckIn;
 import com.pbasolutions.android.model.MCheckPoint;
 import com.pbasolutions.android.model.ModelConst;
 
-import java.util.ArrayList;
 import java.util.TimeZone;
 
 /**
@@ -182,7 +181,7 @@ public class PBSCheckpointController extends ContextWrapper implements PBSIContr
         Cursor cursor = getContentResolver().query(ModelConst.uriCustomBuilder(ModelConst.M_CHECKPOINT_TABLE), projection, ModelConst.C_PROJECTLOCATION_UUID_COL + "=?", selectionArg, null);
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            ObservableArrayList<MCheckPoint> checkPointSeqList = new ObservableArrayList<MCheckPoint>();
+            ObservableArrayList<MCheckPoint> checkPointSeqList = new ObservableArrayList<>();
             //multiple rows. iterate the cursor.
             for (int j = 0; j < cursor.getCount(); j++) {
                 MCheckPoint checkPointSeq = new MCheckPoint();

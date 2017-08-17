@@ -8,12 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -32,9 +30,6 @@ import com.pbasolutions.android.listener.SpinnerOnItemSelected;
 import com.pbasolutions.android.model.MPurchaseRequest;
 import com.wnafee.vector.compat.ResourcesCompat;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -341,22 +336,22 @@ public class RequisitionFragment extends Fragment{
     public void refreshRequsitions(){
         PandoraContext globalVar = ((PandoraMain)context).getGlobalVariable();
         Bundle input = new Bundle();
-        input.putString(requisCont.ARG_USER_ID, globalVar.getAd_user_id());
-        input.putString(requisCont.ARG_PROJECT_LOCATION_ID, globalVar.getC_projectlocation_id());
+        input.putString(PBSRequisitionController.ARG_USER_ID, globalVar.getAd_user_id());
+        input.putString(PBSRequisitionController.ARG_PROJECT_LOCATION_ID, globalVar.getC_projectlocation_id());
         input.putString(PBSServerConst.PARAM_URL, globalVar.getServer_url());
-        Bundle result = requisCont.triggerEvent(requisCont.SYNC_REQUISITIONS_EVENT, input, new Bundle(), null);
+        Bundle result = requisCont.triggerEvent(PBSRequisitionController.SYNC_REQUISITIONS_EVENT, input, new Bundle(), null);
     }
 
     public ObservableArrayList<MPurchaseRequest> getRequisitionList() {
         Bundle input = new Bundle();
         if (statusItem != null) {
               String orderBy = statusItem.getPair() == null ? null : statusItem.getPair().getValue();
-              input.putString(requisCont.ARG_ORDERBY, orderBy);
+              input.putString(PBSRequisitionController.ARG_ORDERBY, orderBy);
         }
 
-        input.putString(requisCont.ARG_PROJECT_LOCATION_UUID, ((PandoraMain)context).getGlobalVariable().getC_projectlocation_uuid());
-        Bundle result = requisCont.triggerEvent(requisCont.GET_REQUISITIONS_EVENT, input, new Bundle(), null);
-        return (ObservableArrayList<MPurchaseRequest>)result.get(requisCont.ARG_REQUISITION_LIST);
+        input.putString(PBSRequisitionController.ARG_PROJECT_LOCATION_UUID, ((PandoraMain)context).getGlobalVariable().getC_projectlocation_uuid());
+        Bundle result = requisCont.triggerEvent(PBSRequisitionController.GET_REQUISITIONS_EVENT, input, new Bundle(), null);
+        return (ObservableArrayList<MPurchaseRequest>)result.get(PBSRequisitionController.ARG_REQUISITION_LIST);
     }
 
 }

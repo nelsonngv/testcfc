@@ -13,7 +13,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.pbasolutions.android.PandoraContext;
@@ -93,10 +92,10 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
 
     public List<SpinnerPair> getProdList() {
         Bundle input = new Bundle();
-        input.putString(reqCont.ARG_PROD_COL_SELECTION, MProduct.NAME_COL);
-        Bundle result = reqCont.triggerEvent(reqCont.GET_PRODUCT_LIST_EVENT,
+        input.putString(PBSRequisitionController.ARG_PROD_COL_SELECTION, MProduct.NAME_COL);
+        Bundle result = reqCont.triggerEvent(PBSRequisitionController.GET_PRODUCT_LIST_EVENT,
                 input, new Bundle(), null);
-        return result.getParcelableArrayList(reqCont.ARG_PRODUCT_LIST);
+        return result.getParcelableArrayList(PBSRequisitionController.ARG_PRODUCT_LIST);
     }
 
     protected void setUIListener() {
@@ -108,9 +107,9 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Bundle input = new Bundle();
                 PBSAssetController assetCont = new PBSAssetController(getActivity());
-                input.putString(assetCont.ARG_M_PRODUCT_UUID, ((SpinnerPair) prodNameAdapter.getItem(position)).getKey());
-                Bundle result = assetCont.triggerEvent(assetCont.GET_UOM_EVENT, input, new Bundle(), null);
-                MUOM mUOM = (MUOM)result.getSerializable(assetCont.ARG_UOM);
+                input.putString(PBSAssetController.ARG_M_PRODUCT_UUID, ((SpinnerPair) prodNameAdapter.getItem(position)).getKey());
+                Bundle result = assetCont.triggerEvent(PBSAssetController.GET_UOM_EVENT, input, new Bundle(), null);
+                MUOM mUOM = (MUOM)result.getSerializable(PBSAssetController.ARG_UOM);
                 uom.setText(mUOM.getName());
                 prodUUID = ((SpinnerPair) prodNameAdapter.getItem(position)).getKey();
                 prodName = ((SpinnerPair) prodNameAdapter.getItem(position)).getValue();
@@ -149,7 +148,7 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
 
     }
 
-    public void savePRLine() {};
+    public void savePRLine() {}
 
 //    private void setOnItemSelectedListener() {
 //        prodNameItem = new SpinnerOnItemSelected(prodNameSpinner, new SpinnerPair());

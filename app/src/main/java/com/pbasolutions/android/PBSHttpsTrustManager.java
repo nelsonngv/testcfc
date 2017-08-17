@@ -46,10 +46,7 @@ public class PBSHttpsTrustManager implements X509TrustManager {
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
             @Override
             public boolean verify(String hostname, SSLSession arg1) {
-                if (!hostname.equalsIgnoreCase("www.anywebsiteurl.com"))
-                    return true;
-                else
-                    return false;
+                return !hostname.equalsIgnoreCase("www.anywebsiteurl.com");
             }
         });
 
@@ -61,9 +58,7 @@ public class PBSHttpsTrustManager implements X509TrustManager {
         try {
             context = SSLContext.getInstance("TLS");
             context.init(null, trustManagers, new SecureRandom());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
         }
 

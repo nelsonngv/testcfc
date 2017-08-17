@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -209,10 +206,10 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
      */
     public MProjectTask getTask() {
         Bundle inputBundle = new Bundle();
-        inputBundle.putString(taskCont.ARG_C_PROJECTTASK_UUID, _UUID);
+        inputBundle.putString(PBSTaskController.ARG_C_PROJECTTASK_UUID, _UUID);
         Bundle resultBundle = new Bundle();
-        resultBundle = taskCont.triggerEvent(taskCont.TASK_DETAILS_EVENT, inputBundle, resultBundle, null);
-        return (MProjectTask)resultBundle.getSerializable(taskCont.ARG_TASK);
+        resultBundle = taskCont.triggerEvent(PBSTaskController.TASK_DETAILS_EVENT, inputBundle, resultBundle, null);
+        return (MProjectTask)resultBundle.getSerializable(PBSTaskController.ARG_TASK);
     }
 
     @Override
@@ -238,16 +235,16 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
     private boolean saveTask(){
         Bundle input = new Bundle();
-        input.putString(taskCont.ARG_C_PROJECTTASK_UUID, _UUID);
+        input.putString(PBSTaskController.ARG_C_PROJECTTASK_UUID, _UUID);
         return true;
     }
 
     private MProjectTask getProjTask() {
         Bundle input = new Bundle();
 //        input.putSerializable(taskCont.ARG_TASK_LIST, modelList);
-        input.putString(taskCont.ARG_C_PROJECTTASK_UUID, _UUID);
-        Bundle result = taskCont.triggerEvent(taskCont.GET_PROJTASK_EVENT, input, new Bundle(), null);
-        return (MProjectTask)result.getSerializable(taskCont.ARG_PROJTASK);
+        input.putString(PBSTaskController.ARG_C_PROJECTTASK_UUID, _UUID);
+        Bundle result = taskCont.triggerEvent(PBSTaskController.GET_PROJTASK_EVENT, input, new Bundle(), null);
+        return (MProjectTask)result.getSerializable(PBSTaskController.ARG_PROJTASK);
     }
 
     /**
@@ -318,7 +315,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 //        hasChanged |= !(taskPicture4.getTag(R.string.tag_imageview_path) == null || ((String)taskPicture4.getTag(R.string.tag_imageview_path)).isEmpty());
 //        hasChanged |= !(taskPicture5.getTag(R.string.tag_imageview_path) == null || ((String)taskPicture5.getTag(R.string.tag_imageview_path)).isEmpty());
 
-        if (hasChanged == false)
+        if (!hasChanged)
             return true;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -456,7 +453,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
     private void completeProj() {
 
         if (taskComments.getText() == null || taskComments.getText().toString().isEmpty()){
-            PandoraHelper.showWarningMessage((PandoraMain)getActivity(),
+            PandoraHelper.showWarningMessage(getActivity(),
                     getString(R.string.please_fill_in_fields, getString(R.string.label_comment)));
             return;
         }
@@ -466,22 +463,22 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         input.putString(PBSServerConst.PARAM_URL, globalVar.getServer_url());
 //        input.putString(taskCont.ARG_PROJLOC_ID, globalVar.getC_projectlocation_id());
 
-        Bundle locResult = taskCont.triggerEvent(taskCont.GET_PROJECTLOCATIONS_EVENT,
+        Bundle locResult = taskCont.triggerEvent(PBSTaskController.GET_PROJECTLOCATIONS_EVENT,
                 input, new Bundle(), null);
-        List<SpinnerPair> projLoc = locResult.getParcelableArrayList(taskCont.ARG_PROJECTLOCATIONS);
+        List<SpinnerPair> projLoc = locResult.getParcelableArrayList(PBSTaskController.ARG_PROJECTLOCATIONS);
         for(int i = 0; i < projLoc.size(); i++) {
             if(projLoc.get(i).getValue().equalsIgnoreCase(projTask.getProjLocName()))
-                input.putString(taskCont.ARG_PROJLOC_ID, projLoc.get(i).getKey());
+                input.putString(PBSTaskController.ARG_PROJLOC_ID, projLoc.get(i).getKey());
         }
 
-        input.putString(taskCont.ARG_TASK_ID,String.valueOf(projTask.get_ID()));
-        input.putString(taskCont.ARG_TASK_UUID, _UUID);
-        input.putString(taskCont.ARG_COMMENTS, taskComments.getText().toString());
-        input.putString(taskCont.ARG_DUEDATE, taskDueDate.getText().toString());
+        input.putString(PBSTaskController.ARG_TASK_ID,String.valueOf(projTask.get_ID()));
+        input.putString(PBSTaskController.ARG_TASK_UUID, _UUID);
+        input.putString(PBSTaskController.ARG_COMMENTS, taskComments.getText().toString());
+        input.putString(PBSTaskController.ARG_DUEDATE, taskDueDate.getText().toString());
         for (int i = 0; i < taskPictures.length; i++) {
             if (taskPictures[i] == null || taskPictures[i].getTag(R.string.tag_imageview_path) == null || ((String) taskPictures[i].getTag(R.string.tag_imageview_path)).isEmpty())
                 break;
-            input.putString(taskCont.ARG_TASKPIC + (i + 1), (String) taskPictures[i].getTag(R.string.tag_imageview_path));
+            input.putString(PBSTaskController.ARG_TASKPIC + (i + 1), (String) taskPictures[i].getTag(R.string.tag_imageview_path));
         }
 //        input.putString(taskCont.ARG_TASKPIC_1, (String)taskPicture1.getTag(R.string.tag_imageview_path));
 //        input.putString(taskCont.ARG_TASKPIC_2, (String)taskPicture2.getTag(R.string.tag_imageview_path));
@@ -502,7 +499,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == context.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             String picturePath = CameraUtil.getPicPath(context, data);
 
             if (picturePath != null) {

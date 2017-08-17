@@ -26,8 +26,7 @@ public class AssetRVA  extends RecyclerView.Adapter<AssetRVA.AssetVH>{
     @Override
     public AssetRVA.AssetVH onCreateViewHolder(ViewGroup parent, int viewType) {
         AssetListItemBinding binding = AssetListItemBinding.inflate(inflater);
-        AssetVH viewHolder = new AssetVH(binding);
-        return viewHolder;
+        return new AssetVH(binding);
     }
 
     @Override

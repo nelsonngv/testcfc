@@ -61,7 +61,6 @@
             <Button
                 style="@style/PLargeButton"
                 android:id="@+id/roleOK"
-                android:onClick="roleOkClicked"
                 android:text="Ok" />
         </LinearLayout>
     </LinearLayout>

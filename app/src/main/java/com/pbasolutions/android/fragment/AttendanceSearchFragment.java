@@ -33,7 +33,6 @@ import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.model.MAttendance;
 import com.pbasolutions.android.model.MAttendanceSearchItem;
-import com.pbasolutions.android.model.ModelConst;
 import com.wnafee.vector.compat.ResourcesCompat;
 
 import java.text.SimpleDateFormat;
@@ -114,7 +113,7 @@ public class AttendanceSearchFragment extends Fragment {
         setUI(rootView);
         setUIListener();
 
-        attendances = new ObservableArrayList<MAttendanceSearchItem>();
+        attendances = new ObservableArrayList<>();
         return rootView;
     }
 
@@ -368,7 +367,7 @@ public class AttendanceSearchFragment extends Fragment {
 
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         if (projlocPair == null) { // when no selected
-            return new ArrayList<SpinnerPair>();
+            return new ArrayList<>();
         }
 
         String projLocId = projlocPair.getKey();
@@ -433,8 +432,7 @@ public class AttendanceSearchFragment extends Fragment {
 
             @Override
             protected Bundle doInBackground(Bundle... params) {
-                Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.SEARCH_ATTENDANCE_EVENT, params[0], new Bundle(), null);
-                return result;
+                return attendanceCont.triggerEvent(PBSAttendanceController.SEARCH_ATTENDANCE_EVENT, params[0], new Bundle(), null);
             }
 
             @Override

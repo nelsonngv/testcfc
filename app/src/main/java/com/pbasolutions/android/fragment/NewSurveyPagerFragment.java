@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -213,10 +212,10 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
             Bundle output = new Bundle();
             if (_UUID != null && !_UUID.equals("")) {
                 input.putString(PBSSurveyController.ARG_SURVEY_UUID, _UUID);
-                output = surveyCont.triggerEvent(surveyCont.GET_SURVEY_EVENT, input, output, null);
+                output = surveyCont.triggerEvent(PBSSurveyController.GET_SURVEY_EVENT, input, output, null);
             } else {
                 input.putString(PBSSurveyController.ARG_TEMPLATE_UUID, PBSSurveyController.templateUUID);
-                output = surveyCont.triggerEvent(surveyCont.GET_QUESTIONS_EVENT, input, output, null);
+                output = surveyCont.triggerEvent(PBSSurveyController.GET_QUESTIONS_EVENT, input, output, null);
             }
             return output;
         }
@@ -288,9 +287,9 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
     }
 
     private void updateMenuItem() {
-        prev.setEnabled(mPager.getCurrentItem() > 0 ? true : false);
+        prev.setEnabled(mPager.getCurrentItem() > 0);
         prev.getIcon().setAlpha(mPager.getCurrentItem() > 0 ? 255 : 64);
-        next.setEnabled(mPager.getCurrentItem() < NUM_PAGES - 1 ? true : false);
+        next.setEnabled(mPager.getCurrentItem() < NUM_PAGES - 1);
         next.getIcon().setAlpha(mPager.getCurrentItem() < NUM_PAGES - 1 ? 255 : 64);
     }
 

@@ -3,17 +3,13 @@ package com.pbasolutions.android.fragment;
 import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
@@ -99,10 +95,10 @@ public class EmployeeFragment extends Fragment {
                 Bundle input = new Bundle();
                 input.putString(PBSRecruitController.ARG_PROJECT_LOCATION_UUID, projectLocationUUID);
                 input.putString(PBSRecruitController.ARG_PROJECT_LOCATION_NAME, projectLocationName);
-                Bundle result = recCont.triggerEvent(recCont.GET_EMPLOYEES_EVENT, input, new Bundle(), null);
-                return (ObservableArrayList<MEmployee>) result.getSerializable(recCont.EMPLOYEE_LIST);
+                Bundle result = recCont.triggerEvent(PBSRecruitController.GET_EMPLOYEES_EVENT, input, new Bundle(), null);
+                return (ObservableArrayList<MEmployee>) result.getSerializable(PBSRecruitController.EMPLOYEE_LIST);
             } else {
-                PandoraHelper.showErrorMessage((PandoraMain) getActivity(), getString(R.string.text_projectloc_na));
+                PandoraHelper.showErrorMessage(getActivity(), getString(R.string.text_projectloc_na));
             }
         }
         return null;

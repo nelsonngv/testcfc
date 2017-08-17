@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,9 +104,8 @@ public class PreferencesFragment extends Fragment {
         FileChannel destination = null;
         String currentDBPath = "/data/" + "com.pbasolutions.android.syncAdapter"
                 + "/databases/" + dbName;
-        String backupDBPathh = dbName;
         File currentDB = new File(data, currentDBPath);
-        File backupDB = new File(sd, backupDBPathh);
+        File backupDB = new File(sd, dbName);
         try {
             source = new FileInputStream(currentDB).getChannel();
             destination = new FileOutputStream(backupDB).getChannel();

@@ -3,13 +3,9 @@ package com.pbasolutions.android;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.database.Cursor;
 import android.os.Bundle;
 
-import com.pbasolutions.android.controller.BroadcastTask;
 import com.pbasolutions.android.controller.PBSIController;
-import com.pbasolutions.android.json.PBSProjLocJSON;
-import com.pbasolutions.android.model.ModelConst;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -64,13 +60,11 @@ public class PandoraController extends ContextWrapper implements PBSIController 
         input.putString(ARG_TASK_EVENT, GET_PROJLOC_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         PandoraTask task = new PandoraTask(input, output, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             output = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return output;

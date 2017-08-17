@@ -121,7 +121,7 @@ public class MSurveyQnA extends PBSJson {
         return templatename;
     }
 
-    public void setTemplateName(String surveyname) {
+    public void setTemplateName(String templatename) {
         this.templatename = templatename;
     }
 

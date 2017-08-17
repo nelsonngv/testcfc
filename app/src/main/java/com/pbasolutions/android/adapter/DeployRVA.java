@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.pbasolutions.android.databinding.DeploymentListitemBinding;
 import com.pbasolutions.android.model.MDeploy;
-import com.pbasolutions.android.model.MResourceAlloc;
 
 /**
  * Created by pbadell on 10/8/15.
@@ -28,8 +27,7 @@ public class DeployRVA extends RecyclerView.Adapter<DeployRVA.DeployVH>{
     @Override
     public DeployRVA.DeployVH onCreateViewHolder(ViewGroup parent, int viewType) {
         DeploymentListitemBinding binding = DeploymentListitemBinding.inflate(inflater);
-        DeployVH viewHolder = new DeployVH(binding);
-        return viewHolder;
+        return new DeployVH(binding);
     }
 
     @Override

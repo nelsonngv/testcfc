@@ -28,8 +28,7 @@ public class EmployeeRVA extends RecyclerView.Adapter<EmployeeRVA.MEmployeeVH> i
     @Override
     public EmployeeRVA.MEmployeeVH onCreateViewHolder(ViewGroup parent, int viewType) {
         EmployeeListitemBinding binding = EmployeeListitemBinding.inflate(inflater);
-        MEmployeeVH viewHolder = new MEmployeeVH(binding);
-        return viewHolder;
+        return new MEmployeeVH(binding);
     }
 
     @Override

@@ -42,7 +42,7 @@ public class RequisitionLineRVA extends RecyclerView.Adapter<RequisitionLineRVA.
         RequisitionlineItemBinding binding = RequisitionlineItemBinding.inflate(inflater);
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.requisitionline_item, null);
-        RequisitionLineVH viewHolder = new RequisitionLineVH(binding, view, new BroadcastRVA.IViewHolderOnClicks(){
+        return new RequisitionLineVH(binding, view, new BroadcastRVA.IViewHolderOnClicks(){
             @Override
             public void onCheckbox(CheckBox cb, int pos) {
                 MPurchaseRequestLine prline = (MPurchaseRequestLine) cb.getTag();
@@ -76,7 +76,6 @@ public class RequisitionLineRVA extends RecyclerView.Adapter<RequisitionLineRVA.
                         (FragmentActivity)mContext, mContext.getString(R.string.title_requisitionline));
             }
         });
-        return viewHolder;
     }
 
     @Override

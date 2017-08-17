@@ -95,10 +95,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by pbadell on 6/29/15.
@@ -328,7 +325,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         //check login
         checkLoginRunnable = new Runnable(){
             public void run() {
-                if(getSupportActionBar().isShowing() == true) {
+                if(getSupportActionBar().isShowing()) {
                     checkLogin(true);
                 }
 
@@ -340,7 +337,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         //check proj task
         checkProjTaskRunnable = new Runnable(){
             public void run() {
-                if(getSupportActionBar().isShowing() == true) {
+                if(getSupportActionBar().isShowing()) {
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {
@@ -643,11 +640,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
         boolean result;
         if (resultJSON != null){
-            if (resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT)) {
-                result = false;
-            } else {
-                result = true;
-            }
+            result = !resultJSON.getSuccess().equals(PBSResultJSON.FALSE_TEXT);
         } else {
             result = false;
         }
@@ -660,13 +653,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     public void sync(boolean gotoRecrut) {
         Bundle inputAuth = new Bundle();
-        inputAuth.putString(authenticatorController.USER_NAME_ARG,
+        inputAuth.putString(PBSAuthenticatorController.USER_NAME_ARG,
                 getGlobalVariable().getAd_user_name());
-        inputAuth.putString(authenticatorController.AUTH_TOKEN_ARG,
+        inputAuth.putString(PBSAuthenticatorController.AUTH_TOKEN_ARG,
                 getGlobalVariable().getAuth_token());
-        inputAuth.putString(authenticatorController.SERVER_URL_ARG,
+        inputAuth.putString(PBSAuthenticatorController.SERVER_URL_ARG,
                 getGlobalVariable().getServer_url());
-        inputAuth.putString(authenticatorController.SERIAL_ARG,
+        inputAuth.putString(PBSAuthenticatorController.SERIAL_ARG,
                 getGlobalVariable().getSerial());
         inputAuth.putBoolean(GOTO_RECRUIT, gotoRecrut);
 
@@ -710,11 +703,11 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     } else {
                         //set the auth token to null.
                         Bundle input = new Bundle();
-                        input.putString(authenticatorController.USER_NAME_ARG,
+                        input.putString(PBSAuthenticatorController.USER_NAME_ARG,
                                 getGlobalVariable().getAd_user_name());
-                        input.putString(authenticatorController.ARG_ACCOUNT_TYPE,
+                        input.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE,
                                 PBSAccountInfo.ACCOUNT_TYPE);
-                        input.putString(authenticatorController.ARG_AUTH_TYPE,
+                        input.putString(PBSAuthenticatorController.ARG_AUTH_TYPE,
                                 PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
                         authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
                                 input, new Bundle(), null);
@@ -819,7 +812,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         if (position < MENU_LIST.length) {
             drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(
                     R.id.fragment_navigation_drawer);
-            String[] titlesList = drawerFragment.titles;
+            String[] titlesList = FragmentDrawer.titles;
             if (titlesList.length > 0)
                 for (int i = 0; i < MENU_LIST.length; i++) {
                     if (titlesList[position].equalsIgnoreCase(MENU_LIST[i])) {
@@ -1022,7 +1015,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         fragment.setRetainInstance(true);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getName());
-        if (isAddToStack == false) {
+        if (!isAddToStack) {
             fragmentTransaction.addToBackStack(fragment.getClass().getName());
         }
         fragmentTransaction.commit();
@@ -1048,12 +1041,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         Bundle extras = new Bundle();
         Bundle input = new Bundle();
         PBSAuthenticatorController authController = new PBSAuthenticatorController(this);
-        input.putString(authController.USER_NAME_ARG, getGlobalVariable().getAd_user_name());
-        input.putString(authController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
-        Bundle accountBundle = authController.triggerEvent(authController.GET_USER_ACCOUNT_EVENT,
+        input.putString(PBSAuthenticatorController.USER_NAME_ARG, getGlobalVariable().getAd_user_name());
+        input.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE, PBSAccountInfo.ACCOUNT_TYPE);
+        Bundle accountBundle = authController.triggerEvent(PBSAuthenticatorController.GET_USER_ACCOUNT_EVENT,
                 input, new Bundle(), null);
         if (accountBundle != null) {
-            Account acc = accountBundle.getParcelable(authController.USER_ACC_ARG);
+            Account acc = accountBundle.getParcelable(PBSAuthenticatorController.USER_ACC_ARG);
             extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
             extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
             ContentResolver.requestSync(acc, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
@@ -1066,7 +1059,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (intent != null) {
-            if (intent.getExtras() != null && intent.getExtras().get("isNotification") != null && (boolean)intent.getExtras().get("isNotification") == true) {
+            if (intent.getExtras() != null && intent.getExtras().get("isNotification") != null && (boolean) intent.getExtras().get("isNotification")) {
                 if (intent.getExtras().get("className") != null && intent.getExtras().get("className").equals(ProjTaskDetailsFragment.class.getSimpleName())) {
                     Fragment fragment = new ProjTaskDetailsFragment();
                     ((PBSDetailsFragment) fragment).set_UUID(intent.getExtras().getString("uuid"));
@@ -1238,7 +1231,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             @Override
             protected void onPostExecute(Boolean bPrevState) {
                 super.onPostExecute(bPrevState);
-                if (bPrevState.booleanValue() == false) {
+                if (!bPrevState.booleanValue()) {
                     Toast.makeText(PandoraMain.this, "Initial Sync completed",
                             Toast.LENGTH_SHORT).show();
                     Fragment frag = getCurrentFragment();
@@ -1278,13 +1271,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                     Bundle input = new Bundle();
                     Bundle result = new Bundle();
 
-                    input.putString(authenticatorController.USER_NAME_ARG,
+                    input.putString(PBSAuthenticatorController.USER_NAME_ARG,
                             getGlobalVariable().getAd_user_name());
-                    input.putString(authenticatorController.AUTH_TOKEN_ARG,
+                    input.putString(PBSAuthenticatorController.AUTH_TOKEN_ARG,
                             getGlobalVariable().getAuth_token());
-                    input.putString(authenticatorController.SERVER_URL_ARG,
+                    input.putString(PBSAuthenticatorController.SERVER_URL_ARG,
                             getGlobalVariable().getServer_url());
-                    input.putString(authenticatorController.SERIAL_ARG,
+                    input.putString(PBSAuthenticatorController.SERIAL_ARG,
                             getGlobalVariable().getSerial());
                     result = authenticatorController
                             .triggerEvent(PBSAuthenticatorController.AUTHENTICATE_TOKEN_SERVER,

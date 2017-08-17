@@ -1,7 +1,6 @@
 package com.pbasolutions.android.syncAdapter;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.pbasolutions.android.PBSServer;

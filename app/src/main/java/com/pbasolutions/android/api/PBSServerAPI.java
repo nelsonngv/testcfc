@@ -11,11 +11,7 @@ import com.pbasolutions.android.json.PBSNotesJSON;
 import com.pbasolutions.android.json.PBSProjTasksJSON;
 import com.pbasolutions.android.model.MAttendance;
 import com.pbasolutions.android.model.MMovement;
-import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.model.MPurchaseRequest;
-import com.pbasolutions.android.model.MStorage;
-
-import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

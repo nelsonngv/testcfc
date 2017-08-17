@@ -1,16 +1,11 @@
 package com.pbasolutions.android.fragment;
 
-import android.accounts.Account;
 import android.app.Activity;
 
-import android.content.ContentResolver;
 import android.databinding.ObservableArrayList;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,24 +16,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.pbasolutions.android.PandoraConstant;
-import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraMain;
-import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.adapter.CheckInRVA;
-import com.pbasolutions.android.controller.PBSAuthenticatorController;
 import com.pbasolutions.android.listener.FragmentListOnItemClickListener;
 import com.pbasolutions.android.listener.RecyclerItemClickListener;
 import com.pbasolutions.android.model.IModel;
 import com.pbasolutions.android.model.MCheckIn;
 import com.pbasolutions.android.controller.PBSCheckpointController;
 import com.pbasolutions.android.R;
-import com.pbasolutions.android.model.ModelConst;
-
-import java.util.ArrayList;
 
 /**
  * Created by pbadell on 7/21/15.
@@ -100,9 +87,8 @@ public class CheckInFragment extends Fragment {
     public ObservableArrayList<MCheckIn> getCheckIns() {
         Bundle resultBundle = new Bundle();
         resultBundle = checkpointController.triggerEvent(PBSCheckpointController.CHECKIN_ROWS_EVENT,null, resultBundle, null);
-        ObservableArrayList<MCheckIn> checkInList = (ObservableArrayList<MCheckIn>)
+        return (ObservableArrayList<MCheckIn>)
                 resultBundle.getSerializable(checkpointController.ROW_ITEMS);
-        return checkInList;
     }
 
     @Override

@@ -63,14 +63,14 @@ public class RecruitFragment extends Fragment {
                     @Override
                     public void run() {
                         Bundle input = new Bundle();
-                        input.putString(authCont.USER_NAME_ARG,
+                        input.putString(PBSAuthenticatorController.USER_NAME_ARG,
                                 ((PandoraMain)getActivity()).getGlobalVariable().getAd_user_name());
-                        input.putString(authCont.ARG_ACCOUNT_TYPE,
+                        input.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE,
                                 PBSAccountInfo.ACCOUNT_TYPE);
-                        Bundle accountBundle = authCont.triggerEvent(authCont.GET_USER_ACCOUNT_EVENT, input, new Bundle(), null);
+                        Bundle accountBundle = authCont.triggerEvent(PBSAuthenticatorController.GET_USER_ACCOUNT_EVENT, input, new Bundle(), null);
                         Account acc;
                         if (accountBundle != null) {
-                            acc = accountBundle.getParcelable(authCont.USER_ACC_ARG);
+                            acc = accountBundle.getParcelable(PBSAuthenticatorController.USER_ACC_ARG);
                             boolean isSynchronizing =
                                     PandoraHelper.isSyncActive(acc, PBSAccountInfo.ACCOUNT_AUTHORITY);
                             if (isSynchronizing)

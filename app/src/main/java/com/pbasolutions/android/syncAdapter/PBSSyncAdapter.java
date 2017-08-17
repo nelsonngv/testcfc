@@ -185,7 +185,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 int syncCount = syncResultBundle.getInt(PandoraConstant.SYNC_COUNT);
                 boolean isSyncCompleted = syncCount == 0;
                 PandoraMain.instance.getGlobalVariable().setIsFirstBatchSynced(true);
-                if (PandoraMain.instance != null && PandoraMain.instance.getSupportActionBar().isShowing() == true) {
+                if (PandoraMain.instance != null && PandoraMain.instance.getSupportActionBar().isShowing()) {
                     PBSProjLocJSON[] projLoc = null;
                     if (isSyncCompleted) {
                         syncIdentifier = 0;
@@ -200,8 +200,8 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                         PandoraController cont = new PandoraController(PandoraMain.instance);
                         Bundle input = new Bundle();
                         input.putString(PBSAssetController.ARG_AD_USER_ID, global.getAd_user_id());
-                        Bundle result = cont.triggerEvent(cont.GET_PROJLOC_EVENT, input, new Bundle(), null);
-                        projLoc = (PBSProjLocJSON[]) result.getSerializable(cont.ARG_PROJECT_LOCATION_JSON);
+                        Bundle result = cont.triggerEvent(PandoraController.GET_PROJLOC_EVENT, input, new Bundle(), null);
+                        projLoc = (PBSProjLocJSON[]) result.getSerializable(PandoraController.ARG_PROJECT_LOCATION_JSON);
                         if (projLoc == null) {
                             PandoraMain.instance.runOnUiThread(new Runnable() {
                                 public void run() {
@@ -250,10 +250,6 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
             syncResult.hasError();
             syncResult.stats.numIoExceptions++;
-        } catch (AuthenticatorException e) {
-            syncResult.hasError();
-            Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
-            syncResult.stats.numAuthExceptions++;
         } catch (Exception e) {
             syncResult.hasError();
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());

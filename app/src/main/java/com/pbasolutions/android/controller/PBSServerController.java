@@ -1,25 +1,6 @@
 package com.pbasolutions.android.controller;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.util.Log;
-
-import com.pbasolutions.android.PandoraConstant;
-import com.pbasolutions.android.json.PBSColumnsJSON;
-import com.pbasolutions.android.json.PBSSyncJSON;
-import com.pbasolutions.android.json.PBSTableJSON;
-import com.pbasolutions.android.model.ModelConst;
-import com.pbasolutions.android.syncAdapter.PBSIServerAccessor;
-import com.pbasolutions.android.syncAdapter.PBSServerAccessor;
-import com.pbasolutions.android.utils.CameraUtil;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by pbadell on 7/1/15.

@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.pbasolutions.android.PBSServerConst;
-import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
@@ -77,7 +76,7 @@ public class AssetListFragment extends Fragment {
             protected void onPostExecute(Void avoid) {
                 super.onPostExecute(avoid);
                 if (PBSServerConst.cookieStore == null) {
-                    PandoraHelper.showErrorMessage((PandoraMain) getActivity(),
+                    PandoraHelper.showErrorMessage(getActivity(),
                             getString(R.string.error_logged_out_sync, getString(R.string.assets_and_movements)));
                 } else {
                     AssetRVA viewAdapter = new AssetRVA(getActivity(), assetList, inflater);
@@ -137,9 +136,9 @@ public class AssetListFragment extends Fragment {
     private ObservableArrayList<MStorage> getMStorage() {
         PandoraContext pc = ((PandoraMain)getActivity()).getGlobalVariable();
         Bundle input = new Bundle();
-        input.putString(assetCont.ARG_PROJECTLOCATION_ID, pc.getC_projectlocation_id());
+        input.putString(PBSAssetController.ARG_PROJECTLOCATION_ID, pc.getC_projectlocation_id());
         input.putString(PBSServerConst.PARAM_URL, pc.getServer_url());
-        Bundle result = assetCont.triggerEvent(assetCont.GET_MSTORAGES_EVENT, input, new Bundle(), null);
+        Bundle result = assetCont.triggerEvent(PBSAssetController.GET_MSTORAGES_EVENT, input, new Bundle(), null);
         return (ObservableArrayList<MStorage>) result.getSerializable(PBSAssetController.ARG_STORAGE);
     }
 }

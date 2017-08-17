@@ -1,7 +1,6 @@
 package com.pbasolutions.android.fragment;
 
 import android.databinding.ObservableArrayList;
-import android.support.v7.widget.RecyclerView;
 
 import com.pbasolutions.android.model.IModel;
 

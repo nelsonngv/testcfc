@@ -155,7 +155,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == context.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             String picturePath = CameraUtil.getPicPath(context, data);
 
             if (picturePath != null) {
@@ -193,7 +193,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
     public boolean onBackKeyPressed() {
         boolean hasChanged = !(taskPicture1.getTag(R.string.tag_imageview_path) == null || ((String)taskPicture1.getTag(R.string.tag_imageview_path)).isEmpty());
 
-        if (hasChanged == false)
+        if (!hasChanged)
             return true;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -221,11 +221,11 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
             String adUserID = globalVar.getAd_user_id();
             if (adUserID != null) {
                 input.putString(PBSTaskController.ARG_AD_USER_ID, adUserID);
-                Bundle result = taskCont.triggerEvent(taskCont.GET_USERS_EVENT,
+                Bundle result = taskCont.triggerEvent(PBSTaskController.GET_USERS_EVENT,
                         input, new Bundle(), null);
-                return result.getParcelableArrayList(taskCont.ARG_USERS);
+                return result.getParcelableArrayList(PBSTaskController.ARG_USERS);
             } else {
-                PandoraHelper.showErrorMessage((PandoraMain) getActivity(), getString(R.string.text_projectloc_na));
+                PandoraHelper.showErrorMessage(getActivity(), getString(R.string.text_projectloc_na));
             }
         }
         return null;
@@ -234,17 +234,17 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
     public List<SpinnerPair> getProjLocList() {
         Bundle input = new Bundle();
         Bundle result = taskCont
-                .triggerEvent(taskCont.GET_PROJECTLOCATIONS_EVENT,
+                .triggerEvent(PBSTaskController.GET_PROJECTLOCATIONS_EVENT,
                         input, new Bundle(), null);
         return result
-                .getParcelableArrayList(taskCont.ARG_PROJECTLOCATIONS);
+                .getParcelableArrayList(PBSTaskController.ARG_PROJECTLOCATIONS);
     }
 
     public void createProjTask(){
         //check all value is not null.
         if (projLocNameItem.getPair().getKey() == null || assignToItem.getPair().getKey() == null)
         {
-            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Incomplete info");
+            PandoraHelper.showWarningMessage(getActivity(), "Incomplete info");
             return;
         }
         String name = taskName.getText().toString();
@@ -261,18 +261,18 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
                 || assignedTo.isEmpty()
                 || seqNo.isEmpty())
         {
-            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please fill up all fields");
+            PandoraHelper.showWarningMessage(getActivity(), "Please fill up all fields");
             return;
         }
 
         int nSeqNo = -1;
         try {
             nSeqNo = Integer.parseInt(seqNo);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         if (nSeqNo < 0) {
-            PandoraHelper.showWarningMessage((PandoraMain)getActivity(), "Please fill up valid Priority.");
+            PandoraHelper.showWarningMessage(getActivity(), "Please fill up valid Priority.");
             return;
         }
 
@@ -331,7 +331,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         Bundle input = new Bundle();
         PandoraContext cont = ((PandoraMain) getActivity()).getGlobalVariable();
         input.putSerializable(PBSServerConst.PARAM_URL, cont.getServer_url());
-        input.putSerializable(taskCont.ARG_PROJTASK, pt);
+        input.putSerializable(PBSTaskController.ARG_PROJTASK, pt);
 
         new AsyncTask<Bundle, Void, Bundle>() {
             @Override
@@ -343,7 +343,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
             @Override
             protected Bundle doInBackground(Bundle... params) {
                 Bundle output = new Bundle();
-                output = taskCont.triggerEvent(taskCont.CREATE_TASK_EVENT, params[0], output, null);
+                output = taskCont.triggerEvent(PBSTaskController.CREATE_TASK_EVENT, params[0], output, null);
                 return output;
             }
 

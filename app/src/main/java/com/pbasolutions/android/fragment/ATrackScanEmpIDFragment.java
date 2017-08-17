@@ -1,5 +1,6 @@
 package com.pbasolutions.android.fragment;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -244,7 +245,7 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
                 return;
             }
 
-            final PBSLoginJSON loginJSON = (PBSLoginJSON) resultBundle.getSerializable(authController.PBS_LOGIN_JSON);
+            final PBSLoginJSON loginJSON = (PBSLoginJSON) resultBundle.getSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON);
             if (loginJSON != null) {
                 if (loginJSON.getSuccess().equals("TRUE")) {
                     PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -300,7 +301,7 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == context.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             picturePath = CameraUtil.getPicPath(context, data);
 
             if (picturePath != null) {

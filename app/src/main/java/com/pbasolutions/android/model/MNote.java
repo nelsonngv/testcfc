@@ -1,10 +1,6 @@
 package com.pbasolutions.android.model;
 
-import android.databinding.BaseObservable;
-
 import com.pbasolutions.android.json.PBSJson;
-
-import java.io.Serializable;
 
 /**
  * Created by pbadell on 10/8/15.

@@ -11,6 +11,7 @@ import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
+import com.pbasolutions.android.controller.PBSRequisitionController;
 import com.pbasolutions.android.model.MPurchaseRequestLine;
 
 import java.util.UUID;
@@ -73,7 +74,7 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
         int nQty = -1;
         try {
             nQty = Integer.parseInt(qtyRequested.getText().toString());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         if (nQty < 0) {
@@ -107,8 +108,8 @@ public class NewRequisitionLineFragment extends AbstractRequisitionLineFragment 
         cv.put(MPurchaseRequestLine.PURCHASEREASON_COL, purcReason.getText().toString());
 
         Bundle input = new Bundle();
-        input.putParcelable(reqCont.ARG_CONTENTVALUES, cv);
-        Bundle output = reqCont.triggerEvent(reqCont.INSERT_REQLINE_EVENT, input, new Bundle(), null);
+        input.putParcelable(PBSRequisitionController.ARG_CONTENTVALUES, cv);
+        Bundle output = reqCont.triggerEvent(PBSRequisitionController.INSERT_REQLINE_EVENT, input, new Bundle(), null);
         if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
 
             PandoraHelper.hideSoftKeyboard();

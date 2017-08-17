@@ -96,7 +96,7 @@ public class DeployTask implements Callable<Bundle> {
     }
 
     private String getEmployeesName(int C_BPartner_IDs[]){
-        StringBuffer names = new StringBuffer();
+        StringBuilder names = new StringBuilder();
         for (int x=0; x<C_BPartner_IDs.length; x++){
             String name =ModelConst.mapIDtoColumn(ModelConst.C_BPARTNER_TABLE,
                     ModelConst.NAME_COL, String.valueOf(C_BPartner_IDs[x]),ModelConst.C_BPARTNER_ID_COL, cr);

@@ -1,12 +1,10 @@
 package com.pbasolutions.android;
 
 import android.app.Application;
-import android.content.ContentResolver;
 import android.content.Context;
 
 import com.pbasolutions.android.json.PBSProjLocJSON;
 import com.pbasolutions.android.json.PBSRoleJSON;
-import com.pbasolutions.android.model.ModelConst;
 
 import java.io.Serializable;
 

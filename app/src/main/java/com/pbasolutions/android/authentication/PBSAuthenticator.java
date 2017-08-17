@@ -4,21 +4,13 @@ import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
 import android.accounts.NetworkErrorException;
-import android.accounts.OperationCanceledException;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.pbasolutions.android.PandoraMain;
-import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
 import com.pbasolutions.android.json.PBSLoginJSON;
-
-import java.io.IOException;
 
 /**
  * PBSAuthenticator class allows android account to authenticate, add account, update credentials.

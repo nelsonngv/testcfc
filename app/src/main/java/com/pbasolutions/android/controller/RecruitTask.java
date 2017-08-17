@@ -16,7 +16,6 @@ import com.pbasolutions.android.database.PBSDBHelper;
 import com.pbasolutions.android.model.IModel;
 import com.pbasolutions.android.model.MApplicant;
 import com.pbasolutions.android.model.MEmployee;
-import com.pbasolutions.android.model.MShift;
 import com.pbasolutions.android.model.ModelConst;
 
 import java.util.ArrayList;
@@ -115,7 +114,7 @@ public class RecruitTask extends Task {
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.JOBAPP_LIST_VIEW),
                 projection, selection, selectArgs, null);
 
-        ObservableArrayList<MApplicant> applicantList = new ObservableArrayList<MApplicant>();
+        ObservableArrayList<MApplicant> applicantList = new ObservableArrayList<>();
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
             do {

@@ -1,8 +1,6 @@
 package com.pbasolutions.android.model;
 
 
-import com.pbasolutions.android.adapter.SpinnerPair;
-
 /**
  * Created by pbadell on 10/19/15.
  */

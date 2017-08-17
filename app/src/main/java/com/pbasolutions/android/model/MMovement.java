@@ -1,7 +1,7 @@
 package com.pbasolutions.android.model;
 
 import android.graphics.Color;
-import android.widget.Switch;
+
 import com.pbasolutions.android.json.PBSJson;
 
 import java.text.ParseException;

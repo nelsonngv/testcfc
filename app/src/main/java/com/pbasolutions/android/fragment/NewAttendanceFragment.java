@@ -279,7 +279,7 @@ public class NewAttendanceFragment extends Fragment {
 
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         if (projlocPair == null) { // when no selected
-            return new ObservableArrayList<MAttendanceLine>();
+            return new ObservableArrayList<>();
         }
 
         String projLocId = projlocPair.getKey();
@@ -358,8 +358,7 @@ public class NewAttendanceFragment extends Fragment {
 
         PBSAttendanceController.deployDate = deployDate;
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
-        String projLocId = projlocPair.getKey();
-        PBSAttendanceController.projectLocationId = projLocId;
+        PBSAttendanceController.projectLocationId = projlocPair.getKey();
 
         PBSAttendanceController.shiftUUID = spinnerPair.getKey();
 
@@ -373,7 +372,7 @@ public class NewAttendanceFragment extends Fragment {
 
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         if (projlocPair == null) { // when no selected
-            return new ArrayList<SpinnerPair>();
+            return new ArrayList<>();
         }
 
         String projLocId = projlocPair.getKey();
@@ -398,8 +397,7 @@ public class NewAttendanceFragment extends Fragment {
             protected Bundle doInBackground(Void... params) {
                 Bundle input = new Bundle();
                 input.putSerializable(PBSAttendanceController.ARG_ATTENDANCELINE_LIST, linesAdapter.getLines());
-                Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.REMOVE_ATTDLINES_EVENT, input, new Bundle(), null);
-                return result;
+                return attendanceCont.triggerEvent(PBSAttendanceController.REMOVE_ATTDLINES_EVENT, input, new Bundle(), null);
             }
 
             @Override
@@ -426,14 +424,14 @@ public class NewAttendanceFragment extends Fragment {
         attendance = new MAttendance();
 
         if (attendance == null) {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+            PandoraHelper.showWarningMessage(getActivity(), getString(
                     R.string.no_line_error, getString(R.string.request)));
             return;
         }
 
         SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
         if (spinnerPair.getKey() == null) {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+            PandoraHelper.showWarningMessage(getActivity(), getString(
                     R.string.no_list_error, getString(R.string.proj_shift)));
             return;
         }
@@ -450,7 +448,7 @@ public class NewAttendanceFragment extends Fragment {
 
         ObservableArrayList<MAttendanceLine> lines = linesAdapter.getLines();
         if (lines == null || lines.size() == 0) {
-            PandoraHelper.showWarningMessage((PandoraMain) getActivity(), getString(
+            PandoraHelper.showWarningMessage(getActivity(), getString(
                     R.string.no_line_error, getString(R.string.request)));
             return;
         }
@@ -474,8 +472,7 @@ public class NewAttendanceFragment extends Fragment {
 
             @Override
             protected Bundle doInBackground(Bundle... params) {
-                Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.CREATE_ATTENDANCE_EVENT, params[0], new Bundle(), null);
-                return result;
+                return attendanceCont.triggerEvent(PBSAttendanceController.CREATE_ATTENDANCE_EVENT, params[0], new Bundle(), null);
             }
 
             @Override

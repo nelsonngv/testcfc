@@ -3,12 +3,7 @@ package com.pbasolutions.android.controller;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.databinding.ObservableArrayList;
 import android.os.Bundle;
-
-import com.pbasolutions.android.PandoraHelper;
-import com.pbasolutions.android.model.IModel;
-import com.pbasolutions.android.model.MProjectTask;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -99,13 +94,11 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
         input.putString(ARG_TASK_EVENT, GET_USERS_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -115,13 +108,11 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
         input.putString(ARG_TASK_EVENT, GET_PROJECTLOCATIONS_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -131,13 +122,11 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
         input.putString(ARG_TASK_EVENT, GET_PROJTASK_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -147,13 +136,11 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
         input.putString(ARG_TASK_EVENT, COMPLETE_PROJTASK_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -163,13 +150,11 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
         input.putString(ARG_TASK_EVENT, GET_PROJTASKS_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -179,13 +164,11 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
         input.putString(ARG_TASK_EVENT, SYNC_PROJTASKS_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -195,13 +178,11 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
         input.putString(ARG_TASK_EVENT, CREATE_TASK_EVENT);
         ExecutorService es = Executors.newSingleThreadExecutor();
         ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<Bundle> (task);
+        FutureTask<Bundle> taskResult = new FutureTask<>(task);
         es.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;

@@ -2,7 +2,6 @@ package com.pbasolutions.android.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,7 +96,7 @@ public class RoleFragment extends Fragment {
     }
 
     private void addSpinnerData() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         if (context.getGlobalVariable() != null) {
             roles = context.getGlobalVariable().getRoleJSON();
         }
@@ -119,7 +118,7 @@ public class RoleFragment extends Fragment {
      * @param spinnerName
      */
     public void addItemsOnSpinner(Spinner spinner, List list, String spinnerName) {
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_spinner_dropdown_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
@@ -161,17 +160,17 @@ public class RoleFragment extends Fragment {
             @Override
             protected Bundle doInBackground(Void... params) {
                 Bundle input = new Bundle();
-                input.putString(authenticatorController.ROLE_ARG,
+                input.putString(PBSAuthenticatorController.ROLE_ARG,
                         context.getGlobalVariable().getAd_role_id());
-                input.putString(authenticatorController.ORG_ARG,
+                input.putString(PBSAuthenticatorController.ORG_ARG,
                         context.getGlobalVariable().getAd_org_id());
-                input.putString(authenticatorController.CLIENT_ARG,
+                input.putString(PBSAuthenticatorController.CLIENT_ARG,
                         context.getGlobalVariable().getAd_client_id());
-                input.putString(authenticatorController.SERVER_URL_ARG,
+                input.putString(PBSAuthenticatorController.SERVER_URL_ARG,
                         context.getGlobalVariable().getServer_url());
                 Bundle result = new Bundle();
                 result = authenticatorController.triggerEvent(
-                        authenticatorController.ROLE_SUBMIT_EVENT, input, result, null);
+                        PBSAuthenticatorController.ROLE_SUBMIT_EVENT, input, result, null);
 
                 return result;
             }

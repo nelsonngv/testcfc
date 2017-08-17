@@ -37,10 +37,10 @@ public class CheckInDetailsFragment extends PBSDetailsFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.checkpoint_details, container, false);
         Bundle inputBundle = new Bundle();
-        inputBundle.putString(checkpointController.ARG_CHECKIN_UUID, _UUID);
+        inputBundle.putString(PBSCheckpointController.ARG_CHECKIN_UUID, _UUID);
         Bundle resultBundle = new Bundle();
-        resultBundle = checkpointController.triggerEvent(checkpointController.CHECKIN_DETAILS_EVENT, inputBundle, resultBundle, null);
-        final MCheckIn checkpointdetails = (MCheckIn)resultBundle.getSerializable(checkpointController.ARG_CHECKPOINT_DETAILS);
+        resultBundle = checkpointController.triggerEvent(PBSCheckpointController.CHECKIN_DETAILS_EVENT, inputBundle, resultBundle, null);
+        final MCheckIn checkpointdetails = (MCheckIn)resultBundle.getSerializable(PBSCheckpointController.ARG_CHECKPOINT_DETAILS);
         binding =  CheckpointDetailsBinding.bind(rootView);
         binding.setCheckpointdetails(checkpointdetails);
         return rootView;

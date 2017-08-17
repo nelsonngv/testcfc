@@ -26,8 +26,7 @@ public class TaskRVA extends RecyclerView.Adapter<TaskRVA.TaskVH> {
     @Override
     public TaskRVA.TaskVH onCreateViewHolder(ViewGroup parent, int viewType) {
         TaskListItemBinding binding = TaskListItemBinding.inflate(inflater);
-        TaskVH viewHolder = new TaskVH(binding);
-        return viewHolder;
+        return new TaskVH(binding);
     }
 
     @Override

@@ -43,11 +43,11 @@ public class BroadcastDetailsFragment extends PBSDetailsFragment {
 
     public MNote getNote() {
         Bundle inputBundle = new Bundle();
-        inputBundle.putString(broadCont.ARG_NOTE_UUID, _UUID);
-        inputBundle.putSerializable(broadCont.NOTE_LIST, modelList);
+        inputBundle.putString(PBSBroadcastController.ARG_NOTE_UUID, _UUID);
+        inputBundle.putSerializable(PBSBroadcastController.NOTE_LIST, modelList);
         Bundle resultBundle = new Bundle();
-        resultBundle = broadCont.triggerEvent(broadCont.GET_NOTE_EVENT, inputBundle, resultBundle, null);
-        return (MNote)resultBundle.getSerializable(broadCont.ARG_NOTE);
+        resultBundle = broadCont.triggerEvent(PBSBroadcastController.GET_NOTE_EVENT, inputBundle, resultBundle, null);
+        return (MNote)resultBundle.getSerializable(PBSBroadcastController.ARG_NOTE);
     }
 
     @Override

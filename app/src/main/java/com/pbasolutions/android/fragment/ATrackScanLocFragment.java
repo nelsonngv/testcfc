@@ -16,7 +16,6 @@ import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
-import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.controller.PBSCheckInController;
 
@@ -109,8 +108,8 @@ public class ATrackScanLocFragment extends Fragment {
         if (projLocations.size() > 0) {
             PBSAttendanceController.projectLocationId = projLocations.get(0);
             PBSAttendanceController.projectLocationName = projLocations.get(1);
-            PBSAttendanceController.isKioskMode = projLocations.get(2).equals("Y") ? true : false;
-            PBSAttendanceController.isPhoto = projLocations.get(3).equals("Y") ? true : false;
+            PBSAttendanceController.isKioskMode = projLocations.get(2).equals("Y");
+            PBSAttendanceController.isPhoto = projLocations.get(3).equals("Y");
             ((PandoraMain) getActivity()).displayView(PandoraMain.FRAGMENT_ATTENDANCE_TRACKING_EMPID, false);
         }
         else PandoraHelper.showWarningMessage(getActivity(), getString(R.string.invalid_tag));

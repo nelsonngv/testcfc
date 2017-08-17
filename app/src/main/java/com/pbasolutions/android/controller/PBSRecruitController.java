@@ -1,21 +1,6 @@
 package com.pbasolutions.android.controller;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.ContextWrapper;
-import android.databinding.ObservableArrayList;
-import android.os.Bundle;
-
-import com.pbasolutions.android.PandoraHelper;
-import com.pbasolutions.android.fragment.RecruitFragment;
-import com.pbasolutions.android.model.IModel;
-import com.pbasolutions.android.model.MApplicant;
-import com.pbasolutions.android.model.MEmployee;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 
 /**
  * Created by pbadell on 10/5/15.

@@ -26,8 +26,7 @@ public class RequisitionRVA extends RecyclerView.Adapter<RequisitionRVA.Requisti
     @Override
     public RequisitionRVA.RequistionVH onCreateViewHolder(ViewGroup parent, int viewType) {
         RequisitionListItemBinding binding = RequisitionListItemBinding.inflate(inflater);
-        RequistionVH viewHolder = new RequistionVH(binding);
-        return viewHolder;
+        return new RequistionVH(binding);
     }
 
     @Override

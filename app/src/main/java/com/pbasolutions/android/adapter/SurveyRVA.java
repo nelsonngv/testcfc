@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.pbasolutions.android.databinding.SurveyListItemBinding;
-import com.pbasolutions.android.databinding.TaskListItemBinding;
-import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.model.MSurvey;
 
 /**
@@ -28,8 +26,7 @@ public class SurveyRVA extends RecyclerView.Adapter<SurveyRVA.SurveyVH> {
     @Override
     public SurveyRVA.SurveyVH onCreateViewHolder(ViewGroup parent, int viewType) {
         SurveyListItemBinding binding = SurveyListItemBinding.inflate(inflater);
-        SurveyVH viewHolder = new SurveyVH(binding);
-        return viewHolder;
+        return new SurveyVH(binding);
     }
 
     @Override

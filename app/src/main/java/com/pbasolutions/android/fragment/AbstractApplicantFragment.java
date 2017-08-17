@@ -2,13 +2,7 @@ package com.pbasolutions.android.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -231,9 +225,9 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
      * @return
      */
     private List<SpinnerPair> getIdTypeList() {
-        Bundle result = recCont.triggerEvent(recCont.GET_IDTYPE_EVENT, new Bundle(),
+        Bundle result = recCont.triggerEvent(PBSRecruitController.GET_IDTYPE_EVENT, new Bundle(),
                 new Bundle(),null);
-        return result.getParcelableArrayList(recCont.IDTYPE_LIST);
+        return result.getParcelableArrayList(PBSRecruitController.IDTYPE_LIST);
     }
 
     /**
@@ -348,7 +342,7 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == context.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             String picturePath = CameraUtil.getPicPath(context, data);
 
             if (picturePath != null) {
@@ -441,9 +435,9 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
      */
     public List<SpinnerPair> getPrefShiftList() {
         Bundle input = new Bundle();
-        input.putString(recCont.ARG_PROJECT_LOCATION_UUID, appContext.getC_projectlocation_uuid());
-        Bundle result = recCont.triggerEvent(recCont.GET_SHIFTS_EVENT, input, new Bundle(),null);
-        return result.getParcelableArrayList(recCont.SHIFT_LIST);
+        input.putString(PBSRecruitController.ARG_PROJECT_LOCATION_UUID, appContext.getC_projectlocation_uuid());
+        Bundle result = recCont.triggerEvent(PBSRecruitController.GET_SHIFTS_EVENT, input, new Bundle(),null);
+        return result.getParcelableArrayList(PBSRecruitController.SHIFT_LIST);
     }
 
     /**
@@ -451,9 +445,9 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
      * @return
      */
     private List<SpinnerPair> getSetupJobList() {
-        Bundle result = recCont.triggerEvent(recCont.GET_SETUPJOB_EVENT, new Bundle(),
+        Bundle result = recCont.triggerEvent(PBSRecruitController.GET_SETUPJOB_EVENT, new Bundle(),
                 new Bundle(),null);
-        return result.getParcelableArrayList(recCont.SETUPJOB_LIST);
+        return result.getParcelableArrayList(PBSRecruitController.SETUPJOB_LIST);
     }
 
     /**
@@ -461,9 +455,9 @@ public abstract class AbstractApplicantFragment extends PBSDetailsFragment {
      * @return
      */
     public List<SpinnerPair> getNationalityList() {
-        Bundle result = recCont.triggerEvent(recCont.GET_NATIONALITY_EVENT, new Bundle(),
+        Bundle result = recCont.triggerEvent(PBSRecruitController.GET_NATIONALITY_EVENT, new Bundle(),
                 new Bundle(),null);
-        return result.getParcelableArrayList(recCont.NATIONALITY_LIST);
+        return result.getParcelableArrayList(PBSRecruitController.NATIONALITY_LIST);
     }
 
     /**

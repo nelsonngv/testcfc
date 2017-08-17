@@ -2,10 +2,6 @@ package com.pbasolutions.android.adapter;
 
 import android.content.Context;
 import android.databinding.ObservableArrayList;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,18 +12,10 @@ import android.widget.TextView;
 
 
 import com.pbasolutions.android.PandoraHelper;
-import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.databinding.AttendanceSearchlineItemBinding;
-import com.pbasolutions.android.databinding.AttendancelineItemBinding;
-import com.pbasolutions.android.fragment.PBSDetailsFragment;
-import com.pbasolutions.android.fragment.AttendanceLineDetailFragment;
-import com.pbasolutions.android.listener.FragmentListOnItemClickListener;
-import com.pbasolutions.android.model.IModel;
-import com.pbasolutions.android.model.MAttendance;
 import com.pbasolutions.android.model.MAttendanceLine;
 import com.pbasolutions.android.model.MAttendanceSearchItem;
-import com.pbasolutions.android.model.MPurchaseRequestLine;
 
 /**
  * Created by danny on 8/8/15.
@@ -52,7 +40,7 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
         AttendanceSearchlineItemBinding binding = AttendanceSearchlineItemBinding.inflate(inflater);
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.attendance_searchline_item, null);
-        AttendanceSearchLineVH viewHolder = new AttendanceSearchLineVH(binding, view, new BroadcastRVA.IViewHolderOnClicks(){
+        return new AttendanceSearchLineVH(binding, view, new BroadcastRVA.IViewHolderOnClicks(){
             @Override
             public void onCheckbox(CheckBox cb, int pos) {
                 MAttendanceLine prline = (MAttendanceLine) cb.getTag();
@@ -86,7 +74,6 @@ public class AttendanceSearchLineRVA extends RecyclerView.Adapter<AttendanceSear
 //                        (FragmentActivity)mContext, mContext.getString(R.string.title_attendanceline));
             }
         });
-        return viewHolder;
     }
 
     @Override

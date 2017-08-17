@@ -28,8 +28,7 @@ public class ApplicantRVA extends RecyclerView.Adapter<ApplicantRVA.MApplicantVH
     @Override
     public ApplicantRVA.MApplicantVH onCreateViewHolder(ViewGroup parent, int viewType) {
         ApplicantListitemBinding binding = ApplicantListitemBinding.inflate(inflater);
-        MApplicantVH viewHolder = new MApplicantVH(binding);
-        return viewHolder;
+        return new MApplicantVH(binding);
     }
 
     @Override

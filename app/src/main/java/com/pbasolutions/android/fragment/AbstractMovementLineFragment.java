@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -143,8 +142,10 @@ public abstract class AbstractMovementLineFragment extends PBSDetailsFragment{
         setOnItemSelectedListener();
     }
 
-    public void setValues() {};
-    public void save() {};
+    public void setValues() {}
+
+    public void save() {}
+
     protected abstract MMovementLine getMovementLine();
 
     private void setOnItemSelectedListener() {

@@ -34,11 +34,11 @@ public class EmployeeDetailsFragment extends PBSDetailsFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.employee_details, container, false);
         Bundle inputBundle = new Bundle();
-        inputBundle.putString(recCont.ARG_EMP_UUID, _UUID);
-        inputBundle.putSerializable(recCont.EMPLOYEE_LIST, modelList);
+        inputBundle.putString(PBSRecruitController.ARG_EMP_UUID, _UUID);
+        inputBundle.putSerializable(PBSRecruitController.EMPLOYEE_LIST, modelList);
         Bundle resultBundle = new Bundle();
-        resultBundle = recCont.triggerEvent(recCont.GET_EMPLOYEE_EVENT, inputBundle, resultBundle, null);
-        final MEmployee employee = (MEmployee) resultBundle.getSerializable(recCont.ARG_EMPLOYEE);
+        resultBundle = recCont.triggerEvent(PBSRecruitController.GET_EMPLOYEE_EVENT, inputBundle, resultBundle, null);
+        final MEmployee employee = (MEmployee) resultBundle.getSerializable(PBSRecruitController.ARG_EMPLOYEE);
         binding = EmployeeDetailsBinding.bind(rootView);
         binding.setEmployee(employee);
         return rootView;

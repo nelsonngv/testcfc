@@ -12,22 +12,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.pbasolutions.android.json.PBSJson;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -91,13 +75,11 @@ public class PBSServer {
             queue.add(stringReq);
             try {
                 String response = future.get(timeout, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after n seconds
-                return (PBSJson) new Gson().fromJson(response.toString(), cls);
+                return (PBSJson) new Gson().fromJson(response, cls);
             } catch (InterruptedException e) {
                 // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
                 Thread.currentThread().interrupt();
             } catch (ExecutionException e) {
-                Log.e(TAG, "Error: " + e.toString());
-            } catch (TimeoutException e) {
                 Log.e(TAG, "Error: " + e.toString());
             } catch (Exception e) {
                 Log.e(TAG, "Error: " + e.toString());
@@ -195,13 +177,11 @@ public class PBSServer {
             queue.add(stringReq);
             try {
                 String response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after n seconds
-                return response.toString();
+                return response;
             } catch (InterruptedException e) {
                 // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
                 Thread.currentThread().interrupt();
             } catch (ExecutionException e) {
-                Log.e(TAG, "Error: " + e.toString());
-            } catch (TimeoutException e) {
                 Log.e(TAG, "Error: " + e.toString());
             } catch (Exception e) {
                 Log.e(TAG, "Error: " + e.toString());

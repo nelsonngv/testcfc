@@ -6,9 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,22 +15,15 @@ import android.widget.TextView;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.pbasolutions.android.PandoraConstant;
-import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.controller.PBSCheckInController;
+import com.pbasolutions.android.controller.PBSRecruitController;
 import com.pbasolutions.android.controller.PBSSurveyController;
 import com.pbasolutions.android.model.MSurvey;
-import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.UUID;
 
 /**
  * Created by pbadell on 10/5/15.
@@ -125,9 +115,9 @@ public class NewApplicantSignFragment extends AbstractApplicantFragment {
             public void onClick(View view) {
                 Bitmap signatureBitmap = mSignaturePad.getSignatureBitmap();
                 String signImgPath = CameraUtil.storeSignature(signatureBitmap);
-                ContentValues cv = input.getParcelable(recCont.APPLICANT_VALUES);
+                ContentValues cv = input.getParcelable(PBSRecruitController.APPLICANT_VALUES);
                 cv.put(MSurvey.ATTACHMENT_SIGNATURE_COL, signImgPath);
-                input.putParcelable(recCont.APPLICANT_VALUES, cv);
+                input.putParcelable(PBSRecruitController.APPLICANT_VALUES, cv);
                 submitApplicant(input);
             }
         });
@@ -161,8 +151,7 @@ public class NewApplicantSignFragment extends AbstractApplicantFragment {
 
             @Override
             protected Bundle doInBackground(Bundle... params) {
-                Bundle output = recCont.triggerEvent(recCont.INSERT_APPLICANT_EVENT, params[0], new Bundle(), null);
-                return output;
+                return recCont.triggerEvent(recCont.INSERT_APPLICANT_EVENT, params[0], new Bundle(), null);
             }
 
             @Override

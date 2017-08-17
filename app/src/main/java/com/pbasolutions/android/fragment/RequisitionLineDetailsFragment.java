@@ -57,10 +57,10 @@ public class RequisitionLineDetailsFragment extends AbstractRequisitionLineFragm
     private void isRequested(View rootView) {
         ViewGroup vg = (ViewGroup) rootView;
         Bundle input = new Bundle();
-        input.putString(reqCont.ARG_PURCHASEREQUEST_UUID, prl.getM_PurchaseRequest_UUID());
-        Bundle result = reqCont.triggerEvent(reqCont.CHECK_PR_IS_REQUESTED_EVENT,
+        input.putString(PBSRequisitionController.ARG_PURCHASEREQUEST_UUID, prl.getM_PurchaseRequest_UUID());
+        Bundle result = reqCont.triggerEvent(PBSRequisitionController.CHECK_PR_IS_REQUESTED_EVENT,
                 input, new Bundle(), null);
-          isRequested = result.getBoolean(reqCont.ARG_IS_PR_REQUESTED);
+          isRequested = result.getBoolean(PBSRequisitionController.ARG_IS_PR_REQUESTED);
         if (isRequested)
             disableClickableControls(false, vg);
         //disable save button:
@@ -91,9 +91,9 @@ public class RequisitionLineDetailsFragment extends AbstractRequisitionLineFragm
 
     private MPurchaseRequestLine getRequisitionLine() {
         Bundle input = new Bundle();
-        input.putString(reqCont.ARG_PURCHASEREQUESTLINE_UUID, _UUID);
-        Bundle result = reqCont.triggerEvent(reqCont.GET_REQUISITIONLINE_EVENT, input, new Bundle(), null);
-        return (MPurchaseRequestLine) result.getSerializable(reqCont.ARG_PURCHASEREQUESTLINE);
+        input.putString(PBSRequisitionController.ARG_PURCHASEREQUESTLINE_UUID, _UUID);
+        Bundle result = reqCont.triggerEvent(PBSRequisitionController.GET_REQUISITIONLINE_EVENT, input, new Bundle(), null);
+        return (MPurchaseRequestLine) result.getSerializable(PBSRequisitionController.ARG_PURCHASEREQUESTLINE);
     }
 
     @Override

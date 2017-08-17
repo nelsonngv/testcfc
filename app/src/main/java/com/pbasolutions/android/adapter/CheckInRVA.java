@@ -48,8 +48,7 @@ public class CheckInRVA extends RecyclerView.Adapter<CheckInVH> {
     public CheckInVH onCreateViewHolder(ViewGroup viewGroup, int position) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View view = inflater.inflate(R.layout.list_holder, null);
-        CheckInVH viewHolder = new CheckInVH(view, context);
-        return viewHolder;
+        return new CheckInVH(view, context);
     }
 
     @Override

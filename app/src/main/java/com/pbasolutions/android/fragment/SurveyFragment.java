@@ -3,8 +3,6 @@ package com.pbasolutions.android.fragment;
 import android.databinding.ObservableArrayList;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -127,8 +125,8 @@ public class SurveyFragment extends Fragment implements PBABackKeyListener {
         Bundle input = new Bundle();
         input.putString(PBSTaskController.ARG_PROJLOC_UUID, globalVar.getC_projectlocation_uuid());
         input.putString(PBSTaskController.ARG_AD_USER_ID, globalVar.getAd_user_id());
-        Bundle result = surveyCont.triggerEvent(surveyCont.GET_SURVEYS_EVENT, input, new Bundle(), null);
-        surveyList = (ObservableArrayList<MSurvey>) result.getSerializable(surveyCont.ARG_SURVEYS);
+        Bundle result = surveyCont.triggerEvent(PBSSurveyController.GET_SURVEYS_EVENT, input, new Bundle(), null);
+        surveyList = (ObservableArrayList<MSurvey>) result.getSerializable(PBSSurveyController.ARG_SURVEYS);
     }
 
     /**

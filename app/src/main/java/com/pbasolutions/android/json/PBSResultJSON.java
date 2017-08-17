@@ -26,7 +26,7 @@ public class PBSResultJSON extends PBSJson {
         return ID;
     }
 
-    public void setID(String GUID) {
+    public void setID(String ID) {
         this.ID = ID;
     }
 

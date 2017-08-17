@@ -176,8 +176,7 @@ public class CameraUtil {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
         File albumF = getAlbumDir(mAlbumStorageDirFactory);
-        File imageF = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, albumF);
-        return imageF;
+        return File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, albumF);
 
     }
 
@@ -209,8 +208,7 @@ public class CameraUtil {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] b = baos.toByteArray();
-            String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
-            return imageEncoded;
+            return Base64.encodeToString(b,Base64.DEFAULT);
         }
         return null;
     }

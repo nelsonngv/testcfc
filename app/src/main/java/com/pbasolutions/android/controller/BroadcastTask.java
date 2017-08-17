@@ -162,9 +162,7 @@ public class BroadcastTask implements Callable<Bundle> {
                 }
                 output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
                 output.putString(PandoraConstant.RESULT, "Successfully synced notes");
-            } catch (RemoteException e) {
-                Log.e(TAG, e.getMessage());
-            } catch (OperationApplicationException e) {
+            } catch (RemoteException | OperationApplicationException e) {
                 Log.e(TAG, e.getMessage());
             }
         }

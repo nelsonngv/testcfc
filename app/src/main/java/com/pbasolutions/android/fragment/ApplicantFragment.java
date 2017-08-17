@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
@@ -115,12 +114,12 @@ public class ApplicantFragment extends Fragment {
             String projectLocationUUID = globalVar.getC_projectlocation_uuid();
             if (projectLocationUUID != null) {
                 Bundle input = new Bundle();
-                input.putString(recCont.ARG_PROJECT_LOCATION_UUID, projectLocationUUID);
-                Bundle result = recCont.triggerEvent(recCont.GET_APPLICANTS_EVENT, input, new Bundle(), null);
-                return (ObservableArrayList<MApplicant>) result.getSerializable(recCont.APPLICANT_LIST);
+                input.putString(PBSRecruitController.ARG_PROJECT_LOCATION_UUID, projectLocationUUID);
+                Bundle result = recCont.triggerEvent(PBSRecruitController.GET_APPLICANTS_EVENT, input, new Bundle(), null);
+                return (ObservableArrayList<MApplicant>) result.getSerializable(PBSRecruitController.APPLICANT_LIST);
 
             } else {
-                PandoraHelper.showErrorMessage((PandoraMain) getActivity(), getString(R.string.text_projectloc_na));
+                PandoraHelper.showErrorMessage(getActivity(), getString(R.string.text_projectloc_na));
             }
         }
         return null;

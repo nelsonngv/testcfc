@@ -160,10 +160,10 @@ public class BroadcastFragment extends Fragment {
         if (PBSServerConst.cookieStore != null) {
             //get latest broadcast list
             Bundle input = new Bundle();
-            input.putString(broadCont.ARG_USER_ID, context.getAd_user_id());
-            input.putString(broadCont.ARG_PROJLOC_UUID, context.getC_projectlocation_uuid());
+            input.putString(PBSBroadcastController.ARG_USER_ID, context.getAd_user_id());
+            input.putString(PBSBroadcastController.ARG_PROJLOC_UUID, context.getC_projectlocation_uuid());
             input.putString(PBSServerConst.PARAM_URL, context.getServer_url());
-            Bundle result = broadCont.triggerEvent(broadCont.SYNC_NOTES_EVENT, input,
+            Bundle result = broadCont.triggerEvent(PBSBroadcastController.SYNC_NOTES_EVENT, input,
                     new Bundle(), null);
 
             String resultTitle = result.getString(PandoraConstant.TITLE);
@@ -209,9 +209,9 @@ public class BroadcastFragment extends Fragment {
      */
     public ObservableArrayList<MNote> getBroadCastList() {
         Bundle input = new Bundle();
-        input.putString(broadCont.ARG_USER_UUID, context.getAd_user_uuid());
-        Bundle result = broadCont.triggerEvent(broadCont.GET_NOTES_EVENT, input, new Bundle(), null);
-        return (ObservableArrayList<MNote>)result.getSerializable(broadCont.NOTE_LIST);
+        input.putString(PBSBroadcastController.ARG_USER_UUID, context.getAd_user_uuid());
+        Bundle result = broadCont.triggerEvent(PBSBroadcastController.GET_NOTES_EVENT, input, new Bundle(), null);
+        return (ObservableArrayList<MNote>)result.getSerializable(PBSBroadcastController.NOTE_LIST);
     }
 
     private void promptDeleteMessage(String message, String title, String okButton,
@@ -234,7 +234,6 @@ public class BroadcastFragment extends Fragment {
         if (cancelButton != null) {
             builder.setNegativeButton(cancelButton, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                return;
                 }
             });
         }
@@ -247,12 +246,12 @@ public class BroadcastFragment extends Fragment {
     private void runDeleteNotes( ObservableArrayList<MNote> list){
         Bundle input = new Bundle();
         String selection = MNote.AD_NOTE_UUID_COL + "=?";
-        input.putString(broadCont.ARG_SELECTION, selection);
-        input.putSerializable(broadCont.NOTE_LIST, list);
-        Bundle result = broadCont.triggerEvent(broadCont.DELETE_NOTES_EVENT, input,
+        input.putString(PBSBroadcastController.ARG_SELECTION, selection);
+        input.putSerializable(PBSBroadcastController.NOTE_LIST, list);
+        Bundle result = broadCont.triggerEvent(PBSBroadcastController.DELETE_NOTES_EVENT, input,
                 new Bundle(), null);
         String title = result.getString(PandoraConstant.TITLE);
-        PandoraHelper.showMessage(((PandoraMain)getActivity()),
+        PandoraHelper.showMessage(getActivity(),
                 result.getString(title));
         if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -293,7 +292,7 @@ public class BroadcastFragment extends Fragment {
                 super.onPostExecute(message);
 
                 if (message != null && showMsg) {
-                    PandoraHelper.showMessage((PandoraMain)getActivity(), message[1]);
+                    PandoraHelper.showMessage(getActivity(), message[1]);
                 }
 
                 viewAdapter = new BroadcastRVA(getActivity(),broadCastList, inflater);

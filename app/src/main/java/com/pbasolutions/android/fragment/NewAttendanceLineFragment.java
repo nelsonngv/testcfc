@@ -1,11 +1,8 @@
 package com.pbasolutions.android.fragment;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,14 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
@@ -30,12 +24,9 @@ import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSAttendanceController;
-import com.pbasolutions.android.controller.PBSRequisitionController;
 import com.pbasolutions.android.model.MAttendanceLine;
-import com.pbasolutions.android.model.MPurchaseRequestLine;
 import com.pbasolutions.android.model.ModelConst;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -244,7 +235,7 @@ public class NewAttendanceLineFragment extends Fragment {
         return newAttendanceFragment;
     }
 
-    public void setNewAttendanceFragment(Fragment ewattendanceFragment) {
+    public void setNewAttendanceFragment(Fragment newAttendanceFragment) {
         this.newAttendanceFragment = newAttendanceFragment;
     }
 
@@ -389,7 +380,7 @@ public class NewAttendanceLineFragment extends Fragment {
     }
 
     public List<SpinnerPair> getDayTypeList(){
-        List<SpinnerPair> daytype = new ArrayList<SpinnerPair>();
+        List<SpinnerPair> daytype = new ArrayList<>();
         daytype.add(new SpinnerPair("1", "Full Day "));
         daytype.add(new SpinnerPair("0.5", "Half Day "));
         return daytype;

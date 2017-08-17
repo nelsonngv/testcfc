@@ -1,6 +1,5 @@
 package com.pbasolutions.android.fragment;
 
-import android.content.Context;
 import android.databinding.ObservableArrayList;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -38,7 +37,7 @@ public abstract class PBSDetailsFragment extends Fragment implements IDetailsFra
         return modelList;
     }
 
-    protected void addRecyclerViewListener(RecyclerView rv){};
+    protected void addRecyclerViewListener(RecyclerView rv){}
 
     /**
      *

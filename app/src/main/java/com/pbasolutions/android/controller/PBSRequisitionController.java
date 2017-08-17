@@ -148,9 +148,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -164,9 +162,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -180,9 +176,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -212,9 +206,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -228,9 +220,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -244,9 +234,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -261,9 +249,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -278,9 +264,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -294,9 +278,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -310,9 +292,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -326,9 +306,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -342,9 +320,7 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -354,13 +330,11 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         input.putString(ARG_TASK_EVENT, SYNC_REQUISITIONS_EVENT);
         reqTask.setInput(input);
         reqTask.setOutput(result);
-        taskResult = new FutureTask<Bundle> (reqTask);
+        taskResult = new FutureTask<>(reqTask);
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;
@@ -376,13 +350,11 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
         input.putString(ARG_TASK_EVENT, GET_REQUISITIONS_EVENT);
         reqTask.setInput(input);
         reqTask.setOutput(result);
-        taskResult = new FutureTask<Bundle> (reqTask);
+        taskResult = new FutureTask<>(reqTask);
         exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         return result;

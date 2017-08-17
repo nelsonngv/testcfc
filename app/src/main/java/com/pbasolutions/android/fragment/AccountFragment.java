@@ -57,10 +57,10 @@ public class AccountFragment extends Fragment {
         TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.nav_item_connection)));
         Bundle inputBundle = new Bundle();
-        inputBundle.putString(authenticatorController.ARG_AUTH_TYPE, PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
+        inputBundle.putString(PBSAuthenticatorController.ARG_AUTH_TYPE, PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
         if (context.getGlobalVariable() != null){
             if (!context.getGlobalVariable().getAd_user_name().isEmpty()) {
-                inputBundle.putString(authenticatorController.USER_NAME_ARG, context.getGlobalVariable().getAd_user_name());
+                inputBundle.putString(PBSAuthenticatorController.USER_NAME_ARG, context.getGlobalVariable().getAd_user_name());
             }
 
         }

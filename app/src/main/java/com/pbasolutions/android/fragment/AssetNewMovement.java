@@ -66,9 +66,9 @@ public class AssetNewMovement extends AbstractMovementFragment {
         cv.put(MMovement.C_PROJECTLOCATIONTO_UUID_COL, toProjectLocationItem.getPair().getKey());
         cv.put(MMovement.MOVEMENTDATE_COL, movementDate.getText().toString());
 
-        input.putString(assetCont.ARG_AD_USER_ID, appContext.getAd_user_id());
+        input.putString(PBSAssetController.ARG_AD_USER_ID, appContext.getAd_user_id());
         input.putParcelable(PBSController.ARG_CONTENTVALUES, cv);
-        Bundle result = assetCont.triggerEvent(assetCont.SAVE_MOVEMENT_EVENT,
+        Bundle result = assetCont.triggerEvent(PBSAssetController.SAVE_MOVEMENT_EVENT,
                 input, new Bundle(), null);
         if (PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
             PandoraHelper.showErrorMessage(context,
@@ -101,9 +101,8 @@ public class AssetNewMovement extends AbstractMovementFragment {
 
             @Override
             protected Bundle doInBackground(Bundle... params) {
-                Bundle result = assetCont.triggerEvent(assetCont.MOVE_EVENT,
+                return assetCont.triggerEvent(assetCont.MOVE_EVENT,
                         params[0], new Bundle(), null);
-                return result;
             }
 
             @Override
@@ -155,10 +154,10 @@ public class AssetNewMovement extends AbstractMovementFragment {
     protected void populateLines() {
         if (_UUID != null && !_UUID.isEmpty()) {
             Bundle input = new Bundle();
-            input.putString(assetCont.ARG_M_MOVEMENT_UUID, get_UUID());
-            Bundle result = assetCont.triggerEvent(assetCont.GET_LINES_EVENT,
+            input.putString(PBSAssetController.ARG_M_MOVEMENT_UUID, get_UUID());
+            Bundle result = assetCont.triggerEvent(PBSAssetController.GET_LINES_EVENT,
                     input, new Bundle(), null);
-            lines = (ObservableArrayList<MMovementLine>)result.getSerializable(assetCont.ARG_LINES);
+            lines = (ObservableArrayList<MMovementLine>)result.getSerializable(PBSAssetController.ARG_LINES);
             if (lines != null && movement != null)
                 movement.setLines(lines.toArray(new MMovementLine[lines.size()]));
         }
@@ -168,10 +167,10 @@ public class AssetNewMovement extends AbstractMovementFragment {
     protected void populateMovement(){
         if (_UUID != null && !_UUID.isEmpty()) {
             Bundle input = new Bundle();
-            input.putString(assetCont.ARG_M_MOVEMENT_UUID, get_UUID());
-            Bundle result = assetCont.callEventDirectly(assetCont.GET_MOVEMENT_EVENT,
+            input.putString(PBSAssetController.ARG_M_MOVEMENT_UUID, get_UUID());
+            Bundle result = assetCont.callEventDirectly(PBSAssetController.GET_MOVEMENT_EVENT,
                     input, new Bundle(), null);
-            movement = (MMovement) result.getSerializable(assetCont.ARG_MOVEMENT);
+            movement = (MMovement) result.getSerializable(PBSAssetController.ARG_MOVEMENT);
         }
     }
 
@@ -183,7 +182,7 @@ public class AssetNewMovement extends AbstractMovementFragment {
                 ModelConst.NAME_COL, getActivity().getContentResolver());
         projectLocation.setText(locName);
 //        projectLocation.setText(appContext.getC_projectlocation_name());
-        projectLocation.setTag(appContext.getC_projectlocation_uuid().toString());
+        projectLocation.setTag(appContext.getC_projectlocation_uuid());
         if(PBSAssetController.movementDate != null && !PBSAssetController.movementDate.equals("") && lines != null && lines.size() > 0) {
             String deployDate = PBSAssetController.movementDate;
             Date date = PandoraHelper.stringToDate("dd-MM-yyyy", deployDate);
@@ -197,8 +196,8 @@ public class AssetNewMovement extends AbstractMovementFragment {
     @Override
     protected void removeLine() {
         Bundle input = new Bundle();
-        input.putSerializable(assetCont.ARG_MOVEMENTLINES, viewAdapter.getLines());
-        Bundle result = assetCont.triggerEvent(assetCont.REMOVE_LINES_EVENT,
+        input.putSerializable(PBSAssetController.ARG_MOVEMENTLINES, viewAdapter.getLines());
+        Bundle result = assetCont.triggerEvent(PBSAssetController.REMOVE_LINES_EVENT,
                 input, new Bundle(), null);
         if (!PandoraConstant.ERROR.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -213,12 +212,12 @@ public class AssetNewMovement extends AbstractMovementFragment {
     @Override
     protected List<SpinnerPair> getProjectLocationsTo() {
         Bundle input = new Bundle();
-        input.putString(assetCont.ARG_EXCLUDE_PROJECTLOCATION_UUID, appContext.getC_projectlocation_uuid());
+        input.putString(PBSAssetController.ARG_EXCLUDE_PROJECTLOCATION_UUID, appContext.getC_projectlocation_uuid());
         Bundle result = assetCont
-                .triggerEvent(assetCont.GET_PROJECTLOCATIONS_EVENT,
+                .triggerEvent(PBSAssetController.GET_PROJECTLOCATIONS_EVENT,
                         input, new Bundle(), null);
         return result
-                .getParcelableArrayList(assetCont.ARG_PROJECTLOCATIONS);
+                .getParcelableArrayList(PBSAssetController.ARG_PROJECTLOCATIONS);
     }
 
 }

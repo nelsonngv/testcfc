@@ -190,7 +190,7 @@ public class AttendanceTask implements Callable<Bundle> {
             MAttendanceSearchItem attendancesSearchRes[] = (MAttendanceSearchItem[])pair.second;
 
             //convert from array to list
-            ObservableArrayList<MAttendanceSearchItem> list = new ObservableArrayList<MAttendanceSearchItem>();
+            ObservableArrayList<MAttendanceSearchItem> list = new ObservableArrayList<>();
             if (attendancesSearchRes != null)
             {
                 for (int x=0; x < attendancesSearchRes.length; x++) {
@@ -300,7 +300,7 @@ public class AttendanceTask implements Callable<Bundle> {
     }
 
     private String getEmployeesName(int C_BPartner_IDs[]){
-        StringBuffer names = new StringBuffer();
+        StringBuilder names = new StringBuilder();
         for (int x=0; x<C_BPartner_IDs.length; x++){
             String name =ModelConst.mapIDtoColumn(ModelConst.C_BPARTNER_TABLE,
                     ModelConst.NAME_COL, String.valueOf(C_BPartner_IDs[x]),ModelConst.C_BPARTNER_ID_COL, cr);
@@ -316,9 +316,8 @@ public class AttendanceTask implements Callable<Bundle> {
     }
 
     private String getEmployeeName(int C_BPartner_ID){
-            String name =ModelConst.mapIDtoColumn(ModelConst.C_BPARTNER_TABLE,
-                    ModelConst.NAME_COL, String.valueOf(C_BPartner_ID),ModelConst.C_BPARTNER_ID_COL, cr);
-        return name;
+        return ModelConst.mapIDtoColumn(ModelConst.C_BPARTNER_TABLE,
+                ModelConst.NAME_COL, String.valueOf(C_BPartner_ID),ModelConst.C_BPARTNER_ID_COL, cr);
     }
 
     private Bundle getEmployees() {
@@ -466,9 +465,7 @@ public class AttendanceTask implements Callable<Bundle> {
             }
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully synced notes");
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
-        } catch (OperationApplicationException e) {
+        } catch (RemoteException | OperationApplicationException e) {
             Log.e(TAG, e.getMessage());
         }
         return output;
@@ -655,9 +652,7 @@ public class AttendanceTask implements Callable<Bundle> {
             }
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully created attendance");
-        } catch (RemoteException e) {
-            Log.e(TAG, e.getMessage());
-        } catch (OperationApplicationException e) {
+        } catch (RemoteException | OperationApplicationException e) {
             Log.e(TAG, e.getMessage());
         }
         return output;

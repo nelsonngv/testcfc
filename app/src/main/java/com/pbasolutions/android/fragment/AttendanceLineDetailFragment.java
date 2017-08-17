@@ -62,10 +62,10 @@ public class AttendanceLineDetailFragment extends AbstractRequisitionLineFragmen
 
     private void isRequested() {
         Bundle input = new Bundle();
-        input.putString(reqCont.ARG_PURCHASEREQUEST_UUID, prl.getM_PurchaseRequest_UUID());
-        Bundle result = reqCont.triggerEvent(reqCont.CHECK_PR_IS_REQUESTED_EVENT,
+        input.putString(PBSRequisitionController.ARG_PURCHASEREQUEST_UUID, prl.getM_PurchaseRequest_UUID());
+        Bundle result = reqCont.triggerEvent(PBSRequisitionController.CHECK_PR_IS_REQUESTED_EVENT,
                 input, new Bundle(), null);
-        isRequested = result.getBoolean(reqCont.ARG_IS_PR_REQUESTED);
+        isRequested = result.getBoolean(PBSRequisitionController.ARG_IS_PR_REQUESTED);
         //disable save button:
         if (isRequested)
             add.setEnabled(false);
@@ -78,9 +78,9 @@ public class AttendanceLineDetailFragment extends AbstractRequisitionLineFragmen
 
     private MPurchaseRequestLine getRequisitionLine() {
         Bundle input = new Bundle();
-        input.putString(reqCont.ARG_PURCHASEREQUESTLINE_UUID, _UUID);
-        Bundle result = reqCont.triggerEvent(reqCont.GET_REQUISITIONLINE_EVENT, input, new Bundle(), null);
-        return (MPurchaseRequestLine) result.getSerializable(reqCont.ARG_PURCHASEREQUESTLINE);
+        input.putString(PBSRequisitionController.ARG_PURCHASEREQUESTLINE_UUID, _UUID);
+        Bundle result = reqCont.triggerEvent(PBSRequisitionController.GET_REQUISITIONLINE_EVENT, input, new Bundle(), null);
+        return (MPurchaseRequestLine) result.getSerializable(PBSRequisitionController.ARG_PURCHASEREQUESTLINE);
     }
 
     @Override
@@ -111,9 +111,9 @@ public class AttendanceLineDetailFragment extends AbstractRequisitionLineFragmen
             cv.put(MPurchaseRequestLine.M_PRODUCT_UUID_COL, prodNameItem.getPair().getKey());
             cv.put(MPurchaseRequestLine.DATEREQUIRED_COL, requiredDate.getText().toString());
             cv.put(MPurchaseRequestLine.QTYREQUESTED_COL, Integer.parseInt(qtyRequested.getText().toString()));
-            input.putString(reqCont.ARG_PURCHASEREQUESTLINE_UUID, prl.getM_PurchaseRequestLine_UUID());
-            input.putParcelable(reqCont.ARG_CONTENTVALUES, cv);
-            Bundle output = reqCont.triggerEvent(reqCont.UPDATE_PR_LINE_EVENT, input, new Bundle(), null);
+            input.putString(PBSRequisitionController.ARG_PURCHASEREQUESTLINE_UUID, prl.getM_PurchaseRequestLine_UUID());
+            input.putParcelable(PBSRequisitionController.ARG_CONTENTVALUES, cv);
+            Bundle output = reqCont.triggerEvent(PBSRequisitionController.UPDATE_PR_LINE_EVENT, input, new Bundle(), null);
             if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
 
                 Fragment fragment = new NewRequisitionFragment();

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.pbasolutions.android.PandoraMain;
@@ -23,7 +22,6 @@ import com.pbasolutions.android.listener.FragmentListOnItemClickListener;
 import com.pbasolutions.android.model.IModel;
 import com.pbasolutions.android.model.MNote;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,7 +45,9 @@ public class BroadcastRVA extends RecyclerView.Adapter<BroadcastRVA.BroadcastVH>
         NoteListitemBinding binding = NoteListitemBinding.inflate(inflater);
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.note_listitem, null);
-        BroadcastVH viewHolder = new BroadcastVH(binding, view, new BroadcastRVA.IViewHolderOnClicks(){
+
+        // create a new view
+        return new BroadcastVH(binding, view, new IViewHolderOnClicks(){
             @Override
             public void onCheckbox(CheckBox cb, int pos) {
                 MNote note = (MNote) cb.getTag();
@@ -81,9 +81,6 @@ public class BroadcastRVA extends RecyclerView.Adapter<BroadcastRVA.BroadcastVH>
                         (FragmentActivity)mContext, mContext.getString(R.string.title_broadcastdetails));
             }
         });
-
-        // create a new view
-        return viewHolder;
     }
 
     @Override
