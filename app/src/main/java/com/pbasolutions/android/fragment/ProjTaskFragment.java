@@ -218,7 +218,7 @@ public class ProjTaskFragment extends Fragment {
                 if (resultTitle != null && !result.isEmpty()) {
                     text = result.getString(resultTitle);
                 } else {
-                    text = "Project Task is up to date";
+                    text = result.getString(PandoraConstant.ERROR);
                 }
                 if (showMsg)
                     PandoraHelper.showMessage(PandoraMain.instance, text);

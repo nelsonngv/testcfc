@@ -184,31 +184,35 @@ public class AttendanceTask implements Callable<Bundle> {
 
 //        String json = "{\"ResourceAllocations\":[{\"Status\":\"Checked Out\",\"HR_LeaveType_ID\":0,\"CheckOut\":\"2016-07-10T20:00:00.000+0800\",\"C_BPartner_ID\":1003932,\"CheckIn\":\"2016-07-10T18:00:00.000+0800\",\"HR_ResourceAllocation_ID\":1006065},{\"Status\":\"Checked Out\",\"HR_LeaveType_ID\":0,\"CheckOut\":\"2016-07-10T20:00:00.000+0800\",\"C_BPartner_ID\":1003529,\"CheckIn\":\"2016-07-10T18:00:00.000+0800\",\"HR_ResourceAllocation_ID\":1006066}],\"Success\":\"TRUE\"}";
 
-        Pair pair = PandoraHelper.parseJsonWithArraytoPair(json, "Success", "ResourceAllocations", MAttendanceSearchItem[].class.getName());
-        String success = (String) pair.first;
-        if (success != null && success.equalsIgnoreCase(PandoraConstant.TRUE)) {
-            MAttendanceSearchItem attendancesSearchRes[] = (MAttendanceSearchItem[])pair.second;
+        if (json != null) {
+            Pair pair = PandoraHelper.parseJsonWithArraytoPair(json, "Success", "ResourceAllocations", MAttendanceSearchItem[].class.getName());
+            String success = (String) pair.first;
+            if (success != null && success.equalsIgnoreCase(PandoraConstant.TRUE)) {
+                MAttendanceSearchItem attendancesSearchRes[] = (MAttendanceSearchItem[]) pair.second;
 
-            //convert from array to list
-            ObservableArrayList<MAttendanceSearchItem> list = new ObservableArrayList<>();
-            if (attendancesSearchRes != null)
-            {
-                for (int x=0; x < attendancesSearchRes.length; x++) {
-                    MAttendanceSearchItem item = attendancesSearchRes[x];
-                    item.setC_BPartner_Name(getEmployeeName(item.getC_BPartner_ID()));
-                    item.setHR_LeaveType_Name(getHRLeaveTypeName(item.getHR_LeaveType_ID()));
-                    item.setCheckIn(PandoraHelper.parseToDisplaySDate(item.getCheckIn(), "yyyy-MM-dd HH:mm", null));
-                    item.setCheckOut(PandoraHelper.parseToDisplaySDate(item.getCheckOut(), "yyyy-MM-dd HH:mm", null));
-                    item.setDeploymentDate(PandoraHelper.parseToDisplaySDate(item.getDeploymentDate(), "yyyy-MM-dd", null));
-                    item.setHR_Shift_Name(getHRShiftName(item.getHR_Shift_ID()));
-                    item.setHR_DaysType(getHRDaysName(item.getHR_DaysType()));
-                    item.setComments(item.getComments());
-                    list.add(item);
+                //convert from array to list
+                ObservableArrayList<MAttendanceSearchItem> list = new ObservableArrayList<>();
+                if (attendancesSearchRes != null) {
+                    for (int x = 0; x < attendancesSearchRes.length; x++) {
+                        MAttendanceSearchItem item = attendancesSearchRes[x];
+                        item.setC_BPartner_Name(getEmployeeName(item.getC_BPartner_ID()));
+                        item.setHR_LeaveType_Name(getHRLeaveTypeName(item.getHR_LeaveType_ID()));
+                        item.setCheckIn(PandoraHelper.parseToDisplaySDate(item.getCheckIn(), "yyyy-MM-dd HH:mm", null));
+                        item.setCheckOut(PandoraHelper.parseToDisplaySDate(item.getCheckOut(), "yyyy-MM-dd HH:mm", null));
+                        item.setDeploymentDate(PandoraHelper.parseToDisplaySDate(item.getDeploymentDate(), "yyyy-MM-dd", null));
+                        item.setHR_Shift_Name(getHRShiftName(item.getHR_Shift_ID()));
+                        item.setHR_DaysType(getHRDaysName(item.getHR_DaysType()));
+                        item.setComments(item.getComments());
+                        list.add(item);
+                    }
                 }
-            }
 
-            output.putSerializable(PBSAttendanceController.ARG_ATTENDANCESEARCHRES, list);
-            output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+                output.putSerializable(PBSAttendanceController.ARG_ATTENDANCESEARCHRES, list);
+                output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+            } else {
+                output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+                output.putString(PandoraConstant.ERROR, "Fail to load attendances");
+            }
         } else {
             output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
             output.putString(PandoraConstant.ERROR, "Fail to load attendances");

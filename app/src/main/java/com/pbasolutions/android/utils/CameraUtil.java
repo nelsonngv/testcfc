@@ -1,6 +1,7 @@
 package com.pbasolutions.android.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
@@ -55,28 +57,36 @@ public class CameraUtil {
     public static final int CAPTURE_ATTACH_9 = 10;
     public static final int CAPTURE_ATTACH_10 = 11;
 
-    public static void  setPic(final ImageView mImageView, final String mCurrentPhotoPath) {
+    public static void  setPic(final ImageView mImageView, final String mCurrentPhotoPath, final Context activity) {
 		/* There isn't enough memory to open up more than a couple camera photos */
 		/* So pre-scale the target bitmap into which the file is decoded */
         mImageView.post(new Runnable() {
             @Override
             public void run() {
-                Bitmap bitmap = resizeImage(500, 500, mCurrentPhotoPath);
-                // compress
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-                File file = new File(mCurrentPhotoPath);
-                try (FileOutputStream outputStream = new FileOutputStream(file)) {
-                    baos.writeTo(outputStream);
+                try {
+                    Bitmap bitmap = resizeImage(500, 500, mCurrentPhotoPath);
+                    if (bitmap != null) {
+                        // compress
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                        File file = new File(mCurrentPhotoPath);
+                        try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                            baos.writeTo(outputStream);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        bitmap = resizeImage(mImageView.getMeasuredWidth(),
+                                mImageView.getMeasuredHeight(), mCurrentPhotoPath);
+
+		                /* Associate the Bitmap to the ImageView */
+                        mImageView.setImageBitmap(bitmap);
+                    } else if (activity != null) {
+                        Toast.makeText(activity, "Unable to load this photo", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                bitmap = resizeImage(mImageView.getMeasuredWidth(),
-                        mImageView.getMeasuredHeight(), mCurrentPhotoPath);
-
-		        /* Associate the Bitmap to the ImageView */
-                mImageView.setImageBitmap(bitmap);
             }
         });
     }
@@ -128,6 +138,7 @@ public class CameraUtil {
             return scaledBmp;
         }
     }
+
     public static void galleryAddPic(String mCurrentPhotoPath, Activity activity) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(mCurrentPhotoPath);
@@ -138,7 +149,7 @@ public class CameraUtil {
 
     public static  void handleBigCameraPhoto(ImageView imageView, String mCurrentPhotoPath, Activity activity) {
         if (mCurrentPhotoPath != null) {
-            setPic(imageView, mCurrentPhotoPath);
+            setPic(imageView, mCurrentPhotoPath, activity);
             addPathToPic(imageView, mCurrentPhotoPath);
         }
     }
@@ -220,7 +231,7 @@ public class CameraUtil {
      */
     public static void loadPicture(String path, ImageView imageView) {
         if (path != null) {
-            setPic(imageView, path);
+            setPic(imageView, path, null);
         }
     }
 
@@ -229,6 +240,7 @@ public class CameraUtil {
         try {
             if (data != null) {
                 Uri curImage = data.getData();
+
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
                 Cursor cursor = context.getContentResolver().query(curImage, filePathColumn, null, null, null);
                 cursor.moveToFirst();

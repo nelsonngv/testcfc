@@ -147,7 +147,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      *  Store current action codes
      */
 
-    private int    currentActionCode;
+    public int currentActionCode;
 
     /**
      *  Progress Indicator

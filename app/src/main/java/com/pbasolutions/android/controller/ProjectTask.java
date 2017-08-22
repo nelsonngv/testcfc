@@ -250,6 +250,9 @@ public class ProjectTask implements Callable<Bundle> {
         String longitude = input.getString(MSurvey.LONGITUDE_COL);
         String signature = input.getString(MSurvey.ATTACHMENT_SIGNATURE_COL);
 
+        if (signature != null && !signature.isEmpty())
+            signature = CameraUtil.imageToBase64(signature);
+
         PBSProjTaskJSON projTask = new PBSProjTaskJSON();
         projTask.setC_ProjectLocation_ID(projLocId);
         projTask.setC_ProjectTask_ID(taskID);
@@ -424,6 +427,7 @@ public class ProjectTask implements Callable<Bundle> {
                 String isDone = (projTask.getIsDone()) ? "Y":"N";
                 cv.put(MProjectTask.ISDONE_COL, isDone);
                 cv.put(MProjectTask.DUEDATE_COL, projTask.getDueDate());
+                cv.put(MProjectTask.COMMENTS_COL, projTask.getComments());
                 String selection = MProjectTask.C_PROJECTTASK_ID_COL;
                 String[] arg = {cv.getAsString(selection)};
                 String tableName = ModelConst.C_PROJECTTASK_TABLE;
