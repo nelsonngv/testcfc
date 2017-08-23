@@ -1151,30 +1151,30 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         });
 
 
-        MenuItem loadPictureItem  = popup.getMenu().add(R.string.title_gallery_button);
-
-        loadPictureItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                if (Build.VERSION.SDK_INT >= 14) {
-                    Log.e("-->", " >= 14");
-                    MediaScannerConnection.scanFile(getApplicationContext(), new String[]{Environment.getExternalStorageDirectory().toString()}, null, new MediaScannerConnection.OnScanCompletedListener() {
-                        public void onScanCompleted(String path, Uri uri) {
-                            Log.e("ExternalStorage", "Scanned " + path + ":");
-                            Log.e("ExternalStorage", "-> uri=" + uri);
-                        }
-                    });
-                } else {
-                    Log.e("-->", " < 14");
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-                }
-
-                Intent loadPictureIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                if (loadPictureIntent.resolveActivity(getPackageManager()) == null) return true;
-
-                startActivityForResult(loadPictureIntent, currentActionCode);
-                return true;
-            }
-        });
+//        MenuItem loadPictureItem  = popup.getMenu().add(R.string.title_gallery_button);
+//
+//        loadPictureItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            public boolean onMenuItemClick(MenuItem item) {
+//                if (Build.VERSION.SDK_INT >= 14) {
+//                    Log.e("-->", " >= 14");
+//                    MediaScannerConnection.scanFile(getApplicationContext(), new String[]{Environment.getExternalStorageDirectory().toString()}, null, new MediaScannerConnection.OnScanCompletedListener() {
+//                        public void onScanCompleted(String path, Uri uri) {
+//                            Log.e("ExternalStorage", "Scanned " + path + ":");
+//                            Log.e("ExternalStorage", "-> uri=" + uri);
+//                        }
+//                    });
+//                } else {
+//                    Log.e("-->", " < 14");
+//                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+//                }
+//
+//                Intent loadPictureIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                if (loadPictureIntent.resolveActivity(getPackageManager()) == null) return true;
+//
+//                startActivityForResult(loadPictureIntent, currentActionCode);
+//                return true;
+//            }
+//        });
 
         popup.show();
     }

@@ -148,7 +148,7 @@ public class SurveyTask extends Task {
     }
 
     private MSurvey populateProjectTask(Cursor cursor) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         MSurvey survey = new MSurvey();
         try {

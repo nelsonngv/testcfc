@@ -3,10 +3,8 @@ package com.pbasolutions.android.fragment;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -36,8 +33,6 @@ import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -145,35 +140,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
                         break;
                     }
                     case EVENT_PIC1: {
-//                        takePicture(CameraUtil.CAPTURE_ATTACH_1, object);
-                        ((PandoraMain) getActivity()).currentActionCode = CameraUtil.CAPTURE_ATTACH_1;
-
-                        PopupMenu popup = new PopupMenu(getActivity(), object);
-
-                        MenuItem cameraItem  = popup.getMenu().add(R.string.title_camera_button);
-                        cameraItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                            public boolean onMenuItemClick(MenuItem item) {
-                                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) == null) return true;
-
-                                File f;
-                                try {
-                                    f = CameraUtil.setUpPhotoFile(((PandoraMain) getActivity()).mAlbumStorageDirFactory);
-                                    ((PandoraMain) getActivity()).mCurrentPhotoPath = f.getAbsolutePath();
-                                    CameraUtil.galleryAddPic(((PandoraMain) getActivity()).mCurrentPhotoPath, getActivity());
-                                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                    ((PandoraMain) getActivity()).mCurrentPhotoPath = null;
-                                }
-
-                                getActivity().startActivityForResult(takePictureIntent, ((PandoraMain) getActivity()).currentActionCode);
-                                return true;
-                            }
-                        });
-
-                        popup.show();
-
+                        takePicture(CameraUtil.CAPTURE_ATTACH_1, object);
                         break;
                     }
                     default:
