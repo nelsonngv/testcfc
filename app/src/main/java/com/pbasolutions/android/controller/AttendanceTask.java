@@ -603,7 +603,7 @@ public class AttendanceTask implements Callable<Bundle> {
         ContentValues cv = input.getParcelable(PBSAttendanceController.ARG_CONTENTVALUES);
 
         String ad_org_uuid = appContext.getAd_org_uuid();
-        if (ad_org_uuid.isEmpty()) {
+        if (ad_org_uuid == null || ad_org_uuid.equalsIgnoreCase("null") || ad_org_uuid.isEmpty()) {
             ad_org_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_ORG_TABLE,
                     ModelConst.AD_ORG_UUID_COL, appContext.getAd_org_id(),
                     ModelConst.AD_ORG_TABLE + ModelConst._ID, appContext.getContentResolver());
@@ -611,7 +611,7 @@ public class AttendanceTask implements Callable<Bundle> {
         }
 
         String ad_client_uuid = appContext.getAd_client_uuid();
-        if (ad_client_uuid.isEmpty()) {
+        if (ad_client_uuid == null || ad_client_uuid.equalsIgnoreCase("null") || ad_client_uuid.isEmpty()) {
             ad_client_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_CLIENT_TABLE,
                     ModelConst.AD_CLIENT_UUID_COL, appContext.getAd_client_id(),
                     ModelConst.AD_CLIENT_TABLE + ModelConst._ID, appContext.getContentResolver());
@@ -619,7 +619,7 @@ public class AttendanceTask implements Callable<Bundle> {
         }
 
         String ad_user_uuid = appContext.getAd_user_uuid();
-        if (ad_user_uuid.isEmpty()) {
+        if (ad_user_uuid == null || ad_user_uuid.equalsIgnoreCase("null") || ad_user_uuid.isEmpty()) {
             ad_user_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
                     ModelConst.AD_USER_UUID_COL, appContext.getAd_user_id(),
                     ModelConst.AD_USER_TABLE + ModelConst._ID, appContext.getContentResolver());

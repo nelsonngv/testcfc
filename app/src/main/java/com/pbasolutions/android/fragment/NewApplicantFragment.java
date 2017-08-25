@@ -117,7 +117,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         String ad_org_uuid = appContext.getAd_org_uuid();
         //as we dont know when does the initial sync completed. we try check if the uuid isEmpty.
         // if it is .. we have to search the uuid in database
-        if (ad_org_uuid.isEmpty()) {
+        if (ad_org_uuid == null || ad_org_uuid.equalsIgnoreCase("null") || ad_org_uuid.isEmpty()) {
             ad_org_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_ORG_TABLE,
                     ModelConst.AD_ORG_UUID_COL, context.getGlobalVariable().getAd_org_id(),
                     ModelConst.AD_ORG_TABLE + ModelConst._ID, getActivity().getContentResolver());
@@ -129,7 +129,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         String ad_client_uuid = appContext.getAd_client_uuid();
         //as we dont know when does the initial sync completed. we try check if the uuid isEmpty.
         // if it is .. we have to search the uuid in database
-        if (ad_client_uuid.isEmpty()) {
+        if (ad_client_uuid == null || ad_client_uuid.equalsIgnoreCase("null") || ad_client_uuid.isEmpty()) {
             ad_client_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_CLIENT_TABLE,
                     ModelConst.AD_CLIENT_UUID_COL, context.getGlobalVariable().getAd_client_id(),
                     ModelConst.AD_CLIENT_TABLE + ModelConst._ID, getActivity().getContentResolver());
@@ -141,7 +141,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         String ad_user_uuid = appContext.getAd_user_uuid();
         //as we dont know when does the initial sync completed. we try check if the uuid isEmpty.
         // if it is .. we have to search the uuid in database
-        if (ad_user_uuid.isEmpty()) {
+        if (ad_user_uuid == null || ad_user_uuid.equalsIgnoreCase("null") || ad_user_uuid.isEmpty()) {
             ad_user_uuid = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
                     ModelConst.AD_USER_UUID_COL, context.getGlobalVariable().getAd_user_id(),
                     ModelConst.AD_USER_TABLE + ModelConst._ID, getActivity().getContentResolver());
@@ -205,6 +205,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         cv.put(MApplicant.AGE_COL, age.getText().toString());
         cv.put(MApplicant.QUALIFICATION_HIGHEST_COL, qualHigh.getText().toString());
         cv.put(MApplicant.QUALIFICATION_OTHER_COL, qualOther.getText().toString());
+        cv.put(MApplicant.APPLICATIONDATE_COL, date.getText().toString());
 
         cv.put(MApplicant.ATTACHMENT_APPLICANTPICTURE_COL, (String) profileImage.getTag(R.string.tag_imageview_path));
         cv.put(MApplicant.ATTACHMENT_CERTPICTURE_1, (String) cert1Pic.getTag(R.string.tag_imageview_path));
