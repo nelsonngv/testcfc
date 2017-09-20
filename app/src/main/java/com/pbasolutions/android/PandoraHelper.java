@@ -819,7 +819,7 @@ public class PandoraHelper  {
             if (string.contains("\\n"))
             return string.replace("\\n", System.getProperty("line.separator"));
         }
-        return null;
+        return string;
     }
 
     /**
