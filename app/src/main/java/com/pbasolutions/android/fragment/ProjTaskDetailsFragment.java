@@ -125,7 +125,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             taskName.setText(projTask.getName());
             taskProjLoc.setText(projTask.getProjLocName());
             taskStatus.setText(projTask.getStatus());
-            taskDesc.setText(projTask.getDescription().replace("\\n", System.getProperty("line.separator")));
+            taskDesc.setText(PandoraHelper.parseNewLine(projTask.getDescription()));
             taskDueDate.setText(projTask.getDueDate());
 
             if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1()).exists()) projTask.setATTACHMENT_BEFORETASKPICTURE_1(null);
@@ -140,7 +140,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 //            CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_3(), taskPicture3);
 //            CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_4(), taskPicture4);
 //            CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_5(), taskPicture5);
-            taskComments.setText(projTask.getComments().replace("\\n", System.getProperty("line.separator")));
+            taskComments.setText(PandoraHelper.parseNewLine(projTask.getComments()));
 
             picPath[0] = projTask.getATTACHMENT_TASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_1()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_1();
             picPath[1] = projTask.getATTACHMENT_TASKPICTURE_2() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_2()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_2();

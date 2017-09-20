@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.model.MCheckIn;
 import com.pbasolutions.android.model.CheckInVH;
 import com.pbasolutions.android.R;
@@ -57,7 +58,7 @@ public class CheckInRVA extends RecyclerView.Adapter<CheckInVH> {
         rowViewHolder.getTextLocationView().setText(String.valueOf(checkIn.getProjectLocation()));
         rowViewHolder.getImageStatusView().setBackgroundResource(checkIn.getStatusIcon());
         rowViewHolder.getTextDateView().setText(String.valueOf(checkIn.getDate()));
-        rowViewHolder.getTextCommentView().setText(String.valueOf(checkIn.getComment()).replace("\\n", System.getProperty("line.separator")));
+        rowViewHolder.getTextCommentView().setText(PandoraHelper.parseNewLine(String.valueOf(checkIn.getComment())));
         rowViewHolder.getTextCheckinView().setText(String.valueOf(checkIn.getUuid()));
     }
 }

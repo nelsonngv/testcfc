@@ -136,7 +136,7 @@ public class NewSurveyFragment extends Fragment {
                         rating.setEnabled(false);
                         rating.setSelection(Integer.parseInt(question.getAmt()) + 1);
                         etRemarks.setEnabled(false);
-                        etRemarks.setText(question.getRemarks().replace("\\n", System.getProperty("line.separator")));
+                        etRemarks.setText(PandoraHelper.parseNewLine(question.getRemarks()));
                     }
                     else etRemarks.setHint("Remarks");
 
