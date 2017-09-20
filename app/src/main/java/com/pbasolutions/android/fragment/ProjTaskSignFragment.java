@@ -147,43 +147,43 @@ public class ProjTaskSignFragment extends Fragment {
             input.putString(MProjectTask.LONGITUDE_COL, longitude);
             input.putString(MProjectTask.ATTACHMENT_SIGNATURE_COL, signImgPath);
 
-            Fragment fragment = new ProjTaskSign2Fragment();
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragment.setArguments(input);
-            fragment.setRetainInstance(true);
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_body, fragment);
-            fragmentTransaction.addToBackStack(fragment.getClass().getName());
-            fragmentTransaction.commit();
+//            Fragment fragment = new ProjTaskSign2Fragment();
+//            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//            fragment.setArguments(input);
+//            fragment.setRetainInstance(true);
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.container_body, fragment);
+//            fragmentTransaction.addToBackStack(fragment.getClass().getName());
+//            fragmentTransaction.commit();
 
-//            new AsyncTask<Bundle, Void, Bundle>() {
-//                @Override
-//                protected void onPreExecute() {
-//                    super.onPreExecute();
-//                    ((PandoraMain)getActivity()).showProgressDialog("Loading...");
-//                }
-//
-//                @Override
-//                protected Bundle doInBackground(Bundle... params) {
-//                    Bundle output = new Bundle();
-//                    output = taskCont.triggerEvent(PBSTaskController.COMPLETE_PROJTASK_EVENT, params[0], output, null);
-//                    return output;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(Bundle result) {
-//                    super.onPostExecute(result);
-//                    if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-//                        PandoraMain.instance.getSupportFragmentManager().popBackStack();
-//                        PandoraMain.instance.getSupportFragmentManager().popBackStack();
-//                    } else {
-//                        PandoraHelper.showMessage(getActivity(),
-//                                result.getString(result.getString(PandoraConstant.TITLE)));
-//                        PandoraMain.instance.getSupportFragmentManager().popBackStack();
-//                    }
-//                    ((PandoraMain)getActivity()).dismissProgressDialog();
-//                }
-//            }.execute(input);
+            new AsyncTask<Bundle, Void, Bundle>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+                }
+
+                @Override
+                protected Bundle doInBackground(Bundle... params) {
+                    Bundle output = new Bundle();
+                    output = taskCont.triggerEvent(PBSTaskController.COMPLETE_PROJTASK_EVENT, params[0], output, null);
+                    return output;
+                }
+
+                @Override
+                protected void onPostExecute(Bundle result) {
+                    super.onPostExecute(result);
+                    if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                        PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                        PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                    } else {
+                        PandoraHelper.showMessage(getActivity(),
+                                result.getString(result.getString(PandoraConstant.TITLE)));
+                        PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                    }
+                    ((PandoraMain)getActivity()).dismissProgressDialog();
+                }
+            }.execute(input);
         }
     }
 }

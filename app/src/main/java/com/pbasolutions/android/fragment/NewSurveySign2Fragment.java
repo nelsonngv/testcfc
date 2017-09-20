@@ -1,11 +1,14 @@
 package com.pbasolutions.android.fragment;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +34,7 @@ import java.util.ArrayList;
 /**
  * Created by pbadell on 10/5/15.
  */
-public class ProjTaskSign2Fragment extends Fragment {
+public class NewSurveySign2Fragment extends Fragment {
     /**
      * Class tag name.
      */
@@ -49,7 +52,7 @@ public class ProjTaskSign2Fragment extends Fragment {
     /**
      * Constructor method.
      */
-    public ProjTaskSign2Fragment() {
+    public NewSurveySign2Fragment() {
     }
 
     @Override
@@ -83,7 +86,7 @@ public class ProjTaskSign2Fragment extends Fragment {
         mClearButton = (Button) rootView.findViewById(R.id.clear_button);
         mSaveButton = (Button) rootView.findViewById(R.id.save_button);
         TextView mDesc = (TextView) rootView.findViewById(R.id.signature_pad_description);
-        mDesc.setText(getString(R.string.proj_task_agreement2));
+        mDesc.setText(getString(R.string.survey_agreement2));
     }
 
     void setUIListener() {
@@ -119,7 +122,7 @@ public class ProjTaskSign2Fragment extends Fragment {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                completeProj();
+                completeSurvey();
             }
         });
     }
@@ -132,38 +135,44 @@ public class ProjTaskSign2Fragment extends Fragment {
         PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
-    protected void completeProj() {
+    protected void completeSurvey() {
         Bitmap signatureBitmap = mSignaturePad.getSignatureBitmap();
         String signImgPath = CameraUtil.storeSignature(signatureBitmap);
 
-        input.putString(MProjectTask.ATTACHMENT_STAFFSIGNATURE_COL, signImgPath);
+        ContentValues surveyCV = input.getParcelable(PBSSurveyController.SURVEY_VALUES);
+        surveyCV.put(MProjectTask.ATTACHMENT_STAFFSIGNATURE_COL, signImgPath);
+        input.putParcelable(PBSSurveyController.SURVEY_VALUES, surveyCV);
 
         new AsyncTask<Bundle, Void, Bundle>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+                ((PandoraMain) getActivity()).showProgressDialog("Loading...");
             }
 
             @Override
             protected Bundle doInBackground(Bundle... params) {
-                Bundle output = new Bundle();
-                output = taskCont.triggerEvent(PBSTaskController.COMPLETE_PROJTASK_EVENT, params[0], output, null);
-                return output;
+                return surveyCont.triggerEvent(surveyCont.INSERT_SURVEY_EVENT, params[0], new Bundle(), null);
             }
 
             @Override
-            protected void onPostExecute(Bundle result) {
-                super.onPostExecute(result);
-                if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
-                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
+            protected void onPostExecute(Bundle output) {
+                super.onPostExecute(output);
+                ((PandoraMain) getActivity()).dismissProgressDialog();
+                if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
+                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    PandoraMain.instance.getSupportActionBar().show();
+                    PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
+                    Fragment surveyFrag = new SurveyFragment();
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.container_body, surveyFrag);
+//                        fragmentTransaction.addToBackStack(surveyFrag.getClass().getName());
+                    fragmentTransaction.commit();
                 } else {
-                    PandoraHelper.showMessage(getActivity(),
-                            result.getString(result.getString(PandoraConstant.TITLE)));
-                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                    PandoraHelper.showMessage(getActivity(), output.getString(output.getString(PandoraConstant.TITLE)));
                 }
-                ((PandoraMain)getActivity()).dismissProgressDialog();
             }
         }.execute(input);
     }

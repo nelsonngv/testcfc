@@ -188,10 +188,8 @@ public class ProjTaskFragment extends Fragment {
 //        if (isrecyclerviewAdded) return;
         isrecyclerviewAdded = true;
 
-        ObservableArrayList<IModel> modelList = (ObservableArrayList) taskList;
-        rv.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(),
-                new FragmentListOnItemClickListener(modelList, new ProjTaskDetailsFragment(),
-                        getActivity(), taskDetailTitle)));
+        PandoraHelper.addRecyclerViewListener(recyclerView, (ObservableArrayList) taskList, getActivity(),
+                new ProjTaskDetailsFragment(), taskDetailTitle);
     }
 
     protected void refreshProjtask(final boolean showMsg) {

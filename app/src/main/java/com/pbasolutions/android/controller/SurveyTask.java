@@ -212,7 +212,6 @@ public class SurveyTask extends Task {
                     try {
                         date = df.parse(rowValue);
                     } catch (ParseException e) {
-                        e.printStackTrace();
                         date = df2.parse(rowValue);
                     }
                     survey.setDateDelivery(sdf.format(date));

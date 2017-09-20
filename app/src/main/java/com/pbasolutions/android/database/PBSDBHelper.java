@@ -28,7 +28,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 20;
     /**
      *
      */
@@ -1202,6 +1202,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "LONGITUDE NUMBER, " +
                     "LATITUDE NUMBER, " +
                     "ATTACHMENT_SIGNATURE VARCHAR2(100), " +
+                    "ATTACHMENT_STAFFSIGNATURE VARCHAR2(100), " +
                     "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')), " +
                     "CREATEDBY NUMBER(10, 0) NOT NULL, " +
                     "UPDATED DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')), " +
@@ -2774,6 +2775,10 @@ public class PBSDBHelper extends SQLiteOpenHelper {
             if (oldVersion < 19) {
                 db.execSQL("ALTER TABLE C_PROJECTTASK ADD ISEXPIRINGNOTIFIED CHAR(1) DEFAULT 'N' NOT NULL");
                 db.execSQL("ALTER TABLE C_PROJECTTASK ADD ISEXPIREDNOTIFIED CHAR(1) DEFAULT 'N' NOT NULL");
+            }
+
+            if (oldVersion < 20) {
+                db.execSQL("ALTER TABLE C_SURVEY ADD ATTACHMENT_STAFFSIGNATURE VARCHAR2(100)");
             }
         } catch (SQLException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE

@@ -231,38 +231,47 @@ public class NewSurveySignFragment extends Fragment {
             input.putParcelable(PBSSurveyController.SURVEY_VALUES, surveyCV);
             input.putParcelableArray(PBSSurveyController.SURVEY_ANSWERS, answerCV);
 
-            new AsyncTask<Bundle, Void, Bundle>() {
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    ((PandoraMain) getActivity()).showProgressDialog("Loading...");
-                }
+            Fragment fragment = new NewSurveySign2Fragment();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragment.setArguments(input);
+            fragment.setRetainInstance(true);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_body, fragment);
+            fragmentTransaction.addToBackStack(fragment.getClass().getName());
+            fragmentTransaction.commit();
 
-                @Override
-                protected Bundle doInBackground(Bundle... params) {
-                    return surveyCont.triggerEvent(surveyCont.INSERT_SURVEY_EVENT, params[0], new Bundle(), null);
-                }
-
-                @Override
-                protected void onPostExecute(Bundle output) {
-                    super.onPostExecute(output);
-                    ((PandoraMain) getActivity()).dismissProgressDialog();
-                    if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
-                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                        PandoraMain.instance.getSupportActionBar().show();
-                        PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-
-                        Fragment surveyFrag = new SurveyFragment();
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.container_body, surveyFrag);
-//                        fragmentTransaction.addToBackStack(surveyFrag.getClass().getName());
-                        fragmentTransaction.commit();
-                    } else {
-                        PandoraHelper.showMessage(getActivity(), output.getString(output.getString(PandoraConstant.TITLE)));
-                    }
-                }
-            }.execute(input);
+//            new AsyncTask<Bundle, Void, Bundle>() {
+//                @Override
+//                protected void onPreExecute() {
+//                    super.onPreExecute();
+//                    ((PandoraMain) getActivity()).showProgressDialog("Loading...");
+//                }
+//
+//                @Override
+//                protected Bundle doInBackground(Bundle... params) {
+//                    return surveyCont.triggerEvent(surveyCont.INSERT_SURVEY_EVENT, params[0], new Bundle(), null);
+//                }
+//
+//                @Override
+//                protected void onPostExecute(Bundle output) {
+//                    super.onPostExecute(output);
+//                    ((PandoraMain) getActivity()).dismissProgressDialog();
+//                    if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
+//                        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//                        PandoraMain.instance.getSupportActionBar().show();
+//                        PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+//
+//                        Fragment surveyFrag = new SurveyFragment();
+//                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                        fragmentTransaction.replace(R.id.container_body, surveyFrag);
+////                        fragmentTransaction.addToBackStack(surveyFrag.getClass().getName());
+//                        fragmentTransaction.commit();
+//                    } else {
+//                        PandoraHelper.showMessage(getActivity(), output.getString(output.getString(PandoraConstant.TITLE)));
+//                    }
+//                }
+//            }.execute(input);
         }
     }
 }
