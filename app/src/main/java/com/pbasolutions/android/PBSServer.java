@@ -4,8 +4,10 @@ import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -62,17 +64,24 @@ public class PBSServer {
                     headers.put("Content-Type", "application/x-www-form-urlencoded");
                     return headers;
                 }
+
+                @Override
+                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                    if (response.data.length > 10000) setShouldCache(false);
+                    return super.parseNetworkResponse(response);
+                }
             };
             int timeout = 30;
 //            if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced())
 //                timeout = 180;
             stringReq.setRetryPolicy(new DefaultRetryPolicy(timeout * 1000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            stringReq.setShouldCache(false);
 
-            if (queue == null) {
+            if (PandoraMain.queue == null) {
                 // Adding string request to request queue
-                queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
+                PandoraMain.queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
             }
-            queue.add(stringReq);
+            PandoraMain.queue.add(stringReq);
             try {
                 String response = future.get(timeout, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after n seconds
                 return (PBSJson) new Gson().fromJson(response, cls);
@@ -167,14 +176,21 @@ public class PBSServer {
                     params.put("json", json);
                     return params;
                 }
+
+                @Override
+                protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                    if (response.data.length > 10000) setShouldCache(false);
+                    return super.parseNetworkResponse(response);
+                }
             };
             stringReq.setRetryPolicy(new DefaultRetryPolicy(30000, 3, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            stringReq.setShouldCache(false);
 
-            if (queue == null) {
+            if (PandoraMain.queue == null) {
                 // Adding string request to request queue
-                queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
+                PandoraMain.queue = Volley.newRequestQueue(PandoraMain.instance.getBaseContext());
             }
-            queue.add(stringReq);
+            PandoraMain.queue.add(stringReq);
             try {
                 String response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after n seconds
                 return response;

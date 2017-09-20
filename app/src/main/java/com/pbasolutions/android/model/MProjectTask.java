@@ -49,6 +49,8 @@ public class MProjectTask extends PBSJson {
     private int AssignedTo;
     private int C_ProjectLocation_ID;
     private int StatusColor;
+    private String IsExpiringNotified;
+    private String IsExpiredNotified;
 
     public static final String C_PROJECTTASK_UUID_COL = "C_ProjectTask_UUID";
     public static final String C_PROJECTTASK_ID_COL = "C_ProjectTask_ID";
@@ -63,6 +65,8 @@ public class MProjectTask extends PBSJson {
     public static final String CREATED_COL = "Created";
     public static final String CREATEDBY_COL = "CreatedBy";
     public static final String DUEDATE_COL = "DueDate";
+    public static final String ISEXPIRINGNOTIFIED_COL = "IsExpiringNotified";
+    public static final String ISEXPIREDNOTIFIED_COL = "IsExpiredNotified";
     public static final String TABLENAME = "C_ProjectTask";
 
 
@@ -94,6 +98,10 @@ public class MProjectTask extends PBSJson {
     public static final String ATTACHMENT_TASKPICTURE_25_COL = "ATTACHMENT_TASKPICTURE_25";
     public static final String ATTACHMENT_TASKPICTURE_COL = "ATTACHMENT_TASKPICTURE_";
     public static final String ATTACHMENT_PIC = "Attachment_Pic";
+    public static final String ATTACHMENT_SIGNATURE_COL = "Attachment_Signature";
+    public static final String ATTACHMENT_STAFFSIGNATURE_COL = "Attachment_StaffSignature";
+    public static final String LONGITUDE_COL = "Longitude";
+    public static final String LATITUDE_COL = "Latitude";
 
 
     public String getProjLocUUID() {
@@ -435,5 +443,21 @@ public class MProjectTask extends PBSJson {
 
     public void setDueDate(String dueDate) {
         this.DueDate = dueDate;
+    }
+
+    public String getIsexpiringnotified() {
+        return IsExpiringNotified;
+    }
+
+    public void setIsexpiringnotified(String isExpiringNotified) {
+        this.IsExpiringNotified = isExpiringNotified;
+    }
+
+    public String getIsexpirednotified() {
+        return IsExpiredNotified;
+    }
+
+    public void setIsexpirednotified(String isExpiredNotified) {
+        this.IsExpiredNotified = isExpiredNotified;
     }
 }

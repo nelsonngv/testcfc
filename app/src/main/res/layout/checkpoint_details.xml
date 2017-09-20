@@ -84,7 +84,7 @@
                 <EditText
                     style="@style/TableValue"
                     android:focusable="false"
-                    android:inputType="textMultiLine"
+                    android:inputType="textCapSentences|textMultiLine"
                     android:ems="10"
                     android:id="@+id/editText2"
                     android:text="@{checkpointdetails.comment}"

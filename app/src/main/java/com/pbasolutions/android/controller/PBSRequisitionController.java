@@ -150,6 +150,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -164,6 +166,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -178,6 +182,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -208,6 +214,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -222,6 +230,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -236,6 +246,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -251,6 +263,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -266,6 +280,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -280,6 +296,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -294,6 +312,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -308,6 +328,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -322,6 +344,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -336,6 +360,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }
@@ -356,6 +382,8 @@ public class PBSRequisitionController extends ContextWrapper implements PBSICont
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
         }
         return result;
     }

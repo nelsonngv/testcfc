@@ -392,8 +392,9 @@ public class ProjectTask implements Callable<Bundle> {
                 return output;
             }
 
-            ArrayList<ContentProviderOperation> ops =
-                    new ArrayList<>();
+            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+            ArrayList<ContentProviderOperation> ops2 = new ArrayList<>();
+            ContentValues cv2 = new ContentValues();
 
 //            ops.add(ContentProviderOperation
 //                    .newDelete(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
@@ -460,10 +461,46 @@ public class ProjectTask implements Callable<Bundle> {
                             Date dueDate = cal.getTime();
                             cal.add(Calendar.HOUR, -2);
                             Date expiringDueDate = cal.getTime();
+                            cv2.clear();
+                            ops2.clear();
                             if (new Date().after(dueDate)) {
-                                PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_proj_task_expired), ProjTaskDetailsFragment.class.getSimpleName());
+                                String isExpiredNotified = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE,
+                                        MProjectTask.C_PROJECTTASK_ID_COL, projTask.getC_ProjectTask_ID(),
+                                        MProjectTask.ISEXPIREDNOTIFIED_COL, cr);
+                                if (isExpiredNotified.equalsIgnoreCase("N")) {
+                                    PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_proj_task_expired), ProjTaskDetailsFragment.class.getSimpleName());
+                                    cv2.put(MProjectTask.ISEXPIREDNOTIFIED_COL, "Y");
+                                    ops2.add(ContentProviderOperation
+                                            .newUpdate(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
+                                            .withValues(cv2)
+                                            .build());
+                                    try {
+                                        cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops2);
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    } catch (OperationApplicationException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             } else if (new Date().after(expiringDueDate)) {
-                                PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_proj_task_expiring), ProjTaskDetailsFragment.class.getSimpleName());
+                                String isExpiringNotified = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE,
+                                        MProjectTask.C_PROJECTTASK_ID_COL, projTask.getC_ProjectTask_ID(),
+                                        MProjectTask.ISEXPIRINGNOTIFIED_COL, cr);
+                                if (isExpiringNotified.equalsIgnoreCase("N")) {
+                                    PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_proj_task_expiring), ProjTaskDetailsFragment.class.getSimpleName());
+                                    cv2.put(MProjectTask.ISEXPIRINGNOTIFIED_COL, "Y");
+                                    ops2.add(ContentProviderOperation
+                                            .newUpdate(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
+                                            .withValues(cv2)
+                                            .build());
+                                    try {
+                                        cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops2);
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    } catch (OperationApplicationException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
                         } catch (ParseException e) {
                             e.printStackTrace();

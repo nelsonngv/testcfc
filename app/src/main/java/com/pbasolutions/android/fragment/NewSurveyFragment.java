@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,15 +126,17 @@ public class NewSurveyFragment extends Fragment {
                         }
                     });
                     etRemarks.setTag(question.getC_SurveyTemplateQuestion_UUID());
-                    etRemarks.setSingleLine(false);
+                    etRemarks.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                    etRemarks.setMinLines(1);
                     etRemarks.setMaxLines(5);
+                    etRemarks.setFilters(new InputFilter[] {new InputFilter.LengthFilter(2000)});
                     etRemarks.setHorizontalScrollBarEnabled(true);
                     etRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     if (question.getAmt() != null && !question.getAmt().equals("")) {
                         rating.setEnabled(false);
                         rating.setSelection(Integer.parseInt(question.getAmt()) + 1);
                         etRemarks.setEnabled(false);
-                        etRemarks.setText(question.getRemarks());
+                        etRemarks.setText(question.getRemarks().replace("\\n", System.getProperty("line.separator")));
                     }
                     else etRemarks.setHint("Remarks");
 

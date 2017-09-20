@@ -420,7 +420,7 @@ public class ServerTask extends Task {
                             tableCursor.getColumnName(x), tableCursor.getString(x),
                             columnID, contentResolver);
                     PBSColumnsJSON column = new PBSColumnsJSON(columnID,
-                            Integer.parseInt(_ID));
+                            Integer.parseInt(_ID != null && !_ID.equalsIgnoreCase("null") ? _ID : "0"));
                     columns.add(column);
                 } else if (tableCursor.getColumnName(x).equalsIgnoreCase("CreatedBy") ||
                         tableCursor.getColumnName(x).equalsIgnoreCase("UpdatedBy")) {

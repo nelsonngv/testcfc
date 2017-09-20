@@ -37,6 +37,8 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 //import com.google.firebase.iid.FirebaseInstanceId;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.controller.PBSAttendanceController;
@@ -215,6 +217,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     private Runnable checkLoginRunnable, checkProjTaskRunnable;
     private int checkLoginDelay = 600000; //10 mins
     private int checkProjTaskDelay = 1800000; //30 mins
+    public static RequestQueue queue;
 
     // to check sync result
     public static final String GOTO_RECRUIT = "GotoRecruit";
@@ -275,6 +278,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * Initial.
      */
     private void init() {
+        queue = Volley.newRequestQueue(this);
         authenticatorController = new PBSAuthenticatorController(this);
         setGlobalVariable((PandoraContext) getApplicationContext());
         if (getGlobalVariable() != null) {

@@ -74,7 +74,7 @@ public class MovementListFragment extends Fragment {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+                mSwipeRefreshLayout.setRefreshing(true);
             }
 
             @Override
@@ -82,7 +82,7 @@ public class MovementListFragment extends Fragment {
                 inflater = (LayoutInflater) params[0];
                 recyclerView = (RecyclerView) params[1];
 
-                if (PBSServerConst.cookieStore == null){
+                if (PBSServerConst.cookieStore == null) {
                     movements = null;
                 } else {
                     movements = getMovements();
@@ -100,7 +100,7 @@ public class MovementListFragment extends Fragment {
                 PandoraHelper.addRecyclerViewListener(recyclerView, movements, getActivity(),
                         new AssetMovementDetails(), movementDetailTitle);
 
-                ((PandoraMain)getActivity()).dismissProgressDialog();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }.execute(inflater, recyclerView);
 
@@ -122,7 +122,7 @@ public class MovementListFragment extends Fragment {
                         inflater = (LayoutInflater) params[0];
                         recyclerView = (RecyclerView) params[1];
 
-                        if (PBSServerConst.cookieStore == null){
+                        if (PBSServerConst.cookieStore == null) {
                             movements = null;
                         } else {
                             movements = getMovements();

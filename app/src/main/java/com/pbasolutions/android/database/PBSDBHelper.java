@@ -28,7 +28,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
     /**
      *
      */
@@ -791,6 +791,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "ATTACHMENT_SIGNATURE VARCHAR2(100) , " +
                     "LATITUDE NUMBER , " +
                     "LONGITUDE NUMBER , " +
+                    "ISEXPIRINGNOTIFIED CHAR(1) DEFAULT 'N' NOT NULL, " +
+                    "ISEXPIREDNOTIFIED CHAR(1) DEFAULT 'N' NOT NULL, " +
                     //--
 //                    "CONSTRAINT PROJTASKID_UNIQCONS UNIQUE (C_PROJECTTASK_ID)," +
                     "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
@@ -1307,7 +1309,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
 //            insertSQL = "insert into HR_PROJLOCATION_SHIFT(" +
 //            "HR_PROJLOCATION_SHIFT_ID,AD_ORG_UUID,AD_CLIENT_UUID,CREATED,CREATEDBY,UPDATED,UPDATEDBY,ISACTIVE,ISUPDATED,ISSYNCED,ISDELETED,HR_PROJLOCATION_SHIFT_UUID,HR_SHIFT_UUID,C_PROJECTLOCATION_UUID) " +
 //            "values ('1000021','502a1593-01b9-4d28-8739-57316b11f3c2','4884dc2a-1491-4dab-a394-0c7b7b20322e','2016-01-16T12:04:32.000+0800','e191a5bc-358d-4ac6-8e2d-6fc066656605','2016-01-16T12:04:32.000+0800','e191a5bc-358d-4ac6-8e2d-6fc066656605','Y','Y','Y','N','57602605-5d18-4252-bc41-6f3878d24004','5c93ea3d-7d08-4f98-a4b4-f44ad04aa44c','b044209d-ae8f-44dc-aa0e-1176d88631d4')";
-            db.execSQL(insertSQL);
+//            db.execSQL(insertSQL);
         } catch (SQLException e) {
 //                        PandoraHelper.showErrorMessage(context, "Error in initializing database");
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
@@ -2767,6 +2769,11 @@ public class PBSDBHelper extends SQLiteOpenHelper {
 
                 db.execSQL("PRAGMA foreign_keys = true;");
                 db.execSQL("PRAGMA writable_schema = false;");
+            }
+
+            if (oldVersion < 19) {
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ISEXPIRINGNOTIFIED CHAR(1) DEFAULT 'N' NOT NULL");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD ISEXPIREDNOTIFIED CHAR(1) DEFAULT 'N' NOT NULL");
             }
         } catch (SQLException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE

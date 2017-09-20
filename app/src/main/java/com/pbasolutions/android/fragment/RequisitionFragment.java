@@ -88,13 +88,19 @@ public class RequisitionFragment extends Fragment{
         setIsApprovedSpinner(rootView);
         setOnItemSelectedListener();
 
+        requisitionList = getRequisitionList();
+        RequisitionRVA viewAdapter = new RequisitionRVA(getActivity(), requisitionList, inflater);
+        recyclerView.setAdapter(viewAdapter);
+        PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
+                new RequisitionDetailFragment(), requisitionDetailTitle);
+
         new AsyncTask<Object, Void, Void>() {
             protected LayoutInflater inflater;
             protected RecyclerView recyclerView;
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+                mSwipeRefreshLayout.setRefreshing(true);
             }
 
             @Override
@@ -120,7 +126,7 @@ public class RequisitionFragment extends Fragment{
                 PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
                         new RequisitionDetailFragment(), requisitionDetailTitle);
 
-                ((PandoraMain)getActivity()).dismissProgressDialog();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }.execute(inflater, recyclerView);
 

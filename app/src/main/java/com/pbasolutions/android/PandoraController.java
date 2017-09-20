@@ -64,8 +64,11 @@ public class PandoraController extends ContextWrapper implements PBSIController 
         es.execute(taskResult);
         try {
             output = taskResult.get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return output;
     }

@@ -271,7 +271,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         } catch (Exception ignored) {
         }
 
-        if (nSeqNo < 0) {
+        if (nSeqNo < 0 || nSeqNo > 2) {
             PandoraHelper.showWarningMessage(getActivity(), "Please fill up valid Priority.");
             return;
         }

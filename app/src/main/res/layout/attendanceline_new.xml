@@ -151,7 +151,10 @@
                         <EditText
                             style="@style/TableValueDate"
                             android:id="@+id/atComment"
-                            android:inputType="textCapSentences"
+                            android:inputType="textCapSentences|textMultiLine"
+                            android:minLines="1"
+                            android:maxLines="5"
+                            android:maxLength="2000"
                             android:text="@{atLine.Comments}"
                             />
                     </LinearLayout>

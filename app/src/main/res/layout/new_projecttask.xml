@@ -55,7 +55,10 @@
 
             <EditText
                 android:id="@+id/newTaskDescription"
-                android:inputType="textCapSentences"
+                android:inputType="textCapSentences|textMultiLine"
+                android:minLines="1"
+                android:maxLines="5"
+                android:maxLength="2000"
                 style="@style/TableValue" />
         </LinearLayout>
         <LinearLayout style="@style/PTableVirtRow">
@@ -63,6 +66,13 @@
                 android:id="@+id/textViewTaskSeqNo"
                 style="@style/TableInfoLabel"
                 android:text="@string/label_taskSeqNo"
+                />
+            <TextView
+                style="@style/TableInfoLabel"
+                android:layout_marginTop="-3dp"
+                android:text="@string/label_taskSeqNoDesc"
+                android:textSize="12sp"
+                android:textStyle="normal"
                 />
 
             <EditText

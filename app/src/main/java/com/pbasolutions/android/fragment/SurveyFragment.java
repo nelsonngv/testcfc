@@ -143,6 +143,8 @@ public class SurveyFragment extends Fragment implements PBABackKeyListener {
 
     protected void refreshSurvey() {
         PandoraMain pandoraMain = PandoraMain.instance;
+        if (pandoraMain == null || globalVar == null)
+            return;
         populateSurvey();
         viewAdapter = new SurveyRVA(pandoraMain, surveyList);
         recyclerView.setAdapter(viewAdapter);

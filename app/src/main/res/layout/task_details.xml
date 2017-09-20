@@ -33,6 +33,8 @@
                     <TextView
                         android:id="@+id/taskSeqNo"
                         style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:text="10"
                         android:textSize="@dimen/abc_text_size_subhead_material" />
 
@@ -41,6 +43,8 @@
                         android:layout_width="300dp"
                         android:layout_height="wrap_content"
                         android:layout_column="1"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:editable="false"
                         android:text="Task 20"
@@ -53,11 +57,15 @@
                     >
                     <TextView
                         style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:text="@string/label_projloc"
                         android:textSize="@dimen/abc_text_size_body_1_material" />
 
                     <TextView
                         android:id="@+id/taskProjLoc"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         style="@style/Value"
                         />
                 </TableRow>
@@ -69,10 +77,14 @@
 
                     <TextView
                         style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:text="@string/label_projdesc"/>
 
                     <TextView
                         android:id="@+id/taskDesc"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         style="@style/Value"
                         />
                 </TableRow>
@@ -82,10 +94,14 @@
                     >
                     <TextView
                         style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:text="@string/label_duedate"
                         />
                     <TextView
                         android:id="@+id/taskDueDate"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         style="@style/Value" />
                 </TableRow>
                 <TableLayout android:id="@+id/tlPics"
@@ -141,14 +157,21 @@
                     <TextView
                         android:id="@+id/textViewTaskComments"
                         style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:text="@string/taskdetails_label_comment"
                         />
 
                     <EditText
                         android:id="@+id/taskComments"
                         style="@style/Value"
-                        android:inputType="textCapSentences"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:editable="true"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:minLines="1"
+                        android:maxLines="5"
+                        android:maxLength="2000"
                         android:hint="Sweep floor, ..."
                         />
                 </TableRow>
@@ -157,9 +180,13 @@
 
                     <TextView
                         android:text="@string/taskdetails_label_status"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                     style="@style/TableLabel"/>
                     <TextView
                         style="@style/Value"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
                         android:id="@+id/taskStatus"/>
 
                 </TableRow>

@@ -100,7 +100,7 @@
                             android:singleLine="false"
                             android:maxLines="5"
                             android:scrollHorizontally="true"
-                            android:inputType="textMultiLine|textCapSentences|text"
+                            android:inputType="textCapSentences|textMultiLine|text"
                             android:text="@{prLine.purchaseReason}"
                             />
                     </LinearLayout>

@@ -27,7 +27,8 @@
                 android:layout_height="wrap_content"
                 android:divider="?android:attr/dividerHorizontal"
                 android:showDividers="middle">
-                <TableRow>
+                <TableRow
+                    android:paddingTop="15dp">
                     <TextView
                         android:layout_marginLeft="@dimen/table_margin_left"
                         android:layout_width="match_parent"
@@ -85,6 +86,7 @@
                     android:showDividers="middle">
                     <TextView
                         style="@style/TableLabelWide"
+                        android:paddingBottom="15dp"
                         android:text="@string/label_status" />
                     <TextView
                         android:id="@+id/task_status"

@@ -61,6 +61,7 @@ public class ProjTaskFragment extends Fragment {
     private TaskRVA viewAdapter;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private AsyncTask asyncTask;
     /**
      * Contructor.
      */
@@ -84,6 +85,10 @@ public class ProjTaskFragment extends Fragment {
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.task_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        populateProjTask();
+        viewAdapter = new TaskRVA(getActivity(), taskList, LayoutInflater.from(PandoraMain.instance));
+        recyclerView.setAdapter(viewAdapter);
+        addRecyclerViewListener(recyclerView);
         refreshProjtask(false);
 
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
@@ -92,7 +97,6 @@ public class ProjTaskFragment extends Fragment {
             public void onRefresh() {
                 // Refresh items
                 refreshProjtask(true);
-                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -191,11 +195,16 @@ public class ProjTaskFragment extends Fragment {
     }
 
     protected void refreshProjtask(final boolean showMsg) {
-        new AsyncTask<Object, Void, Bundle>() {
+        if (asyncTask != null && !asyncTask.getStatus().name().equalsIgnoreCase("FINISHED"))
+            return;
+
+        asyncTask = new AsyncTask<Object, Void, Bundle>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+                if (!mSwipeRefreshLayout.isRefreshing())
+                    mSwipeRefreshLayout.setRefreshing(true);
+//                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
             }
 
             @Override
@@ -207,7 +216,7 @@ public class ProjTaskFragment extends Fragment {
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
                 PandoraMain pandoraMain = PandoraMain.instance;
-                pandoraMain.dismissProgressDialog();
+//                pandoraMain.dismissProgressDialog();
 
                 String resultTitle = result.getString(PandoraConstant.TITLE);
                 String text;
@@ -222,7 +231,9 @@ public class ProjTaskFragment extends Fragment {
                 }
                 if (showMsg)
                     PandoraHelper.showMessage(PandoraMain.instance, text);
+                if (mSwipeRefreshLayout.isRefreshing())
+                    mSwipeRefreshLayout.setRefreshing(false);
             }
-        }.execute();
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void)null);
     }
 }

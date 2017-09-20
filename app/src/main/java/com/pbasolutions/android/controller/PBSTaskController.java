@@ -100,6 +100,9 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }
@@ -114,6 +117,9 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }
@@ -128,6 +134,9 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }
@@ -142,6 +151,9 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }
@@ -156,6 +168,9 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }
@@ -170,6 +185,9 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }
@@ -184,6 +202,9 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }

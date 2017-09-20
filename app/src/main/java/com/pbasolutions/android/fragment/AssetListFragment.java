@@ -55,7 +55,7 @@ public class AssetListFragment extends Fragment {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+                mSwipeRefreshLayout.setRefreshing(true);
             }
 
             @Override
@@ -63,7 +63,7 @@ public class AssetListFragment extends Fragment {
                 inflater = (LayoutInflater) params[0];
                 recyclerView = (RecyclerView) params[1];
 
-                if (PBSServerConst.cookieStore == null){
+                if (PBSServerConst.cookieStore == null) {
                     assetList = null;
                 } else {
                     assetList = getMStorage();
@@ -83,7 +83,7 @@ public class AssetListFragment extends Fragment {
                     recyclerView.setAdapter(viewAdapter);
                 }
 
-                ((PandoraMain)getActivity()).dismissProgressDialog();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }.execute(inflater, recyclerView);
 
@@ -105,7 +105,7 @@ public class AssetListFragment extends Fragment {
                         inflater = (LayoutInflater) params[0];
                         recyclerView = (RecyclerView) params[1];
 
-                        if (PBSServerConst.cookieStore == null){
+                        if (PBSServerConst.cookieStore == null) {
                             assetList = null;
                         } else {
                             assetList = getMStorage();

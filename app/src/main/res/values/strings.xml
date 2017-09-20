@@ -274,11 +274,12 @@
     <string name="text_icon_remove">Remove</string>
     <string name="text_icon_move">Move</string>
     <string name="text_icon_save">Save</string>
-    <string name="label_taskname">Name</string>
+    <string name="label_taskname">Task Name</string>
     <string name="label_taskprojloc">Project Location</string>
     <string name="label_taskdesc">Description</string>
     <string name="label_assignto">Assign To</string>
     <string name="label_taskSeqNo">Priority</string>
+    <string name="label_taskSeqNoDesc">0 (HIgh Priority) to 2 (Low Priority)</string>
     <string name="label_template">Template</string>
     <string name="text_icon_assign">Assign Project</string>
     <string name="title_newprojecttask">New Task</string>
@@ -335,6 +336,7 @@
     <string name="invalid_tag">Invalid tag detected</string>
     <string name="attendance_done1">Hi %1$s, you have marked an attendance at %2$s.</string>
     <string name="attendance_done2">Thank you for using our service!</string>
+    <string name="attendance_to">%1$s to %2$s</string>
 
     <!--
     ImageView Tag Key.
@@ -351,6 +353,7 @@
     <string name="notification_proj_task_expiring">Project task is expiring</string>
 
     <string name="applicant_agreement">I agree that the information provided are true.</string>
-    <string name="proj_task_agreement">I agree that the project task has been completed.</string>
+    <string name="proj_task_agreement">As a customer, I agree that the project task has been completed.</string>
+    <string name="proj_task_agreement2">As a service provider, I agree that the project task has been completed.</string>
 
 </resources>

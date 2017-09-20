@@ -15,6 +15,7 @@ import com.pbasolutions.android.model.MSurvey;
 import com.pbasolutions.android.model.ModelConst;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -148,7 +149,8 @@ public class SurveyTask extends Task {
     }
 
     private MSurvey populateProjectTask(Cursor cursor) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         MSurvey survey = new MSurvey();
         try {
@@ -206,7 +208,13 @@ public class SurveyTask extends Task {
                     }
                 } else if (MSurvey.DATEDELIVERY_COL
                         .equalsIgnoreCase(columnName)) {
-                    Date date = df.parse(rowValue);
+                    Date date;
+                    try {
+                        date = df.parse(rowValue);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        date = df2.parse(rowValue);
+                    }
                     survey.setDateDelivery(sdf.format(date));
                 } else if ("TemplateName"
                         .equalsIgnoreCase(columnName)) {

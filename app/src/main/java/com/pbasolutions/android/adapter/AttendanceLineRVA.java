@@ -81,7 +81,6 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
 
         holder.at_isabsent.setTag(strTag);
         holder.at_checkindate.setTag(strTag);
-        holder.at_checkoutdate.setTag(strTag);
         holder.at_leavetype.setTag(strTag);
         holder.at_comments.setTag(strTag);
 
@@ -104,7 +103,6 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         PandoraHelper.setVisibleView(holder.at_restdaydesc, !isWork);
         PandoraHelper.setVisibleView(holder.at_restday, !isWork);
         PandoraHelper.setVisibleView(holder.at_rowCheckinDate, isWork);
-        PandoraHelper.setVisibleView(holder.at_rowCheckoutDate, isWork);
     }
 
     /**
@@ -130,12 +128,10 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
         TextView at_restdaydesc;
         TextView at_restday;
         TextView at_checkindate;
-        TextView at_checkoutdate;
         TextView at_leavetype;
         TextView at_comments;
 
         TableRow at_rowCheckinDate;
-        TableRow at_rowCheckoutDate;
         TableRow at_rowLeaveType;
         TableRow at_rowIsabsent;
         TableRow at_rowIsoff;
@@ -158,12 +154,10 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
             at_restdaydesc = (TextView) bindView.findViewById(R.id.at_restdaydesc);
             at_restday = (TextView) bindView.findViewById(R.id.at_restday);
             at_checkindate = (TextView) bindView.findViewById(R.id.at_checkindate);
-            at_checkoutdate = (TextView) bindView.findViewById(R.id.at_checkoutdate);
             at_leavetype = (TextView) bindView.findViewById(R.id.at_leavetype);
             at_comments = (TextView) bindView.findViewById(R.id.at_comments);
 
             at_rowCheckinDate = (TableRow) bindView.findViewById(R.id.at_row_checkindate);
-            at_rowCheckoutDate = (TableRow) bindView.findViewById(R.id.at_row_checkoutdate);
             at_rowLeaveType = (TableRow) bindView.findViewById(R.id.at_row_leavetype);
             at_rowIsabsent = (TableRow) bindView.findViewById(R.id.at_row_isabsent);
             at_rowIsoff = (TableRow) bindView.findViewById(R.id.at_row_isoff);
@@ -173,7 +167,6 @@ public class AttendanceLineRVA extends RecyclerView.Adapter<AttendanceLineRVA.At
 
             at_isabsent.setOnClickListener(this);
             at_checkindate.setOnClickListener(this);
-            at_checkoutdate.setOnClickListener(this);
             at_leavetype.setOnClickListener(this);
             at_comments.setOnClickListener(this);
         }

@@ -8,6 +8,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:orientation="vertical"
         android:weightSum="1">
 
@@ -24,74 +26,67 @@
             android:textSize="32sp"
             android:textStyle="normal|bold"
             android:layout_marginTop="19dp"
-            android:layout_marginLeft="5dp"
-            android:elevation="2dp"
-            android:translationZ="5dp" />
+            android:layout_marginLeft="15dp"
+            android:elevation="5dp" />
 
 
-    <TableLayout android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="?android:attr/dividerHorizontal"
-        android:showDividers="middle">
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="?android:attr/dividerVertical"
-            android:showDividers="middle">
+        <TableLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="80dp">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@drawable/divider_vertical"
+                android:showDividers="none">
+                <!--<TextView
+                    android:text="@string/label_name"
+                    style="@style/TableLabel"/>-->
+                <TextView
+                    style="@style/Value"
+                    android:id="@+id/employee_name"
+                    android:textStyle="bold"
+                    android:text="@{employee.name}"
+                   />
+            </TableRow>
+            <TableRow android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!--<TextView
+                    android:text="@string/label_idnumber"
+                    style="@style/TableLabel"/>-->
+                <TextView
+                    style="@style/Value"
+                    android:id="@+id/employee_idnumber"
+                    android:text="@{employee.idNumber}"
+                    />
+            </TableRow>
+            <TableRow android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!--<TextView
+                    android:text="@string/label_phone"
+                    style="@style/TableLabel"/>-->
+                <TextView
+                    style="@style/Value"
+                    android:id="@+id/employee_phone"
+                    android:text="@{employee.phone}"
+                    />
+            </TableRow>
+            <TableRow android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!--<TextView
+                    android:text="@string/label_default_projloc"
+                    style="@style/TableLabel"/>-->
+                <TextView
+                    style="@style/Value"
+                    android:id="@+id/employee_default_projloc"
+                    android:text="@{employee.defaultProjLoc}"
+                    />
+            </TableRow>
             <TextView
-                android:text="@string/label_name"
-                style="@style/TableLabel"/>
-            <TextView
-                style="@style/Value"
-                android:id="@+id/employee_name"
-                android:text="@{employee.name}"
-               />
-        </TableRow>
-        <TableRow android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="?android:attr/dividerVertical"
-            android:showDividers="middle">
-            <TextView
-                android:text="@string/label_idnumber"
-                style="@style/TableLabel"/>
-            <TextView
-                style="@style/Value"
-                android:id="@+id/employee_idnumber"
-                android:text="@{employee.idNumber}"
-                />
-        </TableRow>
-        <TableRow android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="?android:attr/dividerVertical"
-            android:showDividers="middle">
-            <TextView
-                android:text="@string/label_phone"
-                style="@style/TableLabel"/>
-            <TextView
-                style="@style/Value"
-                android:id="@+id/employee_phone"
-                android:text="@{employee.phone}"
-                />
-        </TableRow>
-        <TableRow android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="?android:attr/dividerVertical"
-            android:showDividers="middle">
-            <TextView
-                android:text="@string/label_default_projloc"
-                style="@style/TableLabel"/>
-            <TextView
-                style="@style/Value"
-                android:id="@+id/employee_default_projloc"
-                android:text="@{employee.defaultProjLoc}"
-                />
-        </TableRow>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:id="@+id/_UUID"
-            android:text="@{employee._UUID}"
-            android:visibility="invisible"/>
-    </TableLayout>
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/_UUID"
+                android:text="@{employee._UUID}"
+                android:visibility="invisible"/>
+        </TableLayout>
     </RelativeLayout>
 </layout>

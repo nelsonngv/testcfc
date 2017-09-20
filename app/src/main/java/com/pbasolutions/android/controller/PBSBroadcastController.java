@@ -67,6 +67,9 @@ public class PBSBroadcastController extends ContextWrapper implements PBSIContro
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }
@@ -81,6 +84,9 @@ public class PBSBroadcastController extends ContextWrapper implements PBSIContro
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }
@@ -95,6 +101,9 @@ public class PBSBroadcastController extends ContextWrapper implements PBSIContro
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }
@@ -109,6 +118,9 @@ public class PBSBroadcastController extends ContextWrapper implements PBSIContro
             result = taskResult.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            taskResult.cancel(true);
+            es.shutdownNow();
         }
         return result;
     }

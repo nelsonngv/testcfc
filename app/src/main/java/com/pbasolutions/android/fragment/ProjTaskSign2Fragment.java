@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +31,7 @@ import java.util.ArrayList;
 /**
  * Created by pbadell on 10/5/15.
  */
-public class ProjTaskSignFragment extends Fragment {
+public class ProjTaskSign2Fragment extends Fragment {
     /**
      * Class tag name.
      */
@@ -51,7 +49,7 @@ public class ProjTaskSignFragment extends Fragment {
     /**
      * Constructor method.
      */
-    public ProjTaskSignFragment() {
+    public ProjTaskSign2Fragment() {
     }
 
     @Override
@@ -85,7 +83,7 @@ public class ProjTaskSignFragment extends Fragment {
         mClearButton = (Button) rootView.findViewById(R.id.clear_button);
         mSaveButton = (Button) rootView.findViewById(R.id.save_button);
         TextView mDesc = (TextView) rootView.findViewById(R.id.signature_pad_description);
-        mDesc.setText(getString(R.string.proj_task_agreement));
+        mDesc.setText(getString(R.string.proj_task_agreement2));
     }
 
     void setUIListener() {
@@ -135,55 +133,38 @@ public class ProjTaskSignFragment extends Fragment {
     }
 
     protected void completeProj() {
-        Bundle resultBundle = checkInController.triggerEvent(PBSCheckInController.GET_LOCATION, null, new Bundle(), null);
-        String latitude = String.valueOf(resultBundle.getDouble("DEVICE_LAT"));
-        String longitude = String.valueOf(resultBundle.getDouble("DEVICE_LONG"));
+        Bitmap signatureBitmap = mSignaturePad.getSignatureBitmap();
+        String signImgPath = CameraUtil.storeSignature(signatureBitmap);
 
-        if (!latitude.equals("0.0") && !longitude.equals("0.0")) {
-            Bitmap signatureBitmap = mSignaturePad.getSignatureBitmap();
-            String signImgPath = CameraUtil.storeSignature(signatureBitmap);
+        input.putString(MProjectTask.ATTACHMENT_STAFFSIGNATURE_COL, signImgPath);
 
-            input.putString(MProjectTask.LATITUDE_COL, latitude);
-            input.putString(MProjectTask.LONGITUDE_COL, longitude);
-            input.putString(MProjectTask.ATTACHMENT_SIGNATURE_COL, signImgPath);
+        new AsyncTask<Bundle, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
 
-            Fragment fragment = new ProjTaskSign2Fragment();
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragment.setArguments(input);
-            fragment.setRetainInstance(true);
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container_body, fragment);
-            fragmentTransaction.addToBackStack(fragment.getClass().getName());
-            fragmentTransaction.commit();
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle output = new Bundle();
+                output = taskCont.triggerEvent(PBSTaskController.COMPLETE_PROJTASK_EVENT, params[0], output, null);
+                return output;
+            }
 
-//            new AsyncTask<Bundle, Void, Bundle>() {
-//                @Override
-//                protected void onPreExecute() {
-//                    super.onPreExecute();
-//                    ((PandoraMain)getActivity()).showProgressDialog("Loading...");
-//                }
-//
-//                @Override
-//                protected Bundle doInBackground(Bundle... params) {
-//                    Bundle output = new Bundle();
-//                    output = taskCont.triggerEvent(PBSTaskController.COMPLETE_PROJTASK_EVENT, params[0], output, null);
-//                    return output;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(Bundle result) {
-//                    super.onPostExecute(result);
-//                    if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
-//                        PandoraMain.instance.getSupportFragmentManager().popBackStack();
-//                        PandoraMain.instance.getSupportFragmentManager().popBackStack();
-//                    } else {
-//                        PandoraHelper.showMessage(getActivity(),
-//                                result.getString(result.getString(PandoraConstant.TITLE)));
-//                        PandoraMain.instance.getSupportFragmentManager().popBackStack();
-//                    }
-//                    ((PandoraMain)getActivity()).dismissProgressDialog();
-//                }
-//            }.execute(input);
-        }
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                } else {
+                    PandoraHelper.showMessage(getActivity(),
+                            result.getString(result.getString(PandoraConstant.TITLE)));
+                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                }
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
     }
 }

@@ -57,7 +57,7 @@ public class CheckInRVA extends RecyclerView.Adapter<CheckInVH> {
         rowViewHolder.getTextLocationView().setText(String.valueOf(checkIn.getProjectLocation()));
         rowViewHolder.getImageStatusView().setBackgroundResource(checkIn.getStatusIcon());
         rowViewHolder.getTextDateView().setText(String.valueOf(checkIn.getDate()));
-        rowViewHolder.getTextCommentView().setText(String.valueOf(checkIn.getComment()));
+        rowViewHolder.getTextCommentView().setText(String.valueOf(checkIn.getComment()).replace("\\n", System.getProperty("line.separator")));
         rowViewHolder.getTextCheckinView().setText(String.valueOf(checkIn.getUuid()));
     }
 }
