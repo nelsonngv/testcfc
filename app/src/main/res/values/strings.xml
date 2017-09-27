@@ -86,6 +86,7 @@
     <!--Applicants layout!-->
 
     <string name="label_status">Status</string>
+    <string name="label_dateassigned">Date Assigned</string>
     <string name="label_duedate">Due Date</string>
     <string name="label_interviewernotes">Interviewer Notes</string>
     <string name="label_nationality">Nationality</string>
@@ -315,6 +316,8 @@
     <string name="label_rating">Rating: </string>
     <string name="label_average">Average: </string>
     <string name="label_percentage">Percentage: </string>
+    <string name="label_timeofcleaning">Time of Cleaning: </string>
+    <string name="label_surveyremarks">Survey Remarks: </string>
 
     <!--
     Signature pad.

@@ -35,7 +35,7 @@
                         style="@style/TableLabel"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
-                        android:text="10"
+                        android:text="@{String.valueOf(task.priority)}"
                         android:textSize="@dimen/abc_text_size_subhead_material" />
 
                     <TextView
@@ -47,7 +47,7 @@
                         android:paddingBottom="5dp"
                         android:layout_marginLeft="@dimen/margin_left"
                         android:editable="false"
-                        android:text="Task 20"
+                        android:text="@{task.name}"
                         android:textStyle="bold"
                         android:textSize="@dimen/abc_text_size_subhead_material" />
                 </TableRow>
@@ -66,6 +66,7 @@
                         android:id="@+id/taskProjLoc"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
+                        android:text="@{task.projLocName}"
                         style="@style/Value"
                         />
                 </TableRow>
@@ -85,8 +86,26 @@
                         android:id="@+id/taskDesc"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
+                        android:text="@{task.description}"
                         style="@style/Value"
                         />
+                </TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle"
+                    >
+                    <TextView
+                        style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/label_dateassigned"
+                        />
+                    <TextView
+                        android:id="@+id/taskDateAssigned"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@{task.dateAssigned}"
+                        style="@style/Value" />
                 </TableRow>
                 <TableRow
                     android:divider="?android:attr/dividerVertical"
@@ -102,6 +121,7 @@
                         android:id="@+id/taskDueDate"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
+                        android:text="@{task.dueDate}"
                         style="@style/Value" />
                 </TableRow>
                 <TableLayout android:id="@+id/tlPics"
@@ -173,6 +193,7 @@
                         android:maxLines="5"
                         android:maxLength="2000"
                         android:hint="Sweep floor, ..."
+                        android:text="@{task.comments}"
                         />
                 </TableRow>
 
@@ -187,6 +208,7 @@
                         style="@style/Value"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
+                        android:text="@{task.status}"
                         android:id="@+id/taskStatus"/>
 
                 </TableRow>

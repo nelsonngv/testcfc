@@ -69,6 +69,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
     TextView taskProjLoc;
     TextView taskStatus;
     TextView taskDesc;
+    TextView taskDateAssigned;
     TextView taskDueDate;
     ImageView pretaskPicture;
 //    ImageView taskPicture1;
@@ -111,8 +112,11 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         setUI(rootView);
         setUIListener();
         context.fragment = this;
+
         projTask = getProjTask();
         setValues();
+//        binding =  TaskDetailsBinding.bind(rootView);
+//        binding.setTask(getProjTask());
         return rootView;
     }
 
@@ -126,6 +130,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             taskProjLoc.setText(projTask.getProjLocName());
             taskStatus.setText(projTask.getStatus());
             taskDesc.setText(PandoraHelper.parseNewLine(projTask.getDescription()));
+            taskDateAssigned.setText(projTask.getDateAssigned());
             taskDueDate.setText(projTask.getDueDate());
 
             if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1()).exists()) projTask.setATTACHMENT_BEFORETASKPICTURE_1(null);
@@ -258,6 +263,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         taskProjLoc = (TextView) rootView.findViewById(R.id.taskProjLoc);
         taskStatus = (TextView) rootView.findViewById(R.id.taskStatus);
         taskDesc = (TextView) rootView.findViewById(R.id.taskDesc);
+        taskDateAssigned = (TextView) rootView.findViewById(R.id.taskDateAssigned);
         taskDueDate = (TextView) rootView.findViewById(R.id.taskDueDate);
         pretaskPicture = (ImageView) rootView.findViewById(R.id.pretaskPicture);
         taskPictures[picCount] = (ImageView) rootView.findViewById(R.id.taskPicture1);
@@ -273,10 +279,6 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
      //   taskIsDoneButton = (Button) rootView.findViewById(R.id.buttonTaskStatus);
         TextView textViewTaskComments = (TextView) rootView.findViewById(R.id.textViewTaskComments);
         PandoraHelper.setAsterisk(textViewTaskComments);
-
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        taskDueDate.setText(sdf.format(date));
 
         btnMorePic.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -60,6 +60,20 @@
                             android:id="@+id/atTemplate" />
                     </LinearLayout>
                 </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout style="@style/PTableVirtRowW">
+                        <TextView
+                            android:id="@+id/tvSurveyDateTrx"
+                            style="@style/TableInfoLabel"
+                            android:text="@string/label_timeofcleaning" />
+
+                        <TextView
+                            android:id="@+id/atSurveyDateTrx"
+                            style="@style/TableValueDate" />
+                    </LinearLayout>
+                </TableRow>
             </TableLayout>
         </LinearLayout>
     </ScrollView>

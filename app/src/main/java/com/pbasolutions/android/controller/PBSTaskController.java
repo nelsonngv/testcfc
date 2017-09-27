@@ -17,6 +17,7 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
 
     public static final String ARG_C_PROJECTTASK_UUID = "ARG_C_PROJECTTASK_UUID";
     public static final String ARG_AD_USER_ID= "ARG_AD_USER_ID";
+    public static final String ARG_AD_CLIENT_ID= "ARG_AD_CLIENT_ID";
     public static final String ARG_TASK = "ARG_TASK";
     public static final String ARG_TASK_ID = "ARG_TASK_ID";
     public static final String ARG_TASK_UUID = "ARG_TASK_UUID";

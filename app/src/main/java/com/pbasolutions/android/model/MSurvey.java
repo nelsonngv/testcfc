@@ -39,6 +39,7 @@ public class MSurvey extends PBSJson implements Parcelable {
     public static final String TYPE_COL = "Type";
     public static final String REMARKS_COL = "Remarks";
     public static final String AMT_COL = "Amt";
+    public static final String DATETRX_COL = "DateTrx";
 
     private String _UUID;
     private int C_ProjectLocation_ID;

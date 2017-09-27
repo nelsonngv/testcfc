@@ -30,6 +30,7 @@ public class ModelConst {
     public static final String AD_USER_ID_COL = "AD_User_ID";
     public static final String AD_ORG_UUID_COL = "AD_Org_UUID";
     public static final String AD_CLIENT_UUID_COL = "AD_Client_UUID";
+    public static final String AD_CLIENT_ID_COL = "AD_Client_ID";
     public static final String NAME_COL = "Name";
     public static final String DESC_COL = "Description";
     public static final String SEQNO_COL = "SeqNo";

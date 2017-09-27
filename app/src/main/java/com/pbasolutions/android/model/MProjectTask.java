@@ -44,6 +44,7 @@ public class MProjectTask extends PBSJson {
     private String created;
     private String createdBy;
     private String Status;
+    private String DateAssigned;
     private String DueDate;
     transient private String assignedToName;
     private int AssignedTo;
@@ -102,6 +103,7 @@ public class MProjectTask extends PBSJson {
     public static final String ATTACHMENT_STAFFSIGNATURE_COL = "Attachment_StaffSignature";
     public static final String LONGITUDE_COL = "Longitude";
     public static final String LATITUDE_COL = "Latitude";
+    public static final String DATEASSIGNED_COL = "DateAssigned";
 
 
     public String getProjLocUUID() {
@@ -435,6 +437,14 @@ public class MProjectTask extends PBSJson {
 
     public void setAssignedToName(String assignedToName) {
         this.assignedToName = assignedToName;
+    }
+
+    public String getDateAssigned() {
+        return DateAssigned;
+    }
+
+    public void setDateAssigned(String dateAssigned) {
+        this.DateAssigned = dateAssigned;
     }
 
     public String getDueDate() {

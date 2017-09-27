@@ -63,11 +63,13 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
     private SpinnerOnItemSelected assignToItem;
     private ArrayAdapter assignToAdapter;
     private List<SpinnerPair> projLocList;
+    private TextView taskDateAssigned;
     private TextView taskDueDate;
     PandoraMain context;
 
     private static final int ASSIGN_ID = 1;
-    protected static final String EVENT_DATE = "EVENT_DATE";
+    protected static final String EVENT_FUTURE_DATE = "EVENT_FUTURE_DATE";
+    protected static final String EVENT_BACK_DATE = "EVENT_BACK_DATE";
     protected static final String EVENT_PIC1 = "EVENT_PIC1";
 
     @Override
@@ -94,7 +96,8 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 
     protected void setUIListener() {
         setOnItemSelectedListener();
-        setOnClickListener(taskDueDate, EVENT_DATE);
+        setOnClickListener(taskDateAssigned, EVENT_BACK_DATE);
+        setOnClickListener(taskDueDate, EVENT_FUTURE_DATE);
         setOnClickListener(taskPicture1, EVENT_PIC1);
     }
 
@@ -117,6 +120,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         projLocSpinner = (Spinner) rootView.findViewById(R.id.newTaskProjLoc);
         projLocNameAdapter = PandoraHelper.addListToSpinner(act, projLocSpinner, getProjLocList());
         taskPicture1 = (ImageView) rootView.findViewById(R.id.taskPicture1);
+        taskDateAssigned = (TextView) rootView.findViewById(R.id.taskDateAssigned);
         taskDueDate = (TextView) rootView.findViewById(R.id.taskDueDate);
         TextView textViewTaskName = (TextView)rootView.findViewById(R.id.textViewTaskName);
         TextView textViewTaskDescription = (TextView)rootView.findViewById(R.id.textViewTaskDescription);
@@ -127,6 +131,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        taskDateAssigned.setText(sdf.format(date));
         taskDueDate.setText(sdf.format(date));
     }
 
@@ -135,7 +140,11 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
             @Override
             public void onClick(View v) {
                 switch (event) {
-                    case EVENT_DATE: {
+                    case EVENT_BACK_DATE: {
+                        PandoraHelper.promptDatePicker((TextView) object, getActivity());
+                        break;
+                    }
+                    case EVENT_FUTURE_DATE: {
                         PandoraHelper.promptFutureDatePicker((TextView) object, getActivity());
                         break;
                     }
@@ -219,8 +228,10 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
             Bundle input = new Bundle();
 //            String projectLocationUUID = globalVar.getC_projectlocation_uuid();
             String adUserID = globalVar.getAd_user_id();
+            String adClientID = globalVar.getAd_client_id();
             if (adUserID != null) {
                 input.putString(PBSTaskController.ARG_AD_USER_ID, adUserID);
+                input.putString(PBSTaskController.ARG_AD_CLIENT_ID, adClientID);
                 Bundle result = taskCont.triggerEvent(PBSTaskController.GET_USERS_EVENT,
                         input, new Bundle(), null);
                 return result.getParcelableArrayList(PBSTaskController.ARG_USERS);
@@ -252,6 +263,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         String desc = description.getText().toString();
         String assignedTo  = assignToItem.getPair().getKey();
         String seqNo  = sequenceNo.getText().toString();
+        String dateAssigned  = taskDateAssigned.getText().toString();
         String dueDate  = taskDueDate.getText().toString();
         if (locID == null
                 || locID.isEmpty()
@@ -283,6 +295,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         pt.setAssignedTo(Integer.parseInt(assignedTo));
         pt.setPriority(nSeqNo);
         pt.setIsDone("N");
+        pt.setDateAssigned(dateAssigned);
         pt.setDueDate(dueDate);
         if (taskPicture1.getTag(R.string.tag_imageview_path) != null && !((String)taskPicture1.getTag(R.string.tag_imageview_path)).isEmpty()) {
 //            String pic1 = CameraUtil

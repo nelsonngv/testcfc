@@ -40,6 +40,7 @@ public class PBSSurveyController extends PBSController {
     public static String projLocUUID;
     public static String templateUUID;
     public static String dateStart;
+    public static String dateTrx;
 
     /**
      *

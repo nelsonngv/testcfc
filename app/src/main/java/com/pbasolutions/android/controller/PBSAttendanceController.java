@@ -15,6 +15,7 @@ import java.util.concurrent.FutureTask;
  */
 public class PBSAttendanceController extends ContextWrapper implements PBSIController {
 
+    public static final String ARG_AD_CLIENT_ID= "ARG_AD_CLIENT_ID";
     public static final String ARG_RESOURCEALLOC_UUID = "ARG_RESOURCEALLOC_UUID";
     public static final String ARG_NOTE = "ARG_NOTE";
     public static final String NOTE_DETAILS_EVENT =  "GET_NOTE_EVENT";

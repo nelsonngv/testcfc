@@ -97,9 +97,14 @@ public class ProjectTask implements Callable<Bundle> {
 
 //        String projLocationUUID = input.getString(PBSTaskController.ARG_PROJLOC_UUID);
         String adUserID = input.getString(PBSTaskController.ARG_AD_USER_ID);
+        String adClientID = input.getString(PBSTaskController.ARG_AD_CLIENT_ID);
+        String adClientUUID = ModelConst.mapUUIDtoColumn(ModelConst.AD_CLIENT_TABLE, ModelConst.AD_CLIENT_ID_COL,
+                adClientID, ModelConst.AD_CLIENT_UUID_COL, cr);
+
         String selection = aduser + ModelConst.AD_USER_ID_COL + "!= ? AND " +
+                aduser + ModelConst.AD_CLIENT_UUID_COL + "= ? AND " +
                 "EXISTS (SELECT C_BPartner_UUID FROM C_BPartner WHERE C_BPartner.C_BPartner_ID = AD_User.C_BPartner_UUID AND C_BPartner.IsEmployee = ?)";
-        String[] selectionArg = {adUserID, "Y"};
+        String[] selectionArg = {adUserID, adClientUUID, "Y"};
         String[] projection = {aduser + ModelConst.AD_USER_ID_COL,
                 aduser + ModelConst.NAME_COL};
 
@@ -112,7 +117,7 @@ public class ProjectTask implements Callable<Bundle> {
                 SpinnerPair pair = new SpinnerPair();
                 for (int x = 0; x < cursor.getColumnNames().length; x++) {
                     if (ModelConst.AD_USER_ID_COL.equalsIgnoreCase(cursor.getColumnName(x))) {
-                        Log.i(TAG, "getUsers: "+cursor.getString(x));
+//                        Log.i(TAG, "getUsers: "+cursor.getString(x));
 //                        String getid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE,
 //                                ModelConst.AD_USER_UUID_COL, cursor.getString(x), ModelConst.AD_USER_ID_COL, cr);
                         pair.setKey(cursor.getString(x));
@@ -370,9 +375,10 @@ public class ProjectTask implements Callable<Bundle> {
         cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
         cv.put(MProjectTask.ISDONE_COL, projTask.isDone());
 
-        cv.put(MProjectTask.COMMENTS_COL,projTask.getComments());
-        cv.put(MProjectTask.DUEDATE_COL,projTask.getDueDate());
-        cv.put(MProjectTask.ATTACHMENT_BEFORETASKPICTURE_1_COL,projTask.getATTACHMENT_BEFORETASKPICTURE_1());
+        cv.put(MProjectTask.COMMENTS_COL, projTask.getComments());
+        cv.put(MProjectTask.DATEASSIGNED_COL, projTask.getDateAssigned());
+        cv.put(MProjectTask.DUEDATE_COL, projTask.getDueDate());
+        cv.put(MProjectTask.ATTACHMENT_BEFORETASKPICTURE_1_COL, projTask.getATTACHMENT_BEFORETASKPICTURE_1());
 
         return cv;
     }
@@ -387,8 +393,14 @@ public class ProjectTask implements Callable<Bundle> {
                 (projLocId, input.getString(PBSTaskController.ARG_AD_USER_ID), input.getString(PBSServerConst.PARAM_URL));
 
         if (projTasks != null) {
-            if (projTasks.getSuccess().equalsIgnoreCase(PBSServerConst.FALSE)){
+            if (projTasks.getSuccess() != null && projTasks.getSuccess().equalsIgnoreCase(PBSServerConst.FALSE)){
                 output.putString(PandoraConstant.ERROR, "Fail to sync Project Tasks.");
+                return output;
+            }
+
+            if (projTasks.getSuccess() == null) {
+                output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+                output.putString(PandoraConstant.RESULT, "Successfully synced Project Task");
                 return output;
             }
 
@@ -424,9 +436,10 @@ public class ProjectTask implements Callable<Bundle> {
                 cv.put(MProjectTask.PRIORITY_COL, projTask.getSeqNo());
                 cv.put(MProjectTask.NAME_COL, projTask.getName());
                 cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
-                cv.put(MProjectTask.ASSIGNEDTO_COL, projTask.getAssignedTo());
                 String isDone = (projTask.getIsDone()) ? "Y":"N";
                 cv.put(MProjectTask.ISDONE_COL, isDone);
+                if (projTask.getDateAssigned() != null && !projTask.getDateAssigned().isEmpty())
+                    cv.put(MProjectTask.DATEASSIGNED_COL, projTask.getDateAssigned());
                 cv.put(MProjectTask.DUEDATE_COL, projTask.getDueDate());
                 cv.put(MProjectTask.COMMENTS_COL, projTask.getComments());
                 String selection = MProjectTask.C_PROJECTTASK_ID_COL;
@@ -746,6 +759,17 @@ public class ProjectTask implements Callable<Bundle> {
                     }
                 } else
                     projTask.setDueDate(rowValue);
+            } else if (MProjectTask.DATEASSIGNED_COL
+                    .equalsIgnoreCase(columnName)) {
+                if (rowValue != null) {
+                    try {
+                        Date date = df.parse(rowValue);
+                        projTask.setDateAssigned(sdf.format(date));
+                    } catch (Exception e) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                } else
+                    projTask.setDateAssigned(rowValue);
             }
         }
         return projTask;

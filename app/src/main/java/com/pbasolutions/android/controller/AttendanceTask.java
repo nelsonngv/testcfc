@@ -327,18 +327,22 @@ public class AttendanceTask implements Callable<Bundle> {
     private Bundle getEmployees() {
         String cbpartner = ModelConst.C_BPARTNER_VIEW + ".";
 
+        String adClientID = input.getString(PBSAttendanceController.ARG_AD_CLIENT_ID);
+        String adClientUUID = ModelConst.mapUUIDtoColumn(ModelConst.AD_CLIENT_TABLE, ModelConst.AD_CLIENT_ID_COL,
+                adClientID, ModelConst.AD_CLIENT_UUID_COL, cr);
         String projLocationId = input.getString(PBSAttendanceController.ARG_PROJECTLOCATION_ID);
         String projLocationUUID = ModelConst.getProjLocationUUID(projLocationId, cr);
 
         String[] projection = {cbpartner + MAttendanceLine.C_BPARTNER_UUID_COL,
                 cbpartner + ModelConst.NAME_COL};
 
-        String[] selectionArg = { projLocationUUID, PBSAttendanceController.shiftUUID };
+        String[] selectionArg = { adClientUUID, projLocationUUID, PBSAttendanceController.shiftUUID };
 
-        String wherePhase = String.format("%s NOT IN (SELECT %s FROM %s) AND %s=? AND %s=?",
+        String wherePhase = String.format("%s NOT IN (SELECT %s FROM %s) AND %s=? AND %s=? AND %s=?",
                 cbpartner + MAttendanceLine.C_BPARTNER_UUID_COL,
                 MAttendanceLine.C_BPARTNER_UUID_COL,
                 ModelConst.M_ATTENDANCELINE_TABLE,
+                ModelConst.AD_CLIENT_UUID_COL,
                 ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.C_PROJECTLOCATION_UUID_COL,
                 ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.HR_SHIFT_UUID_COL
                 );

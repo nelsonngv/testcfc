@@ -367,6 +367,7 @@ public class NewAttendanceLineFragment extends Fragment {
 
     public List<SpinnerPair> getEmployeeList() {
         Bundle input = new Bundle();
+        input.putString(PBSAttendanceController.ARG_AD_CLIENT_ID, ((PandoraMain) getActivity()).getGlobalVariable().getAd_client_id());
         input.putString(PBSAttendanceController.ARG_PROJECTLOCATION_ID, PBSAttendanceController.projectLocationId);
 
         Bundle result = attendCont.triggerEvent(PBSAttendanceController.GET_EMPLOYEES_EVENT, input, new Bundle(),null);

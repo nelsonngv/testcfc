@@ -61,6 +61,7 @@ public class RequisitionFragment extends Fragment{
     RequisitionRVA linesAdapter;
 
     Context context;
+    private AsyncTask asyncTask;
 
     private ObservableArrayList<MPurchaseRequest> requisitionList;
 
@@ -94,7 +95,7 @@ public class RequisitionFragment extends Fragment{
         PandoraHelper.addRecyclerViewListener(recyclerView, requisitionList, getActivity(),
                 new RequisitionDetailFragment(), requisitionDetailTitle);
 
-        new AsyncTask<Object, Void, Void>() {
+        asyncTask = new AsyncTask<Object, Void, Void>() {
             protected LayoutInflater inflater;
             protected RecyclerView recyclerView;
             @Override
@@ -134,7 +135,10 @@ public class RequisitionFragment extends Fragment{
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new AsyncTask<Object, Void, Void>() {
+                if (asyncTask != null && !asyncTask.getStatus().name().equalsIgnoreCase("FINISHED"))
+                    asyncTask.cancel(true);
+
+                asyncTask = new AsyncTask<Object, Void, Void>() {
                     protected LayoutInflater inflater;
                     protected RecyclerView recyclerView;
                     @Override

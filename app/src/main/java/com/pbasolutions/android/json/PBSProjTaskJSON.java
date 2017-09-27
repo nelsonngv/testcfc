@@ -19,6 +19,7 @@ public class PBSProjTaskJSON extends PBSJson {
     private String Attachment_Pic3;
     private String Attachment_Pic4;
     private String Attachment_Pic5;
+    private String DateAssigned;
     private String DueDate;
     private String Latitude;
     private String Longitude;
@@ -144,6 +145,14 @@ public class PBSProjTaskJSON extends PBSJson {
 
     public void setAssignedTo(String assignedTo) {
         AssignedTo = assignedTo;
+    }
+
+    public String getDateAssigned() {
+        return DateAssigned;
+    }
+
+    public void setDateAssigned(String dateAssigned) {
+        DateAssigned = dateAssigned;
     }
 
     public String getDueDate() {

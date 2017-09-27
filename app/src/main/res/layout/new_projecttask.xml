@@ -83,6 +83,16 @@
         <LinearLayout style="@style/PTableVirtRow">
             <TextView
                 style="@style/TableInfoLabel"
+                android:text="@string/label_dateassigned"
+                />
+            <TextView
+                android:id="@+id/taskDateAssigned"
+                style="@style/TableValueDate"
+                android:hint="Press to Select Date" />
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                style="@style/TableInfoLabel"
                 android:text="@string/label_duedate"
                 />
             <TextView

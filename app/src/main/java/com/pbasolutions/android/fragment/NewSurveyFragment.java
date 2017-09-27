@@ -8,6 +8,7 @@ import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -126,7 +127,6 @@ public class NewSurveyFragment extends Fragment {
                         }
                     });
                     etRemarks.setTag(question.getC_SurveyTemplateQuestion_UUID());
-                    etRemarks.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     etRemarks.setMinLines(1);
                     etRemarks.setMaxLines(5);
                     etRemarks.setFilters(new InputFilter[] {new InputFilter.LengthFilter(2000)});
@@ -139,6 +139,12 @@ public class NewSurveyFragment extends Fragment {
                         etRemarks.setText(PandoraHelper.parseNewLine(question.getRemarks()));
                     }
                     else etRemarks.setHint("Remarks");
+                    etRemarks.setOnTouchListener(new View.OnTouchListener() {
+                        public boolean onTouch(View v, MotionEvent event) {
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            return false;
+                        }
+                    });
 
                     subLL.addView(tvQuestion);
                     subLL.addView(tvQuestionDesc);

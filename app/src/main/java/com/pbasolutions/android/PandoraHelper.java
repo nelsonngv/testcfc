@@ -324,52 +324,12 @@ public class PandoraHelper  {
      * @param date
      */
     public static void promptDatePicker(final TextView date, Activity activity) {
-        promptDatePicker(date, activity, true);
+        promptDatePicker(date, activity, false, true);
     }
-    public static void promptDatePicker(final TextView date, Activity activity, boolean hasMaxDate) {
-        final Calendar c = Calendar.getInstance();
-        if (date != null && date.getText() != null && !date.getText().toString().isEmpty()) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-            try {
-                c.setTime(sdf.parse(date.getText().toString()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        int  mYear = c.get(Calendar.YEAR);
-        int  mMonth = c.get(Calendar.MONTH);
-        int  mDay = c.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog dpd = new DatePickerDialog(activity,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-                        String timeStr = String.format("%02d-%02d-%04d", dayOfMonth, monthOfYear + 1, year);
-                        date.setText(timeStr);
-
-                    }
-                }, mYear, mMonth, mDay);
-        if (hasMaxDate) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.HOUR_OF_DAY, cal.getMaximum(Calendar.HOUR_OF_DAY));
-            cal.set(Calendar.MINUTE, cal.getMaximum(Calendar.MINUTE));
-            cal.set(Calendar.SECOND, cal.getMaximum(Calendar.SECOND));
-            cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
-            dpd.getDatePicker().setMaxDate(cal.getTimeInMillis());
-        }
-        dpd.show();
-    }
-
-    /**
-     *
-     * @param date
-     */
     public static void promptFutureDatePicker(final TextView date, Activity activity) {
-        promptFutureDatePicker(date, activity, true);
+        promptDatePicker(date, activity, true, false);
     }
-    public static void promptFutureDatePicker(final TextView date, Activity activity, boolean hasMinDate) {
+    public static void promptDatePicker(final TextView date, Activity activity, boolean hasMinDate, boolean hasMaxDate) {
         final Calendar c = Calendar.getInstance();
         if (date != null && date.getText() != null && !date.getText().toString().isEmpty()) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -401,6 +361,14 @@ public class PandoraHelper  {
             cal.set(Calendar.SECOND, cal.getMinimum(Calendar.SECOND));
             cal.set(Calendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
             dpd.getDatePicker().setMinDate(cal.getTimeInMillis());
+        }
+        if (hasMaxDate) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, cal.getMaximum(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, cal.getMaximum(Calendar.MINUTE));
+            cal.set(Calendar.SECOND, cal.getMaximum(Calendar.SECOND));
+            cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
+            dpd.getDatePicker().setMaxDate(cal.getTimeInMillis());
         }
         dpd.show();
     }

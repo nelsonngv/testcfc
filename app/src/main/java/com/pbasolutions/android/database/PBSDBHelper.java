@@ -28,7 +28,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int DATABASE_VERSION = 20;
+    private static final int DATABASE_VERSION = 25;
     /**
      *
      */
@@ -749,7 +749,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "ISUPDATED BOOLEAN DEFAULT 'Y'," +
                     "ISSYNCED BOOLEAN DEFAULT 'Y'," +
                     "ISDELETED BOOLEAN DEFAULT 'N'," +
-                    "DUEDATE DATETIME," +
+                    "DATEASSIGNED DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))," +
+                    "DUEDATE DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))," +
                     //PK
                     "C_PROJECTTASK_UUID TEXT PRIMARY KEY NOT NULL," +
                     //FK
@@ -1199,6 +1200,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "NAME TEXT, " +
                     "DATESTART DATE, " +
                     "DATEEND DATE, " +
+                    "REMARKS TEXT, " +
+                    "DATETRX DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')), " +
                     "LONGITUDE NUMBER, " +
                     "LATITUDE NUMBER, " +
                     "ATTACHMENT_SIGNATURE VARCHAR2(100), " +
@@ -2779,6 +2782,132 @@ public class PBSDBHelper extends SQLiteOpenHelper {
 
             if (oldVersion < 20) {
                 db.execSQL("ALTER TABLE C_SURVEY ADD ATTACHMENT_STAFFSIGNATURE VARCHAR2(100)");
+            }
+
+            if (oldVersion < 25) {
+                db.execSQL("PRAGMA writable_schema = true;");
+                db.execSQL("PRAGMA foreign_keys = false;");
+
+                db.execSQL("DROP TABLE IF EXISTS TMP_TABLE;");
+                //C_SURVEY
+                db.execSQL("ALTER TABLE C_SURVEY RENAME TO TMP_TABLE;");
+                db.execSQL("CREATE TABLE C_SURVEY(" +
+                        "C_SURVEY_ID NUMBER(10, 0) DEFAULT NULL, " +
+                        "C_SURVEY_UUID TEXT PRIMARY KEY NOT NULL, " +
+                        "AD_CLIENT_UUID NUMBER(10, 0) NOT NULL, " +
+                        "AD_ORG_UUID NUMBER(10, 0) NOT NULL, " +
+                        "C_PROJECTLOCATION_UUID NUMBER(10, 0) NOT NULL, " +
+                        "C_SURVEYTEMPLATE_UUID NUMBER(10, 0) NOT NULL, " +
+                        "ISACTIVE CHAR(1) DEFAULT 'Y' NOT NULL, " +
+                        "VALUE TEXT NOT NULL, " +
+                        "VALIDTO DATE, " +
+                        "EMAIL TEXT NOT NULL, " +
+                        "DATEDELIVERY DATE NOT NULL, " +
+                        "EMAILSENT CHAR(1) DEFAULT 'N' NOT NULL, " +
+                        "STATUS CHAR(1) DEFAULT 'N' NOT NULL, " +
+                        "NAME TEXT, " +
+                        "DATESTART DATE, " +
+                        "DATEEND DATE, " +
+                        "REMARKS TEXT, " +
+                        "DATETRX DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')), " +
+                        "LONGITUDE NUMBER, " +
+                        "LATITUDE NUMBER, " +
+                        "ATTACHMENT_SIGNATURE VARCHAR2(100), " +
+                        "ATTACHMENT_STAFFSIGNATURE VARCHAR2(100), " +
+                        "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')), " +
+                        "CREATEDBY NUMBER(10, 0) NOT NULL, " +
+                        "UPDATED DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME')), " +
+                        "UPDATEDBY NUMBER(10, 0) NOT NULL, " +
+                        "ISUPDATED BOOLEAN DEFAULT 'N', " +
+                        "ISSYNCED BOOLEAN DEFAULT 'N', " +
+                        "ISDELETED BOOLEAN DEFAULT 'N', " +
+                        "FOREIGN KEY(AD_ORG_UUID) REFERENCES AD_ORG(AD_ORG_UUID)," +
+                        "FOREIGN KEY(AD_CLIENT_UUID) REFERENCES AD_CLIENT(AD_CLIENT_UUID)," +
+                        "FOREIGN KEY(C_SURVEYTEMPLATE_UUID) REFERENCES C_SURVEYTEMPLATE(C_SURVEYTEMPLATE_UUID), " +
+                        "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
+                        "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)," +
+                        "FOREIGN KEY(UPDATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
+                        ");");
+
+                //create index for C_SURVEY_ID_INDEX
+                db.execSQL("DROP INDEX C_SURVEY_ID_INDEX");
+                db.execSQL("CREATE INDEX C_SURVEY_ID_INDEX ON C_SURVEY(C_SURVEY_ID)");
+                db.execSQL("INSERT INTO C_SURVEY SELECT * FROM TMP_TABLE;");
+                db.execSQL("DROP TABLE TMP_TABLE;");
+
+                //C_PROJECTTASK
+                db.execSQL("ALTER TABLE C_PROJECTTASK RENAME TO TMP_TABLE;");
+                db.execSQL("CREATE TABLE C_PROJECTTASK(" +
+                        //STANDARD
+                        "C_PROJECTTASK_ID NUMBER(10, 0) DEFAULT NULL," +
+                        "CREATED DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))," +
+                        "CREATEDBY TEXT NOT NULL," +
+                        "ISACTIVE CHAR(1) DEFAULT 'Y' NOT NULL," +
+                        "ISUPDATED BOOLEAN DEFAULT 'Y'," +
+                        "ISSYNCED BOOLEAN DEFAULT 'Y'," +
+                        "ISDELETED BOOLEAN DEFAULT 'N'," +
+                        "DATEASSIGNED DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))," +
+                        "DUEDATE DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))," +
+                        //PK
+                        "C_PROJECTTASK_UUID TEXT PRIMARY KEY NOT NULL," +
+                        //FK
+                        "C_PROJECTLOCATION_UUID TEXT NOT NULL," +
+                        //OTHERS
+                        "PRIORITY NUMBER(10,0), " +
+                        "NAME NVARCHAR2(300), " +
+                        "ASSIGNEDTO NUMBER(10, 0)," + //AD_USER_ID
+
+                        "ISDONE CHAR(1) DEFAULT 'N' NOT NULL, " +
+                        "DESCRIPTION NVARCHAR2(255), " +
+                        "COMMENTS NVARCHAR2(255)," +
+                        "ATTACHMENT_BEFORETASKPICTURE_1 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_1 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_2 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_3 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_4 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_5 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_6 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_7 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_8 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_9 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_10 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_11 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_12 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_13 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_14 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_15 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_16 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_17 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_18 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_19 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_20 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_21 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_22 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_23 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_24 VARCHAR2(100) , " +
+                        "ATTACHMENT_TASKPICTURE_25 VARCHAR2(100) , " +
+                        "ATTACHMENT_SIGNATURE VARCHAR2(100) , " +
+                        "LATITUDE NUMBER , " +
+                        "LONGITUDE NUMBER , " +
+                        "ISEXPIRINGNOTIFIED CHAR(1) DEFAULT 'N' NOT NULL, " +
+                        "ISEXPIREDNOTIFIED CHAR(1) DEFAULT 'N' NOT NULL, " +
+                        //--
+//                    "CONSTRAINT PROJTASKID_UNIQCONS UNIQUE (C_PROJECTTASK_ID)," +
+                        "FOREIGN KEY(C_PROJECTLOCATION_UUID) REFERENCES C_PROJECTLOCATION(C_PROJECTLOCATION_UUID)," +
+                        "FOREIGN KEY(CREATEDBY) REFERENCES AD_USER(AD_USER_UUID)" +
+                        ");");
+
+                //create index for C_PROJECTTASK_ID_INDEX
+                db.execSQL("DROP INDEX C_PROJECTTASK_ID_INDEX");
+                db.execSQL("CREATE INDEX C_PROJECTTASK_ID_INDEX ON C_PROJECTTASK(C_PROJECTTASK_ID)");
+                db.execSQL("INSERT INTO C_PROJECTTASK SELECT * FROM TMP_TABLE;");
+                db.execSQL("DROP TABLE TMP_TABLE;");
+
+                db.execSQL("PRAGMA foreign_keys = true;");
+                db.execSQL("PRAGMA writable_schema = false;");
+
+//                db.execSQL("ALTER TABLE C_SURVEY ADD REMARKS TEXT");
+//                db.execSQL("ALTER TABLE C_SURVEY ADD DATETRX DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))");
             }
         } catch (SQLException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE

@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -50,6 +49,7 @@ public class NewSurveySignFragment extends Fragment {
     private Button mClearButton;
     private Button mSaveButton;
     private ArrayList<MSurvey> answerList;
+    private Bundle bundle;
 
     /**
      * Constructor method.
@@ -77,7 +77,7 @@ public class NewSurveySignFragment extends Fragment {
         setUI(rootView);
         setUIListener();
 
-        Bundle bundle = getArguments();
+        bundle = getArguments();
         if (bundle != null)
             answerList = bundle.getParcelableArrayList("answers");
 
@@ -209,6 +209,8 @@ public class NewSurveySignFragment extends Fragment {
             surveyCV.put(ModelConst.UPDATEDBY_COL, ad_user_uuid);
             surveyCV.put(ModelConst.IS_SYNCED_COL, PandoraConstant.NO);
             surveyCV.put(ModelConst.IS_UPDATED_COL, PandoraConstant.NO);
+            surveyCV.put(MSurvey.DATETRX_COL, bundle.getString(MSurvey.DATETRX_COL, ""));
+            surveyCV.put(MSurvey.REMARKS_COL, bundle.getString(MSurvey.REMARKS_COL, ""));
 
             ContentValues[] answerCV = new ContentValues[answerList.size()];
             for (int i = 0; i < answerList.size(); i++) {

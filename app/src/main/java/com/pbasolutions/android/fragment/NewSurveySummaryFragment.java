@@ -6,16 +6,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.R;
+import com.pbasolutions.android.controller.PBSSurveyController;
 import com.pbasolutions.android.model.MSurvey;
 
 import java.math.BigDecimal;
@@ -35,6 +41,7 @@ public class NewSurveySummaryFragment extends Fragment {
     private ArrayList<MSurvey> answerList;
     private ArrayList<String> sectionList;
     private Bundle bundle;
+    private EditText etSurveyRemarks;
 
     /**
      * Constructor method.
@@ -105,6 +112,31 @@ public class NewSurveySummaryFragment extends Fragment {
 //                subLL.addView(ratingLL);
                 mainLL.addView(subLL);
             }
+
+            LinearLayout subLL = new LinearLayout(getActivity(), null, R.style.PTableVirtRow);
+            TextView tvSurveyRemarks = new TextView(getActivity(), null, R.style.TableInfoLabel);
+            etSurveyRemarks = new EditText(getActivity());
+            subLL.setOrientation(LinearLayout.VERTICAL);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 50, 0, 50);
+            subLL.setLayoutParams(layoutParams);
+
+            tvSurveyRemarks.setTypeface(null, Typeface.BOLD);
+            tvSurveyRemarks.setText(getString(R.string.label_surveyremarks));
+            etSurveyRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            etSurveyRemarks.setFilters(new InputFilter[] {new InputFilter.LengthFilter(2000)});
+            etSurveyRemarks.setMaxLines(5);
+            etSurveyRemarks.setOnTouchListener(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
+;
+            subLL.addView(tvSurveyRemarks);
+            subLL.addView(etSurveyRemarks);
+            mainLL.addView(subLL);
         }
 
         return rootView;
@@ -136,6 +168,9 @@ public class NewSurveySummaryFragment extends Fragment {
     }
 
     protected void next() {
+        PandoraHelper.hideSoftKeyboard();
+        bundle.putString(MSurvey.DATETRX_COL, PBSSurveyController.dateTrx);
+        bundle.putString(MSurvey.REMARKS_COL, etSurveyRemarks.getText().toString());
         Fragment fragment = new NewSurveySignFragment();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragment.setArguments(bundle);

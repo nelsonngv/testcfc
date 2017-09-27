@@ -88,7 +88,8 @@ public class ProjTaskFragment extends Fragment {
         populateProjTask();
         viewAdapter = new TaskRVA(getActivity(), taskList, LayoutInflater.from(PandoraMain.instance));
         recyclerView.setAdapter(viewAdapter);
-        addRecyclerViewListener(recyclerView);
+        PandoraHelper.addRecyclerViewListener(recyclerView, taskList, getActivity(),
+                new ProjTaskDetailsFragment(), taskDetailTitle);
         refreshProjtask(false);
 
         mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
@@ -179,22 +180,9 @@ public class ProjTaskFragment extends Fragment {
         this.taskList = taskList;
     }
 
-    /**
-     * Add click listener on the recycler view. when ever user clicks the list item.
-     * it will navigate them to the item details.
-     * @param rv
-     */
-    protected void addRecyclerViewListener(RecyclerView rv) {
-//        if (isrecyclerviewAdded) return;
-        isrecyclerviewAdded = true;
-
-        PandoraHelper.addRecyclerViewListener(recyclerView, (ObservableArrayList) taskList, getActivity(),
-                new ProjTaskDetailsFragment(), taskDetailTitle);
-    }
-
     protected void refreshProjtask(final boolean showMsg) {
         if (asyncTask != null && !asyncTask.getStatus().name().equalsIgnoreCase("FINISHED"))
-            return;
+            asyncTask.cancel(true);
 
         asyncTask = new AsyncTask<Object, Void, Bundle>() {
             @Override
@@ -207,7 +195,9 @@ public class ProjTaskFragment extends Fragment {
 
             @Override
             protected Bundle doInBackground(Object... params) {
-                return syncProjTasks();
+                Bundle bundle = syncProjTasks();
+                populateProjTask();
+                return bundle;
             }
 
             @Override
@@ -218,10 +208,8 @@ public class ProjTaskFragment extends Fragment {
 
                 String resultTitle = result.getString(PandoraConstant.TITLE);
                 String text;
-                populateProjTask();
                 viewAdapter = new TaskRVA(pandoraMain, taskList, LayoutInflater.from(PandoraMain.instance));
                 recyclerView.setAdapter(viewAdapter);
-                addRecyclerViewListener(recyclerView);
                 if (resultTitle != null && !result.isEmpty()) {
                     text = result.getString(resultTitle);
                 } else {
@@ -232,6 +220,11 @@ public class ProjTaskFragment extends Fragment {
                 if (mSwipeRefreshLayout.isRefreshing())
                     mSwipeRefreshLayout.setRefreshing(false);
             }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void)null);
+        }.execute();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 }

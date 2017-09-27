@@ -1,5 +1,7 @@
 package com.pbasolutions.android.fragment;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
@@ -13,9 +15,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
@@ -26,7 +30,9 @@ import com.pbasolutions.android.controller.PBSSurveyController;
 import com.pbasolutions.android.model.MSurvey;
 import com.pbasolutions.android.model.ModelConst;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -47,6 +53,7 @@ public class NewSurveyStartFragment extends Fragment {
     protected Spinner templateSpinner;
     protected ArrayAdapter templateAdapter;
     protected MSurvey survey;
+    protected TextView atSurveyDateTrx;
 
     /**
      * Constructor method.
@@ -77,8 +84,13 @@ public class NewSurveyStartFragment extends Fragment {
         projLocationSpinner = (Spinner) rootView.findViewById(R.id.atProjLocation);
         etName = (EditText) rootView.findViewById(R.id.atSurveyName);
         templateSpinner = (Spinner) rootView.findViewById(R.id.atTemplate);
+        atSurveyDateTrx = (TextView) rootView.findViewById(R.id.atSurveyDateTrx);
         TextView tvName = (TextView) rootView.findViewById(R.id.tvSurveyName);
         PandoraHelper.setAsterisk(tvName);
+
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        atSurveyDateTrx.setText(sdf.format(date));
 
         ArrayAdapter projLocNameAdapter = PandoraHelper.addListToSpinner(getActivity(), projLocationSpinner, getProjLocList());
         if (projLocNameAdapter.getCount() > 0) {
@@ -108,6 +120,60 @@ public class NewSurveyStartFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        atSurveyDateTrx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                PandoraHelper.promptDateTimePicker(atSurveyDateTrx, getActivity());
+                final Calendar calendar = Calendar.getInstance();
+                int  mYear = calendar.get(Calendar.YEAR);
+                int  mMonth = calendar.get(Calendar.MONTH);
+                int  mDay = calendar.get(Calendar.DAY_OF_MONTH);
+                final int  mHour = calendar.get(Calendar.HOUR_OF_DAY);
+                final int  mMinute = calendar.get(Calendar.MINUTE);
+
+                DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            int m_nYear;
+                            int m_nMonth;
+                            int m_nDay;
+                            boolean isPrompted = false;
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+
+                                if (isPrompted) return;
+                                isPrompted = true;
+
+                                m_nYear = year;
+                                m_nMonth = monthOfYear;
+                                m_nDay = dayOfMonth;
+
+                                TimePickerDialog timedlg = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                                    @Override
+                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                        String timeStr = String.format("%02d-%02d-%04d %02d:%02d", m_nDay, m_nMonth + 1, m_nYear, hourOfDay, minute);
+                                        atSurveyDateTrx.setText(timeStr);
+                                    }
+                                }, mHour, mMinute, false);
+                                timedlg.show();
+                            }
+                        }, mYear, mMonth, mDay);
+                calendar.set(Calendar.HOUR_OF_DAY, calendar.getMaximum(Calendar.HOUR_OF_DAY));
+                calendar.set(Calendar.MINUTE, calendar.getMaximum(Calendar.MINUTE));
+                calendar.set(Calendar.SECOND, calendar.getMaximum(Calendar.SECOND));
+                calendar.set(Calendar.MILLISECOND, calendar.getMaximum(Calendar.MILLISECOND));
+                dpd.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+
+                calendar.add(Calendar.MONTH, -1);
+                calendar.set(Calendar.HOUR_OF_DAY, calendar.getMinimum(Calendar.HOUR_OF_DAY));
+                calendar.set(Calendar.MINUTE, calendar.getMinimum(Calendar.MINUTE));
+                calendar.set(Calendar.SECOND, calendar.getMinimum(Calendar.SECOND));
+                calendar.set(Calendar.MILLISECOND, calendar.getMinimum(Calendar.MILLISECOND));
+                dpd.getDatePicker().setMinDate(calendar.getTimeInMillis());
+                dpd.show();
             }
         });
     }
@@ -164,6 +230,7 @@ public class NewSurveyStartFragment extends Fragment {
         }
 
         Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dt.setTimeZone(TimeZone.getDefault());
         String now = dt.format(date);
@@ -171,6 +238,12 @@ public class NewSurveyStartFragment extends Fragment {
         PBSSurveyController.projLocUUID = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_ID_COL, projLocPair.getKey(), ModelConst.C_PROJECTLOCATION_UUID_COL, cr);
         PBSSurveyController.templateUUID = templatePair.getKey();
         PBSSurveyController.dateStart = now;
+        try {
+            date = sdf.parse(atSurveyDateTrx.getText().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        PBSSurveyController.dateTrx = dt.format(date);
 
         ((PandoraMain) getActivity()).
                 displayView(PandoraMain.FRAGMENT_NEW_SURVEY, false);
