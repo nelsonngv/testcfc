@@ -2,7 +2,6 @@ package com.pbasolutions.android;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -11,14 +10,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -26,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -580,60 +577,73 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             return;
         }
 
-        clearAllFragmentStack();
-        Bundle inputBundle = new Bundle();
-        if (PandoraHelper.isInternetOn(this)) {
-            inputBundle.putString(PBSAuthenticatorController.USER_NAME_ARG,
-                    getGlobalVariable().getAd_user_name());
-            inputBundle.putString(PBSAuthenticatorController.AUTH_TOKEN_ARG,
-                    getGlobalVariable().getAuth_token());
-            inputBundle.putString(PBSAuthenticatorController.SERVER_URL_ARG,
-                    getGlobalVariable().getServer_url());
-            inputBundle.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE,
-                    PBSAccountInfo.ACCOUNT_TYPE);
-            inputBundle.putString(PBSAuthenticatorController.ARG_AUTH_TYPE,
-                    PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
-        } else {
-            inputBundle.putString(PBSAuthenticatorController.USER_NAME_ARG,
-                    getGlobalVariable().getAd_user_name());
-        }
-        new AsyncTask<Bundle, Void, Bundle>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                showProgressDialog("Loading...");
-            }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Logout")
+                .setMessage("Are you sure you wish to logout?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        clearAllFragmentStack();
+                        Bundle inputBundle = new Bundle();
+                        if (PandoraHelper.isInternetOn(PandoraMain.this)) {
+                            inputBundle.putString(PBSAuthenticatorController.USER_NAME_ARG,
+                                    getGlobalVariable().getAd_user_name());
+                            inputBundle.putString(PBSAuthenticatorController.AUTH_TOKEN_ARG,
+                                    getGlobalVariable().getAuth_token());
+                            inputBundle.putString(PBSAuthenticatorController.SERVER_URL_ARG,
+                                    getGlobalVariable().getServer_url());
+                            inputBundle.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE,
+                                    PBSAccountInfo.ACCOUNT_TYPE);
+                            inputBundle.putString(PBSAuthenticatorController.ARG_AUTH_TYPE,
+                                    PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
+                        } else {
+                            inputBundle.putString(PBSAuthenticatorController.USER_NAME_ARG,
+                                    getGlobalVariable().getAd_user_name());
+                        }
+                        new AsyncTask<Bundle, Void, Bundle>() {
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                                showProgressDialog("Loading...");
+                            }
 
-            @Override
-            protected Bundle doInBackground(Bundle... params) {
-                Bundle inputBundle = params[0];
-                Bundle logOutResult = null;
-                if (PandoraHelper.isInternetOn(PandoraMain.this))
-                    logOutResult = authenticatorController.triggerEvent(
-                        PBSAuthenticatorController.LOG_OUT, inputBundle, new Bundle(), this);
+                            @Override
+                            protected Bundle doInBackground(Bundle... params) {
+                                Bundle inputBundle = params[0];
+                                Bundle logOutResult = null;
+                                if (PandoraHelper.isInternetOn(PandoraMain.this))
+                                    logOutResult = authenticatorController.triggerEvent(
+                                            PBSAuthenticatorController.LOG_OUT, inputBundle, new Bundle(), this);
 
-                authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
-                        inputBundle, null, this);
+                                authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
+                                        inputBundle, null, this);
 
-//                globalVariable = null;
-                PBSServerConst.cookieStore = null;
+//                                globalVariable = null;
+                                PBSServerConst.cookieStore = null;
 
-                return null;
-            }
+                                return null;
+                            }
 
-            @Override
-            protected void onPostExecute(Bundle result) {
-                super.onPostExecute(result);
+                            @Override
+                            protected void onPostExecute(Bundle result) {
+                                super.onPostExecute(result);
 
-                showLogOutDialog(PBSAuthenticatorController.SUCCESSFULLY_LOGGED_OUT_TXT);
+                                showLogOutDialog(PBSAuthenticatorController.SUCCESSFULLY_LOGGED_OUT_TXT);
 
-                dismissProgressDialog();
-                checkLoginHandler.removeCallbacks(checkLoginRunnable);
-                checkProjTaskHandler.removeCallbacks(checkProjTaskRunnable);
+                                dismissProgressDialog();
+                                checkLoginHandler.removeCallbacks(checkLoginRunnable);
+                                checkProjTaskHandler.removeCallbacks(checkProjTaskRunnable);
 
-                directToFragment(false);
-            }
-        }.execute(inputBundle);
+                                directToFragment(false);
+                            }
+                        }.execute(inputBundle);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        dialog = builder.create();
+        dialog.show();
     }
 
     public void resetServerData(String serverUrl) {

@@ -51,6 +51,7 @@ public class MovementListFragment extends Fragment {
     private TextView sortStatusAsc;
 
     protected String movementDetailTitle;
+    private AsyncTask asyncTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class MovementListFragment extends Fragment {
         final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.asset_movement_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        new AsyncTask<Object, Void, Void>() {
+        asyncTask = new AsyncTask<Object, Void, Void>() {
             protected LayoutInflater inflater;
             protected RecyclerView recyclerView;
             @Override
@@ -109,7 +110,7 @@ public class MovementListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 // Refresh items
-                new AsyncTask<Object, Void, Void>() {
+                asyncTask = new AsyncTask<Object, Void, Void>() {
                     protected LayoutInflater inflater;
                     protected RecyclerView recyclerView;
                     @Override
@@ -287,4 +288,11 @@ public class MovementListFragment extends Fragment {
         return (ObservableArrayList)result.getSerializable(PBSAssetController.ARG_MOVEMENT);
     }
 
+    @Override
+    public void onPause() {
+        asyncTask.cancel(true);
+        if (mSwipeRefreshLayout.isRefreshing())
+            mSwipeRefreshLayout.setRefreshing(false);
+        super.onPause();
+    }
 }

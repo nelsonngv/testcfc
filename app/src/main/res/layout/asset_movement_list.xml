@@ -99,7 +99,6 @@
             layout_marginBottom="?attr/actionBarSize"
             android:stackFromBottom="true"
             app:fastScrollThumbColor="@color/colorAccent"
-            app:fastScrollAutoHide="false">
-        </com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView>
+            app:fastScrollAutoHide="false"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

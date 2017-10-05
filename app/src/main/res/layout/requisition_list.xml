@@ -115,8 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:fastScrollThumbColor="@color/colorAccent"
-                app:fastScrollAutoHide="false">
-            </com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView>
+                app:fastScrollAutoHide="false"/>
         </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 </layout>

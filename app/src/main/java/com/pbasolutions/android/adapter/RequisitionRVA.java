@@ -33,6 +33,12 @@ public class RequisitionRVA extends RecyclerView.Adapter<RequisitionRVA.Requisti
     public void onBindViewHolder(RequistionVH holder, int position) {
         MPurchaseRequest requis = requisList.get(position);
         holder.vBinding.setRequisition(requis);
+        if (requisList.size() == 1)
+            holder.itemView.setPadding(0, 10, 0, 10);
+        else {
+            if (position == 0) holder.itemView.setPadding(0, 10, 0, 0);
+            if (position == requisList.size() - 1) holder.itemView.setPadding(0, 0, 0, 10);
+        }
     }
 
     /**
@@ -52,6 +58,7 @@ public class RequisitionRVA extends RecyclerView.Adapter<RequisitionRVA.Requisti
         public RequistionVH(RequisitionListItemBinding binding) {
             super(binding.getRoot());
             this.vBinding = binding;
+            itemView.setClickable(true);
         }
     }
 }

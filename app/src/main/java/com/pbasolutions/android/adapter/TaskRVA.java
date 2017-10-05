@@ -17,7 +17,7 @@ public class TaskRVA extends RecyclerView.Adapter<TaskRVA.TaskVH> {
     private ObservableArrayList<MProjectTask> taskList;
     private LayoutInflater inflater;
 
-    public TaskRVA(Context mContext, ObservableArrayList<MProjectTask> taskList, LayoutInflater inflater) {
+    public TaskRVA(Context mContext, ObservableArrayList<MProjectTask> taskList) {
         this.mContext = mContext;
         this.taskList = taskList;
         this.inflater = LayoutInflater.from(mContext);
@@ -33,6 +33,12 @@ public class TaskRVA extends RecyclerView.Adapter<TaskRVA.TaskVH> {
     public void onBindViewHolder(TaskVH holder, int position) {
         MProjectTask task = taskList.get(position);
         holder.vBinding.setProjTask(task);
+        if (taskList.size() == 1)
+            holder.itemView.setPadding(0, 10, 0, 10);
+        else {
+            if (position == 0) holder.itemView.setPadding(0, 10, 0, 0);
+            if (position == taskList.size() - 1) holder.itemView.setPadding(0, 0, 0, 10);
+        }
     }
 
     /**
@@ -52,6 +58,7 @@ public class TaskRVA extends RecyclerView.Adapter<TaskRVA.TaskVH> {
         public TaskVH(TaskListItemBinding binding) {
             super(binding.getRoot());
             this.vBinding = binding;
+            itemView.setClickable(true);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.pbasolutions.android.fragment;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.Camera;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
@@ -67,6 +71,12 @@ public class ATrackScanLocFragment extends Fragment {
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         tvDesc = (TextView) rootView.findViewById(R.id.tvDesc);
 
+//        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+//        integrator.setPrompt("aaaa");
+//        integrator.setOrientationLocked(false);
+//        integrator.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
+//        integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+
         if (mNfcAdapter == null) {
             tvDesc.setText(getString(R.string.nfc_notsupport));
             tvDesc.setTextColor(Color.RED);
@@ -96,6 +106,20 @@ public class ATrackScanLocFragment extends Fragment {
             }
         }
         return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null && getActivity() != null) {
+            if(result.getContents() == null) {
+                Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     public void startCheckInOut(String nfcTagID) {

@@ -9,101 +9,113 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:divider="?android:attr/dividerVertical"
-            android:showDividers="middle">
-            <TextView
-                android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:foreground="@drawable/selectable_item_background">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/task_seqno"
-                android:text="@{String.valueOf(projTask.Priority)}"
-                android:editable="false"
-                android:gravity="center"
-                android:textSize="@dimen/abc_text_size_subhead_material"/>
-            <TableLayout android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="?android:attr/dividerHorizontal"
+                android:orientation="horizontal"
+                android:divider="?android:attr/dividerVertical"
                 android:showDividers="middle">
-                <TableRow
-                    android:paddingTop="15dp">
-                    <TextView
-                        android:layout_marginLeft="@dimen/table_margin_left"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/task_name"
-                        android:text="@{projTask.name}"
-                        android:textStyle="bold"
-                        android:editable="false"
-                        android:textSize="@dimen/abc_text_size_subhead_material"
-                        android:layout_span="2"/>
-                </TableRow>
-                <TableRow
-                    android:divider="?android:attr/dividerVertical"
-                    android:showDividers="middle">
-                    <TextView
-                        style="@style/TableLabelWide"
-                        android:text="@string/label_projloc" />
-                    <TextView
-                        style="@style/TableValue"
-                        android:layout_marginLeft="@dimen/table_margin_middle"
-                        android:id="@+id/task_project_loc"
-                        android:text="@{projTask.projLocName}"
-                        />
-                </TableRow>
-                <TableRow
-                    android:divider="?android:attr/dividerVertical"
-                    android:showDividers="middle">
-                    <TextView
-                        style="@style/TableLabelWide"
-                        android:text="@string/label_assignto" />
-                    <TextView
-                        style="@style/TableValue"
-                        android:layout_marginLeft="@dimen/table_margin_middle"
-                        android:id="@+id/task_assignedto"
-                        android:text="@{projTask.assignedToName}"
-                        />
-                </TableRow>
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/task_seqno"
+                    android:text="@{String.valueOf(projTask.Priority)}"
+                    android:editable="false"
+                    android:gravity="center"
+                    android:textSize="@dimen/abc_text_size_subhead_material"/>
+                <TableLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:showDividers="middle"
+                    android:stretchColumns="1">
+                    <TableRow
+                        android:paddingTop="15dp">
+                        <TextView
+                            android:layout_marginLeft="@dimen/table_margin_left"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/task_name"
+                            android:text="@{projTask.name}"
+                            android:textStyle="bold"
+                            android:editable="false"
+                            android:textSize="@dimen/abc_text_size_subhead_material"
+                            android:layout_span="2"/>
+                    </TableRow>
+                    <TableRow
+                        android:divider="?android:attr/dividerVertical"
+                        android:showDividers="middle">
+                        <TextView
+                            style="@style/TableLabelWide"
+                            android:text="@string/label_projloc" />
+                        <TextView
+                            style="@style/TableValue"
+                            android:layout_marginLeft="@dimen/table_margin_middle"
+                            android:id="@+id/task_project_loc"
+                            android:text="@{projTask.projLocName}"
+                            />
+                    </TableRow>
+                    <TableRow
+                        android:divider="?android:attr/dividerVertical"
+                        android:showDividers="middle">
+                        <TextView
+                            style="@style/TableLabelWide"
+                            android:text="@string/label_assignto" />
+                        <TextView
+                            style="@style/TableValue"
+                            android:layout_marginLeft="@dimen/table_margin_middle"
+                            android:id="@+id/task_assignedto"
+                            android:text="@{projTask.assignedToName}"
+                            />
+                    </TableRow>
 
-                <TableRow
-                    android:divider="?android:attr/dividerVertical"
-                    android:showDividers="middle">
-                    <TextView
-                        style="@style/TableLabelWide"
-                        android:text="@string/label_duedate" />
-                    <TextView
-                        android:id="@+id/task_duedate"
-                        style="@style/TableValue"
-                        android:layout_marginLeft="@dimen/table_margin_middle"
-                        android:text="@{projTask.DueDate}"
-                        />
-                </TableRow>
+                    <TableRow
+                        android:divider="?android:attr/dividerVertical"
+                        android:showDividers="middle">
+                        <TextView
+                            style="@style/TableLabelWide"
+                            android:text="@string/label_duedate" />
+                        <TextView
+                            android:id="@+id/task_duedate"
+                            style="@style/TableValue"
+                            android:layout_marginLeft="@dimen/table_margin_middle"
+                            android:text="@{projTask.DueDate}"
+                            />
+                    </TableRow>
 
-                <TableRow
-                    android:divider="?android:attr/dividerVertical"
-                    android:showDividers="middle">
-                    <TextView
-                        style="@style/TableLabelWide"
-                        android:paddingBottom="15dp"
-                        android:text="@string/label_status" />
-                    <TextView
-                        android:id="@+id/task_status"
-                        style="@style/TableValue"
-                        android:layout_marginLeft="@dimen/table_margin_middle"
-                        android:text="@{projTask.Status}"
-                        android:textColor="@{projTask.StatusColor}"
-                        />
-                </TableRow>
-            </TableLayout>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:id="@+id/_UUID"
-                android:text="@{projTask._UUID}"
-                android:visibility="invisible"/>
-        </LinearLayout>
-        <View style="@style/Line2" android:layout_width="match_parent"/>
+                    <TableRow
+                        android:divider="?android:attr/dividerVertical"
+                        android:showDividers="middle">
+                        <TextView
+                            style="@style/TableLabelWide"
+                            android:paddingBottom="15dp"
+                            android:text="@string/label_status" />
+                        <TextView
+                            android:id="@+id/task_status"
+                            style="@style/TableValue"
+                            android:layout_marginLeft="@dimen/table_margin_middle"
+                            android:text="@{projTask.Status}"
+                            android:textColor="@{projTask.StatusColor}"
+                            />
+                    </TableRow>
+                </TableLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:id="@+id/_UUID"
+                    android:text="@{projTask._UUID}"
+                    android:visibility="invisible"/>
+            </LinearLayout>
+            <!--<View style="@style/Line2" android:layout_width="match_parent"/>-->
+            <View style="@style/Line2" android:layout_width="match_parent"
+                android:background="@android:color/transparent"/>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 </layout>

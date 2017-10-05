@@ -35,6 +35,12 @@ public class EmployeeRVA extends RecyclerView.Adapter<EmployeeRVA.MEmployeeVH> i
     public void onBindViewHolder(MEmployeeVH holder, int position) {
         MEmployee employee = employeeList.get(position);
         holder.vBinding.setEmployee(employee);
+        if (employeeList.size() == 1)
+            holder.itemView.setPadding(0, 10, 0, 10);
+        else {
+            if (position == 0) holder.itemView.setPadding(0, 10, 0, 0);
+            if (position == employeeList.size() - 1) holder.itemView.setPadding(0, 0, 0, 10);
+        }
     }
 
     /**
@@ -63,6 +69,7 @@ public class EmployeeRVA extends RecyclerView.Adapter<EmployeeRVA.MEmployeeVH> i
         public MEmployeeVH(EmployeeListitemBinding binding) {
             super(binding.getRoot());
             this.vBinding = binding;
+            itemView.setClickable(true);
         }
     }
 }

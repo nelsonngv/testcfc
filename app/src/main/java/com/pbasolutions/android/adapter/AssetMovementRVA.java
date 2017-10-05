@@ -33,6 +33,12 @@ public class AssetMovementRVA extends RecyclerView.Adapter<AssetMovementRVA.Asse
     public void onBindViewHolder(AssetMovementVH holder, int position) {
         MMovement movement = movements.get(position);
         holder.vBinding.setMovement(movement);
+        if (movements.size() == 1)
+            holder.itemView.setPadding(0, 10, 0, 10);
+        else {
+            if (position == 0) holder.itemView.setPadding(0, 10, 0, 0);
+            if (position == movements.size() - 1) holder.itemView.setPadding(0, 0, 0, 10);
+        }
     }
 
     /**
@@ -53,6 +59,7 @@ public class AssetMovementRVA extends RecyclerView.Adapter<AssetMovementRVA.Asse
         public AssetMovementVH(AssetMovementListItemBinding binding) {
             super(binding.getRoot());
             this.vBinding = binding;
+            itemView.setClickable(true);
         }
     }
 }

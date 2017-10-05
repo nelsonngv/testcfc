@@ -8,39 +8,40 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:orientation="vertical"
         android:weightSum="1">
 
         <TextView
             android:id="@+id/icon_employee_text"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:background="@drawable/circular_textview"
             android:fontFamily="sans-serif-thin"
+            android:layout_centerVertical="true"
             android:gravity="center"
             android:text="@{employee.cname}"
             android:textAllCaps="true"
             android:textColor="#FFF"
             android:textSize="32sp"
             android:textStyle="normal|bold"
-            android:layout_marginTop="19dp"
             android:layout_marginLeft="15dp"
             android:elevation="5dp" />
 
 
         <TableLayout android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="80dp">
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle">
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:divider="@drawable/divider_vertical"
-                android:showDividers="none">
-                <!--<TextView
+                android:showDividers="middle">
+                <TextView
+                    android:layout_width="120dp"
+                    android:paddingTop="15dp"
                     android:text="@string/label_name"
-                    style="@style/TableLabel"/>-->
+                    style="@style/TableLabel"/>
                 <TextView
                     style="@style/Value"
                     android:id="@+id/employee_name"
@@ -49,10 +50,12 @@
                    />
             </TableRow>
             <TableRow android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <!--<TextView
+                android:layout_height="match_parent"
+                android:divider="@drawable/divider_vertical"
+                android:showDividers="middle">
+                <TextView
                     android:text="@string/label_idnumber"
-                    style="@style/TableLabel"/>-->
+                    style="@style/TableLabel"/>
                 <TextView
                     style="@style/Value"
                     android:id="@+id/employee_idnumber"
@@ -60,10 +63,12 @@
                     />
             </TableRow>
             <TableRow android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <!--<TextView
+                android:layout_height="match_parent"
+                android:divider="@drawable/divider_vertical"
+                android:showDividers="middle">
+                <TextView
                     android:text="@string/label_phone"
-                    style="@style/TableLabel"/>-->
+                    style="@style/TableLabel"/>
                 <TextView
                     style="@style/Value"
                     android:id="@+id/employee_phone"
@@ -71,10 +76,13 @@
                     />
             </TableRow>
             <TableRow android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <!--<TextView
+                android:layout_height="match_parent"
+                android:divider="@drawable/divider_vertical"
+                android:showDividers="middle">
+                <TextView
+                    android:paddingBottom="15dp"
                     android:text="@string/label_default_projloc"
-                    style="@style/TableLabel"/>-->
+                    style="@style/TableLabel"/>
                 <TextView
                     style="@style/Value"
                     android:id="@+id/employee_default_projloc"

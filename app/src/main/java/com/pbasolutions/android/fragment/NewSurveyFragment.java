@@ -136,7 +136,7 @@ public class NewSurveyFragment extends Fragment {
                         rating.setEnabled(false);
                         rating.setSelection(Integer.parseInt(question.getAmt()) + 1);
                         etRemarks.setEnabled(false);
-                        etRemarks.setText(PandoraHelper.parseNewLine(question.getRemarks()));
+                        etRemarks.setText(question.getRemarks() != null && !question.getRemarks().isEmpty() && !question.getRemarks().equalsIgnoreCase("null") ? PandoraHelper.parseNewLine(question.getRemarks()) : "No remark");
                     }
                     else etRemarks.setHint("Remarks");
                     etRemarks.setOnTouchListener(new View.OnTouchListener() {

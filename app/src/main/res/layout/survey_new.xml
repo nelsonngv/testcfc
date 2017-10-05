@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
-    <LinearLayout
+    android:orientation="vertical">
+    <Button
+        android:id="@+id/atSection"
+        style="@style/PLargeButton"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="-8dp"
+        android:enabled="false" />
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
-        android:orientation="vertical" >
-        <Button
-            android:id="@+id/atSection"
-            style="@style/PLargeButton"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginTop="-8dp"
-            android:enabled="false" />
+        android:layout_height="match_parent">
         <LinearLayout
             android:id="@+id/mainLL"
             android:layout_width="match_parent"
@@ -26,5 +24,5 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp">
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

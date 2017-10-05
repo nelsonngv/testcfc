@@ -33,6 +33,12 @@ public class SurveyRVA extends RecyclerView.Adapter<SurveyRVA.SurveyVH> {
     public void onBindViewHolder(SurveyVH holder, int position) {
         MSurvey survey = surveyList.get(position);
         holder.vBinding.setSurvey(survey);
+        if (surveyList.size() == 1)
+            holder.itemView.setPadding(0, 10, 0, 10);
+        else {
+            if (position == 0) holder.itemView.setPadding(0, 10, 0, 0);
+            if (position == surveyList.size() - 1) holder.itemView.setPadding(0, 0, 0, 10);
+        }
     }
 
     /**
@@ -52,6 +58,7 @@ public class SurveyRVA extends RecyclerView.Adapter<SurveyRVA.SurveyVH> {
         public SurveyVH(SurveyListItemBinding binding) {
             super(binding.getRoot());
             this.vBinding = binding;
+            itemView.setClickable(true);
         }
     }
 }

@@ -191,6 +191,8 @@ public class PBSCheckInController extends ContextWrapper implements PBSIControll
      * @return
      */
     private Bundle processLocation(Bundle bundle, final Bundle resultBundle, Object object) {
+        int MIN_TIME_BW_UPDATES = 10000;
+        int MIN_DISTANCE_CHANGE_FOR_UPDATES = 10000;
         locationManager = (LocationManager) (context).getSystemService(Context.LOCATION_SERVICE);
         int locationMode;
         try {
@@ -225,15 +227,27 @@ public class PBSCheckInController extends ContextWrapper implements PBSIControll
 
             provider = locationManager.getBestProvider(criteria, false);
 
+            customlistener = new CustomLocationListener();
+
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    MIN_TIME_BW_UPDATES,
+                    MIN_DISTANCE_CHANGE_FOR_UPDATES, customlistener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location == null) {
+                locationManager.requestLocationUpdates(
+                        LocationManager.NETWORK_PROVIDER,
+                        MIN_TIME_BW_UPDATES,
+                        MIN_DISTANCE_CHANGE_FOR_UPDATES, customlistener);
                 location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 if (location == null) {
+                    locationManager.requestLocationUpdates(
+                            LocationManager.PASSIVE_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES, customlistener);
                     location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                 }
             }
-
-            customlistener = new CustomLocationListener();
 
             if (location != null) {
                 customlistener.onLocationChanged(location);

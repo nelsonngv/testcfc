@@ -364,5 +364,12 @@ public class RequisitionFragment extends Fragment{
         return (ObservableArrayList<MPurchaseRequest>)result.get(PBSRequisitionController.ARG_REQUISITION_LIST);
     }
 
+    @Override
+    public void onPause() {
+        asyncTask.cancel(true);
+        if (mSwipeRefreshLayout.isRefreshing())
+            mSwipeRefreshLayout.setRefreshing(false);
+        super.onPause();
+    }
 }
 

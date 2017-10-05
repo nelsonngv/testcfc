@@ -35,6 +35,12 @@ public class ApplicantRVA extends RecyclerView.Adapter<ApplicantRVA.MApplicantVH
     public void onBindViewHolder(MApplicantVH holder, int position) {
         MApplicant applicant = applicantList.get(position);
         holder.vBinding.setApplicant(applicant);
+        if (applicantList.size() == 1)
+            holder.itemView.setPadding(0, 10, 0, 10);
+        else {
+            if (position == 0) holder.itemView.setPadding(0, 10, 0, 0);
+            if (position == applicantList.size() - 1) holder.itemView.setPadding(0, 0, 0, 10);
+        }
     }
 
     /**
@@ -63,6 +69,7 @@ public class ApplicantRVA extends RecyclerView.Adapter<ApplicantRVA.MApplicantVH
         public MApplicantVH(ApplicantListitemBinding binding) {
             super(binding.getRoot());
             this.vBinding = binding;
+            itemView.setClickable(true);
         }
     }
 }

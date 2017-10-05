@@ -13,105 +13,120 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="1">
-
-        <TextView
-            android:id="@+id/icon_applicant_text"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:background="@drawable/circular_textview"
-            android:fontFamily="sans-serif-thin"
-            android:gravity="center"
-            android:text="@{applicant.cname}"
-            android:textStyle="normal|bold"
-            android:textAllCaps="true"
-            android:textColor="#FFF"
-            android:textSize="32sp"
-            android:layout_marginTop="19dp"
-            android:layout_marginLeft="5dp"
-            android:elevation="2dp"
-            android:translationZ="5dp" />
-
-        <TableLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="?android:attr/dividerHorizontal"
-            android:showDividers="middle">
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:foreground="@drawable/selectable_item_background">
 
-            <TableRow
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="?android:attr/dividerVertical"
-                android:showDividers="middle">
-
+                android:layout_height="match_parent">
                 <TextView
-                    style="@style/TableLabel"
-                    android:text="@string/label_name" />
+                    android:id="@+id/icon_applicant_text"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:background="@drawable/circular_textview"
+                    android:fontFamily="sans-serif-thin"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@{applicant.cname}"
+                    android:textStyle="normal|bold"
+                    android:textAllCaps="true"
+                    android:textColor="#FFF"
+                    android:textSize="32sp"
+                    android:layout_marginLeft="15dp"
+                    android:elevation="5dp" />
 
-                <TextView
-                    android:id="@+id/applicantName"
-                    style="@style/Value"
-                    android:editable="false"
-                    android:text="@{applicant.name}" />
-            </TableRow>
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:showDividers="middle">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="?android:attr/dividerVertical"
-                android:showDividers="middle">
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="?android:attr/dividerVertical"
+                        android:showDividers="middle">
 
-                <TextView
-                    style="@style/TableLabel"
-                    android:text="@string/label_idnumber" />
+                        <TextView
+                            android:layout_width="120dp"
+                            android:paddingTop="15dp"
+                            style="@style/TableLabel"
+                            android:text="@string/label_name" />
 
-                <TextView
-                    android:id="@+id/applicantIDNumber"
-                    style="@style/Value"
-                    android:editable="false"
-                    android:text="@{applicant.idNumber}" />
-            </TableRow>
+                        <TextView
+                            android:id="@+id/applicantName"
+                            style="@style/Value"
+                            android:editable="false"
+                            android:text="@{applicant.name}" />
+                    </TableRow>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="?android:attr/dividerVertical"
-                android:showDividers="middle">
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="?android:attr/dividerVertical"
+                        android:showDividers="middle">
 
-                <TextView
-                    style="@style/TableLabel"
-                    android:text="@string/label_phone" />
+                        <TextView
+                            style="@style/TableLabel"
+                            android:text="@string/label_idnumber" />
 
-                <TextView
-                    android:id="@+id/applicantPhone"
-                    style="@style/Value"
-                    android:editable="false"
-                    android:text="@{applicant.phone}" />
-            </TableRow>
+                        <TextView
+                            android:id="@+id/applicantIDNumber"
+                            style="@style/Value"
+                            android:editable="false"
+                            android:text="@{applicant.idNumber}" />
+                    </TableRow>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="?android:attr/dividerVertical"
-                android:showDividers="middle">
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="?android:attr/dividerVertical"
+                        android:showDividers="middle">
 
-                <TextView
-                    style="@style/TableLabel"
-                    android:text="@string/app_label_status" />
+                        <TextView
+                            style="@style/TableLabel"
+                            android:text="@string/label_phone" />
 
-                <TextView
-                    android:id="@+id/applicantStatus"
-                    style="@style/Value"
-                    android:editable="false"
-                    android:text="@{applicant.status}"/>
-            </TableRow>
-            <TextView
-                android:id="@+id/_UUID"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:text="@{applicant._UUID}"
-                android:visibility="invisible"></TextView>
-        </TableLayout>
+                        <TextView
+                            android:id="@+id/applicantPhone"
+                            style="@style/Value"
+                            android:editable="false"
+                            android:text="@{applicant.phone}" />
+                    </TableRow>
 
-        <View style="@style/Line" android:layout_width="match_parent" />
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="?android:attr/dividerVertical"
+                        android:showDividers="middle">
+
+                        <TextView
+                            android:paddingBottom="15dp"
+                            style="@style/TableLabel"
+                            android:text="@string/app_label_status" />
+
+                        <TextView
+                            android:id="@+id/applicantStatus"
+                            style="@style/Value"
+                            android:editable="false"
+                            android:text="@{applicant.status}"/>
+                    </TableRow>
+                    <TextView
+                        android:id="@+id/_UUID"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:text="@{applicant._UUID}"
+                        android:visibility="invisible"></TextView>
+                </TableLayout>
+                <View style="@style/Line2" android:layout_width="match_parent"
+                      android:background="@android:color/transparent"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
     </RelativeLayout>
 </layout>

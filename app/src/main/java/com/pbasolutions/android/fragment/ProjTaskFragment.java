@@ -45,7 +45,7 @@ public class ProjTaskFragment extends Fragment {
     /**
      * Project Task list.
      */
-    private ObservableArrayList<MProjectTask> taskList;
+    private ObservableArrayList<MProjectTask> taskList = new ObservableArrayList<>();
     /**
      * Global Variable.
      */
@@ -86,7 +86,7 @@ public class ProjTaskFragment extends Fragment {
         recyclerView = (RecyclerView) rootView.findViewById(R.id.task_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         populateProjTask();
-        viewAdapter = new TaskRVA(getActivity(), taskList, LayoutInflater.from(PandoraMain.instance));
+        viewAdapter = new TaskRVA(getActivity(), taskList);
         recyclerView.setAdapter(viewAdapter);
         PandoraHelper.addRecyclerViewListener(recyclerView, taskList, getActivity(),
                 new ProjTaskDetailsFragment(), taskDetailTitle);
@@ -145,7 +145,8 @@ public class ProjTaskFragment extends Fragment {
         input.putString(PBSTaskController.ARG_PROJLOC_UUID, globalVar.getC_projectlocation_uuid());
         input.putString(PBSTaskController.ARG_AD_USER_ID, globalVar.getAd_user_id());
         Bundle result = taskCont.triggerEvent(PBSTaskController.GET_PROJTASKS_EVENT, input, new Bundle(), null);
-        taskList = (ObservableArrayList<MProjectTask>) result.getSerializable(PBSTaskController.ARG_TASK_LIST);
+        taskList.clear();
+        taskList.addAll((ObservableArrayList<MProjectTask>) result.getSerializable(PBSTaskController.ARG_TASK_LIST));
     }
 
     /**
@@ -208,8 +209,7 @@ public class ProjTaskFragment extends Fragment {
 
                 String resultTitle = result.getString(PandoraConstant.TITLE);
                 String text;
-                viewAdapter = new TaskRVA(pandoraMain, taskList, LayoutInflater.from(PandoraMain.instance));
-                recyclerView.setAdapter(viewAdapter);
+                viewAdapter.notifyDataSetChanged();
                 if (resultTitle != null && !result.isEmpty()) {
                     text = result.getString(resultTitle);
                 } else {
@@ -225,6 +225,9 @@ public class ProjTaskFragment extends Fragment {
 
     @Override
     public void onPause() {
+        asyncTask.cancel(true);
+        if (mSwipeRefreshLayout.isRefreshing())
+            mSwipeRefreshLayout.setRefreshing(false);
         super.onPause();
     }
 }

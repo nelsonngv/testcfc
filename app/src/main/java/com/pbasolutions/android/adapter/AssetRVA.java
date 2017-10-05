@@ -34,6 +34,12 @@ public class AssetRVA  extends RecyclerView.Adapter<AssetRVA.AssetVH>{
         if (storageList != null) {
             MStorage asset = storageList.get(position);
             holder.vBinding.setStorage(asset);
+            if (storageList.size() == 1)
+                holder.itemView.setPadding(0, 10, 0, 10);
+            else {
+                if (position == 0) holder.itemView.setPadding(0, 10, 0, 0);
+                if (position == storageList.size() - 1) holder.itemView.setPadding(0, 0, 0, 10);
+            }
         }
     }
 
@@ -55,6 +61,7 @@ public class AssetRVA  extends RecyclerView.Adapter<AssetRVA.AssetVH>{
         public AssetVH(AssetListItemBinding binding) {
             super(binding.getRoot());
             this.vBinding = binding;
+            itemView.setClickable(true);
         }
     }
 
