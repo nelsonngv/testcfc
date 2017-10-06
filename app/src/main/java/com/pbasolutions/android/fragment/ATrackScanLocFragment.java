@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ public class ATrackScanLocFragment extends Fragment {
     private PandoraMain context;
     private ProgressBar progressBar;
     private TextView tvDesc;
+    private Button btnScanCodeRear, btnScanCodeFront;
 
     /**
      * Constructor method.
@@ -70,12 +72,8 @@ public class ATrackScanLocFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.atrack_scanloc, container, false);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         tvDesc = (TextView) rootView.findViewById(R.id.tvDesc);
-
-//        IntentIntegrator integrator = new IntentIntegrator(getActivity());
-//        integrator.setPrompt("aaaa");
-//        integrator.setOrientationLocked(false);
-//        integrator.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
-//        integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+        btnScanCodeRear = (Button) rootView.findViewById(R.id.btnScanCodeRear);
+        btnScanCodeFront = (Button) rootView.findViewById(R.id.btnScanCodeFront);
 
         if (mNfcAdapter == null) {
             tvDesc.setText(getString(R.string.nfc_notsupport));
@@ -105,6 +103,25 @@ public class ATrackScanLocFragment extends Fragment {
                 }
             }
         }
+
+        final IntentIntegrator integrator = new IntentIntegrator(getActivity());
+        integrator.setPrompt(getString(R.string.scan_qr_barcode_desc));
+        integrator.setOrientationLocked(false);
+        btnScanCodeRear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                integrator.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
+                integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+            }
+        });
+        btnScanCodeFront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                integrator.setCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT);
+                integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+            }
+        });
+
         return rootView;
     }
 

@@ -341,6 +341,10 @@
     <string name="attendance_done1">Hi %1$s, you have marked an attendance at %2$s.</string>
     <string name="attendance_done2">Thank you for using our service!</string>
     <string name="attendance_to">%1$s to %2$s</string>
+    <string name="scan_qr_barcode">Scan QR/Barcode</string>
+    <string name="rear_camera">Rear camera</string>
+    <string name="front_camera">Front camera</string>
+    <string name="scan_qr_barcode_desc">Please scan the QR/Barcode</string>
 
     <!--
     ImageView Tag Key.

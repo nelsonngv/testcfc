@@ -19,4 +19,48 @@
         android:textSize="14pt"
         android:text="@string/location_tag"
         android:layout_below="@id/progressBar" />
+
+    <TextView
+        android:id="@+id/tvOr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:textSize="8pt"
+        android:text="OR"
+        android:layout_below="@id/tvDesc" />
+
+    <TextView
+        android:id="@+id/tvOrScanCodeDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:textSize="12pt"
+        android:text="@string/scan_qr_barcode"
+        android:layout_below="@id/tvOr" />
+
+    <Button
+        android:id="@+id/btnScanCodeRear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        style="@style/PLargeButton"
+        android:text="@string/rear_camera"
+        android:layout_below="@id/tvOrScanCodeDesc" />
+
+    <Button
+        android:id="@+id/btnScanCodeFront"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        style="@style/PLargeButton"
+        android:text="@string/front_camera"
+        android:layout_below="@id/btnScanCodeRear" />
 </RelativeLayout>

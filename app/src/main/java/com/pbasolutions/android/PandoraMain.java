@@ -1105,6 +1105,26 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                         }
                     }
                 }
+                else if (intent.getAction().equals(Intent.ACTION_VIEW) && intent.getDataString() != null && intent.getDataString().contains("www.pandorasuite.com/app/")) {
+                    String[] intentArray = intent.getDataString().split("/");
+                    if (intentArray[2].equalsIgnoreCase("attendance")) {
+                        Bundle bundle = new Bundle();
+                        if (intentArray[3].equalsIgnoreCase("location")) {
+                            fragment = new ATrackScanLocFragment();
+                            bundle.putString("location_id", intentArray[4]);
+                            fragment.setArguments(bundle);
+                            updateFragment(fragment, getString(R.string.title_attendance_tracking), false);
+                        }
+                        else if (intentArray[3].equalsIgnoreCase("bp")) {
+                            fragment = new ATrackScanEmpIDFragment();
+                            bundle.putString("bpartner_id", intentArray[4]);
+                            fragment.setArguments(bundle);
+                            if (PBSAttendanceController.isKioskMode)
+                                updateFragment(fragment, getString(R.string.title_attendance_tracking_kiosk), false);
+                            else updateFragment(fragment, getString(R.string.title_attendance_tracking), false);
+                        }
+                    }
+                }
             } else {
                 checkLogin(false);
             }
