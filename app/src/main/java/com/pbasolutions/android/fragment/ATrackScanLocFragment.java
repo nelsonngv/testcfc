@@ -41,7 +41,7 @@ public class ATrackScanLocFragment extends Fragment {
     private PandoraMain context;
     private ProgressBar progressBar;
     private TextView tvDesc;
-    private Button btnScanCodeRear, btnScanCodeFront;
+//    private Button btnScanCodeRear, btnScanCodeFront;
 
     /**
      * Constructor method.
@@ -72,8 +72,8 @@ public class ATrackScanLocFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.atrack_scanloc, container, false);
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         tvDesc = (TextView) rootView.findViewById(R.id.tvDesc);
-        btnScanCodeRear = (Button) rootView.findViewById(R.id.btnScanCodeRear);
-        btnScanCodeFront = (Button) rootView.findViewById(R.id.btnScanCodeFront);
+//        btnScanCodeRear = (Button) rootView.findViewById(R.id.btnScanCodeRear);
+//        btnScanCodeFront = (Button) rootView.findViewById(R.id.btnScanCodeFront);
 
         if (mNfcAdapter == null) {
             tvDesc.setText(getString(R.string.nfc_notsupport));
@@ -104,40 +104,40 @@ public class ATrackScanLocFragment extends Fragment {
             }
         }
 
-        final IntentIntegrator integrator = new IntentIntegrator(getActivity());
-        integrator.setPrompt(getString(R.string.scan_qr_barcode_desc));
-        integrator.setOrientationLocked(false);
-        btnScanCodeRear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                integrator.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
-                integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
-            }
-        });
-        btnScanCodeFront.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                integrator.setCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT);
-                integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
-            }
-        });
+//        final IntentIntegrator integrator = new IntentIntegrator(getActivity());
+//        integrator.setPrompt(getString(R.string.scan_qr_barcode_desc));
+//        integrator.setOrientationLocked(false);
+//        btnScanCodeRear.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                integrator.setCameraId(Camera.CameraInfo.CAMERA_FACING_BACK);
+//                integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+//            }
+//        });
+//        btnScanCodeFront.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                integrator.setCameraId(Camera.CameraInfo.CAMERA_FACING_FRONT);
+//                integrator.initiateScan(IntentIntegrator.ALL_CODE_TYPES);
+//            }
+//        });
 
         return rootView;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null && getActivity() != null) {
-            if(result.getContents() == null) {
-                Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//        if(result != null && getActivity() != null) {
+//            if(result.getContents() == null) {
+//                Toast.makeText(getActivity(), "Cancelled", Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(getActivity(), "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+//            }
+//        } else {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        }
+//    }
 
     public void startCheckInOut(String nfcTagID) {
         // verify tag by searching project location table

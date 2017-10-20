@@ -47,7 +47,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
      */
     @Override
     protected void applyUpdate() {
-        PandoraHelper.hideSoftKeyboard();
+        PandoraHelper.hideSoftKeyboard(getActivity());
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if(name.getText().toString().equals("")) {
             warnToFill(imm, name);
@@ -225,7 +225,7 @@ public class NewApplicantFragment extends AbstractApplicantFragment {
         Bundle input = new Bundle();
         input.putParcelable(PBSRecruitController.APPLICANT_VALUES, cv);
 
-        PandoraHelper.hideSoftKeyboard();
+        PandoraHelper.hideSoftKeyboard(getActivity());
         Fragment fragment = new NewApplicantSignFragment();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragment.setArguments(input);

@@ -145,6 +145,6 @@ public class CheckPointFragment extends Fragment {
                 recyclerView.setAdapter(viewAdapter);
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }
-        }.execute(LayoutInflater.from(PandoraMain.instance), recyclerView);
+        }.execute(LayoutInflater.from(getActivity()), recyclerView);
     }
 }

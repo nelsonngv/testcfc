@@ -45,170 +45,39 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
     public static final String ARG_TASKPIC_5 = "ARG_TASKPIC_5";
     public static final String ARG_USERS = "ARG_USERS" ;
     public static final String ARG_PROJECTLOCATIONS = "ARG_PROJECTLOCATIONS";
-    ContentResolver cr;
+    private ContentResolver cr;
+    private Context ctx;
+    private ExecutorService exec = Executors.newSingleThreadExecutor();
+    private ProjectTask task;
+    private FutureTask<Bundle> taskResult;
 
     public PBSTaskController(Context base) {
         super(base);
         cr = getContentResolver();
+        this.ctx = base;
+        task = new ProjectTask(cr, ctx);
     }
 
     @Override
     public Bundle triggerEvent(String eventName, Bundle input, Bundle result, Object object) {
-        switch (eventName) {
-            case GET_PROJTASKS_EVENT: {
-                getTasks(input, result, object);
-                break;
-            }
-            case SYNC_PROJTASKS_EVENT: {
-                syncTasks(input, result, object);
-                break;
-            }
-            case COMPLETE_PROJTASK_EVENT: {
-                completeTask(input, result, object);
-                break;
-            }
-            case TASK_DETAILS_EVENT: {
-                break;
-            }
-            case GET_PROJTASK_EVENT: {
-                getProjTask(input, result, object);
-                break;
-            }
-            case GET_PROJECTLOCATIONS_EVENT: {
-                getProjectLocations(input, result, object);
-                break;
-            }
-            case GET_USERS_EVENT: {
-                getUsers(input, result, object);
-                break;
-            }
-            case CREATE_TASK_EVENT: {
-                createTask(input, result, object);
-                break;
-            }
-            default : break;
-        }
-        return result;
+        input.putString(ARG_TASK_EVENT, eventName);
+        return runTask(input, result);
     }
 
-    private Bundle getUsers(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, GET_USERS_EVENT);
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<>(task);
-        es.execute(taskResult);
+    public Bundle runTask(Bundle input, Bundle result) {
+        task.setInput(input);
+        task.setOutput(result);
+        taskResult = new FutureTask(task);
+        exec.execute(taskResult);
         try {
             result = taskResult.get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             taskResult.cancel(true);
-            es.shutdownNow();
         }
         return result;
     }
-
-    private Bundle getProjectLocations(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, GET_PROJECTLOCATIONS_EVENT);
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<>(task);
-        es.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        } finally {
-            taskResult.cancel(true);
-            es.shutdownNow();
-        }
-        return result;
-    }
-
-    private Bundle getProjTask(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, GET_PROJTASK_EVENT);
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<>(task);
-        es.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        } finally {
-            taskResult.cancel(true);
-            es.shutdownNow();
-        }
-        return result;
-    }
-
-    private Bundle completeTask(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, COMPLETE_PROJTASK_EVENT);
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<>(task);
-        es.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        } finally {
-            taskResult.cancel(true);
-            es.shutdownNow();
-        }
-        return result;
-    }
-
-    private Bundle getTasks(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, GET_PROJTASKS_EVENT);
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<>(task);
-        es.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        } finally {
-            taskResult.cancel(true);
-            es.shutdownNow();
-        }
-        return result;
-    }
-
-    private Bundle syncTasks(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, SYNC_PROJTASKS_EVENT);
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<>(task);
-        es.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        } finally {
-            taskResult.cancel(true);
-            es.shutdownNow();
-        }
-        return result;
-    }
-
-    private Bundle createTask(Bundle input, Bundle result, Object object) {
-        input.putString(ARG_TASK_EVENT, CREATE_TASK_EVENT);
-        ExecutorService es = Executors.newSingleThreadExecutor();
-        ProjectTask task = new ProjectTask(input, result, cr);
-        FutureTask<Bundle> taskResult = new FutureTask<>(task);
-        es.execute(taskResult);
-        try {
-            result = taskResult.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        } finally {
-            taskResult.cancel(true);
-            es.shutdownNow();
-        }
-        return result;
-    }
-
-
 }

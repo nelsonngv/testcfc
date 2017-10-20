@@ -125,7 +125,7 @@ public class AttendanceSearchFragment extends Fragment {
 //        refreshAttendances();
         if (projLocNameAdapter.getCount() > 0)
         {
-            PandoraMain pandoraMain = PandoraMain.instance;
+            PandoraMain pandoraMain = ((PandoraMain)getActivity());
             String projLocID = pandoraMain.getGlobalVariable().getC_projectlocation_id();
 
             for (int i = 0; i < projLocNameAdapter.getCount(); i++)

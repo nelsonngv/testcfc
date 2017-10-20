@@ -480,12 +480,12 @@ public class AuthenticatorTask extends Task {
 
 //                    SharedPreferences prefs = ctx.getSharedPreferences(
 //                            BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-//                    PandoraMain.instance.getGlobalVariable().setServer_url(prefs.getString("serverURL", ""));
+//                    ((PandoraMain)ctx).getGlobalVariable().setServer_url(prefs.getString("serverURL", ""));
                     // clear db and account if connects to another server
-                    if (PandoraMain.instance.getGlobalVariable().getServer_url() != null && !PandoraMain.instance.getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(PandoraMain.instance.getGlobalVariable().getServer_url())) {
+                    if (((PandoraMain)ctx).getGlobalVariable().getServer_url() != null && !((PandoraMain)ctx).getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(((PandoraMain)ctx).getGlobalVariable().getServer_url())) {
                         PBSDBHelper.reCreateDatabase(ctx.getApplicationContext());
-                        PandoraMain.instance.resetServerData(serverURL);
-                        PandoraMain.instance.setGlobalVariable(null);
+                        ((PandoraMain)ctx).resetServerData(serverURL);
+                        ((PandoraMain)ctx).setGlobalVariable(null);
                         PandoraHelper.populateMenuForms(ctx, null);
 
                         // remove all accounts
@@ -515,7 +515,7 @@ public class AuthenticatorTask extends Task {
                                     userPass, authType, user.getToken());
                         }
                     } else {
-                        PandoraMain.instance.resetServerData(serverURL);
+                        ((PandoraMain)ctx).resetServerData(serverURL);
                         createNewAccount(userName, accType, deviceID, serverURL,
                                 userPass, authType, user.getToken());
                     }

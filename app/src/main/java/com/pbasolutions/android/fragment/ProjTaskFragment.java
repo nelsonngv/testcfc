@@ -204,19 +204,20 @@ public class ProjTaskFragment extends Fragment {
             @Override
             protected void onPostExecute(Bundle result) {
                 super.onPostExecute(result);
-                PandoraMain pandoraMain = PandoraMain.instance;
+                PandoraMain pandoraMain = ((PandoraMain)getActivity());
 //                pandoraMain.dismissProgressDialog();
 
                 String resultTitle = result.getString(PandoraConstant.TITLE);
                 String text;
-                viewAdapter.notifyDataSetChanged();
+                viewAdapter = new TaskRVA(pandoraMain, taskList);
+                recyclerView.setAdapter(viewAdapter);
                 if (resultTitle != null && !result.isEmpty()) {
                     text = result.getString(resultTitle);
                 } else {
                     text = result.getString(PandoraConstant.ERROR);
                 }
                 if (showMsg)
-                    PandoraHelper.showMessage(PandoraMain.instance, text);
+                    PandoraHelper.showMessage(getActivity(), text);
                 if (mSwipeRefreshLayout.isRefreshing())
                     mSwipeRefreshLayout.setRefreshing(false);
             }

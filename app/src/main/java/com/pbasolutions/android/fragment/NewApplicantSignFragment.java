@@ -62,8 +62,8 @@ public class NewApplicantSignFragment extends AbstractApplicantFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.survey_sign, container, false);
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        PandoraMain.instance.getSupportActionBar().hide();
-        PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        ((PandoraMain)getActivity()).getSupportActionBar().hide();
+        ((PandoraMain)getActivity()).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         setUI(rootView);
         setUIListener();
 
@@ -137,8 +137,8 @@ public class NewApplicantSignFragment extends AbstractApplicantFragment {
     public void onDestroy() {
         super.onDestroy();
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        PandoraMain.instance.getSupportActionBar().show();
-        PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        ((PandoraMain)getActivity()).getSupportActionBar().show();
+        ((PandoraMain)getActivity()).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
     protected void submitApplicant(Bundle input) {
@@ -159,11 +159,11 @@ public class NewApplicantSignFragment extends AbstractApplicantFragment {
                 super.onPostExecute(output);
                 ((PandoraMain) getActivity()).dismissProgressDialog();
                 if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
-                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
-                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    getActivity().getSupportFragmentManager().popBackStack();
                 } else {
-                    PandoraHelper.showMessage(context, output.getString(output.getString(PandoraConstant.TITLE)));
-                    PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                    PandoraHelper.showMessage(getActivity(), output.getString(output.getString(PandoraConstant.TITLE)));
+                    getActivity().getSupportFragmentManager().popBackStack();
                 }
             }
         }.execute(input);

@@ -105,7 +105,7 @@ public class LoginFragment extends Fragment {
      * created yet in the Account Manager.
      */
     public void submit() {
-        PandoraHelper.hideSoftKeyboard();
+        PandoraHelper.hideSoftKeyboard(getActivity());
         accountName = ((TextView) getActivity().findViewById(R.id.accountName))
                 .getText().toString();
         accountPassword = ((TextView) getActivity().findViewById(R.id.accountPassword))
@@ -182,7 +182,7 @@ public class LoginFragment extends Fragment {
         protected void onPostExecute(Bundle resultBundle) {
             context.dismissProgressDialog();
             if (resultBundle.getString(PandoraConstant.ERROR) != null) {
-                PandoraHelper.showMessage(PandoraMain.instance,
+                PandoraHelper.showMessage(getActivity(),
                         resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)));
                 return;
             }
@@ -213,7 +213,7 @@ public class LoginFragment extends Fragment {
                             BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
                     prefs.edit().putString("serverURL", serverURL).commit();
 
-                    PandoraHelper.getProjLocAvailable(PandoraMain.instance, false);
+                    PandoraHelper.getProjLocAvailable(getActivity(), false);
 
                     PandoraHelper.setAccountData(getActivity());
                     //set the apps to only start auto sync after successfully send the role to Server.

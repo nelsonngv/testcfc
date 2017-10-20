@@ -300,6 +300,6 @@ public class BroadcastFragment extends Fragment {
 
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }
-        }.execute(LayoutInflater.from(PandoraMain.instance), recyclerView);
+        }.execute(LayoutInflater.from(getActivity()), recyclerView);
     }
 }

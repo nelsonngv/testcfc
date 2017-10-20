@@ -4,6 +4,7 @@ import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.databinding.ObservableArrayList;
@@ -45,6 +46,7 @@ public class AttendanceTask implements Callable<Bundle> {
     private ContentResolver cr;
     private String event;
     private boolean isSelected = false;
+    private Context ctx;
 
     String atlProjection[] = {
             MAttendanceLine.M_ATTENDANCELINE_UUID_COL,
@@ -602,7 +604,7 @@ public class AttendanceTask implements Callable<Bundle> {
     }
 
     private Bundle createAttendanceTracking() {
-        PandoraContext appContext = PandoraMain.instance.getGlobalVariable();
+        PandoraContext appContext = ((PandoraMain)ctx).getGlobalVariable();
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
         ContentValues cv = input.getParcelable(PBSAttendanceController.ARG_CONTENTVALUES);
 
@@ -667,8 +669,9 @@ public class AttendanceTask implements Callable<Bundle> {
     }
 
 
-    public AttendanceTask(ContentResolver cr) {
+    public AttendanceTask(ContentResolver cr, Context ctx) {
         this.cr = cr;
+        this.ctx = ctx;
     }
 
 

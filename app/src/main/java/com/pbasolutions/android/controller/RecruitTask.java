@@ -2,6 +2,7 @@ package com.pbasolutions.android.controller;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.databinding.ObservableArrayList;
@@ -29,8 +30,11 @@ public class RecruitTask extends Task {
 
         private ContentResolver cr;
 
-        public RecruitTask(ContentResolver cr) {
+        private Context ctx;
+
+        public RecruitTask(ContentResolver cr, Context ctx) {
             this.cr = cr;
+            this.ctx = ctx;
         }
         /**
          * Computes a result, or throws an exception if unable to do so.
@@ -261,7 +265,7 @@ public class RecruitTask extends Task {
                 cbpartner + ModelConst.PHONE_COL + ", " + cbpartner + MEmployee.JOB_TITLE_COL + ", " + cbpartner + ModelConst.WORKPERMIT_COL + ", " + "ISDEFAULT";
 
         try {
-            PBSDBHelper dbHelper = new PBSDBHelper(PandoraMain.instance);
+            PBSDBHelper dbHelper = new PBSDBHelper(ctx);
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             Cursor cursor = db.query(ModelConst.C_BPARTNER_VIEW + " inner join " + ModelConst.HR_PROJECTASSIGNMENT_TABLE +
                             " on (" + ModelConst.C_BPARTNER_VIEW + "." + ModelConst.C_BPARTNER_TABLE + "_uuid = "
@@ -484,7 +488,7 @@ public class RecruitTask extends Task {
         String groupBy = ModelConst.HR_SHIFT_TABLE + "." + ModelConst.HR_SHIFT_TABLE + "_UUID";
 
         try {
-            PBSDBHelper dbHelper = new PBSDBHelper(PandoraMain.instance);
+            PBSDBHelper dbHelper = new PBSDBHelper(ctx);
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             Cursor cursor = db.query(ModelConst.HR_SHIFT_TABLE + " inner join " + ModelConst.HR_PROJECTASSIGNMENT_TABLE + " on (" + ModelConst.HR_SHIFT_TABLE + "." + ModelConst.HR_SHIFT_TABLE + "_uuid = "
                             + ModelConst.HR_PROJECTASSIGNMENT_TABLE + "." + ModelConst.HR_SHIFT_TABLE + "_uuid)",
@@ -525,7 +529,7 @@ public class RecruitTask extends Task {
         String[] selectionArg = {nfcTagID};
 
         try {
-            PBSDBHelper dbHelper = new PBSDBHelper(PandoraMain.instance);
+            PBSDBHelper dbHelper = new PBSDBHelper(ctx);
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             Cursor cursor = db.query(ModelConst.C_BPARTNER_TABLE,
                     projection, ModelConst.NFCTAG_COL + "=?", selectionArg, null, null, null);

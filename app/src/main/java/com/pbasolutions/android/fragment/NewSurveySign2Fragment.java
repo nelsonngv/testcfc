@@ -71,8 +71,8 @@ public class NewSurveySign2Fragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.survey_sign, container, false);
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        PandoraMain.instance.getSupportActionBar().hide();
-        PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        ((PandoraMain)getActivity()).getSupportActionBar().hide();
+        ((PandoraMain)getActivity()).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         setUI(rootView);
         setUIListener();
 
@@ -131,8 +131,8 @@ public class NewSurveySign2Fragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        PandoraMain.instance.getSupportActionBar().show();
-        PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        ((PandoraMain)getActivity()).getSupportActionBar().show();
+        ((PandoraMain)getActivity()).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
     protected void completeSurvey() {
@@ -161,8 +161,8 @@ public class NewSurveySign2Fragment extends Fragment {
                 ((PandoraMain) getActivity()).dismissProgressDialog();
                 if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
                     getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    PandoraMain.instance.getSupportActionBar().show();
-                    PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    ((PandoraMain)getActivity()).getSupportActionBar().show();
+                    ((PandoraMain)getActivity()).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
                     Fragment surveyFrag = new SurveyFragment();
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -170,6 +170,7 @@ public class NewSurveySign2Fragment extends Fragment {
                     fragmentTransaction.replace(R.id.container_body, surveyFrag);
 //                        fragmentTransaction.addToBackStack(surveyFrag.getClass().getName());
                     fragmentTransaction.commit();
+                    ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getActivity().getString(R.string.title_survey));
                 } else {
                     PandoraHelper.showMessage(getActivity(), output.getString(output.getString(PandoraConstant.TITLE)));
                 }

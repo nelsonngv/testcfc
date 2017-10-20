@@ -10,12 +10,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.database.ContentObserver;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -112,6 +114,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * Authenticator controller.
      */
     PBSAuthenticatorController authenticatorController;
+    PBSTaskController taskCont;
     /**
      * Content resolver.
      */
@@ -153,8 +156,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     private ProgressDialog progressDialog;
     private int             progressShowCount = 0;
-
-    public static PandoraMain instance;
 
     /**
      * Fragment id.
@@ -214,7 +215,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     private Runnable checkLoginRunnable, checkProjTaskRunnable;
     private int checkLoginDelay = 600000; //10 mins
     private int checkProjTaskDelay = 1800000; //30 mins
-    public static RequestQueue queue;
 
     // to check sync result
     public static final String GOTO_RECRUIT = "GotoRecruit";
@@ -232,6 +232,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     //dialog builder
     android.support.v7.app.AlertDialog dialog = null;
 
+    private ContentObserver mObserver;
+
     //receive broadcast message from push notification
 //    ReceiveMessages myReceiver = null;
 //    Boolean myReceiverIsRegistered = false;
@@ -244,6 +246,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         CookieHandler.setDefault(new CookieManager());
         init();
 
+        mObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+            public void onChange(boolean selfChange) {
+                updateInitialSyncState();
+            }
+        };
+        getContentResolver().registerContentObserver(Uri.parse("http://" + BuildConfig.APPLICATION_ID + ".syncNotify"), true, mObserver);
     }
 
     @Override
@@ -261,22 +269,12 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         else super.onBackPressed();
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        Fragment frag = getCurrentFragment();
-//        if (frag instanceof PBABackKeyListener) {
-//            if (((PBABackKeyListener)frag).onBackKeyPressed() && keyCode == KeyEvent.KEYCODE_BACK)
-//                return true;
-//            else return false;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
     /**
      * Initial.
      */
     private void init() {
-        queue = Volley.newRequestQueue(this);
         authenticatorController = new PBSAuthenticatorController(this);
+        taskCont = new PBSTaskController(this);
         setGlobalVariable((PandoraContext) getApplicationContext());
         if (getGlobalVariable() != null) {
             if (getGlobalVariable().getAd_user_name().isEmpty()) {
@@ -317,7 +315,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             PBSServerConst.instantiateCookie();
         }
 
-        instance = this;
 //        Log.d(TAG, "Refreshed token: " + FirebaseInstanceId.getInstance().getToken());
 //        //receive push notification broadcast
 //        myReceiver = new ReceiveMessages();
@@ -329,7 +326,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 if(getSupportActionBar().isShowing()) {
                     checkLogin(true);
                 }
-
                 checkLoginHandler.postDelayed(this, checkLoginDelay);
             }
         };
@@ -338,23 +334,19 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         //check proj task
         checkProjTaskRunnable = new Runnable(){
             public void run() {
-                if(getSupportActionBar().isShowing()) {
+                if(getSupportActionBar().isShowing() && PBSServerConst.cookieStore != null && !getGlobalVariable().getC_projectlocation_uuid().isEmpty()) {
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {
-                            if (PBSServerConst.cookieStore != null) {
-                                Bundle input = new Bundle();
-                                input.putString(PBSTaskController.ARG_PROJLOC_UUID, getGlobalVariable().getC_projectlocation_uuid());
-                                input.putString(PBSTaskController.ARG_AD_USER_ID, getGlobalVariable().getAd_user_id());
-                                input.putString(PBSServerConst.PARAM_URL, getGlobalVariable().getServer_url());
-                                input.putBoolean("isShowNotification", true);
-                                PBSTaskController taskCont = new PBSTaskController(PandoraMain.instance);
-                                Bundle result = taskCont.triggerEvent(PBSTaskController.SYNC_PROJTASKS_EVENT, input, new Bundle(), null);
-                            }
+                            Bundle input = new Bundle();
+                            input.putString(PBSTaskController.ARG_PROJLOC_UUID, getGlobalVariable().getC_projectlocation_uuid());
+                            input.putString(PBSTaskController.ARG_AD_USER_ID, getGlobalVariable().getAd_user_id());
+                            input.putString(PBSServerConst.PARAM_URL, getGlobalVariable().getServer_url());
+                            input.putBoolean("isShowNotification", true);
+                            taskCont.triggerEvent(PBSTaskController.SYNC_PROJTASKS_EVENT, input, new Bundle(), null);
                         }
                     });
                 }
-
                 checkProjTaskHandler.postDelayed(this, checkProjTaskDelay);
             }
         };
@@ -646,7 +638,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         dialog.show();
     }
 
-    public void resetServerData(String serverUrl) {
+    public static void resetServerData(String serverUrl) {
         // danny test code to reset sync data
         PBSServer pbsServer = new PBSServer();
         String resetUrl = serverUrl + "/wstore/Sync.jsp?action=Reset";
@@ -1024,7 +1016,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      * @param isAddToStack
      */
     public void updateFragment(Fragment fragment, String title, boolean isAddToStack) {
-        PandoraHelper.hideSoftKeyboard();
+        PandoraHelper.hideSoftKeyboard(this);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragment.setRetainInstance(true);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -1246,13 +1238,13 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             progressDialog.dismiss();
     }
 
-    public void updateInitialSyncState(boolean isCompleted) {
-        if (!isCompleted) return;
+    public void updateInitialSyncState(/*boolean isCompleted*/) {
+//        if (!isCompleted) return;
 
-        boolean prevSyncState;
+        boolean prevSyncState = false;
         if(getGlobalVariable() == null)
             setGlobalVariable((PandoraContext) getApplicationContext());
-        prevSyncState = getGlobalVariable().isInitialSynced();
+//        prevSyncState = getGlobalVariable().isInitialSynced();
         getGlobalVariable().setIsInitialSynced(true);
         PandoraHelper.setAccountData(this);
         new AsyncTask<Boolean, Void, Boolean>() {
@@ -1411,6 +1403,9 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public void onDestroy() {
         super.onDestroy();
         PBSServerConst.cookieStore = null;
+        checkLoginHandler.removeCallbacks(checkLoginRunnable);
+        checkProjTaskHandler.removeCallbacks(checkProjTaskRunnable);
+        getContentResolver().unregisterContentObserver(mObserver);
     }
 
 //    private class ReceiveMessages extends BroadcastReceiver

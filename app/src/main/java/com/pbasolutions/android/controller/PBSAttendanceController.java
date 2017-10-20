@@ -77,7 +77,7 @@ public class PBSAttendanceController extends ContextWrapper implements PBSIContr
     public PBSAttendanceController(Context base) {
         super(base);
         cr = getContentResolver();
-        attendanceTask = new AttendanceTask(cr);
+        attendanceTask = new AttendanceTask(cr, base);
     }
 
     @Override

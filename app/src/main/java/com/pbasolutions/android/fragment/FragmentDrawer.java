@@ -72,10 +72,10 @@ public class FragmentDrawer extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (PandoraMain.instance != null) {
-            if (PandoraMain.instance.menuList == null)
+        if (getActivity() != null) {
+            if (((PandoraMain)getActivity()).menuList == null)
                 titles = EMPTY_ARRAY;
-            else titles = PandoraMain.instance.menuList;
+            else titles = ((PandoraMain)getActivity()).menuList;
         }
         else titles = EMPTY_ARRAY;
         // drawer labels
@@ -237,13 +237,13 @@ public class FragmentDrawer extends Fragment {
         if (list != null && list.length > 0) {
             titles = list;
         } else {
-            if (PandoraMain.instance != null) {
+            if (getActivity() != null) {
 //            if (PandoraMain.instance == null || PandoraMain.instance.menuList == null || PandoraMain.instance.menuList.length == 0)
 //                titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);
 //            else titles = PandoraMain.instance.menuList;
-                if (PandoraMain.instance.menuList == null)
+                if (((PandoraMain)getActivity()).menuList == null)
                     titles = EMPTY_ARRAY;
-                else titles = PandoraMain.instance.menuList;
+                else titles = ((PandoraMain)getActivity()).menuList;
             } else titles = EMPTY_ARRAY;
         }
         adapter = new MenuDrawerRVA(getActivity(), getData());

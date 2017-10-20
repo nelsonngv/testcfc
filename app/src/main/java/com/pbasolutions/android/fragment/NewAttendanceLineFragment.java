@@ -336,7 +336,7 @@ public class NewAttendanceLineFragment extends Fragment {
         cv.put(ModelConst.HR_SHIFT_UUID_COL, PBSAttendanceController.shiftUUID);
         cv.put(MAttendanceLine.COMMENT_COL, textComment.getText().toString());
 
-        PandoraContext appContext = PandoraMain.instance.getGlobalVariable();
+        PandoraContext appContext = ((PandoraMain)getActivity()).getGlobalVariable();
 
         Bundle input = new Bundle();
         input.putParcelable(PBSAttendanceController.ARG_CONTENTVALUES, cv);
@@ -344,8 +344,8 @@ public class NewAttendanceLineFragment extends Fragment {
 
         if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
 
-            PandoraHelper.hideSoftKeyboard();
-            PandoraMain.instance.getSupportFragmentManager().popBackStack();
+            PandoraHelper.hideSoftKeyboard(getActivity());
+            getActivity().getSupportFragmentManager().popBackStack();
 //            Fragment fragment = new NewRequisitionFragment();
 //         //   if (get_UUID() != null){
 //                ((NewRequisitionFragment) fragment).set_UUID(getPrUUID());

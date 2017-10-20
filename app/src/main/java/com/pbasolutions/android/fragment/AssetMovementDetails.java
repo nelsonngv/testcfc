@@ -53,7 +53,7 @@ public class AssetMovementDetails extends AbstractMovementFragment {
                     && movement.getC_ProjectLocation_ID().intValue() == nProjLocId) {
                 //  move.setEnabled(false);
             } else {
-                Toast.makeText(PandoraMain.instance, "Please complete the movement.",
+                Toast.makeText(getActivity(), "Please complete the movement.",
                         Toast.LENGTH_SHORT).show();
                 MenuItem item;
                 item = menu.add(0, COMPLETE_MOVE_ID, 1, getString(R.string.text_icon_complete));

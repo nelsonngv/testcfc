@@ -10,8 +10,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SyncResult;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -43,9 +46,12 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
      * Class name tag.
      */
     private static final String TAG = "PBSSyncAdapter";
+    private static final String SYNCIDENTIFIER = "syncIdentifier";
     private final AccountManager accountManager;
     private Context context;
-    private int syncIdentifier = 0;
+    private int syncIdentifier;
+    private Handler handler;
+    private SharedPreferences prefs;
 
     /**
      *
@@ -56,6 +62,9 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
         super(context, autoInitialize);
         accountManager = AccountManager.get(context);
         this.context = context;
+        handler = new Handler(Looper.getMainLooper());
+        prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        syncIdentifier = prefs.getInt(SYNCIDENTIFIER, 0);
     }
 
     /**
@@ -73,10 +82,10 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        Context context;
-        if (PandoraMain.instance != null)
-            context = PandoraMain.instance.getApplicationContext();
-        else context = getContext();
+//        Context context;
+//        if (PandoraMain.instance != null)
+//            context = PandoraMain.instance.getApplicationContext();
+//        else context = getContext();
 
         //call the controller update sync here.
         PBSServerController serverController = new PBSServerController(context);
@@ -137,24 +146,31 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
 
             boolean isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
 
-            if (!isAuthSuccess) {
-                inputAuth = new Bundle();
+            if (!isAuthSuccess && !global.isInitialSynced()) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "Please login again to proceed initial synchronization.", Toast.LENGTH_LONG).show();
+                    }
+                });
 
-                inputAuth.putString(PBSAuthenticatorController.ARG_ACCOUNT_NAME, global.getAd_user_name());
-                inputAuth.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE,
-                        PBSAccountInfo.ACCOUNT_TYPE);
-                inputAuth.putString(PBSAuthenticatorController.USER_PASS_ARG, global.getAd_user_password());
-                inputAuth.putString(PBSAuthenticatorController.ARG_AUTH_TYPE,
-                        PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
-                inputAuth.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
-                inputAuth.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
-
-                authenticateResult = new Bundle();
-                authenticateResult = authController.triggerEvent(
-                        PBSAuthenticatorController.SUBMIT_LOGIN,
-                        inputAuth, authenticateResult, null);
-
-                isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
+//                inputAuth = new Bundle();
+//
+//                inputAuth.putString(PBSAuthenticatorController.ARG_ACCOUNT_NAME, global.getAd_user_name());
+//                inputAuth.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE,
+//                        PBSAccountInfo.ACCOUNT_TYPE);
+//                inputAuth.putString(PBSAuthenticatorController.USER_PASS_ARG, global.getAd_user_password());
+//                inputAuth.putString(PBSAuthenticatorController.ARG_AUTH_TYPE,
+//                        PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
+//                inputAuth.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
+//                inputAuth.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
+//
+//                authenticateResult = new Bundle();
+//                authenticateResult = authController.triggerEvent(
+//                        PBSAuthenticatorController.SUBMIT_LOGIN,
+//                        inputAuth, authenticateResult, null);
+//
+//                isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
             }
             if (isAuthSuccess) {
 //                if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced()) {
@@ -184,52 +200,68 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 int syncCount = syncResultBundle.getInt(PandoraConstant.SYNC_COUNT);
                 boolean isSyncCompleted = syncCount == 0;
-                PandoraMain.instance.getGlobalVariable().setIsFirstBatchSynced(true);
-                if (PandoraMain.instance != null && PandoraMain.instance.getSupportActionBar().isShowing()) {
+//                global.setIsFirstBatchSynced(true);
+//                if (PandoraMain.instance != null && PandoraMain.instance.getSupportActionBar().isShowing()) {
                     PBSProjLocJSON[] projLoc = null;
+                    if(/*!global.isInitialSynced() ||*/ (!global.isInitialSynced() && isSyncCompleted && projLoc != null)) {
+//                        PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
+                        getContext().getContentResolver().notifyChange(Uri.parse("http://" + BuildConfig.APPLICATION_ID + ".syncNotify"), null, false);
+                    }
                     if (isSyncCompleted) {
-                        syncIdentifier = 0;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                            Settings.Global.getInt(PandoraMain.instance.getContentResolver(), Settings.Global.AUTO_TIME, 1);
-                            Settings.Global.getInt(PandoraMain.instance.getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 1);
-                        } else {
-                            Settings.System.getInt(PandoraMain.instance.getContentResolver(), Settings.System.AUTO_TIME, 1);
-                            Settings.System.getInt(PandoraMain.instance.getContentResolver(), Settings.System.AUTO_TIME_ZONE, 1);
-                        }
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                            Settings.Global.getInt(PandoraMain.instance.getContentResolver(), Settings.Global.AUTO_TIME, 1);
+//                            Settings.Global.getInt(PandoraMain.instance.getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 1);
+//                        } else {
+//                            Settings.System.getInt(PandoraMain.instance.getContentResolver(), Settings.System.AUTO_TIME, 1);
+//                            Settings.System.getInt(PandoraMain.instance.getContentResolver(), Settings.System.AUTO_TIME_ZONE, 1);
+//                        }
 
-                        PandoraController cont = new PandoraController(PandoraMain.instance);
+                        PandoraController cont = new PandoraController(context);
                         Bundle input = new Bundle();
                         input.putString(PBSAssetController.ARG_AD_USER_ID, global.getAd_user_id());
                         Bundle result = cont.triggerEvent(PandoraController.GET_PROJLOC_EVENT, input, new Bundle(), null);
                         projLoc = (PBSProjLocJSON[]) result.getSerializable(PandoraController.ARG_PROJECT_LOCATION_JSON);
                         if (projLoc == null) {
-                            PandoraMain.instance.runOnUiThread(new Runnable() {
+                            handler.post(new Runnable() {
+                                @Override
                                 public void run() {
-                                    Toast.makeText(PandoraMain.instance.getBaseContext(), "Done syncing but incomplete of data detected. Please contact admin for assistance.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, "Done syncing but incomplete of data detected. Please contact admin for assistance.", Toast.LENGTH_LONG).show();
                                 }
                             });
+//                            PandoraMain.instance.runOnUiThread(new Runnable() {
+//                                public void run() {
+//                                    Toast.makeText(context, "Done syncing but incomplete of data detected. Please contact admin for assistance.", Toast.LENGTH_LONG).show();
+//                                }
+//                            });
+                        } else {
+                            syncIdentifier = 0;
+                            global.setProjLocJSON(projLoc);
                         }
-                        else {
-                            ((PandoraContext) context).setProjLocJSON(projLoc);
-                        }
-                    }
-                    if(!global.isInitialSynced() || (global.isInitialSynced() && isSyncCompleted && projLoc != null))
-                        PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
-                    if (!isSyncCompleted) {
+                    } else {
                         if (syncCount != -1) {
                             syncIdentifier = 0;
                             extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
                             extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                             ContentResolver.requestSync(account, authority, extras);
-                            PandoraMain.instance.runOnUiThread(new Runnable() {
+                            handler.post(new Runnable() {
+                                @Override
                                 public void run() {
                                     String text;
-                                    if (PandoraMain.instance.getGlobalVariable().isInitialSynced())
+                                    if (((PandoraContext)context).isInitialSynced())
                                         text = "Syncing...";
                                     else text = "Initial syncing...";
-                                    Toast.makeText(PandoraMain.instance.getBaseContext(), text, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
                                 }
                             });
+//                            PandoraMain.instance.runOnUiThread(new Runnable() {
+//                                public void run() {
+//                                    String text;
+//                                    if (PandoraMain.instance.getGlobalVariable().isInitialSynced())
+//                                        text = "Syncing...";
+//                                    else text = "Initial syncing...";
+//                                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+//                                }
+//                            });
                         }
 //                        else {
 //                            PandoraMain.instance.runOnUiThread(new Runnable() {
@@ -239,8 +271,8 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
 //                            });
 //                        }
                     }
-                }
-            } else{
+//                }
+            } else {
                 syncResult.hasError();
             }
         } catch (OperationCanceledException e) {
@@ -254,6 +286,8 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
             syncResult.hasError();
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
             syncResult.stats.numAuthExceptions++;
+        } finally {
+            prefs.edit().putInt(SYNCIDENTIFIER, syncIdentifier).apply();
         }
     }
 }

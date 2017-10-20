@@ -90,7 +90,7 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
         super.onCreate(savedInstanceState);
         if (PBSAttendanceController.isKioskMode) {
             setHasOptionsMenu(true);
-            PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            ((PandoraMain)getActivity()).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
         context = (PandoraMain) getActivity();
         mNfcAdapter = NfcAdapter.getDefaultAdapter(context);
@@ -241,14 +241,14 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
         protected void onPostExecute(Bundle resultBundle) {
             context.dismissProgressDialog();
             if (resultBundle.getString(PandoraConstant.ERROR) != null) {
-                PandoraHelper.showMessage(PandoraMain.instance, resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)));
+                PandoraHelper.showMessage(getActivity(), resultBundle.getString(resultBundle.getString(PandoraConstant.TITLE)));
                 return;
             }
 
             final PBSLoginJSON loginJSON = (PBSLoginJSON) resultBundle.getSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON);
             if (loginJSON != null) {
                 if (loginJSON.getSuccess().equals("TRUE")) {
-                    PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    ((PandoraMain)getActivity()).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_attendance_tracking));
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     fragmentManager.popBackStack();

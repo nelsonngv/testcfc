@@ -839,14 +839,14 @@ public class PandoraHelper  {
         return deviceId;
     }
 
-    public static void hideSoftKeyboard() {
-        if(PandoraMain.instance != null && PandoraMain.instance.getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) PandoraMain.instance.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(PandoraMain.instance.getCurrentFocus().getWindowToken(), 0);
+    public static void hideSoftKeyboard(Context ctx) {
+        if(ctx != null && ((PandoraMain)ctx).getCurrentFocus() != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) ctx.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(((PandoraMain)ctx).getCurrentFocus().getWindowToken(), 0);
         }
     }
 
-    public static void populateMenuForms(Context ctx, String[] forms) {
+    public static void populateMenuForms(final Context ctx, String[] forms) {
         if (forms != null && forms.length > 0) {
             //sorting menu items
             ArrayList<String> oriMenuList = new ArrayList<>(Arrays.asList(forms));
@@ -868,11 +868,11 @@ public class PandoraHelper  {
             prefs.edit().putString("forms", new Gson().toJson(tmpMenuList)).commit();
 
             Object[] objectList = tmpMenuList.toArray();
-            PandoraMain.instance.menuList = Arrays.copyOf(objectList, objectList.length, String[].class);
-        } else PandoraMain.instance.menuList = null;
-        PandoraMain.instance.runOnUiThread(new Runnable() {
+            ((PandoraMain)ctx).menuList = Arrays.copyOf(objectList, objectList.length, String[].class);
+        } else ((PandoraMain)ctx).menuList = null;
+        ((PandoraMain)ctx).runOnUiThread(new Runnable() {
             public void run() {
-                PandoraMain.instance.updateDrawer(null);
+                ((PandoraMain)ctx).updateDrawer(null);
             }
         });
     }
@@ -884,17 +884,17 @@ public class PandoraHelper  {
         tv.setText(ss);
     }
 
-    public static void sendNotification(String uuid, String content, String className) {
-        Intent intent = new Intent(PandoraMain.instance, PandoraMain.class);
+    public static void sendNotification(Context ctx, String uuid, String content, String className) {
+        Intent intent = new Intent(ctx, PandoraMain.class);
         intent.putExtra("isNotification", true);
         intent.putExtra("uuid", uuid);
         intent.putExtra("className", className);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(PandoraMain.instance, 0 /* Request code */, intent,
+        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(PandoraMain.instance)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("PandoraCFC")
                 .setContentText(content)
@@ -906,7 +906,7 @@ public class PandoraHelper  {
         if (Build.VERSION.SDK_INT < 26) notificationBuilder.setVibrate(new long[0]);
 
         NotificationManager notificationManager =
-                (NotificationManager) PandoraMain.instance.getSystemService(Context.NOTIFICATION_SERVICE);
+                (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify((int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE) /* ID of notification */, notificationBuilder.build());
     }

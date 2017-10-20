@@ -168,7 +168,7 @@ public class NewSurveySummaryFragment extends Fragment {
     }
 
     protected void next() {
-        PandoraHelper.hideSoftKeyboard();
+        PandoraHelper.hideSoftKeyboard(getActivity());
         bundle.putString(MSurvey.DATETRX_COL, PBSSurveyController.dateTrx);
         bundle.putString(MSurvey.REMARKS_COL, etSurveyRemarks.getText().toString());
         Fragment fragment = new NewSurveySignFragment();

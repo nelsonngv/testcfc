@@ -20,7 +20,7 @@
         android:text="@string/location_tag"
         android:layout_below="@id/progressBar" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/tvOr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,5 +62,5 @@
         android:paddingRight="30dp"
         style="@style/PLargeButton"
         android:text="@string/front_camera"
-        android:layout_below="@id/btnScanCodeRear" />
+        android:layout_below="@id/btnScanCodeRear" />-->
 </RelativeLayout>

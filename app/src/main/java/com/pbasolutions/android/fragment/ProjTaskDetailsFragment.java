@@ -355,7 +355,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                     case EVENT_PREPIC: {
                         if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !projTask.getATTACHMENT_BEFORETASKPICTURE_1().equals("")) {
                             intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1())), "image/*");
-                            PandoraMain.instance.startActivity(intent);
+                            getActivity().startActivity(intent);
                         }
                         break;
                     }
@@ -365,7 +365,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                                 String path = object.getTag(R.string.tag_imageview_path).toString();
                                 if (path != null && !path.equals("")) {
                                     intent.setDataAndType(Uri.fromFile(new File(path)), "image/*");
-                                    PandoraMain.instance.startActivity(intent);
+                                    getActivity().startActivity(intent);
                                 }
                             }
                         }
@@ -488,7 +488,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 //        input.putString(taskCont.ARG_TASKPIC_4, (String)taskPicture4.getTag(R.string.tag_imageview_path));
 //        input.putString(taskCont.ARG_TASKPIC_5, (String)taskPicture5.getTag(R.string.tag_imageview_path));
 
-        PandoraHelper.hideSoftKeyboard();
+        PandoraHelper.hideSoftKeyboard(getActivity());
         Fragment fragment = new ProjTaskSignFragment();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragment.setArguments(input);

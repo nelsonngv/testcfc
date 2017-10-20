@@ -3,6 +3,8 @@ package com.pbasolutions.android;
 import android.app.Application;
 import android.content.Context;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.pbasolutions.android.json.PBSProjLocJSON;
 import com.pbasolutions.android.json.PBSRoleJSON;
 
@@ -51,18 +53,19 @@ public class PandoraContext extends Application implements Serializable{
 
     private boolean isInitialSynced = false;
     private boolean isFirstBatchSynced = false;
+    public static RequestQueue queue;
 
     /**
      * Keeps a reference of the application context
      */
-    private Context sContext;
+    private static Context sContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         sContext = getApplicationContext();
-
+        queue = Volley.newRequestQueue(sContext);
     }
 
     /**
@@ -70,8 +73,12 @@ public class PandoraContext extends Application implements Serializable{
      *
      * @return application context
      */
-    public  Context getContext() {
+    public static Context getContext() {
         return sContext;
+    }
+
+    public static RequestQueue getRequestQueue() {
+        return queue;
     }
 
     public String getAd_user_id() {

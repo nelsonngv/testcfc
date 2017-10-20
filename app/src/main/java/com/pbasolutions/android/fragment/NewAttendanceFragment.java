@@ -108,7 +108,7 @@ public class NewAttendanceFragment extends Fragment {
         refreshAttendances();
         if (projLocNameAdapter.getCount() > 0)
         {
-            PandoraMain pandoraMain = PandoraMain.instance;
+            PandoraMain pandoraMain = ((PandoraMain)getActivity());
             String projLocID = pandoraMain.getGlobalVariable().getC_projectlocation_id();
 
             for (int i = 0; i < projLocNameAdapter.getCount(); i++)
@@ -275,7 +275,7 @@ public class NewAttendanceFragment extends Fragment {
 
     private ObservableArrayList<MAttendanceLine> getAttendances() {
         Bundle input = new Bundle();
-        PandoraMain pandoraMain = PandoraMain.instance;
+        PandoraMain pandoraMain = ((PandoraMain)getActivity());
 
         SpinnerPair projlocPair = (SpinnerPair) projLocationSpinner.getSelectedItem();
         if (projlocPair == null) { // when no selected
@@ -344,14 +344,14 @@ public class NewAttendanceFragment extends Fragment {
         String deployDate = deployDateView.getText().toString();
         if (deployDate == null || deployDate.length() == 0)
         {
-            PandoraHelper.showMessage(PandoraMain.instance, "Please select Deployment Date.");
+            PandoraHelper.showMessage(getActivity(), "Please select Deployment Date.");
             return false;
         }
 
         SpinnerPair spinnerPair = (SpinnerPair) shiftSpinner.getSelectedItem();
         if (spinnerPair.getKey() == null)
         {
-            PandoraHelper.showMessage(PandoraMain.instance, getString(
+            PandoraHelper.showMessage(getActivity(), getString(
                     R.string.no_list_error, getString(R.string.proj_shift)));
             return false;
         }
@@ -499,7 +499,7 @@ public class NewAttendanceFragment extends Fragment {
             set_UUID(UUID.randomUUID().toString());
         cv.put(MAttendance.M_ATTENDANCE_UUID_COL, get_UUID());
         cv.put(MAttendance.DEPLOYMENT_DATE_COL, deployDateView.getText().toString());
-        PandoraContext cont = PandoraMain.instance.getGlobalVariable();
+        PandoraContext cont = ((PandoraMain)getActivity()).getGlobalVariable();
 
         cv.put(ModelConst.C_PROJECTLOCATION_UUID_COL, cont.getC_projectlocation_uuid());
 

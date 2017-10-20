@@ -139,7 +139,7 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
                 break;
             }
             case COOMPLETE_ID: {
-                PandoraHelper.hideSoftKeyboard();
+                PandoraHelper.hideSoftKeyboard(getActivity());
                 ArrayList<View> spinnerList = getAllChildren(mPager, Spinner.class);
                 ArrayList<View> etList = getAllChildren(mPager, EditText.class);
                 ArrayList<MSurvey> answerList = new ArrayList<>();
@@ -177,7 +177,7 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
                 fragmentTransaction.replace(R.id.container_body, fragment);
                 fragmentTransaction.addToBackStack(fragment.getClass().getName());
                 fragmentTransaction.commit();
-                PandoraMain.instance.getSupportActionBar().setTitle(survey.getName());
+                ((PandoraMain)getActivity()).getSupportActionBar().setTitle(survey.getName());
                 break;
             }
             default: break;
@@ -229,7 +229,7 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
             sections = (ArrayList<String>) result.getSerializable(PBSSurveyController.ARG_SECTIONS);
             if (sections.size() == 0) {
                 PandoraHelper.showWarningMessage(getActivity(), "This template does not have any questions.");
-                PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                getActivity().getSupportFragmentManager().popBackStack();
                 return;
             }
             NUM_PAGES = sections.size();
@@ -238,7 +238,7 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
 
             if (_UUID == null || _UUID.equals(""))
                 survey.setName(PBSSurveyController.name);
-            PandoraMain.instance.getSupportActionBar().setTitle(survey.getName());
+            ((PandoraMain)getActivity()).getSupportActionBar().setTitle(survey.getName());
         }
     }
 

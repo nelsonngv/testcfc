@@ -380,8 +380,8 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 //                    }
                 }
                 ((PandoraMain)getActivity()).dismissProgressDialog();
-                PandoraHelper.hideSoftKeyboard();
-                PandoraMain.instance.getSupportFragmentManager().popBackStack();
+                PandoraHelper.hideSoftKeyboard(getActivity());
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         }.execute(input);
     }

@@ -67,6 +67,6 @@ public class PBSRecruitController extends PBSController {
      */
     public PBSRecruitController(Context base) {
         super(base);
-        task = new RecruitTask(getContentResolver());
+        task = new RecruitTask(getContentResolver(), base);
     }
 }

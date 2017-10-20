@@ -251,10 +251,14 @@ public class ServerTask extends Task {
                                 deleteTable.getTableName(), selection, arg))
                         //checking if deleted before
                         {
-                            if (!ModelConst.deleteTableRow(cr,
-                                    deleteTable.getTableName(), selection, arg)) {
-                                isSuccessSync = false;
-                            }
+                            cv = new ContentValues();
+                            cv.put("IsActive", "N");
+                            ModelConst.updateTableRow(cr, deleteTable.getTableName(), cv, selection, arg);
+
+//                            if (!ModelConst.deleteTableRow(cr,
+//                                    deleteTable.getTableName(), selection, arg)) {
+//                                isSuccessSync = false;
+//                            }
                         }
                     }
                 }

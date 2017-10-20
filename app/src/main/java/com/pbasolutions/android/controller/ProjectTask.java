@@ -4,6 +4,7 @@ import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.databinding.ObservableArrayList;
@@ -17,6 +18,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
+import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
@@ -44,18 +46,39 @@ import java.util.concurrent.Callable;
 /**
  * Created by pbadell on 11/11/15.
  */
-public class ProjectTask implements Callable<Bundle> {
+public class ProjectTask implements Callable<Bundle>, ITask {
 
     private static final String TAG = "ProjectTask";
     private Bundle input;
     private Bundle output;
     private ContentResolver cr;
     private String event;
-    public ProjectTask(Bundle input, Bundle result, ContentResolver cr) {
-        this.input = input;
-        this.output = result;
+    private Context ctx;
+
+    public ProjectTask(ContentResolver cr, Context ctx) {
         this.cr = cr;
-        event = input.getString(PBSIController.ARG_TASK_EVENT);
+        this.ctx = ctx;
+    }
+
+    @Override
+    public Bundle getInput() {
+        return input;
+    }
+
+    @Override
+    public void setInput(Bundle input) {
+        this.input = input;
+        event = input.getString("ARG_TASK_EVENT");
+    }
+
+    @Override
+    public Bundle getOutput() {
+        return output;
+    }
+
+    @Override
+    public void setOutput(Bundle output) {
+        this.output = output;
     }
 
     /**
@@ -159,7 +182,7 @@ public class ProjectTask implements Callable<Bundle> {
 
     private Bundle getProjectLocations() {
         String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
-                PandoraMain.instance.getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
+                ((PandoraMain)ctx).getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
         String projection[] = {ModelConst.C_PROJECTLOCATION_ID_COL,
                 ModelConst.NAME_COL};
         String selection = "hr_cluster_uuid='null' or hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
@@ -398,12 +421,6 @@ public class ProjectTask implements Callable<Bundle> {
                 return output;
             }
 
-            if (projTasks.getSuccess() == null) {
-                output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-                output.putString(PandoraConstant.RESULT, "Successfully synced Project Task");
-                return output;
-            }
-
             ArrayList<ContentProviderOperation> ops = new ArrayList<>();
             ArrayList<ContentProviderOperation> ops2 = new ArrayList<>();
             ContentValues cv2 = new ContentValues();
@@ -411,141 +428,146 @@ public class ProjectTask implements Callable<Bundle> {
 //            ops.add(ContentProviderOperation
 //                    .newDelete(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
 //                    .build());
-            try {
-                cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops);
-                ops.clear();
-            }
-            catch (Exception e) {
-                Log.e(TAG, e.getMessage());
-            }
+//            try {
+//                cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops);
+//                ops.clear();
+//            }
+//            catch (Exception e) {
+//                Log.e(TAG, e.getMessage());
+//            }
 
             boolean isShowNotification = input.getBoolean("isShowNotification", false);
             String projTaskIDs = "";
-            for (PBSProjTaskJSON projTask : projTasks.getProjTasks()){
-                ContentValues cv = new ContentValues();
+            if (projTasks.getProjTasks().length > 0) {
+                for (PBSProjTaskJSON projTask : projTasks.getProjTasks()) {
+                    ContentValues cv = new ContentValues();
 
-                projTaskIDs += projTask.getC_ProjectTask_ID() + ", ";
-                cv.put(MProjectTask.C_PROJECTTASK_ID_COL, projTask.getC_ProjectTask_ID());
-                cv.put(MProjectTask.CREATED_COL, projTask.getCreated());
-                String createdBy = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
-                        ModelConst.AD_USER_UUID_COL,
-                        projTask.getCreatedBy(), ModelConst.AD_USER_ID_COL, cr);
-                cv.put(MProjectTask.CREATEDBY_COL, createdBy);
-                cv.put(MProjectTask.C_PROJECTLOCATION_UUID_COL, input.getString(PBSBroadcastController.ARG_PROJLOC_UUID));
-                cv.put(MProjectTask.ASSIGNEDTO_COL, projTask.getAssignedTo());
-                cv.put(MProjectTask.PRIORITY_COL, projTask.getSeqNo());
-                cv.put(MProjectTask.NAME_COL, projTask.getName());
-                cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
-                String isDone = (projTask.getIsDone()) ? "Y":"N";
-                cv.put(MProjectTask.ISDONE_COL, isDone);
-                if (projTask.getDateAssigned() != null && !projTask.getDateAssigned().isEmpty())
-                    cv.put(MProjectTask.DATEASSIGNED_COL, projTask.getDateAssigned());
-                cv.put(MProjectTask.DUEDATE_COL, projTask.getDueDate());
-                cv.put(MProjectTask.COMMENTS_COL, projTask.getComments());
-                String selection = MProjectTask.C_PROJECTTASK_ID_COL;
-                String[] arg = {cv.getAsString(selection)};
-                String tableName = ModelConst.C_PROJECTTASK_TABLE;
-                if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
-                    String uuid = UUID.randomUUID().toString();
-                    cv.put(MProjectTask.C_PROJECTTASK_UUID_COL, uuid);
-                    ops.add(ContentProviderOperation
-                            .newInsert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
-                            .withValues(cv)
-                            .build());
+                    projTaskIDs += projTask.getC_ProjectTask_ID() + ", ";
+                    cv.put(MProjectTask.C_PROJECTTASK_ID_COL, projTask.getC_ProjectTask_ID());
+                    cv.put(MProjectTask.CREATED_COL, projTask.getCreated());
+                    String createdBy = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE,
+                            ModelConst.AD_USER_UUID_COL,
+                            projTask.getCreatedBy(), ModelConst.AD_USER_ID_COL, cr);
+                    cv.put(MProjectTask.CREATEDBY_COL, createdBy);
+                    cv.put(MProjectTask.C_PROJECTLOCATION_UUID_COL, input.getString(PBSBroadcastController.ARG_PROJLOC_UUID));
+                    cv.put(MProjectTask.ASSIGNEDTO_COL, projTask.getAssignedTo());
+                    cv.put(MProjectTask.PRIORITY_COL, projTask.getSeqNo());
+                    cv.put(MProjectTask.NAME_COL, projTask.getName());
+                    cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
+                    String isDone = (projTask.getIsDone()) ? "Y" : "N";
+                    cv.put(MProjectTask.ISDONE_COL, isDone);
+                    if (projTask.getDateAssigned() != null && !projTask.getDateAssigned().isEmpty())
+                        cv.put(MProjectTask.DATEASSIGNED_COL, projTask.getDateAssigned());
+                    cv.put(MProjectTask.DUEDATE_COL, projTask.getDueDate());
+                    cv.put(MProjectTask.COMMENTS_COL, projTask.getComments());
+                    String selection = MProjectTask.C_PROJECTTASK_ID_COL;
+                    String[] arg = {cv.getAsString(selection)};
+                    String tableName = ModelConst.C_PROJECTTASK_TABLE;
+                    if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
+                        String uuid = UUID.randomUUID().toString();
+                        cv.put(MProjectTask.C_PROJECTTASK_UUID_COL, uuid);
+                        ops.add(ContentProviderOperation
+                                .newInsert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
+                                .withValues(cv)
+                                .build());
 
-                    if (!projTask.getIsDone() && isShowNotification)
-                        PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_new_proj_task), ProjTaskDetailsFragment.class.getSimpleName());
-                } else {
-                    selection = selection + "=?";
-                    ops.add(ContentProviderOperation
-                            .newUpdate(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
-                            .withValues(cv)
-                            .withSelection(selection, arg)
-                            .build());
-
-                    if (!projTask.getIsDone() && isShowNotification) {
-                        String uuid = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE, MProjectTask.C_PROJECTTASK_ID_COL,
-                                projTask.getC_ProjectTask_ID(), MProjectTask.C_PROJECTTASK_UUID_COL, cr);
-                        try {
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(sdf.parse(projTask.getDueDate()));
-                            cal.add(Calendar.DATE, 1);
-                            Date dueDate = cal.getTime();
-                            cal.add(Calendar.HOUR, -2);
-                            Date expiringDueDate = cal.getTime();
-                            cv2.clear();
-                            ops2.clear();
-                            if (new Date().after(dueDate)) {
-                                String isExpiredNotified = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE,
-                                        MProjectTask.C_PROJECTTASK_ID_COL, projTask.getC_ProjectTask_ID(),
-                                        MProjectTask.ISEXPIREDNOTIFIED_COL, cr);
-                                if (isExpiredNotified.equalsIgnoreCase("N")) {
-                                    PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_proj_task_expired), ProjTaskDetailsFragment.class.getSimpleName());
-                                    cv2.put(MProjectTask.ISEXPIREDNOTIFIED_COL, "Y");
-                                    ops2.add(ContentProviderOperation
-                                            .newUpdate(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
-                                            .withValues(cv2)
-                                            .build());
-                                    try {
-                                        cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops2);
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    } catch (OperationApplicationException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            } else if (new Date().after(expiringDueDate)) {
-                                String isExpiringNotified = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE,
-                                        MProjectTask.C_PROJECTTASK_ID_COL, projTask.getC_ProjectTask_ID(),
-                                        MProjectTask.ISEXPIRINGNOTIFIED_COL, cr);
-                                if (isExpiringNotified.equalsIgnoreCase("N")) {
-                                    PandoraHelper.sendNotification(uuid, PandoraMain.instance.getResources().getString(R.string.notification_proj_task_expiring), ProjTaskDetailsFragment.class.getSimpleName());
-                                    cv2.put(MProjectTask.ISEXPIRINGNOTIFIED_COL, "Y");
-                                    ops2.add(ContentProviderOperation
-                                            .newUpdate(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
-                                            .withValues(cv2)
-                                            .build());
-                                    try {
-                                        cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops2);
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    } catch (OperationApplicationException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-
-            try {
-                ContentProviderResult results[] = cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops);
-                String selection = MProjectTask.ISDONE_COL + "=? AND " + MProjectTask.C_PROJECTTASK_ID_COL + " NOT IN (" + projTaskIDs.substring(0, projTaskIDs.length()-2) + ")";
-                String[] selectionArgs = {"Y"};
-                ModelConst.deleteTableRow(cr, MProjectTask.TABLENAME, selection, selectionArgs);
-                for(ContentProviderResult result : results) {
-                    boolean resultFlag = false;
-                    if (result.uri != null) {
-                        resultFlag = ModelConst.getURIResult(result.uri);
+                        if (!projTask.getIsDone() && isShowNotification)
+                            PandoraHelper.sendNotification(ctx, uuid, PandoraContext.getContext().getResources().getString(R.string.notification_new_proj_task), ProjTaskDetailsFragment.class.getSimpleName());
                     } else {
-                        if (result.count != null && result.count !=0) {
-                            resultFlag = true;
+                        selection = selection + "=?";
+                        ops.add(ContentProviderOperation
+                                .newUpdate(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
+                                .withValues(cv)
+                                .withSelection(selection, arg)
+                                .build());
+
+                        if (!projTask.getIsDone() && isShowNotification) {
+                            String uuid = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE, MProjectTask.C_PROJECTTASK_ID_COL,
+                                    projTask.getC_ProjectTask_ID(), MProjectTask.C_PROJECTTASK_UUID_COL, cr);
+                            try {
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+                                Calendar cal = Calendar.getInstance();
+                                cal.setTime(sdf.parse(projTask.getDueDate()));
+                                cal.add(Calendar.DATE, 1);
+                                Date dueDate = cal.getTime();
+                                cal.add(Calendar.HOUR, -2);
+                                Date expiringDueDate = cal.getTime();
+                                cv2.clear();
+                                ops2.clear();
+                                if (new Date().after(dueDate)) {
+                                    String isExpiredNotified = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE,
+                                            MProjectTask.C_PROJECTTASK_ID_COL, projTask.getC_ProjectTask_ID(),
+                                            MProjectTask.ISEXPIREDNOTIFIED_COL, cr);
+                                    if (isExpiredNotified.equalsIgnoreCase("N")) {
+                                        PandoraHelper.sendNotification(ctx, uuid, ctx.getResources().getString(R.string.notification_proj_task_expired), ProjTaskDetailsFragment.class.getSimpleName());
+                                        cv2.put(MProjectTask.ISEXPIREDNOTIFIED_COL, "Y");
+                                        ops2.add(ContentProviderOperation
+                                                .newUpdate(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
+                                                .withValues(cv2)
+                                                .build());
+                                        try {
+                                            cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops2);
+                                        } catch (RemoteException e) {
+                                            e.printStackTrace();
+                                        } catch (OperationApplicationException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                } else if (new Date().after(expiringDueDate)) {
+                                    String isExpiringNotified = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECTTASK_TABLE,
+                                            MProjectTask.C_PROJECTTASK_ID_COL, projTask.getC_ProjectTask_ID(),
+                                            MProjectTask.ISEXPIRINGNOTIFIED_COL, cr);
+                                    if (isExpiringNotified.equalsIgnoreCase("N")) {
+                                        PandoraHelper.sendNotification(ctx, uuid, ctx.getResources().getString(R.string.notification_proj_task_expiring), ProjTaskDetailsFragment.class.getSimpleName());
+                                        cv2.put(MProjectTask.ISEXPIRINGNOTIFIED_COL, "Y");
+                                        ops2.add(ContentProviderOperation
+                                                .newUpdate(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE))
+                                                .withValues(cv2)
+                                                .build());
+                                        try {
+                                            cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops2);
+                                        } catch (RemoteException e) {
+                                            e.printStackTrace();
+                                        } catch (OperationApplicationException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
-                    if (!resultFlag) {
-                        output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-                        output.putString(PandoraConstant.ERROR, "Fail to sync Project Tasks.");
-                        return output;
-                    }
                 }
+
+                try {
+                    ContentProviderResult results[] = cr.applyBatch(PBSAccountInfo.ACCOUNT_AUTHORITY, ops);
+                    String selection = MProjectTask.ISDONE_COL + "=? AND " + MProjectTask.C_PROJECTTASK_ID_COL + " NOT IN (" + projTaskIDs.substring(0, projTaskIDs.length() - 2) + ")";
+                    String[] selectionArgs = {"Y"};
+                    ModelConst.deleteTableRow(cr, MProjectTask.TABLENAME, selection, selectionArgs);
+                    for (ContentProviderResult result : results) {
+                        boolean resultFlag = false;
+                        if (result.uri != null) {
+                            resultFlag = ModelConst.getURIResult(result.uri);
+                        } else {
+                            if (result.count != null && result.count != 0) {
+                                resultFlag = true;
+                            }
+                        }
+                        if (!resultFlag) {
+                            output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+                            output.putString(PandoraConstant.ERROR, "Fail to sync Project Tasks.");
+                            return output;
+                        }
+                    }
+                    output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+                    output.putString(PandoraConstant.RESULT, "Successfully synced Project Task");
+                } catch (RemoteException | OperationApplicationException e) {
+                    Log.e(TAG, e.getMessage());
+                }
+            } else {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
                 output.putString(PandoraConstant.RESULT, "Successfully synced Project Task");
-            } catch (RemoteException | OperationApplicationException e) {
-                Log.e(TAG, e.getMessage());
             }
         } else {
             output.putString(PandoraConstant.ERROR, "Fail to sync Project Tasks.");

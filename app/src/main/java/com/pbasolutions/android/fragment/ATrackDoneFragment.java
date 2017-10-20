@@ -58,7 +58,7 @@ public class ATrackDoneFragment extends Fragment implements PBABackKeyListener {
             }
 
             public void onFinish() {
-                PandoraMain.instance.mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                ((PandoraMain)getActivity()).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.popBackStack();
                 fragmentManager.popBackStack();

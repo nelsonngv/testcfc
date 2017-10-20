@@ -50,7 +50,7 @@ public class NewMovementLineFragment extends AbstractMovementLineFragment {
             input.putString(PBSServerConst.PARAM_URL, appContext.getServer_url());
             Bundle output = assetCont.triggerEvent(PBSAssetController.SAVE_MOVEMENTLINE_EVENT, input, new Bundle(), null);
             if (!PandoraConstant.ERROR.equalsIgnoreCase(output.getString(PandoraConstant.TITLE))) {
-                PandoraHelper.hideSoftKeyboard();
+                PandoraHelper.hideSoftKeyboard(getActivity());
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.popBackStack();
 //                Fragment fragment = new AssetNewMovement();

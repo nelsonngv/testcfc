@@ -142,7 +142,7 @@ public class SurveyFragment extends Fragment implements PBABackKeyListener {
     }
 
     protected void refreshSurvey() {
-        PandoraMain pandoraMain = PandoraMain.instance;
+        PandoraMain pandoraMain = ((PandoraMain)getActivity());
         if (pandoraMain == null || globalVar == null)
             return;
         populateSurvey();
