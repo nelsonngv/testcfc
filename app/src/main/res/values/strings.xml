@@ -278,7 +278,11 @@
     <string name="label_taskname">Task Name</string>
     <string name="label_taskprojloc">Project Location</string>
     <string name="label_taskdesc">Description</string>
+    <string name="label_taskequip">Equipment</string>
+    <string name="label_taskcontact">Contact Name</string>
+    <string name="label_taskcontactno">Contact Number</string>
     <string name="label_assignto">Assign To</string>
+    <string name="label_secassignto">Assign To (Secondary)</string>
     <string name="label_taskSeqNo">Priority</string>
     <string name="label_taskSeqNoDesc">0 (HIgh Priority) to 2 (Low Priority)</string>
     <string name="label_template">Template</string>

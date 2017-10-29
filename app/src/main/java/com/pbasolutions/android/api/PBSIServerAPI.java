@@ -31,6 +31,7 @@ public interface PBSIServerAPI {
 
     String searchAttendances(JsonObject object, String serverURL);
 
+    String updateProjectTask(PBSJson json, String serverURL);
     String createProjectTask(PBSJson json, String serverURL);
     String attachToProjTask(JsonObject json, String serverURL);
 }

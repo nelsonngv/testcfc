@@ -27,6 +27,7 @@ public class PBSTaskController extends ContextWrapper implements PBSIController 
     public static final String COMPLETE_PROJTASK_EVENT =  "COMPLETE_PROJTASKS_EVENT";
     public static final String GET_PROJTASK_EVENT =  "GET_PROJTASK_EVENT";
     public static final String CREATE_TASK_EVENT = "CREATE_TASK_EVENT" ;
+    public static final String UPDATE_TASK_EVENT = "UPDATE_TASK_EVENT" ;
     public static final String GET_USERS_EVENT = "GET_USERS_EVENT";
     public static final String GET_PROJECTLOCATIONS_EVENT = "GET_PROJECTLOCATIONS_EVENT";
     public static final String ARG_TASK_LIST = "ARG_TASK_LIST";

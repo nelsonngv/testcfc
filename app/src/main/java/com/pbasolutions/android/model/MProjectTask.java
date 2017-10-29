@@ -13,6 +13,9 @@ public class MProjectTask extends PBSJson {
     private int SeqNo;
     private String isDone;
     private String Description;
+    private String Equipment;
+    private String Contact;
+    private String ContactNo;
     private String comments;
     transient private String projLocName;
     private String ATTACHMENT_BEFORETASKPICTURE_1;
@@ -47,7 +50,10 @@ public class MProjectTask extends PBSJson {
     private String DateAssigned;
     private String DueDate;
     transient private String assignedToName;
+    transient private String secAssignedToName;
     private int AssignedTo;
+    private int SecAssignedTo;
+//    private int AssignedTo3;
     private int C_ProjectLocation_ID;
     private int StatusColor;
     private String IsExpiringNotified;
@@ -60,8 +66,12 @@ public class MProjectTask extends PBSJson {
     public static final String NAME_COL = "Name";
     public static final String ISDONE_COL = "IsDone";
     public static final String ASSIGNEDTO_COL = "AssignedTo";
+    public static final String SECASSIGNEDTO_COL = "SecAssignedTo";
     public static final String PRIORITY_COL = "Priority";
     public static final String DESCRIPTION_COL = "Description";
+    public static final String EQUIPMENT_COL = "Equipment";
+    public static final String CONTACT_COL = "Contact";
+    public static final String CONTACTNO_COL = "ContactNo";
     public static final String COMMENTS_COL = "Comments";
     public static final String CREATED_COL = "Created";
     public static final String CREATEDBY_COL = "CreatedBy";
@@ -144,6 +154,30 @@ public class MProjectTask extends PBSJson {
 
     public void setDescription(String description) {
         this.Description = description;
+    }
+
+    public String getEquipment() {
+        return Equipment;
+    }
+
+    public void setEquipment(String equipment) {
+        this.Equipment = equipment;
+    }
+
+    public String getContact() {
+        return Contact;
+    }
+
+    public void setContact(String contact) {
+        this.Contact = contact;
+    }
+
+    public String getContactNo() {
+        return ContactNo;
+    }
+
+    public void setContactNo(String contactNo) {
+        this.ContactNo = contactNo;
     }
 
     public String getComments() {
@@ -413,14 +447,20 @@ public class MProjectTask extends PBSJson {
         StatusColor = statusColor;
     }
 
-
-
     public int getAssignedTo() {
         return AssignedTo;
     }
 
     public void setAssignedTo(int assignedTo) {
         AssignedTo = assignedTo;
+    }
+
+    public int getSecAssignedTo() {
+        return SecAssignedTo;
+    }
+
+    public void setSecAssignedTo(int secAssignedTo) {
+        SecAssignedTo = secAssignedTo;
     }
 
     public int getC_ProjectLocation_ID() {
@@ -437,6 +477,14 @@ public class MProjectTask extends PBSJson {
 
     public void setAssignedToName(String assignedToName) {
         this.assignedToName = assignedToName;
+    }
+
+    public String getSecAssignedToName() {
+        return secAssignedToName;
+    }
+
+    public void setSecAssignedToName(String secAssignedToName) {
+        this.secAssignedToName = secAssignedToName;
     }
 
     public String getDateAssigned() {

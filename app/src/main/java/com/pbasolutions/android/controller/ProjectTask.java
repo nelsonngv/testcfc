@@ -99,11 +99,14 @@ public class ProjectTask implements Callable<Bundle>, ITask {
             case PBSTaskController.SYNC_PROJTASKS_EVENT: {
                 return syncProjectTasks();
             }
-            case PBSTaskController.COMPLETE_PROJTASK_EVENT: {
-                return completeProjectTask();
-            }
             case PBSTaskController.CREATE_TASK_EVENT: {
                 return createTask();
+            }
+            case PBSTaskController.UPDATE_TASK_EVENT: {
+                return updateTask();
+            }
+            case PBSTaskController.COMPLETE_PROJTASK_EVENT: {
+                return completeProjectTask();
             }
             case PBSTaskController.GET_PROJECTLOCATIONS_EVENT:{
                 return getProjectLocations();
@@ -221,7 +224,7 @@ public class ProjectTask implements Callable<Bundle>, ITask {
     }
 
     private Bundle createTask() {
-        MProjectTask task = (MProjectTask)input.getSerializable(PBSTaskController.ARG_PROJTASK);
+        MProjectTask task = (MProjectTask) input.getSerializable(PBSTaskController.ARG_PROJTASK);
         ContentValues cv = getContentValuesFromTask(task);
         if (task.getATTACHMENT_BEFORETASKPICTURE_1() != null && !task.getATTACHMENT_BEFORETASKPICTURE_1().isEmpty()) {
             String pic1 = CameraUtil
@@ -254,7 +257,7 @@ public class ProjectTask implements Callable<Bundle>, ITask {
                 Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv);
                 output.putBoolean(PandoraConstant.RESULT, true);
                 output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-                output.putString(PandoraConstant.RESULT, "Successfuly insert new task.");
+                output.putString(PandoraConstant.RESULT, "Successfully inserted new task.");
                 return output;
             }
 
@@ -263,6 +266,36 @@ public class ProjectTask implements Callable<Bundle>, ITask {
         output.putBoolean(PandoraConstant.RESULT, false);
         output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
         output.putString(PandoraConstant.ERROR, "Failed to create task");
+
+        return output;
+    }
+
+    private Bundle updateTask() {
+        MProjectTask task = (MProjectTask) input.getSerializable(PBSTaskController.ARG_PROJTASK);
+        ContentValues cv = getContentValuesFromTask(task);
+
+        PBSIServerAPI serverAPI = new PBSServerAPI();
+        String result = serverAPI.updateProjectTask(task, input.getString(PBSServerConst.PARAM_URL));
+        if (result != null && !result.isEmpty()) {
+            JsonParser p = new JsonParser();
+            JsonObject jsonObj = p.parse(result).getAsJsonObject(); // get project task id and update local
+            String success = jsonObj.get(PBSServerConst.SUCCESS).getAsString();
+            if (PBSServerConst.TRUE.equalsIgnoreCase(success)){
+                String[] arg = {String.valueOf(task.get_ID())};
+                int rowUpdated = cr.update(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv, MProjectTask.C_PROJECTTASK_ID_COL, arg);
+                if (rowUpdated > 0) {
+                    output.putBoolean(PandoraConstant.RESULT, true);
+                    output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+                    output.putString(PandoraConstant.RESULT, "Successfully updated new task.");
+                    return output;
+                }
+            }
+
+        }
+
+        output.putBoolean(PandoraConstant.RESULT, false);
+        output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+        output.putString(PandoraConstant.ERROR, "Failed to update task");
 
         return output;
     }
@@ -386,22 +419,56 @@ public class ProjectTask implements Callable<Bundle>, ITask {
     ContentValues getContentValuesFromTask(MProjectTask projTask) {
         ContentValues cv = new ContentValues();
 
-        cv.put(MProjectTask.C_PROJECTTASK_UUID_COL, projTask.get_UUID());
-//        cv.put(MProjectTask.C_PROJECTTASK_ID_COL, projTask.get_ID());
-        cv.put(MProjectTask.CREATED_COL, projTask.getCreated());
-        cv.put(MProjectTask.CREATEDBY_COL, projTask.getCreatedBy());
+        if (projTask.get_UUID() != null && !projTask.get_UUID().isEmpty())
+            cv.put(MProjectTask.C_PROJECTTASK_UUID_COL, projTask.get_UUID());
 
-        cv.put(MProjectTask.C_PROJECTLOCATION_UUID_COL, projTask.getProjLocUUID());
-        cv.put(MProjectTask.ASSIGNEDTO_COL, projTask.getAssignedTo());
-        cv.put(MProjectTask.PRIORITY_COL, projTask.getPriority());
-        cv.put(MProjectTask.NAME_COL, projTask.getName());
-        cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
-        cv.put(MProjectTask.ISDONE_COL, projTask.isDone());
+        if (projTask.getCreated() != null && !projTask.getCreated().isEmpty())
+            cv.put(MProjectTask.CREATED_COL, projTask.getCreated());
 
-        cv.put(MProjectTask.COMMENTS_COL, projTask.getComments());
-        cv.put(MProjectTask.DATEASSIGNED_COL, projTask.getDateAssigned());
-        cv.put(MProjectTask.DUEDATE_COL, projTask.getDueDate());
-        cv.put(MProjectTask.ATTACHMENT_BEFORETASKPICTURE_1_COL, projTask.getATTACHMENT_BEFORETASKPICTURE_1());
+        if (projTask.getCreatedBy() != null && !projTask.getCreatedBy().isEmpty())
+            cv.put(MProjectTask.CREATEDBY_COL, projTask.getCreatedBy());
+
+        if (projTask.getProjLocUUID() != null && !projTask.getProjLocUUID().isEmpty())
+            cv.put(MProjectTask.C_PROJECTLOCATION_UUID_COL, projTask.getProjLocUUID());
+
+        if (projTask.getAssignedTo() != 0)
+            cv.put(MProjectTask.ASSIGNEDTO_COL, projTask.getAssignedTo());
+
+        if (projTask.getSecAssignedTo() != 0)
+            cv.put(MProjectTask.SECASSIGNEDTO_COL, projTask.getSecAssignedTo());
+
+        if (projTask.getPriority() != 0)
+            cv.put(MProjectTask.PRIORITY_COL, projTask.getPriority());
+
+        if (projTask.getName() != null && !projTask.getName().isEmpty())
+            cv.put(MProjectTask.NAME_COL, projTask.getName());
+
+        if (projTask.getDescription() != null && !projTask.getDescription().isEmpty())
+            cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
+
+        if (projTask.getEquipment() != null && !projTask.getEquipment().isEmpty())
+            cv.put(MProjectTask.EQUIPMENT_COL, projTask.getEquipment());
+
+        if (projTask.getContact() != null && !projTask.getContact().isEmpty())
+            cv.put(MProjectTask.CONTACT_COL, projTask.getContact());
+
+        if (projTask.getContactNo() != null && !projTask.getContactNo().isEmpty())
+            cv.put(MProjectTask.CONTACTNO_COL, projTask.getContactNo());
+
+        if (projTask.isDone() != null && !projTask.isDone().isEmpty())
+            cv.put(MProjectTask.ISDONE_COL, projTask.isDone());
+
+        if (projTask.getComments() != null && !projTask.getComments().isEmpty())
+            cv.put(MProjectTask.COMMENTS_COL, projTask.getComments());
+
+        if (projTask.getDateAssigned() != null && !projTask.getDateAssigned().isEmpty())
+            cv.put(MProjectTask.DATEASSIGNED_COL, projTask.getDateAssigned());
+
+        if (projTask.getDueDate() != null && !projTask.getDueDate().isEmpty())
+            cv.put(MProjectTask.DUEDATE_COL, projTask.getDueDate());
+
+        if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !projTask.getATTACHMENT_BEFORETASKPICTURE_1().isEmpty())
+            cv.put(MProjectTask.ATTACHMENT_BEFORETASKPICTURE_1_COL, projTask.getATTACHMENT_BEFORETASKPICTURE_1());
 
         return cv;
     }
@@ -582,8 +649,12 @@ public class ProjectTask implements Callable<Bundle>, ITask {
             MProjectTask.NAME_COL,
             MProjectTask.ISDONE_COL,
             MProjectTask.ASSIGNEDTO_COL,
+            MProjectTask.SECASSIGNEDTO_COL,
             MProjectTask.PRIORITY_COL,
             MProjectTask.DESCRIPTION_COL,
+            MProjectTask.EQUIPMENT_COL,
+            MProjectTask.CONTACT_COL,
+            MProjectTask.CONTACTNO_COL,
             MProjectTask.COMMENTS_COL,
             MProjectTask.CREATED_COL,
             MProjectTask.CREATEDBY_COL,
@@ -613,6 +684,7 @@ public class ProjectTask implements Callable<Bundle>, ITask {
             MProjectTask.ATTACHMENT_TASKPICTURE_23_COL,
             MProjectTask.ATTACHMENT_TASKPICTURE_24_COL,
             MProjectTask.ATTACHMENT_TASKPICTURE_25_COL,
+            MProjectTask.DATEASSIGNED_COL,
             MProjectTask.DUEDATE_COL
     };
 
@@ -680,9 +752,25 @@ public class ProjectTask implements Callable<Bundle>, ITask {
                 String assignedToName = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.NAME_COL,
                         rowValue, ModelConst.AD_USER_ID_COL, cr);
                 projTask.setAssignedToName(assignedToName);
+            } else if (MProjectTask.SECASSIGNEDTO_COL
+                    .equalsIgnoreCase(columnName)) {
+                if (rowValue == null) rowValue = "0";
+                projTask.setSecAssignedTo(Integer.parseInt(rowValue));
+                String assignedToName = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.NAME_COL,
+                        rowValue, ModelConst.AD_USER_ID_COL, cr);
+                projTask.setSecAssignedToName(assignedToName);
             } else if (MProjectTask.DESCRIPTION_COL
                     .equalsIgnoreCase(columnName)) {
                 projTask.setDescription(rowValue);
+            } else if (MProjectTask.EQUIPMENT_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setEquipment(rowValue);
+            } else if (MProjectTask.CONTACT_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setContact(rowValue);
+            } else if (MProjectTask.CONTACTNO_COL
+                    .equalsIgnoreCase(columnName)) {
+                projTask.setContactNo(rowValue);
             } else if (MProjectTask.COMMENTS_COL
                     .equalsIgnoreCase(columnName)) {
                 projTask.setComments(rowValue);

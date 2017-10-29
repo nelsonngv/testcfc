@@ -28,7 +28,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int DATABASE_VERSION = 25;
+    private static final int DATABASE_VERSION = 26;
     /**
      *
      */
@@ -759,9 +759,13 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "PRIORITY NUMBER(10,0), " +
                     "NAME NVARCHAR2(300), " +
                     "ASSIGNEDTO NUMBER(10, 0)," + //AD_USER_ID
+                    "SECASSIGNEDTO NUMBER(10, 0)," + //AD_USER_ID
 
                     "ISDONE CHAR(1) DEFAULT 'N' NOT NULL, " +
                     "DESCRIPTION NVARCHAR2(255), " +
+                    "EQUIPMENT NVARCHAR2(255), " +
+                    "CONTACT NVARCHAR2(100), " +
+                    "CONTACTNO NUMBER(15, 0), " +
                     "COMMENTS NVARCHAR2(255)," +
                     "ATTACHMENT_BEFORETASKPICTURE_1 VARCHAR2(100) , " +
                     "ATTACHMENT_TASKPICTURE_1 VARCHAR2(100) , " +
@@ -2908,6 +2912,13 @@ public class PBSDBHelper extends SQLiteOpenHelper {
 
 //                db.execSQL("ALTER TABLE C_SURVEY ADD REMARKS TEXT");
 //                db.execSQL("ALTER TABLE C_SURVEY ADD DATETRX DATETIME NOT NULL DEFAULT (DATETIME('NOW', 'LOCALTIME'))");
+            }
+
+            if (oldVersion < 26) {
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD SECASSIGNEDTO NUMBER(10, 0)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD EQUIPMENT VARCHAR2(255)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD CONTACT VARCHAR2(100)");
+                db.execSQL("ALTER TABLE C_PROJECTTASK ADD CONTACTNO NUMBER(15, 0)");
             }
         } catch (SQLException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE

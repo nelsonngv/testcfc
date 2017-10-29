@@ -155,6 +155,7 @@
                             android:minLines="1"
                             android:maxLines="5"
                             android:maxLength="2000"
+                            android:scrollbars="vertical"
                             android:text="@{atLine.Comments}"
                             />
                     </LinearLayout>

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -54,13 +55,18 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
     private PBSTaskController taskCont ;
     private EditText taskName;
     private EditText description;
+    private EditText equipment;
+    private EditText contactName;
+    private EditText contactNo;
     private EditText sequenceNo;
     private ImageView taskPicture1;
     private Spinner assignToSpinner;
+    private Spinner secAssignToSpinner;
     private Spinner projLocSpinner;
     private SpinnerOnItemSelected projLocNameItem;
     private ArrayAdapter projLocNameAdapter;
     private SpinnerOnItemSelected assignToItem;
+    private SpinnerOnItemSelected secAssignToItem;
     private ArrayAdapter assignToAdapter;
     private List<SpinnerPair> projLocList;
     private TextView taskDateAssigned;
@@ -99,6 +105,22 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         setOnClickListener(taskDateAssigned, EVENT_BACK_DATE);
         setOnClickListener(taskDueDate, EVENT_FUTURE_DATE);
         setOnClickListener(taskPicture1, EVENT_PIC1);
+
+        description.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (description.getLineCount() > 5)
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        equipment.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (equipment.getLineCount() > 5)
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -112,10 +134,17 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 
     protected void setUI(View rootView) {
         Activity act = getActivity();
+        List<SpinnerPair> list = getUserList();
+        list.add(0, new SpinnerPair("", "--- Please select ---"));
         assignToSpinner = (Spinner) rootView.findViewById(R.id.newTaskAssignTo);
-        assignToAdapter = PandoraHelper.addListToSpinner(act, assignToSpinner, getUserList());
+        assignToAdapter = PandoraHelper.addListToSpinner(act, assignToSpinner, list);
+        secAssignToSpinner = (Spinner) rootView.findViewById(R.id.newTaskSecAssignTo);
+        assignToAdapter = PandoraHelper.addListToSpinner(act, secAssignToSpinner, list);
         taskName = (EditText)rootView.findViewById(R.id.newTaskName);
         description = (EditText)rootView.findViewById(R.id.newTaskDescription);
+        equipment = (EditText)rootView.findViewById(R.id.newTaskEquipment);
+        contactName = (EditText)rootView.findViewById(R.id.newTaskContact);
+        contactNo = (EditText)rootView.findViewById(R.id.newTaskContactNo);
         sequenceNo = (EditText)rootView.findViewById(R.id.newTaskSeqNo);
         projLocSpinner = (Spinner) rootView.findViewById(R.id.newTaskProjLoc);
         projLocNameAdapter = PandoraHelper.addListToSpinner(act, projLocSpinner, getProjLocList());
@@ -123,10 +152,18 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         taskDateAssigned = (TextView) rootView.findViewById(R.id.taskDateAssigned);
         taskDueDate = (TextView) rootView.findViewById(R.id.taskDueDate);
         TextView textViewTaskName = (TextView)rootView.findViewById(R.id.textViewTaskName);
+        TextView textViewTaskAssignTo = (TextView)rootView.findViewById(R.id.textViewTaskAssignTo);
         TextView textViewTaskDescription = (TextView)rootView.findViewById(R.id.textViewTaskDescription);
+        TextView textViewTaskEquipment = (TextView)rootView.findViewById(R.id.textViewTaskEquipment);
+        TextView textViewTaskContact = (TextView)rootView.findViewById(R.id.textViewTaskContact);
+        TextView textViewTaskContactNo = (TextView)rootView.findViewById(R.id.textViewTaskContactNo);
         TextView textViewTaskSeqNo = (TextView)rootView.findViewById(R.id.textViewTaskSeqNo);
         PandoraHelper.setAsterisk(textViewTaskName);
+        PandoraHelper.setAsterisk(textViewTaskAssignTo);
         PandoraHelper.setAsterisk(textViewTaskDescription);
+        PandoraHelper.setAsterisk(textViewTaskEquipment);
+        PandoraHelper.setAsterisk(textViewTaskContact);
+        PandoraHelper.setAsterisk(textViewTaskContactNo);
         PandoraHelper.setAsterisk(textViewTaskSeqNo);
 
         Date date = new Date();
@@ -196,6 +233,10 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         assignToItem = new SpinnerOnItemSelected(assignToSpinner,
                 new SpinnerPair());
         assignToSpinner.setOnItemSelectedListener(assignToItem);
+
+        secAssignToItem = new SpinnerOnItemSelected(secAssignToSpinner,
+                new SpinnerPair());
+        secAssignToSpinner.setOnItemSelectedListener(secAssignToItem);
     }
 
     @Override
@@ -261,7 +302,11 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         String name = taskName.getText().toString();
         String locID = projLocNameItem.getPair().getKey();
         String desc = description.getText().toString();
+        String equip = equipment.getText().toString();
+        String contName = contactName.getText().toString();
+        String contNo = contactNo.getText().toString();
         String assignedTo  = assignToItem.getPair().getKey();
+        String secAssignedTo  = secAssignToItem.getPair().getKey();
         String seqNo  = sequenceNo.getText().toString();
         String dateAssigned  = taskDateAssigned.getText().toString();
         String dueDate  = taskDueDate.getText().toString();
@@ -269,11 +314,14 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
                 || locID.isEmpty()
                 || name.isEmpty()
                 || desc.isEmpty()
+                || equip.isEmpty()
+                || contName.isEmpty()
+                || contNo.isEmpty()
                 || assignedTo == null
                 || assignedTo.isEmpty()
                 || seqNo.isEmpty())
         {
-            PandoraHelper.showWarningMessage(getActivity(), "Please fill up all fields");
+            PandoraHelper.showWarningMessage(getActivity(), "Please fill up all required fields");
             return;
         }
 
@@ -292,7 +340,12 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         pt.setName(name);
         pt.setC_ProjectLocation_ID(Integer.parseInt(locID));
         pt.setDescription(desc);
+        pt.setEquipment(equip);
+        pt.setContact(contName);
+        pt.setContactNo(contNo);
         pt.setAssignedTo(Integer.parseInt(assignedTo));
+        if (!secAssignedTo.isEmpty())
+            pt.setSecAssignedTo(Integer.parseInt(secAssignedTo));
         pt.setPriority(nSeqNo);
         pt.setIsDone("N");
         pt.setDateAssigned(dateAssigned);

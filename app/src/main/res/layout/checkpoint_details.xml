@@ -85,6 +85,7 @@
                     style="@style/TableValue"
                     android:focusable="false"
                     android:inputType="textCapSentences|textMultiLine"
+                    android:scrollbars="vertical"
                     android:ems="10"
                     android:id="@+id/editText2"
                     android:text="@{checkpointdetails.comment}"

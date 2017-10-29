@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
     <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -25,14 +24,25 @@
         </LinearLayout>
         <LinearLayout style="@style/PTableVirtRow">
             <TextView
+                android:id="@+id/textViewTaskAssignTo"
                 style="@style/TableInfoLabel"
                 android:text="@string/label_assignto" />
 
             <com.pbasolutions.android.control.SearchableSpinner
                 style="@style/SpinnerTableValue"
                 app:dlgTitle="@string/title_selectemployee"
-                android:id="@+id/newTaskAssignTo"
-            />
+                android:id="@+id/newTaskAssignTo" />
+
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                style="@style/TableInfoLabel"
+                android:text="@string/label_secassignto" />
+
+            <com.pbasolutions.android.control.SearchableSpinner
+                style="@style/SpinnerTableValue"
+                app:dlgTitle="@string/title_selectemployee"
+                android:id="@+id/newTaskSecAssignTo" />
 
         </LinearLayout>
         <LinearLayout style="@style/PTableVirtRow">
@@ -59,6 +69,44 @@
                 android:minLines="1"
                 android:maxLines="5"
                 android:maxLength="2000"
+                android:scrollbars="vertical"
+                style="@style/TableValue" />
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                android:id="@+id/textViewTaskEquipment"
+                style="@style/TableInfoLabel"
+                android:text="@string/label_taskequip" />
+
+            <EditText
+                android:id="@+id/newTaskEquipment"
+                android:inputType="textCapSentences|textMultiLine"
+                android:minLines="1"
+                android:maxLines="5"
+                android:maxLength="2000"
+                android:scrollbars="vertical"
+                style="@style/TableValue" />
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                android:id="@+id/textViewTaskContact"
+                style="@style/TableInfoLabel"
+                android:text="@string/label_taskcontact" />
+
+            <EditText
+                android:id="@+id/newTaskContact"
+                android:inputType="textCapWords"
+                style="@style/TableValue" />
+        </LinearLayout>
+        <LinearLayout style="@style/PTableVirtRow">
+            <TextView
+                android:id="@+id/textViewTaskContactNo"
+                style="@style/TableInfoLabel"
+                android:text="@string/label_taskcontactno" />
+
+            <EditText
+                android:id="@+id/newTaskContactNo"
+                android:inputType="number"
                 style="@style/TableValue" />
         </LinearLayout>
         <LinearLayout style="@style/PTableVirtRow">

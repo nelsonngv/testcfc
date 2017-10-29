@@ -127,9 +127,11 @@ public class NewSurveySummaryFragment extends Fragment {
             etSurveyRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
             etSurveyRemarks.setFilters(new InputFilter[] {new InputFilter.LengthFilter(2000)});
             etSurveyRemarks.setMaxLines(5);
+            etSurveyRemarks.setVerticalScrollBarEnabled(true);
             etSurveyRemarks.setOnTouchListener(new View.OnTouchListener() {
                 public boolean onTouch(View v, MotionEvent event) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    if (etSurveyRemarks.getLineCount() > 5)
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
                     return false;
                 }
             });

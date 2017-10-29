@@ -90,7 +90,7 @@ public class NewSurveyFragment extends Fragment {
                     TextView tvQuestion = new TextView(getActivity(), null, R.style.TableInfoLabel);
                     TextView tvQuestionDesc = new TextView(getActivity(), null, R.style.TableValue);
                     Spinner rating = new Spinner(getActivity());
-                    EditText etRemarks = new EditText(getActivity());
+                    final EditText etRemarks = new EditText(getActivity());
 
                     rating.setId(Integer.parseInt(question.getC_SurveyTemplateQuestion_ID() + "1"));
                     etRemarks.setId(Integer.parseInt(question.getC_SurveyTemplateQuestion_ID() + "2"));
@@ -130,7 +130,7 @@ public class NewSurveyFragment extends Fragment {
                     etRemarks.setMinLines(1);
                     etRemarks.setMaxLines(5);
                     etRemarks.setFilters(new InputFilter[] {new InputFilter.LengthFilter(2000)});
-                    etRemarks.setHorizontalScrollBarEnabled(true);
+                    etRemarks.setVerticalScrollBarEnabled(true);
                     etRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     if (question.getAmt() != null && !question.getAmt().equals("")) {
                         rating.setEnabled(false);
@@ -141,7 +141,8 @@ public class NewSurveyFragment extends Fragment {
                     else etRemarks.setHint("Remarks");
                     etRemarks.setOnTouchListener(new View.OnTouchListener() {
                         public boolean onTouch(View v, MotionEvent event) {
-                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            if (etRemarks.getLineCount() > 5)
+                                v.getParent().requestDisallowInterceptTouchEvent(true);
                             return false;
                         }
                     });

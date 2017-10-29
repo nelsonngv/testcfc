@@ -136,6 +136,24 @@ public class PBSServerAPI extends PBSServer implements PBSIServerAPI {
         return new Gson().fromJson(res, MMovement.class);
     }
 
+    @Override
+    public String updateProjectTask(PBSJson json, String serverURL) {
+        String url = getURL(serverURL, PBSServerConst.PATH, PBSServerConst.CFC_JSP);
+        String query = null;
+        try {
+            query = String.format(
+                    "%s=%s",
+                    PBSServerConst.ACTION,
+                    URLEncoder.encode(PBSServerConst.UPDATE_PROJECTTASK, PBSServerConst.UTF_8)
+            );
+        } catch (UnsupportedEncodingException e){
+            Log.e(TAG, e.getMessage());
+        }
+        url += query;
+
+        String strJson = new Gson().toJson(json);
+        return  postServer(url, strJson);
+    }
 
     @Override
     public String createProjectTask(PBSJson json, String serverURL) {

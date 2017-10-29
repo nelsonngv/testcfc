@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -9,26 +10,22 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:divider="?android:attr/dividerHorizontal"
-            android:showDividers="middle">
-            >
+            android:showDividers="middle">>
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:divider="?android:attr/dividerVertical"
-                android:showDividers="middle"
-                >
+                android:showDividers="middle">
 
                 <TableRow
                     android:divider="?android:attr/dividerVertical"
-                    android:showDividers="middle"
-                    >
+                    android:showDividers="middle">
 
                     <TextView
                         android:id="@+id/taskSeqNo"
@@ -53,8 +50,7 @@
                 </TableRow>
                 <TableRow
                     android:divider="?android:attr/dividerVertical"
-                    android:showDividers="middle"
-                    >
+                    android:showDividers="middle">
                     <TextView
                         style="@style/TableLabel"
                         android:paddingTop="5dp"
@@ -70,11 +66,47 @@
                         style="@style/Value"
                         />
                 </TableRow>
-
                 <TableRow
                     android:divider="?android:attr/dividerVertical"
-                    android:showDividers="middle"
-                    >
+                    android:showDividers="middle">
+                    <TextView
+                        style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/label_assignto"/>
+
+                    <com.pbasolutions.android.control.SearchableSpinner
+                        style="@style/SpinnerTableValue"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="15dp"
+                        android:textColor="@drawable/edittext_enabled_color"
+                        app:dlgTitle="@string/title_selectemployee"
+                        android:id="@+id/taskAssignTo" />
+                </TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
+                    <TextView
+                        style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/label_secassignto"/>
+
+                    <com.pbasolutions.android.control.SearchableSpinner
+                        style="@style/SpinnerTableValue"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="15dp"
+                        android:textColor="@drawable/edittext_enabled_color"
+                        app:dlgTitle="@string/title_selectemployee"
+                        android:id="@+id/taskSecAssignTo" />
+                </TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
 
                     <TextView
                         style="@style/TableLabel"
@@ -82,24 +114,114 @@
                         android:paddingBottom="5dp"
                         android:text="@string/label_projdesc"/>
 
-                    <TextView
+                    <EditText
                         android:id="@+id/taskDesc"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:textSize="14sp"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLength="2000"
+                        android:scrollbars="vertical"
                         android:text="@{task.description}"
-                        style="@style/Value"
-                        />
+                        android:textColor="@drawable/edittext_enabled_color"
+                        android:enabled="false"
+                        style="@style/TableValue" />
                 </TableRow>
                 <TableRow
                     android:divider="?android:attr/dividerVertical"
-                    android:showDividers="middle"
-                    >
+                    android:showDividers="middle">
+
                     <TextView
                         style="@style/TableLabel"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
-                        android:text="@string/label_dateassigned"
-                        />
+                        android:text="@string/label_taskequip"/>
+
+                    <EditText
+                        android:id="@+id/taskEquipment"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:textSize="14sp"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLength="2000"
+                        android:scrollbars="vertical"
+                        android:text="@{task.equipment}"
+                        android:textColor="@drawable/edittext_enabled_color"
+                        android:enabled="false"
+                        style="@style/TableValue" />
+                </TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
+
+                    <TextView
+                        style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/label_taskcontact"/>
+
+                    <EditText
+                        android:id="@+id/taskContact"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:textSize="14sp"
+                        android:inputType="textCapWords"
+                        android:text="@{task.contact}"
+                        android:textColor="@drawable/edittext_enabled_color"
+                        android:enabled="false"
+                        style="@style/TableValue" />
+                </TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
+
+                    <TextView
+                        style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/label_taskcontactno"/>
+
+                    <LinearLayout
+                        android:layout_weight="1">
+                        <EditText
+                            android:id="@+id/taskContactNo"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="3dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginRight="5dp"
+                            android:textSize="14sp"
+                            android:inputType="number"
+                            android:text="@{task.contactNo}"
+                            android:textColor="@drawable/edittext_enabled_color"
+                            android:enabled="false"
+                            style="@style/TableValue" />
+
+                        <Button
+                            android:id="@+id/btnCall"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="20dp"
+                            android:background="@drawable/ic_phone"
+                            android:clickable="true"/>
+                    </LinearLayout>
+
+                </TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
+                    <TextView
+                        style="@style/TableLabel"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@string/label_dateassigned"/>
                     <TextView
                         android:id="@+id/taskDateAssigned"
                         android:paddingTop="5dp"
@@ -109,14 +231,12 @@
                 </TableRow>
                 <TableRow
                     android:divider="?android:attr/dividerVertical"
-                    android:showDividers="middle"
-                    >
+                    android:showDividers="middle">
                     <TextView
                         style="@style/TableLabel"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
-                        android:text="@string/label_duedate"
-                        />
+                        android:text="@string/label_duedate"/>
                     <TextView
                         android:id="@+id/taskDueDate"
                         android:paddingTop="5dp"
@@ -128,9 +248,10 @@
                              android:layout_width="match_parent"
                              android:layout_height="wrap_content"
                              android:divider="?android:attr/dividerHorizontal"
-                             android:showDividers="beginning|middle|end">
-                    <TableRow android:layout_marginTop="10dp"
-                              android:layout_marginBottom="10dp">
+                             android:showDividers="beginning|middle">
+                    <TableRow
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp">
                         <TextView
                             style="@style/TableLabel"
                             android:text="@string/label_pretaskpicture" />
@@ -139,11 +260,13 @@
                             android:id="@+id/pretaskPicture"
                             android:layout_width="@dimen/dimen_small_pic"
                             android:layout_height="@dimen/dimen_small_pic"
+                            android:layout_marginLeft="15dp"
                             android:layout_column="1"
                             android:scaleType="fitXY"
                             android:src="@drawable/camera" />
                     </TableRow>
-                    <TableRow android:layout_marginTop="10dp"
+                    <TableRow
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp">
                         <TextView
                             style="@style/TableLabel"
@@ -153,6 +276,7 @@
                             android:id="@+id/taskPicture1"
                             android:layout_width="@dimen/dimen_small_pic"
                             android:layout_height="@dimen/dimen_small_pic"
+                            android:layout_marginLeft="15dp"
                             android:layout_column="1"
                             android:scaleType="fitXY"
                             android:src="@drawable/camera" />
@@ -161,7 +285,9 @@
                 <TableLayout
                     android:id="@+id/tlMorePic"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:divider="?android:attr/dividerHorizontal"
+                    android:showDividers="end">
                     <TableRow>
                         <TextView
                             style="@style/TableLabel" />
@@ -173,31 +299,37 @@
                     </TableRow>
                 </TableLayout>
                 <!--<include layout="@layout/task_attachments" />-->
-                <TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
                     <TextView
                         android:id="@+id/textViewTaskComments"
                         style="@style/TableLabel"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
-                        android:text="@string/taskdetails_label_comment"
-                        />
+                        android:text="@string/taskdetails_label_comment"/>
 
                     <EditText
                         android:id="@+id/taskComments"
-                        style="@style/Value"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
+                        style="@style/TableValue"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="@dimen/margin_left"
+                        android:layout_marginRight="@dimen/margin_right"
                         android:editable="true"
                         android:inputType="textCapSentences|textMultiLine"
+                        android:textSize="14sp"
                         android:minLines="1"
                         android:maxLines="5"
                         android:maxLength="2000"
+                        android:scrollbars="vertical"
                         android:hint="Sweep floor, ..."
-                        android:text="@{task.comments}"
-                        />
+                        android:text="@{task.comments}"/>
                 </TableRow>
 
-                <TableRow>
+                <TableRow
+                    android:divider="?android:attr/dividerVertical"
+                    android:showDividers="middle">
 
                     <TextView
                         android:text="@string/taskdetails_label_status"

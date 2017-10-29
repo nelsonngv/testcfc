@@ -10,7 +10,11 @@ public class PBSProjTaskJSON extends PBSJson {
     private String CreatedBy;
     private String Name;
     private String Description;
+    private String Equipment;
+    private String Contact;
+    private String ContactNo;
     private String AssignedTo;
+    private String SecAssignedTo;
     private String SeqNo;
     private Boolean IsDone;
     private String Comments;
@@ -73,6 +77,30 @@ public class PBSProjTaskJSON extends PBSJson {
 
     public void setDescription(String description) {
         Description = description;
+    }
+
+    public String getEquipment() {
+        return Equipment;
+    }
+
+    public void setEquipment(String equipment) {
+        this.Equipment = equipment;
+    }
+
+    public String getContact() {
+        return Contact;
+    }
+
+    public void setContact(String contact) {
+        this.Contact = contact;
+    }
+
+    public String getContactNo() {
+        return ContactNo;
+    }
+
+    public void setContactNo(String contactNo) {
+        this.ContactNo = contactNo;
     }
 
     public String getSeqNo() {
@@ -145,6 +173,14 @@ public class PBSProjTaskJSON extends PBSJson {
 
     public void setAssignedTo(String assignedTo) {
         AssignedTo = assignedTo;
+    }
+
+    public String getSecAssignedTo() {
+        return SecAssignedTo;
+    }
+
+    public void setSecAssignedTo(String secAssignedTo) {
+        SecAssignedTo = secAssignedTo;
     }
 
     public String getDateAssigned() {

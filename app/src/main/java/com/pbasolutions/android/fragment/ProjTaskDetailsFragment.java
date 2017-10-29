@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,16 +34,18 @@ import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
+import com.pbasolutions.android.adapter.SpinAdapter;
 import com.pbasolutions.android.adapter.SpinnerPair;
+import com.pbasolutions.android.control.SearchableSpinner;
 import com.pbasolutions.android.controller.PBSTaskController;
 import com.pbasolutions.android.databinding.TaskDetailsBinding;
+import com.pbasolutions.android.json.PBSProjTaskJSON;
 import com.pbasolutions.android.listener.PBABackKeyListener;
+import com.pbasolutions.android.listener.SpinnerOnItemSelected;
 import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.utils.CameraUtil;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,32 +65,27 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
      */
     private TaskDetailsBinding binding;
 
-    public static final int COMPLETE_PROJTASK_ID = 900;
+    public static final int EDIT_ID = 900;
+    public static final int DISCARD_ID = 901;
+    public static final int SAVE_ID = 902;
+    public static final int COMPLETE_PROJTASK_ID = 903;
 
     private MProjectTask projTask;
 
-    TextView seqNo;
-    TextView taskName;
-    TextView taskProjLoc;
-    TextView taskStatus;
-    TextView taskDesc;
-    TextView taskDateAssigned;
-    TextView taskDueDate;
+    TextView seqNo, taskName, taskProjLoc, taskStatus, taskDateAssigned, taskDueDate;
+    EditText taskDesc, taskEquipment, taskContact, taskContactNo, taskComments;
     ImageView pretaskPicture;
-//    ImageView taskPicture1;
-//    ImageView taskPicture2;
-//    ImageView taskPicture3;
-//    ImageView taskPicture4;
-//    ImageView taskPicture5;
+    SearchableSpinner taskAssignedTo, taskSecAssignedTo;
+    ArrayAdapter assignToAdapter;
+    SpinnerOnItemSelected assignToItem, secAssignToItem;
     ImageView[] taskPictures = new ImageView[25];
     String[] picPath = new String[25];
-    EditText taskComments;
     TableLayout tlPics, tlMorePic;
-    Button btnMorePic;
+    Button btnMorePic, btnCall;
     int picCount = 0;
-   // Button taskIsDoneButton;
     PandoraMain context;
     View m_rootView;
+    MenuItem edit, discard, save, complete;
 
     protected static final String EVENT_DATE = "EVENT_DATE";
     protected static final String EVENT_COMPLETEPROJ = "EVENT_COMPLETEPROJ";
@@ -122,7 +122,280 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
     /**
      *
+     * @return
      */
+    public MProjectTask getTask() {
+        Bundle inputBundle = new Bundle();
+        inputBundle.putString(PBSTaskController.ARG_C_PROJECTTASK_UUID, _UUID);
+        Bundle resultBundle = new Bundle();
+        resultBundle = taskCont.triggerEvent(PBSTaskController.TASK_DETAILS_EVENT, inputBundle, resultBundle, null);
+        return (MProjectTask)resultBundle.getSerializable(PBSTaskController.ARG_TASK);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        edit = menu.add(0, EDIT_ID, 1, "Edit");
+        edit.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        edit.setIcon(R.drawable.ic_pencil);
+
+        discard = menu.add(0, DISCARD_ID, 2, "Discard");
+        discard.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        discard.setIcon(R.drawable.ic_close);
+        discard.setVisible(false);
+
+        save = menu.add(0, SAVE_ID, 3, "Save");
+        save.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        save.setIcon(R.drawable.ic_save);
+        save.setVisible(false);
+
+        complete = menu.add(0, COMPLETE_PROJTASK_ID, 4, "Complete");
+        complete.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        complete.setIcon(R.drawable.ic_done);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case EDIT_ID: {
+                changeToolbarButtons(true);
+                return true;
+            }
+            case DISCARD_ID: {
+                if (taskDesc.getText().toString().equals(projTask.getDescription() == null ? "" : projTask.getDescription())
+                        && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : projTask.getEquipment())
+                        && taskContact.getText().toString().equals(projTask.getContact() == null ? "" : projTask.getContact())
+                        && taskContactNo.getText().toString().equals(projTask.getContactNo() == null ? "" : projTask.getContactNo())
+                        && assignToItem.getPair().getKey().equals(String.valueOf(projTask.getAssignedTo()))
+                        && (projTask.getSecAssignedTo() == 0 || secAssignToItem.getPair().getKey().equals(String.valueOf(projTask.getSecAssignedTo())))) {
+                    changeToolbarButtons(false);
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setMessage("Changes will be lost. continue to discard?")
+                            .setTitle(PandoraConstant.WARNING)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    taskDesc.setText(PandoraHelper.parseNewLine(projTask.getDescription()));
+                                    taskEquipment.setText(PandoraHelper.parseNewLine(projTask.getEquipment()));
+                                    taskContact.setText(projTask.getContact());
+                                    taskContactNo.setText(projTask.getContactNo());
+                                    taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
+                                    if (projTask.getSecAssignedTo() != 0)
+                                        taskSecAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo())));
+                                    changeToolbarButtons(false);
+                                }
+                            })
+                            .setNegativeButton("No", null);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+                return true;
+            }
+            case SAVE_ID: {
+                updateProj();
+                return true;
+            }
+            case COMPLETE_PROJTASK_ID: {
+                completeProj();
+                return true;
+            }
+            default : return false;
+        }
+    }
+
+    private void changeToolbarButtons(boolean isEdit) {
+        edit.setVisible(!isEdit);
+        complete.setVisible(!isEdit);
+        discard.setVisible(isEdit);
+        save.setVisible(isEdit);
+        taskDesc.setEnabled(isEdit);
+        taskEquipment.setEnabled(isEdit);
+        taskContact.setEnabled(isEdit);
+        taskContactNo.setEnabled(isEdit);
+        taskAssignedTo.setEnabled(isEdit);
+        taskSecAssignedTo.setEnabled(isEdit);
+        if (!isEdit) {
+            taskDesc.setMaxLines(Integer.MAX_VALUE);
+            taskEquipment.setMaxLines(Integer.MAX_VALUE);
+        } else {
+            taskDesc.setMaxLines(5);
+            taskEquipment.setMaxLines(5);
+        }
+        if (!isEdit && !taskContactNo.getText().toString().trim().isEmpty())
+            btnCall.setVisibility(View.VISIBLE);
+        else btnCall.setVisibility(View.GONE);
+    }
+
+    private MProjectTask getProjTask() {
+        Bundle input = new Bundle();
+//        input.putSerializable(taskCont.ARG_TASK_LIST, modelList);
+        input.putString(PBSTaskController.ARG_C_PROJECTTASK_UUID, _UUID);
+        Bundle result = taskCont.triggerEvent(PBSTaskController.GET_PROJTASK_EVENT, input, new Bundle(), null);
+        return (MProjectTask)result.getSerializable(PBSTaskController.ARG_PROJTASK);
+    }
+
+    /**
+     *
+     * @param rootView
+     */
+    protected void setUI(View rootView) {
+        Activity act = getActivity();
+        seqNo = (TextView) rootView.findViewById(R.id.taskSeqNo);
+        taskName = (TextView) rootView.findViewById(R.id.taskName);
+        taskProjLoc = (TextView) rootView.findViewById(R.id.taskProjLoc);
+        taskStatus = (TextView) rootView.findViewById(R.id.taskStatus);
+        taskAssignedTo = (SearchableSpinner) rootView.findViewById(R.id.taskAssignTo);
+        taskSecAssignedTo = (SearchableSpinner) rootView.findViewById(R.id.taskSecAssignTo);
+        taskDesc = (EditText) rootView.findViewById(R.id.taskDesc);
+        taskEquipment = (EditText) rootView.findViewById(R.id.taskEquipment);
+        taskContact = (EditText) rootView.findViewById(R.id.taskContact);
+        taskContactNo = (EditText) rootView.findViewById(R.id.taskContactNo);
+        taskDateAssigned = (TextView) rootView.findViewById(R.id.taskDateAssigned);
+        taskDueDate = (TextView) rootView.findViewById(R.id.taskDueDate);
+        pretaskPicture = (ImageView) rootView.findViewById(R.id.pretaskPicture);
+        taskPictures[picCount] = (ImageView) rootView.findViewById(R.id.taskPicture1);
+        taskComments = (EditText) rootView.findViewById(R.id.taskComments);
+        tlPics = (TableLayout) rootView.findViewById(R.id.tlPics);
+        tlMorePic = (TableLayout) rootView.findViewById(R.id.tlMorePic);
+        btnMorePic = (Button) rootView.findViewById(R.id.btnMorePic);
+        btnCall = (Button) rootView.findViewById(R.id.btnCall);
+        taskPictures[picCount].setTag(R.string.tag_imageview_count, picCount);
+        TextView textViewTaskComments = (TextView) rootView.findViewById(R.id.textViewTaskComments);
+        PandoraHelper.setAsterisk(textViewTaskComments);
+        List<SpinnerPair> list = getUserList();
+        assignToAdapter = PandoraHelper.addListToSpinner(act, taskAssignedTo, list);
+        assignToAdapter = PandoraHelper.addListToSpinner(act, taskSecAssignedTo, list);
+        taskAssignedTo.setEnabled(false);
+        taskSecAssignedTo.setEnabled(false);
+    }
+
+    protected void setUIListener() {
+        setOnClickListener(pretaskPicture, EVENT_PREPIC);
+        setOnClickListener(taskPictures[0], EVENT_PIC1);
+
+        assignToItem = new SpinnerOnItemSelected(taskAssignedTo,
+                new SpinnerPair());
+        taskAssignedTo.setOnItemSelectedListener(assignToItem);
+
+        secAssignToItem = new SpinnerOnItemSelected(taskSecAssignedTo,
+                new SpinnerPair());
+        taskSecAssignedTo.setOnItemSelectedListener(secAssignToItem);
+
+        btnMorePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (taskPictures[picCount].getTag(R.string.tag_imageview_path) == null || ((String)taskPictures[picCount].getTag(R.string.tag_imageview_path)).isEmpty()) {
+                    PandoraHelper.showWarningMessage(getActivity(), getString(R.string.warning_add_pic_first));
+                    return;
+                }
+                addPicField();
+
+                if (picCount == 24)
+                    tlMorePic.setVisibility(View.GONE);
+            }
+        });
+
+        btnCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + taskContactNo.getText()));
+                startActivity(callIntent);
+            }
+        });
+
+        taskDesc.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (taskDesc.getLineCount() > 5)
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        taskEquipment.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (taskEquipment.getLineCount() > 5)
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        taskComments.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (taskComments.getLineCount() > 5)
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public boolean onBackKeyPressed() {
+        if ("Y".equalsIgnoreCase(projTask.isDone()))
+            return true;
+
+        boolean hasChanged = !taskComments.getText().toString().isEmpty();
+        hasChanged |= !(taskPictures[0].getTag(R.string.tag_imageview_path) == null || ((String)taskPictures[0].getTag(R.string.tag_imageview_path)).isEmpty());
+
+        if (!hasChanged)
+            return true;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        // 2. Chain together various setter methods to set the dialog characteristics
+        builder.setMessage("Changes will be lost. continue to leave?")
+                .setTitle(PandoraConstant.WARNING)
+                .setPositiveButton("Leave", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
+                })
+                .setNegativeButton("Close", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        return false;
+    }
+
+    protected void setOnClickListener(final View object, final String event) {
+        object.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(android.content.Intent.ACTION_VIEW);
+                switch (event) {
+                    case EVENT_DATE: {
+                        PandoraHelper.promptFutureDatePicker((TextView) object, getActivity());
+                        break;
+                    }
+                    case EVENT_PREPIC: {
+                        if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !projTask.getATTACHMENT_BEFORETASKPICTURE_1().equals("")) {
+                            intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1())), "image/*");
+                            getActivity().startActivity(intent);
+                        }
+                        break;
+                    }
+                    case EVENT_PIC1: {
+                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
+                            if (object != null && object.getTag(R.string.tag_imageview_path) != null) {
+                                String path = object.getTag(R.string.tag_imageview_path).toString();
+                                if (path != null && !path.equals("")) {
+                                    intent.setDataAndType(Uri.fromFile(new File(path)), "image/*");
+                                    getActivity().startActivity(intent);
+                                }
+                            }
+                        }
+                        else takePicture(Integer.parseInt(object.getTag(R.string.tag_imageview_count).toString()), object);
+//                            takePicture(CameraUtil.CAPTURE_ATTACH_1, object);
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
     protected void setValues() {
         if (projTask != null) {
             seqNo.setText(String.valueOf(projTask.getPriority()));
@@ -130,22 +403,21 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             taskProjLoc.setText(projTask.getProjLocName());
             taskStatus.setText(projTask.getStatus());
             taskDesc.setText(PandoraHelper.parseNewLine(projTask.getDescription()));
+            taskEquipment.setText(PandoraHelper.parseNewLine(projTask.getEquipment()));
+            taskContact.setText(projTask.getContact());
+            taskContactNo.setText(projTask.getContactNo());
             taskDateAssigned.setText(projTask.getDateAssigned());
             taskDueDate.setText(projTask.getDueDate());
+            taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
+            if (projTask.getSecAssignedTo() != 0)
+                taskSecAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo())));
 
             if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1()).exists()) projTask.setATTACHMENT_BEFORETASKPICTURE_1(null);
-//            if (projTask.getATTACHMENT_TASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_1()).exists()) projTask.setATTACHMENT_TASKPICTURE_1(null);
-//            if (projTask.getATTACHMENT_TASKPICTURE_2() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_2()).exists()) projTask.setATTACHMENT_TASKPICTURE_2(null);
-//            if (projTask.getATTACHMENT_TASKPICTURE_3() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_3()).exists()) projTask.setATTACHMENT_TASKPICTURE_3(null);
-//            if (projTask.getATTACHMENT_TASKPICTURE_4() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_4()).exists()) projTask.setATTACHMENT_TASKPICTURE_4(null);
-//            if (projTask.getATTACHMENT_TASKPICTURE_5() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_5()).exists()) projTask.setATTACHMENT_TASKPICTURE_5(null);
             CameraUtil.loadPicture(projTask.getATTACHMENT_BEFORETASKPICTURE_1(), pretaskPicture);
-//            CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_1(), taskPicture1);
-//            CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_2(), taskPicture2);
-//            CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_3(), taskPicture3);
-//            CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_4(), taskPicture4);
-//            CameraUtil.loadPicture(projTask.getATTACHMENT_TASKPICTURE_5(), taskPicture5);
             taskComments.setText(PandoraHelper.parseNewLine(projTask.getComments()));
+
+            if (taskContactNo.getText().toString().trim().isEmpty())
+                btnCall.setVisibility(View.GONE);
 
             picPath[0] = projTask.getATTACHMENT_TASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_1()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_1();
             picPath[1] = projTask.getATTACHMENT_TASKPICTURE_2() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_2()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_2();
@@ -181,243 +453,14 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                 CameraUtil.addPathToPic(taskPictures[i], picPath[i]);
             }
 
-            String buttonText;
             if ("N".equalsIgnoreCase(projTask.isDone())) {
-                //buttonText = "Complete";
                 setHasOptionsMenu(true);
                 getActivity().invalidateOptionsMenu();
             } else {
                 taskComments.setEnabled(false);
                 tlMorePic.setVisibility(View.GONE);
             }
-            /*else {
-               // buttonText = "Completed";
-
-               // taskIsDoneButton.setEnabled(false);
-                taskComments.setEnabled(false);
-                taskPicture1.setEnabled(false);
-                taskPicture2.setEnabled(false);
-                taskPicture3.setEnabled(false);
-                taskPicture4.setEnabled(false);
-                taskPicture5.setEnabled(false);
-            }*/
-           // taskIsDoneButton.setText(buttonText);
         }
-    }
-
-    /**
-     *
-     * @return
-     */
-    public MProjectTask getTask() {
-        Bundle inputBundle = new Bundle();
-        inputBundle.putString(PBSTaskController.ARG_C_PROJECTTASK_UUID, _UUID);
-        Bundle resultBundle = new Bundle();
-        resultBundle = taskCont.triggerEvent(PBSTaskController.TASK_DETAILS_EVENT, inputBundle, resultBundle, null);
-        return (MProjectTask)resultBundle.getSerializable(PBSTaskController.ARG_TASK);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        MenuItem item;
-        item = menu.add(0, COMPLETE_PROJTASK_ID, 1, "Complete Project Task");
-        item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        item.setIcon(R.drawable.ic_done);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case COMPLETE_PROJTASK_ID: {
-                completeProj();
-                return true;
-            }
-            default : return false;
-        }
-    }
-
-    private boolean saveTask(){
-        Bundle input = new Bundle();
-        input.putString(PBSTaskController.ARG_C_PROJECTTASK_UUID, _UUID);
-        return true;
-    }
-
-    private MProjectTask getProjTask() {
-        Bundle input = new Bundle();
-//        input.putSerializable(taskCont.ARG_TASK_LIST, modelList);
-        input.putString(PBSTaskController.ARG_C_PROJECTTASK_UUID, _UUID);
-        Bundle result = taskCont.triggerEvent(PBSTaskController.GET_PROJTASK_EVENT, input, new Bundle(), null);
-        return (MProjectTask)result.getSerializable(PBSTaskController.ARG_PROJTASK);
-    }
-
-    /**
-     *
-     * @param rootView
-     */
-    protected void setUI(View rootView) {
-        Activity act = getActivity();
-        seqNo = (TextView) rootView.findViewById(R.id.taskSeqNo);
-        taskName = (TextView) rootView.findViewById(R.id.taskName);
-        taskProjLoc = (TextView) rootView.findViewById(R.id.taskProjLoc);
-        taskStatus = (TextView) rootView.findViewById(R.id.taskStatus);
-        taskDesc = (TextView) rootView.findViewById(R.id.taskDesc);
-        taskDateAssigned = (TextView) rootView.findViewById(R.id.taskDateAssigned);
-        taskDueDate = (TextView) rootView.findViewById(R.id.taskDueDate);
-        pretaskPicture = (ImageView) rootView.findViewById(R.id.pretaskPicture);
-        taskPictures[picCount] = (ImageView) rootView.findViewById(R.id.taskPicture1);
-//        taskPicture2 = (ImageView) rootView.findViewById(R.id.taskPicture2);
-//        taskPicture3 = (ImageView) rootView.findViewById(R.id.taskPicture3);
-//        taskPicture4 = (ImageView) rootView.findViewById(R.id.taskPicture4);
-//        taskPicture5 = (ImageView) rootView.findViewById(R.id.taskPicture5);
-        taskComments = (EditText) rootView.findViewById(R.id.taskComments);
-        tlPics = (TableLayout) rootView.findViewById(R.id.tlPics);
-        tlMorePic = (TableLayout) rootView.findViewById(R.id.tlMorePic);
-        btnMorePic = (Button) rootView.findViewById(R.id.btnMorePic);
-        taskPictures[picCount].setTag(R.string.tag_imageview_count, picCount);
-     //   taskIsDoneButton = (Button) rootView.findViewById(R.id.buttonTaskStatus);
-        TextView textViewTaskComments = (TextView) rootView.findViewById(R.id.textViewTaskComments);
-        PandoraHelper.setAsterisk(textViewTaskComments);
-
-        btnMorePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (taskPictures[picCount].getTag(R.string.tag_imageview_path) == null || ((String)taskPictures[picCount].getTag(R.string.tag_imageview_path)).isEmpty()) {
-                    PandoraHelper.showWarningMessage(getActivity(), getString(R.string.warning_add_pic_first));
-                    return;
-                }
-                addPicField();
-
-                if (picCount == 24)
-                    tlMorePic.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    protected void setUIListener() {
-       // setOnClickListener(taskIsDoneButton, EVENT_COMPLETEPROJ);
-        setOnClickListener(pretaskPicture, EVENT_PREPIC);
-        setOnClickListener(taskPictures[0], EVENT_PIC1);
-//        setOnClickListener(taskPicture2, EVENT_PIC2);
-//        setOnClickListener(taskPicture3, EVENT_PIC3);
-//        setOnClickListener(taskPicture4, EVENT_PIC4);
-//        setOnClickListener(taskPicture5, EVENT_PIC5);
-    }
-
-    @Override
-    public boolean onBackKeyPressed() {
-        if ("Y".equalsIgnoreCase(projTask.isDone()))
-            return true;
-
-        boolean hasChanged = !taskComments.getText().toString().isEmpty();
-        hasChanged |= !(taskPictures[0].getTag(R.string.tag_imageview_path) == null || ((String)taskPictures[0].getTag(R.string.tag_imageview_path)).isEmpty());
-//        hasChanged |= !(taskPicture2.getTag(R.string.tag_imageview_path) == null || ((String)taskPicture2.getTag(R.string.tag_imageview_path)).isEmpty());
-//        hasChanged |= !(taskPicture3.getTag(R.string.tag_imageview_path) == null || ((String)taskPicture3.getTag(R.string.tag_imageview_path)).isEmpty());
-//        hasChanged |= !(taskPicture4.getTag(R.string.tag_imageview_path) == null || ((String)taskPicture4.getTag(R.string.tag_imageview_path)).isEmpty());
-//        hasChanged |= !(taskPicture5.getTag(R.string.tag_imageview_path) == null || ((String)taskPicture5.getTag(R.string.tag_imageview_path)).isEmpty());
-
-        if (!hasChanged)
-            return true;
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setMessage("Changes will be lost. continue to leave?")
-                .setTitle(PandoraConstant.WARNING)
-                .setPositiveButton("Leave", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        getActivity().getSupportFragmentManager().popBackStack();
-                    }
-                })
-                .setNegativeButton("Close", null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        return false;
-    }
-
-    protected void setOnClickListener(final View object, final String event) {
-        object.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(android.content.Intent.ACTION_VIEW);
-                switch (event) {
-                    case EVENT_DATE: {
-                        PandoraHelper.promptFutureDatePicker((TextView) object, getActivity());
-                        break;
-                    }
-//                    case EVENT_COMPLETEPROJ: {
-//                        completeProj();
-//                        break;
-//                    }
-                    case EVENT_PREPIC: {
-                        if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !projTask.getATTACHMENT_BEFORETASKPICTURE_1().equals("")) {
-                            intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1())), "image/*");
-                            getActivity().startActivity(intent);
-                        }
-                        break;
-                    }
-                    case EVENT_PIC1: {
-                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
-                            if (object != null && object.getTag(R.string.tag_imageview_path) != null) {
-                                String path = object.getTag(R.string.tag_imageview_path).toString();
-                                if (path != null && !path.equals("")) {
-                                    intent.setDataAndType(Uri.fromFile(new File(path)), "image/*");
-                                    getActivity().startActivity(intent);
-                                }
-                            }
-                        }
-                        else takePicture(Integer.parseInt(object.getTag(R.string.tag_imageview_count).toString()), object);
-//                            takePicture(CameraUtil.CAPTURE_ATTACH_1, object);
-                        break;
-                    }
-//                    case EVENT_PIC2: {
-//                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
-//                            if (projTask.getATTACHMENT_TASKPICTURE_2() != null && !projTask.getATTACHMENT_TASKPICTURE_2().equals("")) {
-//                                intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_TASKPICTURE_2())), "image/*");
-//                                PandoraMain.instance.startActivity(intent);
-//                            }
-//                        }
-//                        else takePicture(CameraUtil.CAPTURE_ATTACH_2, object);
-//                        break;
-//                    }
-//                    case EVENT_PIC3: {
-//                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
-//                            if (projTask.getATTACHMENT_TASKPICTURE_3() != null && !projTask.getATTACHMENT_TASKPICTURE_3().equals("")) {
-//                                intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_TASKPICTURE_3())), "image/*");
-//                                PandoraMain.instance.startActivity(intent);
-//                            }
-//                        }
-//                        else takePicture(CameraUtil.CAPTURE_ATTACH_3, object);
-//                        break;
-//                    }
-//                    case EVENT_PIC4: {
-//                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
-//                            if (projTask.getATTACHMENT_TASKPICTURE_4() != null && !projTask.getATTACHMENT_TASKPICTURE_4().equals("")) {
-//                                intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_TASKPICTURE_4())), "image/*");
-//                                PandoraMain.instance.startActivity(intent);
-//                            }
-//                        }
-//                        else takePicture(CameraUtil.CAPTURE_ATTACH_4, object);
-//                        break;
-//                    }
-//                    case EVENT_PIC5: {
-//                        if ("Y".equalsIgnoreCase(projTask.isDone())) {
-//                            if (projTask.getATTACHMENT_TASKPICTURE_5() != null && !projTask.getATTACHMENT_TASKPICTURE_5().equals("")) {
-//                                intent.setDataAndType(Uri.fromFile(new File(projTask.getATTACHMENT_TASKPICTURE_5())), "image/*");
-//                                PandoraMain.instance.startActivity(intent);
-//                            }
-//                        }
-//                        else takePicture(CameraUtil.CAPTURE_ATTACH_5, object);
-//                        break;
-//                    }
-                    default:
-                        break;
-                }
-            }
-        });
     }
 
     private void addPicField() {
@@ -425,18 +468,20 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         try {
             TableRow tr = new TableRow(getActivity());
             TableLayout.LayoutParams tlParams = new TableLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            tlParams.setMargins(0, 20, 0, 20);
+//            tlParams.setMargins(0, 20, 0, 20);
             tr.setLayoutParams(tlParams);
 
             TextView tv = new TextView(new ContextThemeWrapper(getActivity(), R.style.TableLabel));
             TableRow.LayoutParams trParams = new TableRow.LayoutParams(100, LinearLayout.LayoutParams.WRAP_CONTENT);
             trParams.setMargins((int) getResources().getDimension(R.dimen.margin_left), 0,
                     (int) getResources().getDimension(R.dimen.margin_right), 0);
+            trParams.setMargins(0, 15, 10, 15);
             tv.setLayoutParams(trParams);
             tv.setText(getString(R.string.label_picture, String.valueOf(picCount + 1)));
 
             taskPictures[picCount] = new ImageView(getActivity());
             TableRow.LayoutParams params = new TableRow.LayoutParams((int) getResources().getDimension(R.dimen.dimen_small_pic), (int) getResources().getDimension(R.dimen.dimen_small_pic));
+            params.setMargins(20, 15, 0, 15);
             taskPictures[picCount].setLayoutParams(params);
             taskPictures[picCount].requestLayout();
             taskPictures[picCount].setBackgroundResource(R.drawable.camera);
@@ -452,8 +497,112 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         }
     }
 
-    private void completeProj() {
+    private List<SpinnerPair> getUserList() {
+        PandoraContext globalVar = ((PandoraMain)getActivity()).getGlobalVariable();
+        if (globalVar != null) {
+            Bundle input = new Bundle();
+            String adUserID = globalVar.getAd_user_id();
+            String adClientID = globalVar.getAd_client_id();
+            if (adUserID != null) {
+                input.putString(PBSTaskController.ARG_AD_USER_ID, adUserID);
+                input.putString(PBSTaskController.ARG_AD_CLIENT_ID, adClientID);
+                Bundle result = taskCont.triggerEvent(PBSTaskController.GET_USERS_EVENT,
+                        input, new Bundle(), null);
+                return result.getParcelableArrayList(PBSTaskController.ARG_USERS);
+            } else {
+                PandoraHelper.showErrorMessage(getActivity(), getString(R.string.text_projectloc_na));
+            }
+        }
+        return null;
+    }
 
+    private void updateProj() {
+        if (taskDesc.getText().toString().trim().isEmpty()
+                || taskEquipment.getText().toString().trim().isEmpty()
+                || taskContact.getText().toString().trim().isEmpty()
+                || taskContactNo.getText().toString().trim().isEmpty()) {
+            String fields = "";
+            if (taskDesc.getText().toString().trim().isEmpty())
+                fields += getString(R.string.label_projdesc) + ", ";
+            if (taskEquipment.getText().toString().trim().isEmpty())
+                fields += getString(R.string.label_taskequip) + ", ";
+            if (taskContact.getText().toString().trim().isEmpty())
+                fields += getString(R.string.label_taskcontact) + ", ";
+            if (taskContactNo.getText().toString().trim().isEmpty())
+                fields += getString(R.string.label_taskcontactno) + ", ";
+            PandoraHelper.showWarningMessage(getActivity(),
+                    getString(R.string.please_fill_in_fields, fields.substring(0, fields.length() - 2)));
+            return;
+        }
+
+        if (taskDesc.getText().toString().equals(projTask.getDescription() == null ? "" : projTask.getDescription())
+                && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : projTask.getEquipment())
+                && taskContact.getText().toString().equals(projTask.getContact() == null ? "" : projTask.getContact())
+                && taskContactNo.getText().toString().equals(projTask.getContactNo() == null ? "" : projTask.getContactNo())
+                && assignToItem.getPair().getKey().equals(String.valueOf(projTask.getAssignedTo()))
+                && (projTask.getSecAssignedTo() == 0 || secAssignToItem.getPair().getKey().equals(String.valueOf(projTask.getSecAssignedTo())))) {
+            changeToolbarButtons(false);
+            return;
+        }
+
+        PandoraHelper.hideSoftKeyboard(getActivity());
+        PBSProjTaskJSON task = new PBSProjTaskJSON();
+        task.setC_ProjectTask_ID(String.valueOf(projTask.get_ID()));
+
+        if (!assignToItem.getPair().getKey().equals(projTask.getAssignedTo()))
+            task.setAssignedTo(assignToItem.getPair().getKey());
+
+        if (!secAssignToItem.getPair().getKey().equals(projTask.getSecAssignedTo()))
+            task.setSecAssignedTo(secAssignToItem.getPair().getKey());
+
+        if (!taskDesc.getText().toString().equals(projTask.getDescription()))
+            task.setDescription(taskDesc.getText().toString());
+
+        if (!taskEquipment.getText().toString().equals(projTask.getEquipment()))
+            task.setEquipment(taskEquipment.getText().toString());
+
+        if (!taskContact.getText().toString().equals(projTask.getContact()))
+            task.setContact(taskContact.getText().toString());
+
+        if (!taskContactNo.getText().toString().equals(projTask.getContactNo()))
+            task.setContactNo(taskContactNo.getText().toString());
+
+        PandoraContext globalVar = ((PandoraMain) getActivity()).getGlobalVariable();
+        Bundle input = new Bundle();
+        input.putString(PBSServerConst.PARAM_URL, globalVar.getServer_url());
+        input.putSerializable(PBSTaskController.ARG_PROJTASK, task);
+
+        new AsyncTask<Bundle, Void, Bundle>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                ((PandoraMain)getActivity()).showProgressDialog("Loading...");
+            }
+
+            @Override
+            protected Bundle doInBackground(Bundle... params) {
+                Bundle output = new Bundle();
+                output = taskCont.triggerEvent(PBSTaskController.UPDATE_TASK_EVENT, params[0], output, null);
+                return output;
+            }
+
+            @Override
+            protected void onPostExecute(Bundle result) {
+                super.onPostExecute(result);
+                if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
+                    changeToolbarButtons(false);
+                    PandoraHelper.showMessage(getActivity(),
+                            result.getString(result.getString(PandoraConstant.RESULT)));
+                } else {
+                    PandoraHelper.showMessage(getActivity(),
+                            result.getString(result.getString(PandoraConstant.ERROR)));
+                }
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+            }
+        }.execute(input);
+    }
+
+    private void completeProj() {
         if (taskComments.getText() == null || taskComments.getText().toString().isEmpty()){
             PandoraHelper.showWarningMessage(getActivity(),
                     getString(R.string.please_fill_in_fields, getString(R.string.label_comment)));
@@ -482,11 +631,6 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                 break;
             input.putString(PBSTaskController.ARG_TASKPIC + (i + 1), (String) taskPictures[i].getTag(R.string.tag_imageview_path));
         }
-//        input.putString(taskCont.ARG_TASKPIC_1, (String)taskPicture1.getTag(R.string.tag_imageview_path));
-//        input.putString(taskCont.ARG_TASKPIC_2, (String)taskPicture2.getTag(R.string.tag_imageview_path));
-//        input.putString(taskCont.ARG_TASKPIC_3, (String)taskPicture3.getTag(R.string.tag_imageview_path));
-//        input.putString(taskCont.ARG_TASKPIC_4, (String)taskPicture4.getTag(R.string.tag_imageview_path));
-//        input.putString(taskCont.ARG_TASKPIC_5, (String)taskPicture5.getTag(R.string.tag_imageview_path));
 
         PandoraHelper.hideSoftKeyboard(getActivity());
         Fragment fragment = new ProjTaskSignFragment();
@@ -510,36 +654,6 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
                 CameraUtil.handleBigCameraPhoto(taskPictures[requestCode], picturePath, context);
                 context.mCurrentPhotoPath = null;
-//                switch (requestCode) {
-//                    case CameraUtil.CAPTURE_ATTACH_1: {
-//                        CameraUtil.handleBigCameraPhoto(taskPicture1, picturePath, context);
-//                        context.mCurrentPhotoPath = null;
-//                        break;
-//                    }
-//                    case CameraUtil.CAPTURE_ATTACH_2: {
-//                        CameraUtil.handleBigCameraPhoto(taskPicture2, picturePath, context);
-//                        context.mCurrentPhotoPath = null;
-//                        break;
-//                    }
-//                    case CameraUtil.CAPTURE_ATTACH_3: {
-//                        CameraUtil.handleBigCameraPhoto(taskPicture3, picturePath, context);
-//                        context.mCurrentPhotoPath = null;
-//                        break;
-//                    }
-//                    case CameraUtil.CAPTURE_ATTACH_4: {
-//                        CameraUtil.handleBigCameraPhoto(taskPicture4, picturePath, context);
-//                        context.mCurrentPhotoPath = null;
-//                        break;
-//                    }
-//                    case CameraUtil.CAPTURE_ATTACH_5: {
-//                        CameraUtil.handleBigCameraPhoto(taskPicture5, picturePath, context);
-//                        context.mCurrentPhotoPath = null;
-//                        break;
-//                    }
-//
-//                    default:
-//                        break;
-//                }
             }
         }
     }

@@ -126,6 +126,7 @@ public class PBSServerConst {
     public static final String GET_MOVEMENTS = "getMovements";
     public static final String GET_MSTORAGE = "getMStorage";
     public static final String CREATE_MOVEMENT = "createMovement";
+    public static final String UPDATE_PROJECTTASK = "updateProjTask";
     public static final String CREATE_PROJECTTASK = "createProjTask";
     public static final String COMPLETE_MOVEMENT = "completeMovement";
     public static final String GET_DEPLOYMENTS = "getDeployments";

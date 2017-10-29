@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -127,6 +128,14 @@ public abstract  class AbstractRequisitionLineFragment extends PBSDetailsFragmen
                 if (isChecked)
                     PandoraHelper.setAsterisk(textViewPurcReason);
                 else textViewPurcReason.setText(getString(R.string.label_purchase_reason));
+            }
+        });
+
+        purcReason.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (purcReason.getLineCount() > 5)
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
         });
     }

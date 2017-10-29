@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -143,6 +144,14 @@ public class NewAttendanceLineFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 refreshUIState();
+            }
+        });
+
+        textComment.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (textComment.getLineCount() > 5)
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             }
         });
     }
