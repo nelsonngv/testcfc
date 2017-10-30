@@ -202,11 +202,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 boolean isSyncCompleted = syncCount == 0;
 //                global.setIsFirstBatchSynced(true);
 //                if (PandoraMain.instance != null && PandoraMain.instance.getSupportActionBar().isShowing()) {
-                    PBSProjLocJSON[] projLoc = null;
-                    if(/*!global.isInitialSynced() ||*/ (!global.isInitialSynced() && isSyncCompleted && projLoc != null)) {
-//                        PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
-                        getContext().getContentResolver().notifyChange(Uri.parse("http://" + BuildConfig.APPLICATION_ID + ".syncNotify"), null, false);
-                    }
+                    PBSProjLocJSON[] projLoc;
                     if (isSyncCompleted) {
 //                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
 //                            Settings.Global.getInt(PandoraMain.instance.getContentResolver(), Settings.Global.AUTO_TIME, 1);
@@ -234,6 +230,10 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
 //                                }
 //                            });
                         } else {
+                            if (/*!global.isInitialSynced() ||*/ !global.isInitialSynced()) {
+//                                PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
+                                getContext().getContentResolver().notifyChange(Uri.parse("http://" + BuildConfig.APPLICATION_ID + ".syncNotify"), null, false);
+                            }
                             syncIdentifier = 0;
                             global.setProjLocJSON(projLoc);
                         }
