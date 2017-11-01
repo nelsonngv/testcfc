@@ -169,10 +169,11 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public static final int FRAGMENT_REQUISITION = 4;
     public static final int FRAGMENT_TASK = 5;
     public static final int FRAGMENT_SURVEY = 6;
-    public static final int FRAGMENT_CHECKPOINTS = 7;
-    public static final int FRAGMENT_CHECKPOINT_SEQ = 8;
-    public static final int FRAGMENT_BROADCAST = 9;
-    public static final int SETTING_MENU = 10;
+    public static final int FRAGMENT_AUDIT = 7;
+    public static final int FRAGMENT_CHECKPOINTS = 8;
+    public static final int FRAGMENT_CHECKPOINT_SEQ = 9;
+    public static final int FRAGMENT_BROADCAST = 10;
+    public static final int SETTING_MENU = 11;
     public static final int FRAGMENT_CHECKPOINTS_DETAILS = 50;
     public static final int FRAGMENT_NEW_CHECK_IN = 51;
     public static final int FRAGMENT_ACCOUNT = 80;
@@ -185,9 +186,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public static final int FRAGMENT_CREATE_ATTENDANCELINE = 27;
     public static final int FRAGMENT_START_SURVEY = 28;
     public static final int FRAGMENT_NEW_SURVEY = 29;
-    public static final int FRAGMENT_SIGN_SURVEY = 30;
-    public static final int FRAGMENT_ATTENDANCE_TRACKING_EMPID = 31;
-    public static final int FRAGMENT_ATTENDANCE_TRACKING_DONE = 32;
+    public static final int FRAGMENT_START_AUDIT = 30;
+    public static final int FRAGMENT_NEW_AUDIT = 31;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING_EMPID = 32;
+    public static final int FRAGMENT_ATTENDANCE_TRACKING_DONE = 33;
 
     /**
      * Toolbar menu id.
@@ -224,7 +226,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
     //menu list constant
     public static final String[] MENU_LIST = {"Attendance", "Attendance Tracking", "Recruit", "Asset", "Requisition", "Task",
-            "Survey", "Check In", "Check Point", "Broadcast", "Setting"};
+            "Survey", "Audit", "Check In", "Check Point", "Broadcast", "Setting"};
 
     //welcome dialog indicator
     private boolean isWelcomeDisplayed = false;
@@ -975,10 +977,21 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                 break;
             }
 
-            case FRAGMENT_SIGN_SURVEY: {
-                fragment = new NewSurveySignFragment();
+            case FRAGMENT_AUDIT: {
+                fragment = new SurveyFragment();
+                title = getString(R.string.title_audit);
+                break;
+            }
+
+            case FRAGMENT_START_AUDIT: {
+                fragment = new NewSurveyStartFragment();
+                title = getString(R.string.title_new_audit);
+                break;
+            }
+
+            case FRAGMENT_NEW_AUDIT: {
+                fragment = new NewSurveyPagerFragment();
                 title = "";
-//                title = getString(R.string.title_sign_survey);
                 break;
             }
 

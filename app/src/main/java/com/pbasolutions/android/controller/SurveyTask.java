@@ -92,7 +92,8 @@ public class SurveyTask extends Task {
                 ModelConst.C_SURVEY_TABLE + "." + MSurvey.NAME_COL,
                 ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.C_SURVEYTEMPLATE_UUID_COL,
                 ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.NAME_COL + " AS TemplateName",
-                ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.DESCRIPTION_COL
+                ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.DESCRIPTION_COL,
+                ModelConst.C_SURVEY_TABLE + "." + MSurvey.REMARKS_COL
         };
         String selection = ModelConst.C_SURVEY_TABLE + "." + MSurvey.C_SURVEY_UUID_COL + "=?";
         String[] selectionArgs = {input.getString(PBSSurveyController.ARG_SURVEY_UUID)};

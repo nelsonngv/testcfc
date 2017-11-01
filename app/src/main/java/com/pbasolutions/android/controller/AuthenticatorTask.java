@@ -612,8 +612,10 @@ public class AuthenticatorTask extends Task {
         PandoraContext var = ((PandoraMain)ctx).getGlobalVariable();
         if (output.getString(PBSAuthenticatorController.USER_NAME_ARG) != null){
             var.setAd_user_name(output.getString(PBSAuthenticatorController.USER_NAME_ARG));
+
             var.setAd_user_password(
                     output.getString(PBSAuthenticatorController.USER_PASS_ARG));
+
             var.setServer_url(
                     output.getString(PBSAuthenticatorController.SERVER_URL_ARG));
 

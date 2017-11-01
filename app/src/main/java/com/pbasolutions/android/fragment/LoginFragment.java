@@ -85,9 +85,10 @@ public class LoginFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if ( context.getGlobalVariable() != null) {
-            if (context.getGlobalVariable().getAd_user_name()!=null)
+            if (context.getGlobalVariable().getAd_user_name() != null) {
                 ((TextView) getView().findViewById(R.id.accountName))
                         .setText(context.getGlobalVariable().getAd_user_name());
+            }
             if (context.getGlobalVariable().getAd_user_password() != null) {
                 ((TextView) getView().findViewById(R.id.accountPassword))
                         .setText(context.getGlobalVariable().getAd_user_password());

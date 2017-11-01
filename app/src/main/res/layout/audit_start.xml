@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <ScrollView
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_top">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout style="@style/PTableVirtRowW">
+                        <TextView
+                            style="@style/TableInfoLabel"
+                            android:text="@string/label_taskprojloc"
+                            />
+                        <com.pbasolutions.android.control.SearchableSpinner
+                            app:dlgTitle="@string/title_selectprojectloc"
+                            style="@style/SpinnerTableValue"
+                            android:id="@+id/atProjLocation"/>
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout style="@style/PTableVirtRowW">
+                        <TextView
+                            android:id="@+id/tvSurveyName"
+                            style="@style/TableInfoLabel"
+                            android:text="@string/label_auditname" />
+
+                        <EditText
+                            android:id="@+id/atSurveyName"
+                            android:inputType="textCapWords"
+                            style="@style/TableValue" />
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout style="@style/PTableVirtRowW">
+                        <TextView
+                            style="@style/TableInfoLabel"
+                            android:text="@string/label_template" />
+
+                        <com.pbasolutions.android.control.SearchableSpinner
+                            app:dlgTitle="@string/title_selecttemplate"
+                            style="@style/SpinnerTableValue"
+                            android:id="@+id/atTemplate" />
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout style="@style/PTableVirtRowW">
+                        <TextView
+                            android:id="@+id/tvSurveyDateTrx"
+                            style="@style/TableInfoLabel"
+                            android:text="@string/label_timeofcleaning" />
+
+                        <TextView
+                            android:id="@+id/atSurveyDateTrx"
+                            style="@style/TableValueDate" />
+                    </LinearLayout>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

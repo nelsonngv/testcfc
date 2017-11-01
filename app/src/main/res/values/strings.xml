@@ -64,6 +64,7 @@
     <string name="title_broadcastdetails">Broadcast Details</string>
     <string name="title_projtaskdetails">Project Task Details</string>
     <string name="title_surveydetails">Survey Details</string>
+    <string name="title_auditdetails">Audit Details</string>
     <string name="title_default"></string>
     <string name="title_camera_button">Take Picture</string>
     <string name="title_gallery_button">Load From Gallery</string>
@@ -243,6 +244,8 @@
     <string name="title_survey">Survey</string>
     <string name="title_new_survey">New Survey</string>
     <string name="title_sign_survey">Sign for Survey</string>
+    <string name="title_audit">Audit</string>
+    <string name="title_new_audit">New Audit</string>
     <!--
     Error text
     !-->
@@ -322,6 +325,8 @@
     <string name="label_percentage">Percentage: </string>
     <string name="label_timeofcleaning">Time of Cleaning: </string>
     <string name="label_surveyremarks">Survey Remarks: </string>
+    <string name="label_auditname">Audit Name</string>
+    <string name="label_auditremarks">Audit Remarks: </string>
 
     <!--
     Signature pad.

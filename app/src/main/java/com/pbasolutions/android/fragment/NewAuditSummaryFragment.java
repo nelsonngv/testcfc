@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pbasolutions.android.PandoraHelper;
+import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.controller.PBSSurveyController;
 import com.pbasolutions.android.model.MSurvey;
@@ -28,10 +29,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
-/**
- * Created by pbadell on 10/5/15.
- */
-public class NewSurveySummaryFragment extends Fragment {
+public class NewAuditSummaryFragment extends Fragment {
     /**
      * Class tag name.
      */
@@ -41,12 +39,11 @@ public class NewSurveySummaryFragment extends Fragment {
     private ArrayList<MSurvey> answerList;
     private ArrayList<String> sectionList;
     private Bundle bundle;
-    private EditText etSurveyRemarks;
 
     /**
      * Constructor method.
      */
-    public NewSurveySummaryFragment() {
+    public NewAuditSummaryFragment() {
     }
 
     @Override
@@ -72,7 +69,7 @@ public class NewSurveySummaryFragment extends Fragment {
                 int count = 0, rating = 0;
                 for (int j = 0; j < answerList.size(); j++) {
                     MSurvey answer = answerList.get(j);
-                    if (sectionName.equals(answer.getSectionname())) {
+                    if (sectionName.equals(answer.getSectionname()) && Integer.parseInt(answer.getAmt()) >= 0) {
                         rating += Integer.parseInt(answer.getAmt());
                         count++;
                     }
@@ -100,9 +97,9 @@ public class NewSurveySummaryFragment extends Fragment {
                 String[] ratingPair = rating.second.toString().split("/");
                 tvSection.setTypeface(null, Typeface.BOLD);
                 tvSection.setText(rating.first.toString());
-                tvRating.setText(getString(R.string.label_rating) + rating.second.toString());
-                tvAvgRating.setText(getString(R.string.label_average) + (ratingPair[0].equals("0") ? "0" : new BigDecimal(ratingPair[0]).divide(new BigDecimal(ratingPair[1]).divide(new BigDecimal(10), 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP).toString()) + "/10");
-                tvPercRating.setText(getString(R.string.label_percentage) + (ratingPair[0].equals("0") ? "0" : new BigDecimal(ratingPair[0]).divide(new BigDecimal(ratingPair[1]).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP).toString()) + "%");
+                tvRating.setText(getString(R.string.label_rating) + " " + rating.second.toString());
+                tvAvgRating.setText(getString(R.string.label_average) + " " + (ratingPair[0].equals("0") ? "0" : new BigDecimal(ratingPair[0]).divide(new BigDecimal(ratingPair[1]).divide(new BigDecimal(10), 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP).toString()) + "/10");
+                tvPercRating.setText(getString(R.string.label_percentage) + " " + (ratingPair[0].equals("0") ? "0" : new BigDecimal(ratingPair[0]).divide(new BigDecimal(ratingPair[1]).divide(new BigDecimal(100), 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP).toString()) + "%");
 
                 subLL.addView(tvSection);
                 subLL.addView(tvRating);
@@ -112,33 +109,6 @@ public class NewSurveySummaryFragment extends Fragment {
 //                subLL.addView(ratingLL);
                 mainLL.addView(subLL);
             }
-
-            LinearLayout subLL = new LinearLayout(getActivity(), null, R.style.PTableVirtRow);
-            TextView tvSurveyRemarks = new TextView(getActivity(), null, R.style.TableInfoLabel);
-            etSurveyRemarks = new EditText(getActivity());
-            subLL.setOrientation(LinearLayout.VERTICAL);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, 50, 0, 50);
-            subLL.setLayoutParams(layoutParams);
-
-            tvSurveyRemarks.setTypeface(null, Typeface.BOLD);
-            tvSurveyRemarks.setText(getString(R.string.label_surveyremarks));
-            etSurveyRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-            etSurveyRemarks.setFilters(new InputFilter[] {new InputFilter.LengthFilter(2000)});
-            etSurveyRemarks.setMaxLines(5);
-            etSurveyRemarks.setVerticalScrollBarEnabled(true);
-            etSurveyRemarks.setOnTouchListener(new View.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (etSurveyRemarks.getLineCount() > 5)
-                        v.getParent().requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
-            });
-
-            subLL.addView(tvSurveyRemarks);
-            subLL.addView(etSurveyRemarks);
-            mainLL.addView(subLL);
         }
 
         return rootView;
@@ -170,17 +140,23 @@ public class NewSurveySummaryFragment extends Fragment {
     }
 
     protected void next() {
-        PandoraHelper.hideSoftKeyboard(getActivity());
-        bundle.putString(MSurvey.DATETRX_COL, PBSSurveyController.dateTrx);
-        bundle.putString(MSurvey.REMARKS_COL, etSurveyRemarks.getText().toString());
-        Fragment fragment = new NewSurveySignFragment();
+//        PandoraHelper.hideSoftKeyboard(getActivity());
+//        bundle.putString(MSurvey.DATETRX_COL, PBSSurveyController.dateTrx);
+//        bundle.putString(MSurvey.REMARKS_COL, etSurveyRemarks.getText().toString());
+//        Fragment fragment = new NewAuditSignFragment();
+//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//        fragment.setArguments(bundle);
+//        fragment.setRetainInstance(true);
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.container_body, fragment);
+//        fragmentTransaction.addToBackStack(fragment.getClass().getName());
+//        fragmentTransaction.commit();
+
+        Fragment auditFrag = new AuditFragment();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragment.setArguments(bundle);
-        fragment.setRetainInstance(true);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container_body, fragment);
-        fragmentTransaction.addToBackStack(fragment.getClass().getName());
+        fragmentTransaction.replace(R.id.container_body, auditFrag);
         fragmentTransaction.commit();
-//        PandoraMain.instance.getSupportActionBar().setTitle(getString(R.string.title_sign_survey));
+        ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getActivity().getString(R.string.title_audit));
     }
 }
