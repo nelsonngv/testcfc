@@ -62,7 +62,7 @@
                     android:layout_marginTop="5dp">
                     <TextView
                         style="@style/TableLabelWide"
-                        android:text="@string/reqdetails_label_requested_date"
+                        android:text="@string/reqdetails_label_sel_requested_date"
                         />
                     <TextView
                         android:id="@+id/prRequestDate"

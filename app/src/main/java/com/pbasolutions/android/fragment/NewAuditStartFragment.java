@@ -82,7 +82,9 @@ public class NewAuditStartFragment extends Fragment {
         etName = (EditText) rootView.findViewById(R.id.atSurveyName);
         templateSpinner = (Spinner) rootView.findViewById(R.id.atTemplate);
         atSurveyDateTrx = (TextView) rootView.findViewById(R.id.atSurveyDateTrx);
+        TextView tvTemplate = (TextView) rootView.findViewById(R.id.tvSurveyTemplate);
         TextView tvName = (TextView) rootView.findViewById(R.id.tvSurveyName);
+        PandoraHelper.setAsterisk(tvTemplate);
         PandoraHelper.setAsterisk(tvName);
 
         Date date = new Date();
@@ -103,7 +105,10 @@ public class NewAuditStartFragment extends Fragment {
             }
         }
 
-        templateAdapter = PandoraHelper.addListToSpinner(getActivity(), templateSpinner, getTemplateList());
+        List<SpinnerPair> list = getTemplateList();
+        SpinnerPair pair = new SpinnerPair("", "--- Please select ---");
+        list.add(0, pair);
+        templateAdapter = PandoraHelper.addListToSpinner(getActivity(), templateSpinner, list);
     }
 
     void setUIListener() {
@@ -112,6 +117,13 @@ public class NewAuditStartFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SpinnerPair newPair = (SpinnerPair) templateAdapter.getItem(position);
                 PBSSurveyController.templateUUID = newPair.getKey();
+                if (etName.getText().toString().equals("") && !newPair.getKey().equals("")) {
+                    Date date = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                    sdf.setTimeZone(TimeZone.getDefault());
+                    String now = sdf.format(date);
+                    etName.setText(newPair.getValue() + " " + now);
+                }
             }
 
             @Override
@@ -220,7 +232,7 @@ public class NewAuditStartFragment extends Fragment {
             imm.showSoftInput(etName, InputMethodManager.SHOW_IMPLICIT);
             return;
         }
-        if (templatePair.getKey() == null) {
+        if (templatePair.getKey() == null || templatePair.getKey().equals("")) {
             PandoraHelper.showWarningMessage(getActivity(), getString(
                     R.string.no_list_error, getString(R.string.label_template)));
             return;

@@ -274,15 +274,36 @@ public class ProjectTask implements Callable<Bundle>, ITask {
         MProjectTask task = (MProjectTask) input.getSerializable(PBSTaskController.ARG_PROJTASK);
         ContentValues cv = getContentValuesFromTask(task);
 
+        PBSProjTaskJSON taskJson = new PBSProjTaskJSON();
+        taskJson.setC_ProjectTask_ID(String.valueOf(task.get_ID()));
+
+        if (task.getAssignedTo() != 0)
+            taskJson.setAssignedTo(String.valueOf(task.getAssignedTo()));
+
+        if (task.getAssignedTo() != 0)
+            taskJson.setSecAssignedTo(String.valueOf(task.getSecAssignedTo()));
+
+        if (task.getDescription() != null)
+            taskJson.setDescription(task.getDescription());
+
+        if (task.getEquipment() != null)
+            taskJson.setEquipment(task.getEquipment());
+
+        if (task.getContact() != null)
+            taskJson.setContact(task.getContact());
+
+        if (task.getContactNo() != null)
+            taskJson.setContactNo(task.getContactNo());
+
         PBSIServerAPI serverAPI = new PBSServerAPI();
-        String result = serverAPI.updateProjectTask(task, input.getString(PBSServerConst.PARAM_URL));
+        String result = serverAPI.updateProjectTask(taskJson, input.getString(PBSServerConst.PARAM_URL));
         if (result != null && !result.isEmpty()) {
             JsonParser p = new JsonParser();
             JsonObject jsonObj = p.parse(result).getAsJsonObject(); // get project task id and update local
             String success = jsonObj.get(PBSServerConst.SUCCESS).getAsString();
             if (PBSServerConst.TRUE.equalsIgnoreCase(success)){
                 String[] arg = {String.valueOf(task.get_ID())};
-                int rowUpdated = cr.update(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv, MProjectTask.C_PROJECTTASK_ID_COL, arg);
+                int rowUpdated = cr.update(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE), cv, MProjectTask.C_PROJECTTASK_ID_COL+"=?", arg);
                 if (rowUpdated > 0) {
                     output.putBoolean(PandoraConstant.RESULT, true);
                     output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);

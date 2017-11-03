@@ -39,6 +39,7 @@ public class NewAuditSummaryFragment extends Fragment {
     private ArrayList<MSurvey> answerList;
     private ArrayList<String> sectionList;
     private Bundle bundle;
+    private boolean isViewing;
 
     /**
      * Constructor method.
@@ -60,6 +61,7 @@ public class NewAuditSummaryFragment extends Fragment {
 
         bundle = getArguments();
         if (bundle != null) {
+            isViewing = bundle.getBoolean("isViewing", false);
             answerList = bundle.getParcelableArrayList("answers");
             sectionList = bundle.getStringArrayList("sections");
             ArrayList<Pair> ratings = new ArrayList<>();
@@ -120,21 +122,26 @@ public class NewAuditSummaryFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        next = menu.add(0, NEXT_ID, 1, "Next");
-        next.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        next.setIcon(R.drawable.ic_done);
+        if (!isViewing) {
+            menu.clear();
+            next = menu.add(0, NEXT_ID, 1, "Next");
+            next.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            next.setIcon(R.drawable.ic_done);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case NEXT_ID: {
-                next();
-                break;
+        if (!isViewing) {
+            int id = item.getItemId();
+            switch (id) {
+                case NEXT_ID: {
+                    next();
+                    break;
+                }
+                default:
+                    break;
             }
-            default: break;
         }
         return true;
     }

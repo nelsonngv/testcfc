@@ -87,7 +87,9 @@
     <!--Applicants layout!-->
 
     <string name="label_status">Status</string>
+    <string name="label_sel_dateassigned">Select Date Assigned</string>
     <string name="label_dateassigned">Date Assigned</string>
+    <string name="label_sel_duedate">Select Due Date</string>
     <string name="label_duedate">Due Date</string>
     <string name="label_interviewernotes">Interviewer Notes</string>
     <string name="label_nationality">Nationality</string>
@@ -96,7 +98,7 @@
     <string name="label_maritalstat">Marital Status</string>
     <string name="label_qualificationhigh">Qual. High</string>
     <string name="label_qualificationother">Qual. Other</string>
-    <string name="label_applicationdate">Application Date</string>
+    <string name="label_applicationdate">Select Application Date</string>
     <string name="label_hrsetupjob">HR Setup Job</string>
     <string name="label_hrnationality">HR Nationality</string>
     <string name="label_expectedsalary">Expected Salary</string>
@@ -115,8 +117,9 @@
     <string name="label_certpic10">Image [10]</string>
     <string name="label_sender">Sender</string>
     <string name="label_date">Date</string>
-    <string name="label_datefrom">Date From</string>
-    <string name="label_dateto">Date To</string>
+    <string name="label_sel_date">Select Date</string>
+    <string name="label_datefrom">Select Date From</string>
+    <string name="label_dateto">Select Date To</string>
     <string name="label_filterby">Filter By </string>
     <string name="label_value">Value </string>
     <string name="label_shift">Shift </string>
@@ -125,6 +128,8 @@
     <string name="label_isabsent">Absent</string>
     <string name="label_iswork">Work</string>
     <string name="label_isnoshow">No Show</string>
+    <string name="label_sel_checkindate">Select Check In</string>
+    <string name="label_sel_checkoutdate">Select Check Out</string>
     <string name="label_checkindate">Check In</string>
     <string name="label_checkoutdate">Check Out</string>
     <string name="label_leavetype">Leave Type</string>
@@ -166,7 +171,7 @@
     <string name="label_movementqty">Movement Qty </string>
 
     <string name="label_onhandqty">On Hand Quantity </string>
-    <string name="label_movementdate">Movement Date </string>
+    <string name="label_movementdate">Select Movement Date </string>
     <string name="label_uom">UOM </string>
     <string name="text_projectloc_na">Project Location is not selected.
         Please select the project location in defaults setting tab.</string>
@@ -183,7 +188,7 @@
     <!--
    Requisition layout.
    !-->
-    <string name="label_required_date">Required Date</string>
+    <string name="label_required_date">Select Required Date</string>
     <string name="label_projloc">Proj. Location</string>
     <string name="label_requester">Requester</string>
     <string name="label_purchase_reason">Purchase Reason</string>
@@ -192,7 +197,7 @@
     <string name="req_label_docno">Document No</string>
     <string name="reqdetails_label_status">Status</string>
     <string name="reqdetails_label_projloc">Proj. Location</string>
-    <string name="reqdetails_label_requested_date">Requested Date</string>
+    <string name="reqdetails_label_sel_requested_date">Select Requested Date</string>
 
     <string name="label_comment">Comment</string>
     <string name="label_lines">Lines</string>
@@ -318,15 +323,16 @@
     <!--
     Survey.
     !-->
-    <string name="label_surveyname">Survey Name</string>
+    <string name="label_surveyname">Survey Template Name</string>
     <string name="label_section">Section: </string>
     <string name="label_rating">Rating: </string>
     <string name="label_average">Average: </string>
     <string name="label_percentage">Percentage: </string>
-    <string name="label_timeofcleaning">Time of Cleaning: </string>
-    <string name="label_surveyremarks">Survey Remarks: </string>
-    <string name="label_auditname">Audit Name</string>
+    <string name="label_timeofcleaning">Select Time of Cleaning: </string>
+    <string name="label_remarks">Remarks: </string>
+    <string name="label_auditname">Audit Template Name</string>
     <string name="label_auditremarks">Audit Remarks: </string>
+    <string name="label_summary">Summary</string>
 
     <!--
     Signature pad.

@@ -70,13 +70,9 @@ public class NewAuditFragment extends Fragment {
                 section.setVisibility(View.GONE);
             else section.setText(getString(R.string.label_section) + sectionName + " (" + (currPosition + 1) + "/" + sections.size() + ")");
             List<SpinnerPair> ratingList = new ArrayList<>();
-            SpinnerPair pair = new SpinnerPair();
-            pair.setKey(null);
-            pair.setValue("-- Please rate --");
+            SpinnerPair pair = new SpinnerPair(null, "-- Please rate --");
             ratingList.add(pair);
-            pair = new SpinnerPair();
-            pair.setKey("-1");
-            pair.setValue("N/A");
+            pair = new SpinnerPair("-1", "N/A");
             ratingList.add(pair);
             for (int i = 0; i < 11; i++) {
                 pair = new SpinnerPair();
@@ -170,7 +166,7 @@ public class NewAuditFragment extends Fragment {
                 subLL.setLayoutParams(layoutParams);
 
                 tvSurveyRemarks.setTypeface(null, Typeface.BOLD);
-                tvSurveyRemarks.setText(getString(R.string.label_surveyremarks));
+                tvSurveyRemarks.setText(getString(R.string.label_remarks));
                 NewAuditPagerFragment.etSurveyRemarks.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 NewAuditPagerFragment.etSurveyRemarks.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2000)});
                 NewAuditPagerFragment.etSurveyRemarks.setMaxLines(5);

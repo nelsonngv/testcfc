@@ -144,7 +144,7 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
                 ArrayList<View> etList = getAllChildren(mPager, EditText.class);
                 ArrayList<MSurvey> answerList = new ArrayList<>();
 
-                for (int i = 0; i < etList.size(); i++) {
+                for (int i = 0; i < spinnerList.size(); i++) {
                     Spinner spinner = (Spinner) spinnerList.get(i);
                     EditText et = (EditText) etList.get(i);
                     String uuid = spinner.getTag().toString();
@@ -233,6 +233,8 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
                 return;
             }
             NUM_PAGES = sections.size();
+            if (_UUID != null && !_UUID.equals(""))
+                NUM_PAGES++;
             mPager.setOffscreenPageLimit(NUM_PAGES);
             updateMenuItem();
 
@@ -301,11 +303,21 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
         @Override
         public Fragment getItem(int position) {
             Bundle args = new Bundle();
-            Fragment f = new NewSurveyFragment();
-            args.putInt("pos", position);
-//            args.putSerializable(PBSSurveyController.ARG_SURVEY, survey);
-            args.putSerializable(PBSSurveyController.ARG_SECTIONS, sections);
-            args.putSerializable(PBSSurveyController.ARG_QUESTIONS, questions);
+            Fragment f = null;
+            if (_UUID != null && !_UUID.equals("") && position == 0) {
+                f = new NewSurveySummaryFragment();
+                args.putBoolean("isViewing", true);
+                args.putParcelableArrayList("answers", questions);
+                args.putStringArrayList("sections", sections);
+            } else {
+                f = new NewSurveyFragment();
+                if (_UUID != null && !_UUID.equals(""))
+                    args.putInt("pos", position - 1);
+                else args.putInt("pos", position);
+//                args.putSerializable(PBSSurveyController.ARG_SURVEY, survey);
+                args.putSerializable(PBSSurveyController.ARG_SECTIONS, sections);
+                args.putSerializable(PBSSurveyController.ARG_QUESTIONS, questions);
+            }
             f.setArguments(args);
             return f;
         }

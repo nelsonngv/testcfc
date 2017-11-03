@@ -42,6 +42,7 @@ public class NewSurveySummaryFragment extends Fragment {
     private ArrayList<String> sectionList;
     private Bundle bundle;
     private EditText etSurveyRemarks;
+    private boolean isViewing;
 
     /**
      * Constructor method.
@@ -63,6 +64,7 @@ public class NewSurveySummaryFragment extends Fragment {
 
         bundle = getArguments();
         if (bundle != null) {
+            isViewing = bundle.getBoolean("isViewing", false);
             answerList = bundle.getParcelableArrayList("answers");
             sectionList = bundle.getStringArrayList("sections");
             ArrayList<Pair> ratings = new ArrayList<>();
@@ -123,7 +125,7 @@ public class NewSurveySummaryFragment extends Fragment {
             subLL.setLayoutParams(layoutParams);
 
             tvSurveyRemarks.setTypeface(null, Typeface.BOLD);
-            tvSurveyRemarks.setText(getString(R.string.label_surveyremarks));
+            tvSurveyRemarks.setText(getString(R.string.label_remarks));
             etSurveyRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
             etSurveyRemarks.setFilters(new InputFilter[] {new InputFilter.LengthFilter(2000)});
             etSurveyRemarks.setMaxLines(5);
@@ -135,6 +137,11 @@ public class NewSurveySummaryFragment extends Fragment {
                     return false;
                 }
             });
+            if (isViewing) {
+                etSurveyRemarks.setEnabled(false);
+                etSurveyRemarks.setText(NewAuditPagerFragment.audit.getRemarks());
+                etSurveyRemarks.setMaxLines(Integer.MAX_VALUE);
+            }
 
             subLL.addView(tvSurveyRemarks);
             subLL.addView(etSurveyRemarks);
@@ -150,21 +157,26 @@ public class NewSurveySummaryFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        next = menu.add(0, NEXT_ID, 1, "Next");
-        next.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        next.setIcon(R.drawable.ic_done);
+        if (!isViewing) {
+            menu.clear();
+            next = menu.add(0, NEXT_ID, 1, "Next");
+            next.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+            next.setIcon(R.drawable.ic_done);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case NEXT_ID: {
-                next();
-                break;
+        if (!isViewing) {
+            int id = item.getItemId();
+            switch (id) {
+                case NEXT_ID: {
+                    next();
+                    break;
+                }
+                default:
+                    break;
             }
-            default: break;
         }
         return true;
     }

@@ -54,6 +54,7 @@ import com.pbasolutions.android.fragment.AssetMovementDetails;
 import com.pbasolutions.android.fragment.AssetNewMovement;
 import com.pbasolutions.android.fragment.AttendanceDetailFragment;
 import com.pbasolutions.android.fragment.AttendanceFragment;
+import com.pbasolutions.android.fragment.AuditFragment;
 import com.pbasolutions.android.fragment.BroadcastDetailsFragment;
 import com.pbasolutions.android.fragment.BroadcastFragment;
 import com.pbasolutions.android.fragment.CheckPointFragment;
@@ -68,13 +69,14 @@ import com.pbasolutions.android.fragment.MovementListFragment;
 import com.pbasolutions.android.fragment.NewApplicantFragment;
 import com.pbasolutions.android.fragment.NewAttendanceFragment;
 import com.pbasolutions.android.fragment.NewAttendanceLineFragment;
+import com.pbasolutions.android.fragment.NewAuditPagerFragment;
+import com.pbasolutions.android.fragment.NewAuditStartFragment;
 import com.pbasolutions.android.fragment.NewCheckInFragment;
 import com.pbasolutions.android.fragment.AccountFragment;
 import com.pbasolutions.android.fragment.NewMovementLineFragment;
 import com.pbasolutions.android.fragment.NewRequisitionFragment;
 import com.pbasolutions.android.fragment.NewRequisitionLineFragment;
 import com.pbasolutions.android.fragment.NewSurveyPagerFragment;
-import com.pbasolutions.android.fragment.NewSurveySignFragment;
 import com.pbasolutions.android.fragment.NewSurveyStartFragment;
 import com.pbasolutions.android.fragment.PBSDetailsFragment;
 import com.pbasolutions.android.fragment.ProjTaskDetailsFragment;
@@ -451,6 +453,10 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             titleID = R.string.title_survey;
         } else if (NewSurveyStartFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_new_survey;
+        } else if (AuditFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_audit;
+        } else if (NewAuditStartFragment.class.getName().equalsIgnoreCase(fragClassName)){
+            titleID = R.string.title_new_audit;
         } else if (ATrackScanLocFragment.class.getName().equalsIgnoreCase(fragClassName)){
             titleID = R.string.title_attendance_tracking;
         } else if (ATrackScanEmpIDFragment.class.getName().equalsIgnoreCase(fragClassName)
@@ -978,19 +984,19 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             }
 
             case FRAGMENT_AUDIT: {
-                fragment = new SurveyFragment();
+                fragment = new AuditFragment();
                 title = getString(R.string.title_audit);
                 break;
             }
 
             case FRAGMENT_START_AUDIT: {
-                fragment = new NewSurveyStartFragment();
+                fragment = new NewAuditStartFragment();
                 title = getString(R.string.title_new_audit);
                 break;
             }
 
             case FRAGMENT_NEW_AUDIT: {
-                fragment = new NewSurveyPagerFragment();
+                fragment = new NewAuditPagerFragment();
                 title = "";
                 break;
             }

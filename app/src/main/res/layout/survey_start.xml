@@ -36,6 +36,21 @@
                     android:layout_height="wrap_content">
                     <LinearLayout style="@style/PTableVirtRowW">
                         <TextView
+                            android:id="@+id/tvSurveyTemplate"
+                            style="@style/TableInfoLabel"
+                            android:text="@string/label_template" />
+
+                        <com.pbasolutions.android.control.SearchableSpinner
+                            app:dlgTitle="@string/title_selecttemplate"
+                            style="@style/SpinnerTableValue"
+                            android:id="@+id/atTemplate" />
+                    </LinearLayout>
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout style="@style/PTableVirtRowW">
+                        <TextView
                             android:id="@+id/tvSurveyName"
                             style="@style/TableInfoLabel"
                             android:text="@string/label_surveyname" />
@@ -44,20 +59,6 @@
                             android:id="@+id/atSurveyName"
                             android:inputType="textCapWords"
                             style="@style/TableValue" />
-                    </LinearLayout>
-                </TableRow>
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <LinearLayout style="@style/PTableVirtRowW">
-                        <TextView
-                            style="@style/TableInfoLabel"
-                            android:text="@string/label_template" />
-
-                        <com.pbasolutions.android.control.SearchableSpinner
-                            app:dlgTitle="@string/title_selecttemplate"
-                            style="@style/SpinnerTableValue"
-                            android:id="@+id/atTemplate" />
                     </LinearLayout>
                 </TableRow>
                 <TableRow

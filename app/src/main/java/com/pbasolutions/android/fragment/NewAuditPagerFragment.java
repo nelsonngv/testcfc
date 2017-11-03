@@ -105,8 +105,7 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
                     } else {
                         PandoraHelper.hideSoftKeyboard(getActivity());
                         ArrayList<View> spinnerList = getAllChildren(mPager.getChildAt(currPage), Spinner.class);
-                        ArrayList<View> etList = getAllChildren(mPager.getChildAt(currPage), EditText.class);
-                        for (int i = 0; i < etList.size(); i++) {
+                        for (int i = 0; i < spinnerList.size(); i++) {
                             Spinner spinner = (Spinner) spinnerList.get(i);
                             String uuid = spinner.getTag().toString();
                             if (spinner.getSelectedItemPosition() == 0) {
@@ -185,8 +184,7 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
                 } else {
                     PandoraHelper.hideSoftKeyboard(getActivity());
                     ArrayList<View> spinnerList = getAllChildren(mPager.getChildAt(mPager.getCurrentItem()), Spinner.class);
-                    ArrayList<View> etList = getAllChildren(mPager.getChildAt(mPager.getCurrentItem()), EditText.class);
-                    for (int i = 0; i < etList.size(); i++) {
+                    for (int i = 0; i < spinnerList.size(); i++) {
                         Spinner spinner = (Spinner) spinnerList.get(i);
                         String uuid = spinner.getTag().toString();
                         if (spinner.getSelectedItemPosition() == 0) {
@@ -239,6 +237,7 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
                     answerList.get(i).setSectionname(questions.get(i).getSectionname());
                 }
 
+                triggeredByButton = true;
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("answers", answerList);
                 bundle.putStringArrayList("sections", sections);
@@ -308,6 +307,8 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
                 return;
             }
             NUM_PAGES = sections.size();
+            if (_UUID != null && !_UUID.equals(""))
+                NUM_PAGES++;
             mPager.setOffscreenPageLimit(NUM_PAGES);
             updateMenuItem();
 
@@ -382,11 +383,21 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
         @Override
         public Fragment getItem(int position) {
             Bundle args = new Bundle();
-            Fragment f = new NewAuditFragment();
-            args.putInt("pos", position);
-//            args.putSerializable(PBSSurveyController.ARG_SURVEY, audit);
-            args.putSerializable(PBSSurveyController.ARG_SECTIONS, sections);
-            args.putSerializable(PBSSurveyController.ARG_QUESTIONS, questions);
+            Fragment f = null;
+            if (_UUID != null && !_UUID.equals("") && position == 0) {
+                f = new NewAuditSummaryFragment();
+                args.putBoolean("isViewing", true);
+                args.putParcelableArrayList("answers", questions);
+                args.putStringArrayList("sections", sections);
+            } else {
+                f = new NewAuditFragment();
+                if (_UUID != null && !_UUID.equals(""))
+                    args.putInt("pos", position - 1);
+                else args.putInt("pos", position);
+//                args.putSerializable(PBSSurveyController.ARG_SURVEY, audit);
+                args.putSerializable(PBSSurveyController.ARG_SECTIONS, sections);
+                args.putSerializable(PBSSurveyController.ARG_QUESTIONS, questions);
+            }
             f.setArguments(args);
             return f;
         }

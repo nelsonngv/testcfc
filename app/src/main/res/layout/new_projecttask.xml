@@ -126,12 +126,13 @@
             <EditText
                 android:id="@+id/newTaskSeqNo"
                 style="@style/TableValue"
+                android:text="1"
                 android:inputType="number"/>
         </LinearLayout>
         <LinearLayout style="@style/PTableVirtRow">
             <TextView
                 style="@style/TableInfoLabel"
-                android:text="@string/label_dateassigned"
+                android:text="@string/label_sel_dateassigned"
                 />
             <TextView
                 android:id="@+id/taskDateAssigned"
@@ -141,7 +142,7 @@
         <LinearLayout style="@style/PTableVirtRow">
             <TextView
                 style="@style/TableInfoLabel"
-                android:text="@string/label_duedate"
+                android:text="@string/label_sel_duedate"
                 />
             <TextView
                 android:id="@+id/taskDueDate"

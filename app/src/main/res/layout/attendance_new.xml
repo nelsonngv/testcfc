@@ -45,7 +45,7 @@
                         <LinearLayout style="@style/PTableVirtRowW">
                             <TextView
                                 style="@style/TableInfoLabel"
-                                android:text="@string/label_date"
+                                android:text="@string/label_sel_date"
                                 />
                             <TextView
                                 android:id="@+id/attDeployDate"

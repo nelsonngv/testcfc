@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +47,7 @@ import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.utils.CameraUtil;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,8 +78,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
     EditText taskDesc, taskEquipment, taskContact, taskContactNo, taskComments;
     ImageView pretaskPicture;
     SearchableSpinner taskAssignedTo, taskSecAssignedTo;
-    ArrayAdapter assignToAdapter;
-    SpinnerOnItemSelected assignToItem, secAssignToItem;
+    ArrayAdapter assignToAdapter, secAssignToAdapter;
+//    SpinnerOnItemSelected assignToItem, secAssignToItem;
     ImageView[] taskPictures = new ImageView[25];
     String[] picPath = new String[25];
     TableLayout tlPics, tlMorePic;
@@ -86,6 +88,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
     PandoraMain context;
     View m_rootView;
     MenuItem edit, discard, save, complete;
+    List<SpinnerPair> oriList, assignToList, secAssignToList;
+    SpinnerPair assignToPair, secAssignToPair;
 
     protected static final String EVENT_DATE = "EVENT_DATE";
     protected static final String EVENT_COMPLETEPROJ = "EVENT_COMPLETEPROJ";
@@ -109,11 +113,11 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.task_details, container, false);
         m_rootView = rootView;
+        context.fragment = this;
+        projTask = getProjTask();
+
         setUI(rootView);
         setUIListener();
-        context.fragment = this;
-
-        projTask = getProjTask();
         setValues();
 //        binding =  TaskDetailsBinding.bind(rootView);
 //        binding.setTask(getProjTask());
@@ -167,8 +171,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                         && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : projTask.getEquipment())
                         && taskContact.getText().toString().equals(projTask.getContact() == null ? "" : projTask.getContact())
                         && taskContactNo.getText().toString().equals(projTask.getContactNo() == null ? "" : projTask.getContactNo())
-                        && assignToItem.getPair().getKey().equals(String.valueOf(projTask.getAssignedTo()))
-                        && (projTask.getSecAssignedTo() == 0 || secAssignToItem.getPair().getKey().equals(String.valueOf(projTask.getSecAssignedTo())))) {
+                        && assignToPair.getKey().equals(String.valueOf(projTask.getAssignedTo()))
+                        && (projTask.getSecAssignedTo() == 0 || secAssignToPair.getKey().equals(String.valueOf(projTask.getSecAssignedTo())))) {
                     changeToolbarButtons(false);
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -263,9 +267,14 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         taskPictures[picCount].setTag(R.string.tag_imageview_count, picCount);
         TextView textViewTaskComments = (TextView) rootView.findViewById(R.id.textViewTaskComments);
         PandoraHelper.setAsterisk(textViewTaskComments);
-        List<SpinnerPair> list = getUserList();
-        assignToAdapter = PandoraHelper.addListToSpinner(act, taskAssignedTo, list);
-        assignToAdapter = PandoraHelper.addListToSpinner(act, taskSecAssignedTo, list);
+
+        oriList = getUserList();
+        assignToList = new ArrayList<>();
+        secAssignToList = new ArrayList<>();
+        assignToList.addAll(oriList);
+        secAssignToList.addAll(oriList);
+        assignToAdapter = PandoraHelper.addListToSpinner(act, taskAssignedTo, assignToList);
+        secAssignToAdapter = PandoraHelper.addListToSpinner(act, taskSecAssignedTo, secAssignToList);
         taskAssignedTo.setEnabled(false);
         taskSecAssignedTo.setEnabled(false);
     }
@@ -274,12 +283,42 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         setOnClickListener(pretaskPicture, EVENT_PREPIC);
         setOnClickListener(taskPictures[0], EVENT_PIC1);
 
-        assignToItem = new SpinnerOnItemSelected(taskAssignedTo,
-                new SpinnerPair());
+        assignToPair = ((SpinAdapter) assignToAdapter).getItem(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
+        secAssignToPair = ((SpinAdapter) secAssignToAdapter).getItem(((SpinAdapter) secAssignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo())));
+        AdapterView.OnItemSelectedListener assignToItem = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                assignToPair = (SpinnerPair) parent.getItemAtPosition(position);
+                secAssignToList.clear();
+                secAssignToList.addAll(oriList);
+                secAssignToList.remove(assignToPair);
+                secAssignToAdapter.notifyDataSetChanged();
+                taskSecAssignedTo.setSelection(((SpinAdapter) secAssignToAdapter).getPosition(secAssignToPair.getKey()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        };
         taskAssignedTo.setOnItemSelectedListener(assignToItem);
 
-        secAssignToItem = new SpinnerOnItemSelected(taskSecAssignedTo,
-                new SpinnerPair());
+        AdapterView.OnItemSelectedListener secAssignToItem = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                secAssignToPair = (SpinnerPair) parent.getItemAtPosition(position);
+                assignToList.clear();
+                assignToList.addAll(oriList);
+                assignToList.remove(secAssignToPair);
+                assignToAdapter.notifyDataSetChanged();
+                taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(assignToPair.getKey()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        };
         taskSecAssignedTo.setOnItemSelectedListener(secAssignToItem);
 
         btnMorePic.setOnClickListener(new View.OnClickListener() {
@@ -337,22 +376,48 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         boolean hasChanged = !taskComments.getText().toString().isEmpty();
         hasChanged |= !(taskPictures[0].getTag(R.string.tag_imageview_path) == null || ((String)taskPictures[0].getTag(R.string.tag_imageview_path)).isEmpty());
 
-        if (!hasChanged)
-            return true;
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        // 2. Chain together various setter methods to set the dialog characteristics
-        builder.setMessage("Changes will be lost. continue to leave?")
-                .setTitle(PandoraConstant.WARNING)
-                .setPositiveButton("Leave", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        getActivity().getSupportFragmentManager().popBackStack();
-                    }
-                })
-                .setNegativeButton("Close", null);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        if (discard.isVisible()) {
+            if (taskDesc.getText().toString().equals(projTask.getDescription() == null ? "" : projTask.getDescription())
+                    && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : projTask.getEquipment())
+                    && taskContact.getText().toString().equals(projTask.getContact() == null ? "" : projTask.getContact())
+                    && taskContactNo.getText().toString().equals(projTask.getContactNo() == null ? "" : projTask.getContactNo())
+                    && assignToPair.getKey().equals(String.valueOf(projTask.getAssignedTo()))
+                    && (projTask.getSecAssignedTo() == 0 || secAssignToPair.getKey().equals(String.valueOf(projTask.getSecAssignedTo())))) {
+                changeToolbarButtons(false);
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Changes will be lost. continue to discard?")
+                        .setTitle(PandoraConstant.WARNING)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                taskDesc.setText(PandoraHelper.parseNewLine(projTask.getDescription()));
+                                taskEquipment.setText(PandoraHelper.parseNewLine(projTask.getEquipment()));
+                                taskContact.setText(projTask.getContact());
+                                taskContactNo.setText(projTask.getContactNo());
+                                taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
+                                if (projTask.getSecAssignedTo() != 0)
+                                    taskSecAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo())));
+                                changeToolbarButtons(false);
+                            }
+                        })
+                        .setNegativeButton("No", null);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        }
+        else if (hasChanged) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage("Changes will be lost. continue to leave?")
+                    .setTitle(PandoraConstant.WARNING)
+                    .setPositiveButton("Leave", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            getActivity().getSupportFragmentManager().popBackStack();
+                        }
+                    })
+                    .setNegativeButton("Close", null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        } else return true;
 
         return false;
     }
@@ -410,7 +475,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             taskDueDate.setText(projTask.getDueDate());
             taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
             if (projTask.getSecAssignedTo() != 0)
-                taskSecAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo())));
+                taskSecAssignedTo.setSelection(((SpinAdapter) secAssignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo())));
 
             if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1()).exists()) projTask.setATTACHMENT_BEFORETASKPICTURE_1(null);
             CameraUtil.loadPicture(projTask.getATTACHMENT_BEFORETASKPICTURE_1(), pretaskPicture);
@@ -539,21 +604,21 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                 && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : projTask.getEquipment())
                 && taskContact.getText().toString().equals(projTask.getContact() == null ? "" : projTask.getContact())
                 && taskContactNo.getText().toString().equals(projTask.getContactNo() == null ? "" : projTask.getContactNo())
-                && assignToItem.getPair().getKey().equals(String.valueOf(projTask.getAssignedTo()))
-                && (projTask.getSecAssignedTo() == 0 || secAssignToItem.getPair().getKey().equals(String.valueOf(projTask.getSecAssignedTo())))) {
+                && assignToPair.getKey().equals(String.valueOf(projTask.getAssignedTo()))
+                && (projTask.getSecAssignedTo() == 0 || secAssignToPair.getKey().equals(String.valueOf(projTask.getSecAssignedTo())))) {
             changeToolbarButtons(false);
             return;
         }
 
         PandoraHelper.hideSoftKeyboard(getActivity());
-        PBSProjTaskJSON task = new PBSProjTaskJSON();
-        task.setC_ProjectTask_ID(String.valueOf(projTask.get_ID()));
+        MProjectTask task = new MProjectTask();
+        task.set_ID(projTask.get_ID());
 
-        if (!assignToItem.getPair().getKey().equals(projTask.getAssignedTo()))
-            task.setAssignedTo(assignToItem.getPair().getKey());
+        if (!assignToPair.getKey().equals(String.valueOf(projTask.getAssignedTo())))
+            task.setAssignedTo(Integer.parseInt(assignToPair.getKey()));
 
-        if (!secAssignToItem.getPair().getKey().equals(projTask.getSecAssignedTo()))
-            task.setSecAssignedTo(secAssignToItem.getPair().getKey());
+        if (!secAssignToPair.getKey().equals(String.valueOf(projTask.getSecAssignedTo())))
+            task.setSecAssignedTo(Integer.parseInt(secAssignToPair.getKey()));
 
         if (!taskDesc.getText().toString().equals(projTask.getDescription()))
             task.setDescription(taskDesc.getText().toString());
@@ -591,11 +656,29 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                 super.onPostExecute(result);
                 if (PandoraConstant.RESULT.equalsIgnoreCase(result.getString(PandoraConstant.TITLE))) {
                     changeToolbarButtons(false);
+                    if (!assignToPair.getKey().equals(String.valueOf(projTask.getAssignedTo())))
+                        projTask.setAssignedTo(Integer.parseInt(assignToPair.getKey()));
+
+                    if (!secAssignToPair.getKey().equals(String.valueOf(projTask.getSecAssignedTo())))
+                        projTask.setSecAssignedTo(Integer.parseInt(secAssignToPair.getKey()));
+
+                    if (!taskDesc.getText().toString().equals(projTask.getDescription()))
+                        projTask.setDescription(taskDesc.getText().toString());
+
+                    if (!taskEquipment.getText().toString().equals(projTask.getEquipment()))
+                        projTask.setEquipment(taskEquipment.getText().toString());
+
+                    if (!taskContact.getText().toString().equals(projTask.getContact()))
+                        projTask.setContact(taskContact.getText().toString());
+
+                    if (!taskContactNo.getText().toString().equals(projTask.getContactNo()))
+                        projTask.setContactNo(taskContactNo.getText().toString());
+
                     PandoraHelper.showMessage(getActivity(),
-                            result.getString(result.getString(PandoraConstant.RESULT)));
+                            result.getString(PandoraConstant.RESULT));
                 } else {
                     PandoraHelper.showMessage(getActivity(),
-                            result.getString(result.getString(PandoraConstant.ERROR)));
+                            result.getString(PandoraConstant.ERROR));
                 }
                 ((PandoraMain)getActivity()).dismissProgressDialog();
             }

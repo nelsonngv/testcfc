@@ -110,7 +110,7 @@
                         android:layout_marginBottom="5dp"
                         >
                         <TextView
-                            android:text="@string/label_checkindate"
+                            android:text="@string/label_sel_checkindate"
                             style="@style/TableInfoLabel"
                             android:textSize="@dimen/abc_text_size_body_1_material"/>
                         <TextView
@@ -130,7 +130,7 @@
                         android:layout_marginBottom="5dp"
                         >
                         <TextView
-                            android:text="@string/label_checkoutdate"
+                            android:text="@string/label_sel_checkoutdate"
                             style="@style/TableInfoLabel"
                             android:textSize="@dimen/abc_text_size_body_1_material"/>
                         <TextView
