@@ -323,14 +323,14 @@
     <!--
     Survey.
     !-->
-    <string name="label_surveyname">Survey Template Name</string>
+    <string name="label_surveyname">Survey Name</string>
     <string name="label_section">Section: </string>
     <string name="label_rating">Rating: </string>
     <string name="label_average">Average: </string>
     <string name="label_percentage">Percentage: </string>
     <string name="label_timeofcleaning">Select Time of Cleaning: </string>
     <string name="label_remarks">Remarks: </string>
-    <string name="label_auditname">Audit Template Name</string>
+    <string name="label_auditname">Audit Name</string>
     <string name="label_auditremarks">Audit Remarks: </string>
     <string name="label_summary">Summary</string>
 

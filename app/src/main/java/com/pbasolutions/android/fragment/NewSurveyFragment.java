@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.R;
+import com.pbasolutions.android.adapter.SpinAdapter;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSSurveyController;
 import com.pbasolutions.android.model.MSurvey;
@@ -108,7 +110,7 @@ public class NewSurveyFragment extends Fragment {
                             tvQuestionDesc.setText(Html.fromHtml(question.getQuestionDesc()));
                         else tvQuestionDesc.setVisibility(View.GONE);
                     }
-                    PandoraHelper.addListToSpinner(getActivity(), rating, ratingList);
+                    ArrayAdapter adapter = PandoraHelper.addListToSpinner(getActivity(), rating, ratingList);
                     rating.setTag(question.getC_SurveyTemplateQuestion_UUID());
                     rating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
@@ -132,7 +134,7 @@ public class NewSurveyFragment extends Fragment {
                     etRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     if (question.getAmt() != null && !question.getAmt().equals("")) {
                         rating.setEnabled(false);
-                        rating.setSelection(Integer.parseInt(question.getAmt()) + 1);
+                        rating.setSelection(((SpinAdapter) adapter).getPosition(question.getAmt()));
                         etRemarks.setEnabled(false);
                         etRemarks.setText(question.getRemarks() != null && !question.getRemarks().isEmpty() && !question.getRemarks().equalsIgnoreCase("null") ? PandoraHelper.parseNewLine(question.getRemarks()) : "No remark");
                     }

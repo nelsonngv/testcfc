@@ -20,7 +20,6 @@ public class MSurvey extends PBSJson implements Parcelable {
     public static final String C_SURVEYTEMPLATE_UUID_COL = "C_SurveyTemplate_UUID";
     public static final String C_SURVEYTEMPLATEQUESTION_ID_COL = "C_SurveyTemplateQuestion_ID";
     public static final String C_SURVEYTEMPLATEQUESTION_UUID_COL = "C_SurveyTemplateQuestion_UUID";
-    public static final String ISACTIVE_COL = "IsActive";
     public static final String VALUE_COL = "Value";
     public static final String VALIDTO_COL = "ValidTo";
     public static final String EMAIL_COL = "Email";
@@ -40,6 +39,7 @@ public class MSurvey extends PBSJson implements Parcelable {
     public static final String REMARKS_COL = "Remarks";
     public static final String AMT_COL = "Amt";
     public static final String DATETRX_COL = "DateTrx";
+    public static final String SEQNO_COL = "SeqNo";
 
     private String _UUID;
     private int C_ProjectLocation_ID;

@@ -54,7 +54,7 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
     private Toast toast;
     private int currPage = 0;
     private boolean triggeredByButton = false;
-    public static EditText etSurveyRemarks;
+    public static EditText etAuditRemarks;
 
     /**
      * Constructor method.
@@ -242,7 +242,7 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
                 bundle.putParcelableArrayList("answers", answerList);
                 bundle.putStringArrayList("sections", sections);
                 bundle.putString(MSurvey.DATETRX_COL, PBSSurveyController.dateTrx);
-                bundle.putString(MSurvey.REMARKS_COL, etSurveyRemarks.getText().toString());
+                bundle.putString(MSurvey.REMARKS_COL, etAuditRemarks.getText().toString());
                 Fragment fragment = new NewAuditSignFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragment.setArguments(bundle);

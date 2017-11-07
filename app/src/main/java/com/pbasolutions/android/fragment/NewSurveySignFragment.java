@@ -194,7 +194,7 @@ public class NewSurveySignFragment extends Fragment {
             surveyCV.put(MSurvey.C_SURVEY_UUID_COL, UUID.randomUUID().toString());
             surveyCV.put(MSurvey.C_PROJECTLOCATION_UUID_COL, PBSSurveyController.projLocUUID);
             surveyCV.put(MSurvey.C_SURVEYTEMPLATE_UUID_COL, PBSSurveyController.templateUUID);
-            surveyCV.put(MSurvey.ISACTIVE_COL, "Y");
+            surveyCV.put(ModelConst.ISACTIVE_COL, "Y");
             surveyCV.put(MSurvey.STATUS_COL, "C");
             surveyCV.put(MSurvey.VALUE_COL, "");
             surveyCV.put(MSurvey.EMAIL_COL, "");
@@ -220,7 +220,7 @@ public class NewSurveySignFragment extends Fragment {
                 answerCV[i].put(ModelConst.AD_ORG_UUID_COL, ad_org_uuid);
                 answerCV[i].put(ModelConst.AD_CLIENT_UUID_COL, ad_client_uuid);
                 answerCV[i].put(MSurvey.C_SURVEYTEMPLATEQUESTION_UUID_COL, answer.getC_SurveyTemplateQuestion_UUID());
-                answerCV[i].put(MSurvey.ISACTIVE_COL, "Y");
+                answerCV[i].put(ModelConst.ISACTIVE_COL, "Y");
                 answerCV[i].put(MSurvey.REMARKS_COL, answer.getRemarks());
                 answerCV[i].put(MSurvey.AMT_COL, answer.getAmt());
                 answerCV[i].put(ModelConst.CREATEDBY_COL, ad_user_uuid);

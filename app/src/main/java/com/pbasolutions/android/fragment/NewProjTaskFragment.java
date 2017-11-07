@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ import com.pbasolutions.android.PandoraContext;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
+import com.pbasolutions.android.adapter.SpinAdapter;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSTaskController;
 import com.pbasolutions.android.listener.PBABackKeyListener;
@@ -35,6 +37,7 @@ import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -65,12 +68,12 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
     private Spinner projLocSpinner;
     private SpinnerOnItemSelected projLocNameItem;
     private ArrayAdapter projLocNameAdapter;
-    private SpinnerOnItemSelected assignToItem;
-    private SpinnerOnItemSelected secAssignToItem;
-    private ArrayAdapter assignToAdapter;
+    private ArrayAdapter assignToAdapter, secAssignToAdapter;
     private List<SpinnerPair> projLocList;
     private TextView taskDateAssigned;
     private TextView taskDueDate;
+    List<SpinnerPair> oriList, assignToList, secAssignToList;
+    SpinnerPair assignToPair, secAssignToPair;
     PandoraMain context;
 
     private static final int ASSIGN_ID = 1;
@@ -134,12 +137,16 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 
     protected void setUI(View rootView) {
         Activity act = getActivity();
-        List<SpinnerPair> list = getUserList();
-        list.add(0, new SpinnerPair("", "--- Please select ---"));
+        oriList = getUserList();
+        oriList.add(0, new SpinnerPair("", "--- Please select ---"));
+        assignToList = new ArrayList<>();
+        secAssignToList = new ArrayList<>();
+        assignToList.addAll(oriList);
+        secAssignToList.addAll(oriList);
         assignToSpinner = (Spinner) rootView.findViewById(R.id.newTaskAssignTo);
-        assignToAdapter = PandoraHelper.addListToSpinner(act, assignToSpinner, list);
+        assignToAdapter = PandoraHelper.addListToSpinner(act, assignToSpinner, assignToList);
         secAssignToSpinner = (Spinner) rootView.findViewById(R.id.newTaskSecAssignTo);
-        assignToAdapter = PandoraHelper.addListToSpinner(act, secAssignToSpinner, list);
+        secAssignToAdapter = PandoraHelper.addListToSpinner(act, secAssignToSpinner, secAssignToList);
         taskName = (EditText)rootView.findViewById(R.id.newTaskName);
         description = (EditText)rootView.findViewById(R.id.newTaskDescription);
         equipment = (EditText)rootView.findViewById(R.id.newTaskEquipment);
@@ -230,12 +237,46 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
                 new SpinnerPair());
         projLocSpinner.setOnItemSelectedListener(projLocNameItem);
 
-        assignToItem = new SpinnerOnItemSelected(assignToSpinner,
-                new SpinnerPair());
+        assignToPair = ((SpinAdapter) assignToAdapter).getItem(0);
+        secAssignToPair = ((SpinAdapter) secAssignToAdapter).getItem(0);
+        AdapterView.OnItemSelectedListener assignToItem = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                assignToPair = (SpinnerPair) parent.getItemAtPosition(position);
+                if (position > 0) {
+                    secAssignToList.clear();
+                    secAssignToList.addAll(oriList);
+                    secAssignToList.remove(assignToPair);
+                    secAssignToAdapter.notifyDataSetChanged();
+                    secAssignToSpinner.setSelection(((SpinAdapter) secAssignToAdapter).getPosition(secAssignToPair.getKey()));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        };
         assignToSpinner.setOnItemSelectedListener(assignToItem);
 
-        secAssignToItem = new SpinnerOnItemSelected(secAssignToSpinner,
-                new SpinnerPair());
+        AdapterView.OnItemSelectedListener secAssignToItem = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                secAssignToPair = (SpinnerPair) parent.getItemAtPosition(position);
+                if (position > 0) {
+                    assignToList.clear();
+                    assignToList.addAll(oriList);
+                    assignToList.remove(secAssignToPair);
+                    assignToAdapter.notifyDataSetChanged();
+                    assignToSpinner.setSelection(((SpinAdapter) assignToAdapter).getPosition(assignToPair.getKey()));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        };
         secAssignToSpinner.setOnItemSelectedListener(secAssignToItem);
     }
 
@@ -294,7 +335,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
 
     public void createProjTask(){
         //check all value is not null.
-        if (projLocNameItem.getPair().getKey() == null || assignToItem.getPair().getKey() == null)
+        if (projLocNameItem.getPair().getKey() == null || assignToPair.getKey() == null)
         {
             PandoraHelper.showWarningMessage(getActivity(), "Incomplete info");
             return;
@@ -305,8 +346,8 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         String equip = equipment.getText().toString();
         String contName = contactName.getText().toString();
         String contNo = contactNo.getText().toString();
-        String assignedTo  = assignToItem.getPair().getKey();
-        String secAssignedTo  = secAssignToItem.getPair().getKey();
+        String assignedTo  = assignToPair.getKey();
+        String secAssignedTo  = secAssignToPair.getKey();
         String seqNo  = sequenceNo.getText().toString();
         String dateAssigned  = taskDateAssigned.getText().toString();
         String dueDate  = taskDueDate.getText().toString();

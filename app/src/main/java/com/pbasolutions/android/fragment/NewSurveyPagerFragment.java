@@ -307,6 +307,7 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
             if (_UUID != null && !_UUID.equals("") && position == 0) {
                 f = new NewSurveySummaryFragment();
                 args.putBoolean("isViewing", true);
+                args.putParcelable("survey", survey);
                 args.putParcelableArrayList("answers", questions);
                 args.putStringArrayList("sections", sections);
             } else {

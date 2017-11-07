@@ -65,7 +65,7 @@ public class NewAuditSummaryFragment extends Fragment {
             answerList = bundle.getParcelableArrayList("answers");
             sectionList = bundle.getStringArrayList("sections");
             ArrayList<Pair> ratings = new ArrayList<>();
-            int totalRating = 0;
+            int totalCount = 0, totalRating = 0;
             for (int i = 0; i < sectionList.size(); i++) {
                 String sectionName = sectionList.get(i);
                 int count = 0, rating = 0;
@@ -79,8 +79,9 @@ public class NewAuditSummaryFragment extends Fragment {
                 if (!sectionName.equalsIgnoreCase("null"))
                     ratings.add(new Pair<>(sectionName, rating + "/" + (count * 10)));
                 totalRating += rating;
+                totalCount += count;
             }
-            ratings.add(new Pair<>("Total", totalRating + "/" + (answerList.size() * 10)));
+            ratings.add(new Pair<>("Total", totalRating + "/" + (totalCount * 10)));
 
             for (int i = 0; i < ratings.size(); i++) {
                 Pair rating = ratings.get(i);

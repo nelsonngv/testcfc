@@ -284,7 +284,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         setOnClickListener(taskPictures[0], EVENT_PIC1);
 
         assignToPair = ((SpinAdapter) assignToAdapter).getItem(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
-        secAssignToPair = ((SpinAdapter) secAssignToAdapter).getItem(((SpinAdapter) secAssignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo())));
+        int itemLoc = ((SpinAdapter) secAssignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo()));
+        secAssignToPair = ((SpinAdapter) secAssignToAdapter).getItem(itemLoc > 0 ? itemLoc : 0);
         AdapterView.OnItemSelectedListener assignToItem = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

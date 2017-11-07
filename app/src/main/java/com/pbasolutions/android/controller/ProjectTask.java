@@ -129,8 +129,9 @@ public class ProjectTask implements Callable<Bundle>, ITask {
 
         String selection = aduser + ModelConst.AD_USER_ID_COL + "!= ? AND " +
                 aduser + ModelConst.AD_CLIENT_UUID_COL + "= ? AND " +
+                aduser + ModelConst.ISACTIVE_COL + "= ? AND " +
                 "EXISTS (SELECT C_BPartner_UUID FROM C_BPartner WHERE C_BPartner.C_BPartner_ID = AD_User.C_BPartner_UUID AND C_BPartner.IsEmployee = ?)";
-        String[] selectionArg = {adUserID, adClientUUID, "Y"};
+        String[] selectionArg = {adUserID, adClientUUID, "Y", "Y"};
         String[] projection = {aduser + ModelConst.AD_USER_ID_COL,
                 aduser + ModelConst.NAME_COL};
 
@@ -424,8 +425,8 @@ public class ProjectTask implements Callable<Bundle>, ITask {
     }
 
     private Bundle getProjectTask(){
-        String selection = ModelConst.C_PROJECTTASK_TABLE + ModelConst._UUID + "=?";
-        String[] selectionArgs = {input.getString(PBSTaskController.ARG_C_PROJECTTASK_UUID)};
+        String selection = ModelConst.C_PROJECTTASK_TABLE + ModelConst._UUID + "=? AND " + ModelConst.ISACTIVE_COL + "=?";
+        String[] selectionArgs = {input.getString(PBSTaskController.ARG_C_PROJECTTASK_UUID), "Y"};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE),
                 projection, selection, selectionArgs, null);
         if (cursor != null && cursor.getCount() != 0) {
@@ -710,8 +711,8 @@ public class ProjectTask implements Callable<Bundle>, ITask {
     };
 
     private Bundle getProjectTasks() {
-        String selection = ModelConst.C_PROJECTLOCATION_UUID_COL + "=? OR ASSIGNEDTO=?";
-        String[] selectionArgs = {input.getString(PBSTaskController.ARG_PROJLOC_UUID), input.getString(PBSTaskController.ARG_AD_USER_ID)};
+        String selection = ModelConst.ISACTIVE_COL + "=? AND (" + ModelConst.C_PROJECTLOCATION_UUID_COL + "=? OR ASSIGNEDTO=?)";
+        String[] selectionArgs = {"Y", input.getString(PBSTaskController.ARG_PROJLOC_UUID), input.getString(PBSTaskController.ARG_AD_USER_ID)};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECTTASK_TABLE),
                 projection, selection, selectionArgs, MProjectTask.ISDONE_COL + " ASC, " + MProjectTask.PRIORITY_COL + " ASC");
         ObservableArrayList<MProjectTask> projectTaskList = new ObservableArrayList();

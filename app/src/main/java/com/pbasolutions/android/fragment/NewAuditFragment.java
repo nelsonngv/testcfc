@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.R;
+import com.pbasolutions.android.adapter.SpinAdapter;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSSurveyController;
 import com.pbasolutions.android.model.MSurvey;
@@ -108,7 +110,7 @@ public class NewAuditFragment extends Fragment {
                             tvQuestionDesc.setText(Html.fromHtml(question.getQuestionDesc()));
                         else tvQuestionDesc.setVisibility(View.GONE);
                     }
-                    PandoraHelper.addListToSpinner(getActivity(), rating, ratingList);
+                    ArrayAdapter adapter = PandoraHelper.addListToSpinner(getActivity(), rating, ratingList);
                     rating.setTag(question.getC_SurveyTemplateQuestion_UUID());
                     rating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
@@ -132,9 +134,7 @@ public class NewAuditFragment extends Fragment {
                     etRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     if (question.getAmt() != null && !question.getAmt().equals("")) {
                         rating.setEnabled(false);
-                        if (question.getAmt().equals("-1"))
-                            rating.setSelection(1);
-                        else rating.setSelection(Integer.parseInt(question.getAmt()) + 1);
+                        rating.setSelection(((SpinAdapter) adapter).getPosition(question.getAmt()));
                         etRemarks.setEnabled(false);
                         etRemarks.setText(question.getRemarks() != null && !question.getRemarks().isEmpty() && !question.getRemarks().equalsIgnoreCase("null") ? PandoraHelper.parseNewLine(question.getRemarks()) : "No remark");
                     }
@@ -158,7 +158,7 @@ public class NewAuditFragment extends Fragment {
             if (sections.size() - 1 == currPosition) {
                 LinearLayout subLL = new LinearLayout(getActivity(), null, R.style.PTableVirtRow);
                 TextView tvSurveyRemarks = new TextView(getActivity(), null, R.style.TableInfoLabel);
-                NewAuditPagerFragment.etSurveyRemarks = new EditText(getActivity());
+                NewAuditPagerFragment.etAuditRemarks = new EditText(getActivity());
                 subLL.setOrientation(LinearLayout.VERTICAL);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -167,25 +167,26 @@ public class NewAuditFragment extends Fragment {
 
                 tvSurveyRemarks.setTypeface(null, Typeface.BOLD);
                 tvSurveyRemarks.setText(getString(R.string.label_remarks));
-                NewAuditPagerFragment.etSurveyRemarks.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                NewAuditPagerFragment.etSurveyRemarks.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2000)});
-                NewAuditPagerFragment.etSurveyRemarks.setMaxLines(5);
-                NewAuditPagerFragment.etSurveyRemarks.setVerticalScrollBarEnabled(true);
-                NewAuditPagerFragment.etSurveyRemarks.setOnTouchListener(new View.OnTouchListener() {
+                NewAuditPagerFragment.etAuditRemarks.setId(Integer.parseInt("99999"));
+                NewAuditPagerFragment.etAuditRemarks.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                NewAuditPagerFragment.etAuditRemarks.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2000)});
+                NewAuditPagerFragment.etAuditRemarks.setMaxLines(5);
+                NewAuditPagerFragment.etAuditRemarks.setVerticalScrollBarEnabled(true);
+                NewAuditPagerFragment.etAuditRemarks.setOnTouchListener(new View.OnTouchListener() {
                     public boolean onTouch(View v, MotionEvent event) {
-                        if (NewAuditPagerFragment.etSurveyRemarks.getLineCount() > 5)
+                        if (NewAuditPagerFragment.etAuditRemarks.getLineCount() > 5)
                             v.getParent().requestDisallowInterceptTouchEvent(true);
                         return false;
                     }
                 });
                 if (NewAuditPagerFragment.audit != null && NewAuditPagerFragment.audit.getRemarks() != null) {
-                    NewAuditPagerFragment.etSurveyRemarks.setEnabled(false);
-                    NewAuditPagerFragment.etSurveyRemarks.setText(NewAuditPagerFragment.audit.getRemarks());
-                    NewAuditPagerFragment.etSurveyRemarks.setMaxLines(Integer.MAX_VALUE);
+                    NewAuditPagerFragment.etAuditRemarks.setEnabled(false);
+                    NewAuditPagerFragment.etAuditRemarks.setText(NewAuditPagerFragment.audit.getRemarks().equals("null") ? "-" : NewAuditPagerFragment.audit.getRemarks());
+                    NewAuditPagerFragment.etAuditRemarks.setMaxLines(Integer.MAX_VALUE);
                 }
 
                 subLL.addView(tvSurveyRemarks);
-                subLL.addView(NewAuditPagerFragment.etSurveyRemarks);
+                subLL.addView(NewAuditPagerFragment.etAuditRemarks);
                 mainLL.addView(subLL);
             }
         }

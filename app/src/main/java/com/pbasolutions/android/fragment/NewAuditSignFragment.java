@@ -191,7 +191,7 @@ public class NewAuditSignFragment extends Fragment {
             auditCV.put(MSurvey.C_SURVEY_UUID_COL, UUID.randomUUID().toString());
             auditCV.put(MSurvey.C_PROJECTLOCATION_UUID_COL, PBSSurveyController.projLocUUID);
             auditCV.put(MSurvey.C_SURVEYTEMPLATE_UUID_COL, PBSSurveyController.templateUUID);
-            auditCV.put(MSurvey.ISACTIVE_COL, "Y");
+            auditCV.put(ModelConst.ISACTIVE_COL, "Y");
             auditCV.put(MSurvey.STATUS_COL, "C");
             auditCV.put(MSurvey.VALUE_COL, "");
             auditCV.put(MSurvey.EMAIL_COL, "");
@@ -217,7 +217,7 @@ public class NewAuditSignFragment extends Fragment {
                 answerCV[i].put(ModelConst.AD_ORG_UUID_COL, ad_org_uuid);
                 answerCV[i].put(ModelConst.AD_CLIENT_UUID_COL, ad_client_uuid);
                 answerCV[i].put(MSurvey.C_SURVEYTEMPLATEQUESTION_UUID_COL, answer.getC_SurveyTemplateQuestion_UUID());
-                answerCV[i].put(MSurvey.ISACTIVE_COL, "Y");
+                answerCV[i].put(ModelConst.ISACTIVE_COL, "Y");
                 answerCV[i].put(MSurvey.REMARKS_COL, answer.getRemarks());
                 answerCV[i].put(MSurvey.AMT_COL, answer.getAmt());
                 answerCV[i].put(ModelConst.CREATEDBY_COL, ad_user_uuid);

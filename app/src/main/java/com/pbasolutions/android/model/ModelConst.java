@@ -62,6 +62,7 @@ public class ModelConst {
     public static final String NFCTAG_COL = "NFCTAG";
     public static final String ISKIOSKMODE_COL = "IsKioskMode";
     public static final String ISPHOTO_COL = "IsPhoto";
+    public static final String ISACTIVE_COL = "IsActive";
 
     /**
      * table names.

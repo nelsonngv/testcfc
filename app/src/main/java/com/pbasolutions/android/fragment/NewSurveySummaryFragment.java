@@ -38,6 +38,7 @@ public class NewSurveySummaryFragment extends Fragment {
     private static final int NEXT_ID = 1;
     private MenuItem next;
     private LinearLayout mainLL;
+    private MSurvey survey;
     private ArrayList<MSurvey> answerList;
     private ArrayList<String> sectionList;
     private Bundle bundle;
@@ -65,6 +66,7 @@ public class NewSurveySummaryFragment extends Fragment {
         bundle = getArguments();
         if (bundle != null) {
             isViewing = bundle.getBoolean("isViewing", false);
+            survey = bundle.getParcelable("survey");
             answerList = bundle.getParcelableArrayList("answers");
             sectionList = bundle.getStringArrayList("sections");
             ArrayList<Pair> ratings = new ArrayList<>();
@@ -139,7 +141,7 @@ public class NewSurveySummaryFragment extends Fragment {
             });
             if (isViewing) {
                 etSurveyRemarks.setEnabled(false);
-                etSurveyRemarks.setText(NewAuditPagerFragment.audit.getRemarks());
+                etSurveyRemarks.setText(survey.getRemarks().equals("null") ? "-" : survey.getRemarks());
                 etSurveyRemarks.setMaxLines(Integer.MAX_VALUE);
             }
 

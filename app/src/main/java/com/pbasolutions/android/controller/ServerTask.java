@@ -252,7 +252,7 @@ public class ServerTask extends Task {
                         //checking if deleted before
                         {
                             cv = new ContentValues();
-                            cv.put("IsActive", "N");
+                            cv.put(ModelConst.ISACTIVE_COL, "N");
                             ModelConst.updateTableRow(cr, deleteTable.getTableName(), cv, selection, arg);
 
 //                            if (!ModelConst.deleteTableRow(cr,

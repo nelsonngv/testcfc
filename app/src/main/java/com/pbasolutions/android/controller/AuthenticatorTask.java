@@ -497,25 +497,29 @@ public class AuthenticatorTask extends Task {
                     //if account already created.
                     if (arrayAccounts.length > 0) {
                         Account userAccount = getAccount(userName, accType);
-//                        Account userAccount2;
-//                        // allow only 1 account to be stored on the phone
-//                        for (int i = 0; i < arrayAccounts.length; i++) {
-//                            if (!arrayAccounts[i].name.equals(userName)) {
-//                                userAccount2 = getAccount(arrayAccounts[i].name, accType);
-//                                am.removeAccount(userAccount2, null, null);
-//                            }
-//                        }
+                        Account userAccount2;
+                        // allow only 1 account to be stored on the phone
+                        for (int i = 0; i < arrayAccounts.length; i++) {
+                            if (!arrayAccounts[i].name.equals(userName)) {
+                                userAccount2 = getAccount(arrayAccounts[i].name, accType);
+                                am.removeAccount(userAccount2, null, null);
+                            }
+                        }
                         if (userAccount != null) {
                             //work around: delete account and recreate new.
                             //   accountManager.removeAccount(userAccount, null, null);
                             createNewAccount(userName, accType, deviceID, serverURL,
                                     userPass, authType, user.getToken());
                         } else {
+                            PandoraHelper.populateMenuForms(ctx, null);
                             createNewAccount(userName, accType, deviceID, serverURL,
                                     userPass, authType, user.getToken());
                         }
                     } else {
-                        ((PandoraMain)ctx).resetServerData(serverURL);
+                        String serverURL2 = ctx.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
+                                .getString("serverURL", "");
+                        if (serverURL2.equals(""))
+                            ((PandoraMain)ctx).resetServerData(serverURL);
                         createNewAccount(userName, accType, deviceID, serverURL,
                                 userPass, authType, user.getToken());
                     }

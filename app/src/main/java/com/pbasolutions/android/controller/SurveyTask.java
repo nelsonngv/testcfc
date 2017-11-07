@@ -70,9 +70,11 @@ public class SurveyTask extends Task {
                 MSurvey.DATEDELIVERY_COL,
                 ModelConst.IS_SYNCED_COL
         };
+        String selection = ModelConst.ISACTIVE_COL + "=?";
+        String selectionArgs [] = {"Y"};
         String sortOrder = MSurvey.STATUS_COL + " DESC, " + MSurvey.DATEDELIVERY_COL + " DESC";
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_TABLE),
-                projection, null, null, sortOrder);
+                projection, selection, selectionArgs, sortOrder);
         ObservableArrayList<MSurvey> surveysList = new ObservableArrayList();
         if (cursor != null && cursor.getCount() != 0) {
             cursor.moveToFirst();
@@ -95,8 +97,8 @@ public class SurveyTask extends Task {
                 ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.DESCRIPTION_COL,
                 ModelConst.C_SURVEY_TABLE + "." + MSurvey.REMARKS_COL
         };
-        String selection = ModelConst.C_SURVEY_TABLE + "." + MSurvey.C_SURVEY_UUID_COL + "=?";
-        String[] selectionArgs = {input.getString(PBSSurveyController.ARG_SURVEY_UUID)};
+        String selection = ModelConst.C_SURVEY_TABLE + "." + MSurvey.C_SURVEY_UUID_COL + "=? AND " + ModelConst.C_SURVEY_TABLE + "." + ModelConst.ISACTIVE_COL + "=?";
+        String[] selectionArgs = {input.getString(PBSSurveyController.ARG_SURVEY_UUID), "Y"};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_JOIN_TEMPLATE_TABLE),
                 surveyProjection, selection, selectionArgs, null);
         if (cursor != null && cursor.getCount() != 0) {
@@ -110,7 +112,7 @@ public class SurveyTask extends Task {
         String[] sectionProjection = { "DISTINCT " + MSurvey.SECTIONNO_COL, MSurvey.SECTIONNAME_COL };
         String sectionSelection = MSurvey.C_SURVEYTEMPLATE_UUID_COL + "=?";
         String[] sectionSelectionArgs = {templateUUID};
-        String sortOrder = MSurvey.SECTIONNO_COL + " ASC";
+        String sortOrder = MSurvey.SECTIONNO_COL + " ASC, " + MSurvey.SEQNO_COL + " ASC";
         cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE),
                 sectionProjection, sectionSelection, sectionSelectionArgs, sortOrder);
         if (cursor != null && cursor.getCount() != 0) {
@@ -134,7 +136,7 @@ public class SurveyTask extends Task {
                 ModelConst.C_SURVEYRESPONSE_TABLE + "." + MSurvey.REMARKS_COL,
                 ModelConst.C_SURVEYRESPONSE_TABLE + "." + MSurvey.AMT_COL
         };
-        sortOrder = ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SECTIONNO_COL + " ASC, " + ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.C_SURVEYTEMPLATEQUESTION_UUID_COL + " ASC";
+        sortOrder = ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SECTIONNO_COL + " ASC, " + ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SEQNO_COL + " ASC";
         cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TABLE),
                 questionProjection, selection, selectionArgs, sortOrder);
         if (cursor != null && cursor.getCount() != 0) {
@@ -276,9 +278,11 @@ public class SurveyTask extends Task {
 
     private Bundle getTemplates() {
         String[] projection = {MSurvey.C_SURVEYTEMPLATE_UUID_COL, MSurvey.NAME_COL};
+        String selection = ModelConst.ISACTIVE_COL + "=?";
+        String selectionArgs [] = {"Y"};
         //grab the template names from database view.
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATE_TABLE),
-                projection, null, null, null);
+                projection, selection, selectionArgs, null);
 
         ArrayList<SpinnerPair> templateList = new ArrayList<>();
         if (cursor != null && cursor.getCount() != 0) {
@@ -308,8 +312,8 @@ public class SurveyTask extends Task {
                 MSurvey.NAME_COL + " AS TemplateName",
                 MSurvey.DESCRIPTION_COL
         };
-        String selection = MSurvey.C_SURVEYTEMPLATE_UUID_COL + "=?";
-        String[] selectionArgs = {input.getString(PBSSurveyController.ARG_TEMPLATE_UUID)};
+        String selection = MSurvey.C_SURVEYTEMPLATE_UUID_COL + "=? AND " + ModelConst.ISACTIVE_COL + "=?";
+        String[] selectionArgs = {input.getString(PBSSurveyController.ARG_TEMPLATE_UUID), "Y"};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATE_TABLE),
                 templateProjection, selection, selectionArgs, null);
         if (cursor != null && cursor.getCount() != 0) {
@@ -320,7 +324,7 @@ public class SurveyTask extends Task {
         else return output;
 
         String[] sectionProjection = { "DISTINCT " + MSurvey.SECTIONNO_COL, MSurvey.SECTIONNAME_COL };
-        String sortOrder = MSurvey.SECTIONNO_COL + " ASC";
+        String sortOrder = MSurvey.SECTIONNO_COL + " ASC, " + MSurvey.SEQNO_COL + " ASC";
         cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE),
                 sectionProjection, selection, selectionArgs, sortOrder);
         if (cursor != null && cursor.getCount() != 0) {
