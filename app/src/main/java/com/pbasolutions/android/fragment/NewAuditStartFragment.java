@@ -117,7 +117,7 @@ public class NewAuditStartFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SpinnerPair newPair = (SpinnerPair) templateAdapter.getItem(position);
                 PBSSurveyController.templateUUID = newPair.getKey();
-                if (etName.getText().toString().equals("") && !newPair.getKey().equals("")) {
+                if (/*etName.getText().toString().equals("") &&*/ !newPair.getKey().equals("")) {
                     Date date = new Date();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
                     sdf.setTimeZone(TimeZone.getDefault());

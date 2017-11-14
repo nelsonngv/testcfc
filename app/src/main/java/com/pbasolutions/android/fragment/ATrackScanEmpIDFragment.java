@@ -325,14 +325,12 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
         }
 
         try {
-//            openFrontFacingCameraGingerbread();
-
             File f = CameraUtil.setUpPhotoFile(context.mAlbumStorageDirFactory);
             context.mCurrentPhotoPath = f.getAbsolutePath();
             CameraUtil.galleryAddPic(context.mCurrentPhotoPath, getActivity());
             takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", Camera.CameraInfo.CAMERA_FACING_FRONT);
-//            takePictureIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
-//            takePictureIntent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+            takePictureIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+            takePictureIntent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
         } catch (IOException e) {
             e.printStackTrace();
@@ -340,25 +338,6 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
         }
         startActivityForResult(takePictureIntent, 0);
         PandoraHelper.showMessage(getActivity(), "Please show your face");
-    }
-
-    private Camera openFrontFacingCameraGingerbread() {
-        int cameraCount = 0;
-        Camera cam = null;
-        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-        cameraCount = Camera.getNumberOfCameras();
-        for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
-            Camera.getCameraInfo(camIdx, cameraInfo);
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                try {
-                    cam = android.hardware.Camera.open(camIdx);
-                } catch (RuntimeException e) {
-                    Log.e(TAG, "Camera failed to open: " + e.getLocalizedMessage());
-                }
-            }
-        }
-
-        return cam;
     }
 
     protected void insertAttendance(boolean isPhoto) {
