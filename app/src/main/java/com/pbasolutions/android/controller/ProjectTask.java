@@ -189,8 +189,8 @@ public class ProjectTask implements Callable<Bundle>, ITask {
                 ((PandoraMain)ctx).getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
         String projection[] = {ModelConst.C_PROJECTLOCATION_ID_COL,
                 ModelConst.NAME_COL};
-        String selection = "hr_cluster_uuid='null' or hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
-        String selectionArgs [] = {"Y", ad_user_uuid};
+        String selection = ModelConst.ISACTIVE_COL + "=? AND hr_cluster_uuid != 'null' AND hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
+        String selectionArgs [] = {"Y", "Y", ad_user_uuid};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
                 projection, selection,
                 selectionArgs, "LOWER(" + ModelConst.NAME_COL + ") ASC");
@@ -728,181 +728,187 @@ public class ProjectTask implements Callable<Bundle>, ITask {
     }
 
     private MProjectTask populateProjectTask(Cursor cursor) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         MProjectTask projTask = new MProjectTask();
-        for (int x = 0; x < cursor.getColumnNames().length; x++) {
-            String columnName = cursor.getColumnName(x);
-            String rowValue =  cursor.getString(x);
-            if (MProjectTask.C_PROJECTTASK_UUID_COL.equalsIgnoreCase(columnName)){
-                projTask.set_UUID(rowValue);
-            } else if (MProjectTask.C_PROJECTTASK_ID_COL.equalsIgnoreCase(columnName)) {
-                if (rowValue != null)
-                    projTask.set_ID(Integer.parseInt(rowValue));
-            }
-            else if (MProjectTask.C_PROJECTLOCATION_UUID_COL
-                    .equalsIgnoreCase(columnName)) {
-                //map to project location name.
-                if (rowValue != null){
-                    if (!rowValue.isEmpty()) {
-                        //String project location name.
-                        String projLocName = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_UUID_COL,
-                                rowValue, MProjectTask.NAME_COL, cr);
-                        if (!projLocName.equals("null"))
-                            projTask.setProjLocName(projLocName);
+        try {
+            for (int x = 0; x < cursor.getColumnNames().length; x++) {
+                String columnName = cursor.getColumnName(x);
+                String rowValue = cursor.getString(x);
+                if (MProjectTask.C_PROJECTTASK_UUID_COL.equalsIgnoreCase(columnName)) {
+                    projTask.set_UUID(rowValue);
+                } else if (MProjectTask.C_PROJECTTASK_ID_COL.equalsIgnoreCase(columnName)) {
+                    if (rowValue != null)
+                        projTask.set_ID(Integer.parseInt(rowValue));
+                } else if (MProjectTask.C_PROJECTLOCATION_UUID_COL
+                        .equalsIgnoreCase(columnName)) {
+                    //map to project location name.
+                    if (rowValue != null) {
+                        if (!rowValue.isEmpty()) {
+                            //String project location name.
+                            String projLocName = ModelConst.mapUUIDtoColumn(ModelConst.C_PROJECT_LOCATION_TABLE, ModelConst.C_PROJECTLOCATION_UUID_COL,
+                                    rowValue, MProjectTask.NAME_COL, cr);
+                            if (!projLocName.equals("null"))
+                                projTask.setProjLocName(projLocName);
+                        }
                     }
-                }
-                projTask.setProjLocUUID(rowValue);
-            } else if (MProjectTask.NAME_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setName(rowValue);
-            } else if (MProjectTask.ISDONE_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setIsDone(rowValue);
-                if ("N".equalsIgnoreCase(rowValue)) {
-                    projTask.setStatus("Incomplete");
-                } else {
-                    projTask.setStatus("Completed");
-                }
-            } else if (MProjectTask.PRIORITY_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setPriority(cursor.getInt(x));
-            } else if (MProjectTask.ASSIGNEDTO_COL
-                    .equalsIgnoreCase(columnName)) {
-                if (rowValue == null) rowValue = "0";
-                projTask.setAssignedTo(Integer.parseInt(rowValue));
-                String assignedToName = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.NAME_COL,
-                        rowValue, ModelConst.AD_USER_ID_COL, cr);
-                projTask.setAssignedToName(assignedToName);
-            } else if (MProjectTask.SECASSIGNEDTO_COL
-                    .equalsIgnoreCase(columnName)) {
-                if (rowValue == null) rowValue = "0";
-                projTask.setSecAssignedTo(Integer.parseInt(rowValue));
-                String assignedToName = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.NAME_COL,
-                        rowValue, ModelConst.AD_USER_ID_COL, cr);
-                projTask.setSecAssignedToName(assignedToName);
-            } else if (MProjectTask.DESCRIPTION_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setDescription(rowValue);
-            } else if (MProjectTask.EQUIPMENT_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setEquipment(rowValue);
-            } else if (MProjectTask.CONTACT_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setContact(rowValue);
-            } else if (MProjectTask.CONTACTNO_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setContactNo(rowValue);
-            } else if (MProjectTask.COMMENTS_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setComments(rowValue);
-            } else if (MProjectTask.CREATED_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setCreated(rowValue);
-            } else if (MProjectTask.CREATEDBY_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setCreatedBy(rowValue);
-            } else if (MProjectTask.ATTACHMENT_BEFORETASKPICTURE_1_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_BEFORETASKPICTURE_1(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_1_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_1(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_2_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_2(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_3_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_3(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_4_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_4(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_5_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_5(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_6_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_6(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_7_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_7(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_8_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_8(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_9_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_9(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_10_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_10(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_11_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_11(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_12_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_12(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_13_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_13(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_14_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_14(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_15_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_15(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_16_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_16(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_17_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_17(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_18_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_18(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_19_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_19(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_20_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_20(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_21_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_21(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_22_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_22(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_23_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_23(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_24_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_24(rowValue);
-            } else if (MProjectTask.ATTACHMENT_TASKPICTURE_25_COL
-                    .equalsIgnoreCase(columnName)) {
-                projTask.setATTACHMENT_TASKPICTURE_25(rowValue);
-            } else if (MProjectTask.DUEDATE_COL
-                    .equalsIgnoreCase(columnName)) {
-                if (rowValue != null) {
-                    try {
-                        Date date = df.parse(rowValue);
+                    projTask.setProjLocUUID(rowValue);
+                } else if (MProjectTask.NAME_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setName(rowValue);
+                } else if (MProjectTask.ISDONE_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setIsDone(rowValue);
+                    if ("N".equalsIgnoreCase(rowValue)) {
+                        projTask.setStatus("Incomplete");
+                    } else {
+                        projTask.setStatus("Completed");
+                    }
+                } else if (MProjectTask.PRIORITY_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setPriority(cursor.getInt(x));
+                } else if (MProjectTask.ASSIGNEDTO_COL
+                        .equalsIgnoreCase(columnName)) {
+                    if (rowValue == null) rowValue = "0";
+                    projTask.setAssignedTo(Integer.parseInt(rowValue));
+                    String assignedToName = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.NAME_COL,
+                            rowValue, ModelConst.AD_USER_ID_COL, cr);
+                    projTask.setAssignedToName(assignedToName);
+                } else if (MProjectTask.SECASSIGNEDTO_COL
+                        .equalsIgnoreCase(columnName)) {
+                    if (rowValue == null) rowValue = "0";
+                    projTask.setSecAssignedTo(Integer.parseInt(rowValue));
+                    String assignedToName = ModelConst.mapIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.NAME_COL,
+                            rowValue, ModelConst.AD_USER_ID_COL, cr);
+                    projTask.setSecAssignedToName(assignedToName);
+                } else if (MProjectTask.DESCRIPTION_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setDescription(rowValue);
+                } else if (MProjectTask.EQUIPMENT_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setEquipment(rowValue);
+                } else if (MProjectTask.CONTACT_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setContact(rowValue);
+                } else if (MProjectTask.CONTACTNO_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setContactNo(rowValue);
+                } else if (MProjectTask.COMMENTS_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setComments(rowValue);
+                } else if (MProjectTask.CREATED_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setCreated(rowValue);
+                } else if (MProjectTask.CREATEDBY_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setCreatedBy(rowValue);
+                } else if (MProjectTask.ATTACHMENT_BEFORETASKPICTURE_1_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_BEFORETASKPICTURE_1(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_1_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_1(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_2_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_2(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_3_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_3(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_4_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_4(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_5_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_5(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_6_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_6(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_7_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_7(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_8_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_8(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_9_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_9(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_10_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_10(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_11_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_11(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_12_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_12(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_13_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_13(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_14_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_14(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_15_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_15(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_16_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_16(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_17_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_17(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_18_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_18(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_19_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_19(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_20_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_20(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_21_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_21(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_22_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_22(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_23_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_23(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_24_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_24(rowValue);
+                } else if (MProjectTask.ATTACHMENT_TASKPICTURE_25_COL
+                        .equalsIgnoreCase(columnName)) {
+                    projTask.setATTACHMENT_TASKPICTURE_25(rowValue);
+                } else if (MProjectTask.DUEDATE_COL
+                        .equalsIgnoreCase(columnName)) {
+                    if (rowValue != null) {
+                        Date date;
+                        try {
+                            date = df.parse(rowValue);
+                        } catch (Exception e) {
+                            date = df2.parse(rowValue);
+                        }
                         projTask.setDueDate(sdf.format(date));
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                    }
-                } else
-                    projTask.setDueDate(rowValue);
-            } else if (MProjectTask.DATEASSIGNED_COL
-                    .equalsIgnoreCase(columnName)) {
-                if (rowValue != null) {
-                    try {
-                        Date date = df.parse(rowValue);
+                    } else
+                        projTask.setDueDate(rowValue);
+                } else if (MProjectTask.DATEASSIGNED_COL
+                        .equalsIgnoreCase(columnName)) {
+                    if (rowValue != null) {
+                        Date date;
+                        try {
+                            date = df.parse(rowValue);
+                        } catch (Exception e) {
+                            date = df2.parse(rowValue);
+                        }
                         projTask.setDateAssigned(sdf.format(date));
-                    } catch (Exception e) {
-                        Log.e(TAG, e.getMessage());
-                    }
-                } else
-                    projTask.setDateAssigned(rowValue);
+                    } else
+                        projTask.setDateAssigned(rowValue);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return projTask;
     }

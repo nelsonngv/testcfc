@@ -54,7 +54,7 @@ public class PBSAssetController extends PBSController{
     public PBSAssetController(Context base) {
         super(base);
         cr = getContentResolver();
-        task = new AssetTask(cr);
+        task = new AssetTask(cr, base);
     }
 
 }

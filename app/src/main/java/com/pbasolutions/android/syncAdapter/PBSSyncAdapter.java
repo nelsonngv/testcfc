@@ -93,6 +93,10 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
         try {
             PandoraContext global =  ((PandoraContext)context);
 
+            if (PBSServerConst.cookieStore == null) {
+                PBSServerConst.instantiateCookie();
+            }
+
             //work around to get latest authToken after authToken has been changed.
           //  String globalAuthToken = global.getAuth_token();
             String authToken = accountManager.blockingGetAuthToken(account,
@@ -127,6 +131,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                 syncIdentifier = Integer.parseInt(sdf.format(date));
             }
 
+            boolean isAuthSuccess = false;
             Bundle inputAuth = new Bundle();
             inputAuth.putInt(PBSServerConst.IDENTIFIER, syncIdentifier);
             inputAuth.putString(PBSAuthenticatorController.USER_NAME_ARG, userName);
@@ -140,47 +145,60 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
             Bundle syncResultBundle = new Bundle();
             Bundle authenticateResult = new Bundle();
 
-            authenticateResult = authController.triggerEvent(
-                    PBSAuthenticatorController.AUTHENTICATE_TOKEN_SERVER,
-                    inputAuth, authenticateResult, null);
+//            if (isAuthSuccess)
+            {
+                getUnsyncCountBundle = serverController.
+                        triggerEvent(PBSServerController.GET_UNSYNC_COUNT,
+                                inputAuth, getUnsyncCountBundle, null);
+                boolean success = getUnsyncCountBundle.getBoolean(PandoraConstant.RESULT, false);
+                if (!success) {
+                    authenticateResult = authController.triggerEvent(
+                            PBSAuthenticatorController.AUTHENTICATE_TOKEN_SERVER,
+                            inputAuth, authenticateResult, null);
 
-            boolean isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
+                    isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
 
-            if (!isAuthSuccess && !global.isInitialSynced()) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(context, "Please login again to proceed initial synchronization.", Toast.LENGTH_LONG).show();
+                    if (!isAuthSuccess) {
+
+                        inputAuth = new Bundle();
+
+                        inputAuth.putString(PBSAuthenticatorController.ARG_ACCOUNT_NAME, global.getAd_user_name());
+                        inputAuth.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE,
+                                PBSAccountInfo.ACCOUNT_TYPE);
+                        inputAuth.putString(PBSAuthenticatorController.USER_PASS_ARG, global.getAd_user_password());
+                        inputAuth.putString(PBSAuthenticatorController.ARG_AUTH_TYPE,
+                                PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
+                        inputAuth.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
+                        inputAuth.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
+
+                        authenticateResult = new Bundle();
+                        authenticateResult = authController.triggerEvent(
+                                PBSAuthenticatorController.SUBMIT_LOGIN,
+                                inputAuth, authenticateResult, null);
+
+                        isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
                     }
-                });
 
-//                inputAuth = new Bundle();
-//
-//                inputAuth.putString(PBSAuthenticatorController.ARG_ACCOUNT_NAME, global.getAd_user_name());
-//                inputAuth.putString(PBSAuthenticatorController.ARG_ACCOUNT_TYPE,
-//                        PBSAccountInfo.ACCOUNT_TYPE);
-//                inputAuth.putString(PBSAuthenticatorController.USER_PASS_ARG, global.getAd_user_password());
-//                inputAuth.putString(PBSAuthenticatorController.ARG_AUTH_TYPE,
-//                        PBSAccountInfo.AUTHTOKEN_TYPE_SYNC);
-//                inputAuth.putString(PBSAuthenticatorController.SERIAL_ARG, deviceID);
-//                inputAuth.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
-//
-//                authenticateResult = new Bundle();
-//                authenticateResult = authController.triggerEvent(
-//                        PBSAuthenticatorController.SUBMIT_LOGIN,
-//                        inputAuth, authenticateResult, null);
-//
-//                isAuthSuccess = authenticateResult.getBoolean(PandoraConstant.RESULT);
-            }
-            if (isAuthSuccess) {
-//                if (!PandoraMain.instance.getGlobalVariable().isFirstBatchSynced()) {
-                    getUnsyncCountBundle = serverController.
-                            triggerEvent(PBSServerController.GET_UNSYNC_COUNT,
-                                    inputAuth, getUnsyncCountBundle, null);
-                    if (getUnsyncCountBundle.get(PandoraConstant.RESULT) != null && !((boolean) getUnsyncCountBundle.get(PandoraConstant.RESULT))) {
-                        return;
+                    if (isAuthSuccess) {
+                        getUnsyncCountBundle = serverController.
+                                triggerEvent(PBSServerController.GET_UNSYNC_COUNT,
+                                        inputAuth, getUnsyncCountBundle, null);
+                        success = getUnsyncCountBundle.getBoolean(PandoraConstant.RESULT, false);
+                    } else {
+                        syncResult.hasError();
                     }
-//                }
+                }
+
+                if (!success) return;
+                else {
+                    int count = getUnsyncCountBundle.getInt("count", 0);
+                    int total = getUnsyncCountBundle.getInt("total", 0);
+
+                    if (total <= 0) return;
+                    prefs.edit().putInt("count", count).apply();
+                    prefs.edit().putInt("total", total).apply();
+                    getContext().getContentResolver().notifyChange(Uri.parse("http://" + BuildConfig.APPLICATION_ID + ".syncProgress"), null, false);
+                }
 
                 deleteRetentionPeriod = serverController.
                         triggerEvent(PBSServerController.DELETE_RETENTION_RECORD,
@@ -272,9 +290,10 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
 //                        }
                     }
 //                }
-            } else {
-                syncResult.hasError();
             }
+//            else {
+//                syncResult.hasError();
+//            }
         } catch (OperationCanceledException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
             syncResult.hasError();

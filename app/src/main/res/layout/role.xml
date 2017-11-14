@@ -62,6 +62,20 @@
                 style="@style/PLargeButton"
                 android:id="@+id/roleOK"
                 android:text="Ok" />
+
+            <ProgressBar
+                android:id="@+id/syncProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:indeterminate="false"
+                android:minHeight="50dp"
+                android:minWidth="200dp"
+                android:max="100"
+                android:progress="0"
+                android:visibility="gone"
+                style="?android:attr/progressBarStyleHorizontal"
+                />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

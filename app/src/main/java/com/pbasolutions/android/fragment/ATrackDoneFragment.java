@@ -53,7 +53,7 @@ public class ATrackDoneFragment extends Fragment implements PBABackKeyListener {
     }
 
     protected void redirect() {
-        new CountDownTimer(3000, 1000) {
+        new CountDownTimer(4000, 1000) {
             public void onTick(long millisUntilFinished) {
             }
 
@@ -61,12 +61,12 @@ public class ATrackDoneFragment extends Fragment implements PBABackKeyListener {
                 ((PandoraMain)getActivity()).mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.popBackStack();
-                fragmentManager.popBackStack();
+//                fragmentManager.popBackStack();
                 //go back 1st attendance tracking loc tag page else emp tag page
                 if (!PBSAttendanceController.isKioskMode) {
                     ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_attendance_tracking));
                     fragmentManager.popBackStack();
-                    fragmentManager.popBackStack();
+//                    fragmentManager.popBackStack();
                 }
             }
         }.start();

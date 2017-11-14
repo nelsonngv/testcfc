@@ -75,6 +75,7 @@ public class ATrackScanLocFragment extends Fragment {
 //        btnScanCodeRear = (Button) rootView.findViewById(R.id.btnScanCodeRear);
 //        btnScanCodeFront = (Button) rootView.findViewById(R.id.btnScanCodeFront);
 
+//        startCheckInOut("BB:C6:2A:60");
         if (mNfcAdapter == null) {
             tvDesc.setText(getString(R.string.nfc_notsupport));
             tvDesc.setTextColor(Color.RED);
@@ -151,7 +152,9 @@ public class ATrackScanLocFragment extends Fragment {
             PBSAttendanceController.projectLocationName = projLocations.get(1);
             PBSAttendanceController.isKioskMode = projLocations.get(2).equals("Y");
             PBSAttendanceController.isPhoto = projLocations.get(3).equals("Y");
-            ((PandoraMain) getActivity()).displayView(PandoraMain.FRAGMENT_ATTENDANCE_TRACKING_EMPID, false);
+//            PBSAttendanceController.isKioskMode = false;
+//            PBSAttendanceController.isPhoto = true;
+                    ((PandoraMain) getActivity()).displayView(PandoraMain.FRAGMENT_ATTENDANCE_TRACKING_EMPID, false);
         }
         else PandoraHelper.showWarningMessage(getActivity(), getString(R.string.invalid_tag));
     }

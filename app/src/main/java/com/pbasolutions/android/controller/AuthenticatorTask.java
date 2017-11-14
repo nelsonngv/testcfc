@@ -475,77 +475,80 @@ public class AuthenticatorTask extends Task {
                     PBSServerConst.instantiateCookie();
                 }
                 if (user.getSuccess().equals("TRUE")) {
+                    if (ctx instanceof PandoraMain) {
 //                    PandoraHelper.populateMenuForms(user.getForms());
-                    Account arrayAccounts[] = getAccounts(accType);
+                        Account arrayAccounts[] = getAccounts(accType);
 
 //                    SharedPreferences prefs = ctx.getSharedPreferences(
 //                            BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
 //                    ((PandoraMain)ctx).getGlobalVariable().setServer_url(prefs.getString("serverURL", ""));
-                    // clear db and account if connects to another server
-                    if (((PandoraMain)ctx).getGlobalVariable().getServer_url() != null && !((PandoraMain)ctx).getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(((PandoraMain)ctx).getGlobalVariable().getServer_url())) {
-                        PBSDBHelper.reCreateDatabase(ctx.getApplicationContext());
-                        ((PandoraMain)ctx).resetServerData(serverURL);
-                        ((PandoraMain)ctx).setGlobalVariable(null);
-                        PandoraHelper.populateMenuForms(ctx, null);
+                        // clear db and account if connects to another server
+                        if (((PandoraMain) ctx).getGlobalVariable().getServer_url() != null && !((PandoraMain) ctx).getGlobalVariable().getServer_url().equals("") && !serverURL.equalsIgnoreCase(((PandoraMain) ctx).getGlobalVariable().getServer_url())) {
+                            PBSDBHelper.reCreateDatabase(ctx.getApplicationContext());
+                            ((PandoraMain) ctx).resetServerData(serverURL);
+                            ((PandoraMain) ctx).setGlobalVariable(null);
+                            PandoraHelper.populateMenuForms(ctx, null);
 
-                        // remove all accounts
-                        for (int i = 0; i < arrayAccounts.length; i++) {
-                            am.removeAccount(getAccount(arrayAccounts[i].name, accType), null, null);
-                        }
-                    }
-
-                    //if account already created.
-                    if (arrayAccounts.length > 0) {
-                        Account userAccount = getAccount(userName, accType);
-                        Account userAccount2;
-                        // allow only 1 account to be stored on the phone
-                        for (int i = 0; i < arrayAccounts.length; i++) {
-                            if (!arrayAccounts[i].name.equals(userName)) {
-                                userAccount2 = getAccount(arrayAccounts[i].name, accType);
-                                am.removeAccount(userAccount2, null, null);
+                            // remove all accounts
+                            for (int i = 0; i < arrayAccounts.length; i++) {
+                                am.removeAccount(getAccount(arrayAccounts[i].name, accType), null, null);
                             }
                         }
-                        if (userAccount != null) {
-                            //work around: delete account and recreate new.
-                            //   accountManager.removeAccount(userAccount, null, null);
-                            createNewAccount(userName, accType, deviceID, serverURL,
-                                    userPass, authType, user.getToken());
-                        } else {
-                            PandoraHelper.populateMenuForms(ctx, null);
-                            createNewAccount(userName, accType, deviceID, serverURL,
-                                    userPass, authType, user.getToken());
-                        }
-                    } else {
-                        String serverURL2 = ctx.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
-                                .getString("serverURL", "");
-                        if (serverURL2.equals(""))
-                            ((PandoraMain)ctx).resetServerData(serverURL);
-                        createNewAccount(userName, accType, deviceID, serverURL,
-                                userPass, authType, user.getToken());
-                    }
-                    //insert data into master data tables. for first time, check the master
-                    //table data is empty first.
-                    for (PBSTableJSON table : user.getTables()) {
-                        ContentValues cv = ModelConst.mapDataToContentValues(table, cr);
-                        String selection = ModelConst.getTableColumnIdName(table.getTableName(),cv);
-                        String[] arg = {cv.getAsString(selection)};
-                        String tableName = table.getTableName();
-                        if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
-                            ModelConst.insertTableRow(cr, tableName, cv, selection, arg);
-                        } else {
-                            ModelConst.updateTableRow(cr, tableName, cv, selection, arg);
-                        }
-                    }
-                    Bundle extras = new Bundle();
-                    extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-                    extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-                    Account userAccount = getAccount(userName, accType);
-                    ContentResolver.setIsSyncable(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, 1);
-                    ContentResolver.setSyncAutomatically(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, true);
-                    ContentResolver.requestSync(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
-                    ContentResolver.addPeriodicSync(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, new Bundle(), user.getSyncInterval());
 
-                    output.putSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON, user);
+                        //if account already created.
+                        if (arrayAccounts.length > 0) {
+                            Account userAccount = getAccount(userName, accType);
+                            Account userAccount2;
+                            // allow only 1 account to be stored on the phone
+                            for (int i = 0; i < arrayAccounts.length; i++) {
+                                if (!arrayAccounts[i].name.equals(userName)) {
+                                    userAccount2 = getAccount(arrayAccounts[i].name, accType);
+                                    am.removeAccount(userAccount2, null, null);
+                                }
+                            }
+                            if (userAccount != null) {
+                                //work around: delete account and recreate new.
+                                //   accountManager.removeAccount(userAccount, null, null);
+                                createNewAccount(userName, accType, deviceID, serverURL,
+                                        userPass, authType, user.getToken());
+                            } else {
+                                ((PandoraMain) ctx).getGlobalVariable().setC_ProjectLocation_Spinner_Index(0);
+                                PandoraHelper.populateMenuForms(ctx, null);
+                                createNewAccount(userName, accType, deviceID, serverURL,
+                                        userPass, authType, user.getToken());
+                            }
+                        } else {
+                            String serverURL2 = ctx.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE)
+                                    .getString("serverURL", "");
+                            if (serverURL2.equals(""))
+                                ((PandoraMain) ctx).resetServerData(serverURL);
+                            createNewAccount(userName, accType, deviceID, serverURL,
+                                    userPass, authType, user.getToken());
+                        }
+                        //insert data into master data tables. for first time, check the master
+                        //table data is empty first.
+                        for (PBSTableJSON table : user.getTables()) {
+                            ContentValues cv = ModelConst.mapDataToContentValues(table, cr);
+                            String selection = ModelConst.getTableColumnIdName(table.getTableName(), cv);
+                            String[] arg = {cv.getAsString(selection)};
+                            String tableName = table.getTableName();
+                            if (!ModelConst.isInsertedRow(cr, tableName, selection, arg)) {
+                                ModelConst.insertTableRow(cr, tableName, cv, selection, arg);
+                            } else {
+                                ModelConst.updateTableRow(cr, tableName, cv, selection, arg);
+                            }
+                        }
+                        Bundle extras = new Bundle();
+                        extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                        extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+                        Account userAccount = getAccount(userName, accType);
+                        ContentResolver.setIsSyncable(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, 1);
+                        ContentResolver.setSyncAutomatically(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, true);
+                        ContentResolver.requestSync(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, extras);
+                        ContentResolver.addPeriodicSync(userAccount, PBSAccountInfo.ACCOUNT_AUTHORITY, new Bundle(), user.getSyncInterval());
+
+                        output.putSerializable(PBSAuthenticatorController.PBS_LOGIN_JSON, user);
+                    }
                     output.putBoolean(PBSServerConst.RESULT, true);
                 } else {
                     output.putBoolean(PBSServerConst.RESULT, false);

@@ -4,6 +4,7 @@ import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.databinding.ObservableArrayList;
@@ -17,6 +18,7 @@ import com.google.gson.JsonParser;
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
+import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.api.PBSIServerAPI;
@@ -40,6 +42,7 @@ public class AssetTask extends Task {
 
     private static final String TAG = "AssetTask";
 
+    private Context ctx;
     private ContentResolver cr;
     private boolean isSelected = false;
 
@@ -54,8 +57,9 @@ public class AssetTask extends Task {
             MMovementLine.ASI_DESCRIPTION_COL
     };
 
-    public AssetTask(ContentResolver cr) {
+    public AssetTask(ContentResolver cr, Context ctx) {
         this.cr = cr;
+        this.ctx = ctx;
     }
 
     /**
@@ -749,30 +753,34 @@ public class AssetTask extends Task {
     }
 
     private Bundle getProjectLocations() {
-        String projection[] = {ModelConst.C_PROJECTLOCATION_UUID_COL,
-                ModelConst.NAME_COL};
-        String selectionArgs[] = {input.getString(PBSAssetController.ARG_EXCLUDE_PROJECTLOCATION_UUID)};
-        String selection = null;
-        if (selectionArgs[0] != null) {
-            selection = ModelConst.C_PROJECTLOCATION_UUID_COL + "!=?";
-        } else {
-            selectionArgs = null;
-        }
+        try {
+            String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
+                    ((PandoraMain)ctx).getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
+            String projection[] = {ModelConst.C_PROJECTLOCATION_UUID_COL,
+                    ModelConst.NAME_COL};
+            String selection = ModelConst.ISACTIVE_COL + "=? AND hr_cluster_uuid != 'null' AND hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
+            String selectionArgs[] = {"Y", "Y", ad_user_uuid};
+            if (input.getString(PBSAssetController.ARG_EXCLUDE_PROJECTLOCATION_UUID) != null) {
+                selection = ModelConst.C_PROJECTLOCATION_UUID_COL + "!='" + input.getString(PBSAssetController.ARG_EXCLUDE_PROJECTLOCATION_UUID) + "' AND " + selection;
+            }
 
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
-                projection, selection,
-                selectionArgs, "LOWER(" + ModelConst.NAME_COL + ") ASC");
+            Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
+                    projection, selection,
+                    selectionArgs, "LOWER(" + ModelConst.NAME_COL + ") ASC");
 
-        //get the projectLocations list.
-        ArrayList<SpinnerPair> projectLocations = new ArrayList<>();
-        if (cursor != null && cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            do {
-                projectLocations.add(getProjectLocation(cursor));
-            } while (cursor.moveToNext());
+            //get the projectLocations list.
+            ArrayList<SpinnerPair> projectLocations = new ArrayList<>();
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                do {
+                    projectLocations.add(getProjectLocation(cursor));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            output.putParcelableArrayList(PBSAssetController.ARG_PROJECTLOCATIONS, projectLocations);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        cursor.close();
-        output.putParcelableArrayList(PBSAssetController.ARG_PROJECTLOCATIONS, projectLocations);
         return output;
     }
 

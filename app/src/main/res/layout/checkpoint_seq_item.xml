@@ -33,7 +33,7 @@
                 <TextView
                     style="@style/TableValue"
                     android:id="@+id/checkpoint_description"
-                    android:text="@{checkPointSeq.description}"
+                    android:text='@{checkPointSeq.description == null || checkPointSeq.description.equals("null") ? "" : checkPointSeq.description}'
                     />
             </LinearLayout>
         </LinearLayout>

@@ -48,6 +48,6 @@ public class PBSSurveyController extends PBSController {
      */
     public PBSSurveyController(Context base) {
         super(base);
-        task = new SurveyTask(getContentResolver());
+        task = new SurveyTask(getContentResolver(), base);
     }
 }

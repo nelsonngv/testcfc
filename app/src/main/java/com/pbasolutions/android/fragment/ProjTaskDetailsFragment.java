@@ -167,8 +167,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                 return true;
             }
             case DISCARD_ID: {
-                if (taskDesc.getText().toString().equals(projTask.getDescription() == null ? "" : projTask.getDescription())
-                        && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : projTask.getEquipment())
+                if (taskDesc.getText().toString().equals(projTask.getDescription() == null ? "" : PandoraHelper.parseNewLine(projTask.getDescription()))
+                        && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : PandoraHelper.parseNewLine(projTask.getEquipment()))
                         && taskContact.getText().toString().equals(projTask.getContact() == null ? "" : projTask.getContact())
                         && taskContactNo.getText().toString().equals(projTask.getContactNo() == null ? "" : projTask.getContactNo())
                         && assignToPair.getKey().equals(String.valueOf(projTask.getAssignedTo()))
@@ -378,8 +378,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         hasChanged |= !(taskPictures[0].getTag(R.string.tag_imageview_path) == null || ((String)taskPictures[0].getTag(R.string.tag_imageview_path)).isEmpty());
 
         if (discard.isVisible()) {
-            if (taskDesc.getText().toString().equals(projTask.getDescription() == null ? "" : projTask.getDescription())
-                    && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : projTask.getEquipment())
+            if (taskDesc.getText().toString().equals(projTask.getDescription() == null ? "" : PandoraHelper.parseNewLine(projTask.getDescription()))
+                    && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : PandoraHelper.parseNewLine(projTask.getEquipment()))
                     && taskContact.getText().toString().equals(projTask.getContact() == null ? "" : projTask.getContact())
                     && taskContactNo.getText().toString().equals(projTask.getContactNo() == null ? "" : projTask.getContactNo())
                     && assignToPair.getKey().equals(String.valueOf(projTask.getAssignedTo()))
@@ -481,6 +481,10 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1()).exists()) projTask.setATTACHMENT_BEFORETASKPICTURE_1(null);
             CameraUtil.loadPicture(projTask.getATTACHMENT_BEFORETASKPICTURE_1(), pretaskPicture);
             taskComments.setText(PandoraHelper.parseNewLine(projTask.getComments()));
+
+            taskDesc.setMaxLines(Integer.MAX_VALUE);
+            taskEquipment.setMaxLines(Integer.MAX_VALUE);
+            taskComments.setMaxLines(Integer.MAX_VALUE);
 
             if (taskContactNo.getText().toString().trim().isEmpty())
                 btnCall.setVisibility(View.GONE);
@@ -601,8 +605,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
             return;
         }
 
-        if (taskDesc.getText().toString().equals(projTask.getDescription() == null ? "" : projTask.getDescription())
-                && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : projTask.getEquipment())
+        if (taskDesc.getText().toString().equals(projTask.getDescription() == null ? "" : PandoraHelper.parseNewLine(projTask.getDescription()))
+                && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : PandoraHelper.parseNewLine(projTask.getEquipment()))
                 && taskContact.getText().toString().equals(projTask.getContact() == null ? "" : projTask.getContact())
                 && taskContactNo.getText().toString().equals(projTask.getContactNo() == null ? "" : projTask.getContactNo())
                 && assignToPair.getKey().equals(String.valueOf(projTask.getAssignedTo()))
@@ -621,10 +625,10 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         if (!secAssignToPair.getKey().equals(String.valueOf(projTask.getSecAssignedTo())))
             task.setSecAssignedTo(Integer.parseInt(secAssignToPair.getKey()));
 
-        if (!taskDesc.getText().toString().equals(projTask.getDescription()))
+        if (!taskDesc.getText().toString().equals(PandoraHelper.parseNewLine(projTask.getDescription())))
             task.setDescription(taskDesc.getText().toString());
 
-        if (!taskEquipment.getText().toString().equals(projTask.getEquipment()))
+        if (!taskEquipment.getText().toString().equals(PandoraHelper.parseNewLine(projTask.getEquipment())))
             task.setEquipment(taskEquipment.getText().toString());
 
         if (!taskContact.getText().toString().equals(projTask.getContact()))
@@ -663,10 +667,10 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                     if (!secAssignToPair.getKey().equals(String.valueOf(projTask.getSecAssignedTo())))
                         projTask.setSecAssignedTo(Integer.parseInt(secAssignToPair.getKey()));
 
-                    if (!taskDesc.getText().toString().equals(projTask.getDescription()))
+                    if (!taskDesc.getText().toString().equals(PandoraHelper.parseNewLine(projTask.getDescription())))
                         projTask.setDescription(taskDesc.getText().toString());
 
-                    if (!taskEquipment.getText().toString().equals(projTask.getEquipment()))
+                    if (!taskEquipment.getText().toString().equals(PandoraHelper.parseNewLine(projTask.getEquipment())))
                         projTask.setEquipment(taskEquipment.getText().toString());
 
                     if (!taskContact.getText().toString().equals(projTask.getContact()))

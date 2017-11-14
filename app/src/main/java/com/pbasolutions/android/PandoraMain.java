@@ -216,7 +216,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
      */
     private Handler checkLoginHandler = new Handler();
     private Handler checkProjTaskHandler = new Handler();
-    private Runnable checkLoginRunnable, checkProjTaskRunnable;
+    private Runnable /*checkLoginRunnable,*/ checkProjTaskRunnable;
     private int checkLoginDelay = 600000; //10 mins
     private int checkProjTaskDelay = 1800000; //30 mins
 
@@ -236,7 +236,8 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     //dialog builder
     android.support.v7.app.AlertDialog dialog = null;
 
-    private ContentObserver mObserver;
+    private ContentObserver mSyncUpdateObserver;
+    private SharedPreferences prefs;
 
     //receive broadcast message from push notification
 //    ReceiveMessages myReceiver = null;
@@ -248,14 +249,17 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         CookieHandler.setDefault(new CookieManager());
+        prefs = getSharedPreferences(
+                BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         init();
 
-        mObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+        mSyncUpdateObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
             public void onChange(boolean selfChange) {
                 updateInitialSyncState();
             }
         };
-        getContentResolver().registerContentObserver(Uri.parse("http://" + BuildConfig.APPLICATION_ID + ".syncNotify"), true, mObserver);
+        getContentResolver().registerContentObserver(Uri.parse("http://" + BuildConfig.APPLICATION_ID + ".syncNotify"), true, mSyncUpdateObserver);
+
     }
 
     @Override
@@ -309,8 +313,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
             }
         });
 
-        SharedPreferences prefs = getSharedPreferences(
-                BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
         String formString = prefs.getString("forms", "");
         menuList = new Gson().fromJson(formString, String[].class);
         updateDrawer(menuList);
@@ -325,15 +327,15 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 //        registerReceiver(myReceiver, new IntentFilter("Received.PandoraCFC.Push.Notification"));
 
         //check login
-        checkLoginRunnable = new Runnable(){
-            public void run() {
-                if(getSupportActionBar().isShowing()) {
-                    checkLogin(true);
-                }
-                checkLoginHandler.postDelayed(this, checkLoginDelay);
-            }
-        };
-        checkLoginHandler.postDelayed(checkLoginRunnable, checkLoginDelay);
+//        checkLoginRunnable = new Runnable(){
+//            public void run() {
+//                if(getSupportActionBar().isShowing()) {
+//                    checkLogin(true);
+//                }
+//                checkLoginHandler.postDelayed(this, checkLoginDelay);
+//            }
+//        };
+//        checkLoginHandler.postDelayed(checkLoginRunnable, checkLoginDelay);
 
         //check proj task
         checkProjTaskRunnable = new Runnable(){
@@ -614,26 +616,33 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                                     logOutResult = authenticatorController.triggerEvent(
                                             PBSAuthenticatorController.LOG_OUT, inputBundle, new Bundle(), this);
 
-                                authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
-                                        inputBundle, null, this);
+                                if (logOutResult != null && logOutResult.getString(PandoraConstant.TITLE).equals(PandoraConstant.RESULT)) {
+                                    authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
+                                            inputBundle, null, this);
+//                                    globalVariable = null;
+                                    PBSServerConst.cookieStore = null;
+                                }
 
-//                                globalVariable = null;
-                                PBSServerConst.cookieStore = null;
-
-                                return null;
+                                return logOutResult;
                             }
 
                             @Override
                             protected void onPostExecute(Bundle result) {
                                 super.onPostExecute(result);
 
-                                showLogOutDialog(PBSAuthenticatorController.SUCCESSFULLY_LOGGED_OUT_TXT);
+                                if (result != null && result.getString(PandoraConstant.TITLE).equals(PandoraConstant.RESULT)) {
+                                    showLogOutDialog(PBSAuthenticatorController.SUCCESSFULLY_LOGGED_OUT_TXT);
 
+//                                    checkLoginHandler.removeCallbacks(checkLoginRunnable);
+                                    checkProjTaskHandler.removeCallbacks(checkProjTaskRunnable);
+
+                                    directToFragment(false);
+                                } else if (result != null && result.getString(PandoraConstant.TITLE).equals(PandoraConstant.FAIL)) {
+                                    PandoraHelper.showMessage(PandoraMain.this, result.getString(PandoraConstant.FAIL));
+                                } else {
+                                    PandoraHelper.showMessage(PandoraMain.this, "The specified server is unavailable. Please try again later.");
+                                }
                                 dismissProgressDialog();
-                                checkLoginHandler.removeCallbacks(checkLoginRunnable);
-                                checkProjTaskHandler.removeCallbacks(checkProjTaskRunnable);
-
-                                directToFragment(false);
                             }
                         }.execute(inputBundle);
                     }
@@ -1422,9 +1431,9 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     public void onDestroy() {
         super.onDestroy();
         PBSServerConst.cookieStore = null;
-        checkLoginHandler.removeCallbacks(checkLoginRunnable);
+//        checkLoginHandler.removeCallbacks(checkLoginRunnable);
         checkProjTaskHandler.removeCallbacks(checkProjTaskRunnable);
-        getContentResolver().unregisterContentObserver(mObserver);
+        getContentResolver().unregisterContentObserver(mSyncUpdateObserver);
     }
 
 //    private class ReceiveMessages extends BroadcastReceiver

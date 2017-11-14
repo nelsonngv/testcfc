@@ -543,11 +543,14 @@ public class AttendanceTask implements Callable<Bundle> {
     }
 
     private Bundle getProjectLocations() {
+        String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
+                ((PandoraMain)ctx).getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
         String projection[] = {ModelConst.C_PROJECTLOCATION_ID_COL,
                 ModelConst.NAME_COL};
+        String selection = ModelConst.ISACTIVE_COL + "=? AND hr_cluster_uuid != 'null' AND hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
+        String selectionArgs [] = {"Y", "Y", ad_user_uuid};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
-                projection, null,
-                null, "LOWER(" + ModelConst.NAME_COL + ") ASC");
+                projection, selection, selectionArgs, "LOWER(" + ModelConst.NAME_COL + ") ASC");
 
         //get the projectLocations list.
         ArrayList<SpinnerPair> projectLocations = new ArrayList<>();
@@ -580,13 +583,16 @@ public class AttendanceTask implements Callable<Bundle> {
     }
 
     private Bundle getProjectLocationByTag() {
+        String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
+                ((PandoraMain)ctx).getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
         String nfcTagID = (String) input.get(PBSAttendanceController.ARG_NFCTAG);
 
         String[] projection = {ModelConst.C_PROJECTLOCATION_ID_COL,
                 ModelConst.NAME_COL, ModelConst.ISKIOSKMODE_COL, ModelConst.ISPHOTO_COL};
-        String[] selectionArg = {nfcTagID};
+        String selection = ModelConst.NFCTAG_COL + "=? AND " + ModelConst.ISACTIVE_COL + "=? AND hr_cluster_uuid != 'null' AND hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
+        String[] selectionArg = {nfcTagID, "Y", "Y", ad_user_uuid};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE),
-                projection, ModelConst.NFCTAG_COL + "=?", selectionArg, "LOWER(" + ModelConst.NAME_COL + ") ASC");
+                projection, selection, selectionArg, "LOWER(" + ModelConst.NAME_COL + ") ASC");
 
         ArrayList<String> projectLocation = new ArrayList<>();
         if (cursor != null && cursor.getCount() != 0) {

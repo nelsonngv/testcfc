@@ -3,6 +3,7 @@ package com.pbasolutions.android.controller;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.databinding.ObservableArrayList;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.pbasolutions.android.PandoraConstant;
+import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.model.MSurvey;
 import com.pbasolutions.android.model.ModelConst;
@@ -28,9 +30,11 @@ public class SurveyTask extends Task {
     private static final String TAG = "SurveyTask";
 
     private ContentResolver cr;
+    private Context ctx;
 
-    public SurveyTask(ContentResolver cr) {
+    public SurveyTask(ContentResolver cr, Context ctx) {
         this.cr = cr;
+        this.ctx = ctx;
     }
     /**
      * Computes a result, or throws an exception if unable to do so.
@@ -63,6 +67,8 @@ public class SurveyTask extends Task {
 
 
     public Bundle getSurveys() {
+        String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
+                ((PandoraMain)ctx).getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
         String projection[] = {
                 MSurvey.C_SURVEY_UUID_COL,
                 MSurvey.C_PROJECTLOCATION_UUID_COL,
@@ -70,8 +76,8 @@ public class SurveyTask extends Task {
                 MSurvey.DATEDELIVERY_COL,
                 ModelConst.IS_SYNCED_COL
         };
-        String selection = ModelConst.ISACTIVE_COL + "=?";
-        String selectionArgs [] = {"Y"};
+        String selection = ModelConst.ISACTIVE_COL + "=? AND " + ModelConst.CREATEDBY_COL + "=?";
+        String selectionArgs [] = {"Y", ad_user_uuid};
         String sortOrder = MSurvey.STATUS_COL + " DESC, " + MSurvey.DATEDELIVERY_COL + " DESC";
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_TABLE),
                 projection, selection, selectionArgs, sortOrder);

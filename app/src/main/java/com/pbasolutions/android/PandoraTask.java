@@ -76,7 +76,7 @@ public class PandoraTask implements Callable<Bundle> {
                 ad_user_id, ModelConst.AD_USER_UUID_COL, cr);
 
         String projection [] = {ModelConst.C_PROJECTLOCATION_UUID_COL, ModelConst.NAME_COL, ModelConst.C_PROJECTLOCATION_ID_COL};
-        String selection = /*"hr_cluster_uuid='null' or " +*/ ModelConst.ISACTIVE_COL + "=? AND hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
+        String selection = ModelConst.ISACTIVE_COL + "=? AND hr_cluster_uuid != 'null' AND hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
         String selectionArgs [] = {"Y", "Y", ad_user_uuid};
         Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projection, selection, selectionArgs, ModelConst.NAME_COL + " ASC");
         int numberOfRows = cursor.getCount();

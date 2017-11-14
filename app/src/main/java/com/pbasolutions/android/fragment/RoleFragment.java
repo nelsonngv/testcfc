@@ -1,7 +1,13 @@
 package com.pbasolutions.android.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,8 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
+import com.pbasolutions.android.BuildConfig;
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
@@ -38,8 +46,11 @@ public class RoleFragment extends Fragment {
     private Spinner orgSpinner;
     private Spinner clientSpinner;
     private Spinner projectSpinner;
+    private ProgressBar syncProgressBar;
 
     Button okButton;
+    ContentObserver mSyncProgressObserver;
+    SharedPreferences prefs;
 
     private PandoraMain context;
     private PBSAuthenticatorController authenticatorController;
@@ -62,7 +73,29 @@ public class RoleFragment extends Fragment {
         orgSpinner = (Spinner) rootView.findViewById(R.id.organization);
         clientSpinner = (Spinner) rootView.findViewById(R.id.client);
         projectSpinner = (Spinner) rootView.findViewById(R.id.project);
+        syncProgressBar = (ProgressBar) rootView.findViewById(R.id.syncProgress);
         authenticatorController = new PBSAuthenticatorController(getActivity());
+
+        prefs = getActivity().getSharedPreferences(
+                BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+
+        if (!context.getGlobalVariable().isInitialSynced()) {
+            syncProgressBar.setVisibility(View.VISIBLE);
+            syncProgressBar.setMax(prefs.getInt("total", 0));
+            syncProgressBar.setProgress(prefs.getInt("total", 0) - prefs.getInt("count", 0));
+        }
+
+        mSyncProgressObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+            public void onChange(boolean selfChange) {
+                if (!context.getGlobalVariable().isInitialSynced()) {
+                    syncProgressBar.setMax(prefs.getInt("total", 0));
+                    syncProgressBar.setProgress(prefs.getInt("total", 0) - prefs.getInt("count", 0));
+                } else {
+                    syncProgressBar.setVisibility(View.GONE);
+                }
+            }
+        };
+        getActivity().getContentResolver().registerContentObserver(Uri.parse("http://" + BuildConfig.APPLICATION_ID + ".syncProgress"), true, mSyncProgressObserver);
 
         okButton = (Button) rootView.findViewById(R.id.roleOK);
         okButton.setOnClickListener(new View.OnClickListener() {
@@ -90,6 +123,7 @@ public class RoleFragment extends Fragment {
             context.setGlobalVariable((PandoraContext) getActivity().getApplicationContext());
         if (context.getGlobalVariable().isInitialSynced()) {
             okButton.setText(R.string.label_ok);
+            syncProgressBar.setVisibility(View.GONE);
         } else {
             okButton.setText(R.string.label_sync);
         }
@@ -200,5 +234,11 @@ public class RoleFragment extends Fragment {
     public void completedInitialSync() {
         refreshSyncState();
         addSpinnerData();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().getContentResolver().unregisterContentObserver(mSyncProgressObserver);
     }
 }

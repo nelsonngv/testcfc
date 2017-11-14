@@ -236,6 +236,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         projLocNameItem = new SpinnerOnItemSelected(projLocSpinner,
                 new SpinnerPair());
         projLocSpinner.setOnItemSelectedListener(projLocNameItem);
+        projLocSpinner.setSelection(((SpinAdapter) projLocNameAdapter).getPosition(context.getGlobalVariable().getC_projectlocation_id()));
 
         assignToPair = ((SpinAdapter) assignToAdapter).getItem(0);
         secAssignToPair = ((SpinAdapter) secAssignToAdapter).getItem(0);

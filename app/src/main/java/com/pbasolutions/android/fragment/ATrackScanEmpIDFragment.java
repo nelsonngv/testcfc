@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.Camera;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
@@ -106,6 +108,7 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
         View rootView = inflater.inflate(R.layout.atrack_scanemp, container, false);
         setUI(rootView);
 
+//        checkInOut("EB:C9:29:60");
         if (mNfcAdapter == null) {
             tvDesc.setText(getString(R.string.nfc_notsupport));
             tvDesc.setTextColor(Color.RED);
@@ -293,7 +296,7 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
 
                 if (PBSAttendanceController.isPhoto)
                     takePhoto();
-                else insertAttendance();
+                else insertAttendance(false);
             }
             else PandoraHelper.showWarningMessage(getActivity(), getString(R.string.invalid_tag));
         }
@@ -307,7 +310,9 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
             if (picturePath != null) {
                 context.mCurrentPhotoPath = null;
                 cv.put(MAttendanceLog.ATTACHMENT_IMAGE_COL, picturePath);
-                insertAttendance();
+                insertAttendance(true);
+            } else {
+                PandoraHelper.showMessage(getActivity(), "Failed to save photo");
             }
         }
     }
@@ -320,10 +325,14 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
         }
 
         try {
+//            openFrontFacingCameraGingerbread();
+
             File f = CameraUtil.setUpPhotoFile(context.mAlbumStorageDirFactory);
             context.mCurrentPhotoPath = f.getAbsolutePath();
             CameraUtil.galleryAddPic(context.mCurrentPhotoPath, getActivity());
-            takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
+            takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", Camera.CameraInfo.CAMERA_FACING_FRONT);
+//            takePictureIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+//            takePictureIntent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
         } catch (IOException e) {
             e.printStackTrace();
@@ -333,13 +342,40 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
         PandoraHelper.showMessage(getActivity(), "Please show your face");
     }
 
-    protected void insertAttendance() {
+    private Camera openFrontFacingCameraGingerbread() {
+        int cameraCount = 0;
+        Camera cam = null;
+        Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+        cameraCount = Camera.getNumberOfCameras();
+        for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
+            Camera.getCameraInfo(camIdx, cameraInfo);
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                try {
+                    cam = android.hardware.Camera.open(camIdx);
+                } catch (RuntimeException e) {
+                    Log.e(TAG, "Camera failed to open: " + e.getLocalizedMessage());
+                }
+            }
+        }
+
+        return cam;
+    }
+
+    protected void insertAttendance(boolean isPhoto) {
         Bundle input = new Bundle();
         input.putParcelable(PBSAttendanceController.ARG_CONTENTVALUES, cv);
         Bundle result = attendanceCont.triggerEvent(PBSAttendanceController.CREATE_ATTENDANCETRACKING_EVENT,
                 input, new Bundle(), null);
 
         Fragment fragment = new ATrackDoneFragment();
-        ((PandoraMain) getActivity()).updateFragment(fragment, getString(R.string.title_attendance_tracking), false);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragment.setRetainInstance(true);
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_body, fragment, fragment.getClass().getName());
+        fragmentTransaction.addToBackStack(fragment.getClass().getName());
+        if (isPhoto)
+            fragmentTransaction.commitAllowingStateLoss();
+        else fragmentTransaction.commit();
+        ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getString(R.string.title_attendance_tracking));
     }
 }

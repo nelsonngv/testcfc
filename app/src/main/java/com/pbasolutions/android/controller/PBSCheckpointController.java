@@ -1,5 +1,6 @@
 package com.pbasolutions.android.controller;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.database.Cursor;
@@ -8,12 +9,16 @@ import android.os.Bundle;
 
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
+import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.json.PBSProjLocJSON;
 import com.pbasolutions.android.model.MCheckIn;
 import com.pbasolutions.android.model.MCheckPoint;
 import com.pbasolutions.android.model.ModelConst;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -68,13 +73,17 @@ public class PBSCheckpointController extends ContextWrapper implements PBSIContr
     private static final String TAG = "PBSCheckpointController";
 
     private Context context;
+
+    private ContentResolver cr;
     /**
+     *
      * Constructor.
      * @param base
      */
     public PBSCheckpointController(Context base) {
         super(base);
         context = base;
+        cr = getContentResolver();
     }
 
     @Override
@@ -103,8 +112,12 @@ public class PBSCheckpointController extends ContextWrapper implements PBSIContr
     }
 
     private Bundle getCheckPointSeqs(Bundle bundle, Bundle resultBundle, Object object) {
+        String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
+                ((PandoraMain)context).getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
         String projection [] = {ModelConst.C_PROJECTLOCATION_UUID_COL, ModelConst.NAME_COL};
-        Cursor cursor = getContentResolver().query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projection, null, null, null);
+        String selection = ModelConst.ISACTIVE_COL + "=? AND hr_cluster_uuid != 'null' AND hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
+        String selectionArgs [] = {"Y", "Y", ad_user_uuid};
+        Cursor cursor = getContentResolver().query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projection, selection, selectionArgs, null);
         int numberOfRows = cursor.getCount();
         if (numberOfRows > 0) {
             PBSProjLocJSON[] projLocJSONs = new PBSProjLocJSON[numberOfRows];
@@ -139,30 +152,44 @@ public class PBSCheckpointController extends ContextWrapper implements PBSIContr
      * @return
      */
     public Bundle getCheckinRows(Bundle bundle, Bundle resultBundle, Object object) {
-        Cursor cursor = getContentResolver().query(ModelConst.uriCustomBuilder(ModelConst.CHECKIN_JOIN_CHECKPOINT_TABLE), null, null, null, null);
-        cursor.moveToFirst();
-        if (cursor.getCount() > 0) {
-            ObservableArrayList<MCheckIn> checkInList = new ObservableArrayList<>();
-            //multiple rows. iterate the cursor.
-            for (int j = 0; j < cursor.getCount(); j++) {
-                MCheckIn checkIn = new MCheckIn();
-                for (int i = 0; i < cursor.getColumnCount(); i++) {
-                    if (cursor.getColumnName(i).equalsIgnoreCase("name")) {
-                        checkIn.setProjectLocation(cursor.getString(i));
-                    } else if (cursor.getColumnName(i).equalsIgnoreCase("datetrx")) {
-                        checkIn.setDate(PandoraHelper.parseToDisplaySDate(cursor.getString(i), "dd-MM-yyyy HH:mm:ss", TimeZone.getDefault()));
-                    } else if (cursor.getColumnName(i).equalsIgnoreCase("checkin_desc")) {
-                        checkIn.setComment(cursor.getString(i));
-                    } else if (cursor.getColumnName(i).equalsIgnoreCase("m_checkin_uuid")) {
-                        checkIn.setUuid(cursor.getString(i));
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        try {
+            Cursor cursor = getContentResolver().query(ModelConst.uriCustomBuilder(ModelConst.CHECKIN_JOIN_CHECKPOINT_TABLE), null, null, null, null);
+            cursor.moveToFirst();
+            if (cursor.getCount() > 0) {
+                ObservableArrayList<MCheckIn> checkInList = new ObservableArrayList<>();
+                //multiple rows. iterate the cursor.
+                for (int j = 0; j < cursor.getCount(); j++) {
+                    MCheckIn checkIn = new MCheckIn();
+                    for (int i = 0; i < cursor.getColumnCount(); i++) {
+                        if (cursor.getColumnName(i).equalsIgnoreCase("name")) {
+                            checkIn.setProjectLocation(cursor.getString(i));
+                        } else if (cursor.getColumnName(i).equalsIgnoreCase("datetrx")) {
+                            Date date;
+                            try {
+                                date = df.parse(cursor.getString(i));
+                            } catch (Exception e) {
+                                date = df2.parse(cursor.getString(i));
+                            }
+                            checkIn.setDate(sdf.format(date));
+//                            checkIn.setDate(PandoraHelper.parseToDisplaySDate(cursor.getString(i), "dd-MM-yyyy HH:mm:ss", TimeZone.getDefault()));
+                        } else if (cursor.getColumnName(i).equalsIgnoreCase("checkin_desc")) {
+                            checkIn.setComment(cursor.getString(i));
+                        } else if (cursor.getColumnName(i).equalsIgnoreCase("m_checkin_uuid")) {
+                            checkIn.setUuid(cursor.getString(i));
+                        }
                     }
+                    checkIn.setStatusIcon(R.drawable.checkedin);
+                    checkInList.add(checkIn);
+                    cursor.moveToNext();
                 }
-                checkIn.setStatusIcon(R.drawable.checkedin);
-                checkInList.add(checkIn);
-                cursor.moveToNext();
+                cursor.close();
+                resultBundle.putSerializable(ROW_ITEMS, checkInList);
             }
-            cursor.close();
-            resultBundle.putSerializable(ROW_ITEMS, checkInList);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return resultBundle;
     }

@@ -118,5 +118,7 @@
     <!--Read Log Cat -->
     <uses-permission android:name="android.permission.READ_LOGS" />
     <!--Use camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-feature android:name="android.hardware.camera.front" android:required="true" />
 </manifest>

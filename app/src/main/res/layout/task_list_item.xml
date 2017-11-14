@@ -47,6 +47,8 @@
                             android:textStyle="bold"
                             android:editable="false"
                             android:textSize="@dimen/abc_text_size_subhead_material"
+                            android:maxLines="2"
+                            android:ellipsize="end"
                             android:layout_span="2"/>
                     </TableRow>
                     <TableRow

@@ -16,13 +16,16 @@ import android.widget.TextView;
 import com.pbasolutions.android.BuildConfig;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraContext;
+import com.pbasolutions.android.PandoraController;
 import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.PBSServerConst;
+import com.pbasolutions.android.controller.PBSAssetController;
 import com.pbasolutions.android.controller.PBSAuthenticatorController;
 import com.pbasolutions.android.json.PBSLoginJSON;
+import com.pbasolutions.android.json.PBSProjLocJSON;
 
 /**
  * Created by pbadell on 7/29/15.
@@ -213,6 +216,13 @@ public class LoginFragment extends Fragment {
                     SharedPreferences prefs = context.getSharedPreferences(
                             BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
                     prefs.edit().putString("serverURL", serverURL).commit();
+
+                    PandoraController cont = new PandoraController(context);
+                    Bundle input = new Bundle();
+                    input.putString(PBSAssetController.ARG_AD_USER_ID, context.getGlobalVariable().getAd_user_id());
+                    Bundle result = cont.triggerEvent(PandoraController.GET_PROJLOC_EVENT, input, new Bundle(), null);
+                    PBSProjLocJSON[] projLoc = (PBSProjLocJSON[]) result.getSerializable(PandoraController.ARG_PROJECT_LOCATION_JSON);
+                    context.getGlobalVariable().setProjLocJSON(projLoc);
 
                     PandoraHelper.getProjLocAvailable(getActivity(), false);
 

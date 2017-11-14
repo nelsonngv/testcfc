@@ -37,14 +37,15 @@ public class NewCheckInFragment extends Fragment {
      */
     private static final String TAG = "NewCheckInFragment";
     PBSCheckInController checkInController;
-    private TextView scanInfo;
-    private TextView tagID;
+    private TextView checkPointName;
+    private TextView checkPointDesc;
     private TextView latitudeInfo;
     private TextView longitudeInfo;
     private TextView timestampInfo;
     private EditText commentInfo;
     private NfcAdapter mNfcAdapter;
     private ContentValues contentValues;
+    private String tagID;
     ProgressBar progressBar;
     PandoraMain context;
     private static final int SAVE_LINE_ID = 1;
@@ -76,19 +77,19 @@ public class NewCheckInFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.checkin, container, false);
-        scanInfo = (TextView) rootView.findViewById(R.id.scanSerialTextInfo);
+        checkPointName = (TextView) rootView.findViewById(R.id.scanSerialTextInfo);
         commentInfo = (EditText) rootView.findViewById(R.id.serialComment);
-        tagID  = (TextView) rootView.findViewById(R.id.scanSerialTextID);
+        checkPointDesc  = (TextView) rootView.findViewById(R.id.scanSerialTextID);
         timestampInfo = (TextView) rootView.findViewById(R.id.serialTimestamp);
 
         if (mNfcAdapter == null){
-            scanInfo.setText(getString(R.string.nfc_notsupport));
+            checkPointName.setText(getString(R.string.nfc_notsupport));
         }
         if  (mNfcAdapter != null){
             if (!mNfcAdapter.isEnabled()) {
-                scanInfo.setText(getString(R.string.nfc_disabled));
+                checkPointName.setText(getString(R.string.nfc_disabled));
             } else {
-                scanInfo.setText(getString(R.string.tap_nfc));
+                checkPointName.setText(getString(R.string.tap_nfc));
             }
         }
         latitudeInfo = (TextView) rootView.findViewById(R.id.serialLatitude);
@@ -113,9 +114,11 @@ public class NewCheckInFragment extends Fragment {
                     Bundle inputBundle = new Bundle();
                     Bundle resultBundle2 = new Bundle();
                     try {
+                        inputBundle.putBoolean("isCheckin", true);
                         resultBundle2 = checkInController.triggerEvent(PBSCheckInController.PROCESS_NFC, inputBundle, resultBundle2, getNfcIntent());
-                        scanInfo.setText(resultBundle2.getString(PBSCheckInController.NFC_TEXT));
-                        tagID.setText(resultBundle2.getString(PBSCheckInController.NFC_TAG_ID));
+                        checkPointName.setText(resultBundle2.getString("checkpoint_name", ""));
+                        checkPointDesc.setText(resultBundle2.getString("checkpoint_desc", ""));
+                        tagID = resultBundle2.getString(PBSCheckInController.NFC_TAG_ID, "");
                         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
                         progressBar.setVisibility(View.INVISIBLE);
                         //convert
@@ -170,12 +173,15 @@ public class NewCheckInFragment extends Fragment {
             contentValues.put("createdBy",userUUID);
             contentValues.put("updatedBy",userUUID);
             Bundle validateBundle = new Bundle();
-            validateBundle.putString(PBSCheckInController.NFC_TAG_ID, tagID.getText().toString());
+            validateBundle.putString(PBSCheckInController.NFC_TAG_ID, tagID);
             Bundle validateResult = checkInController.triggerEvent(PBSCheckInController.VALIDATE_TAG, validateBundle, new Bundle(), null);
             if (validateResult != null) {
                 String checkpointUUID = validateResult.getString(PBSServerConst.RESULT);
                 if (checkpointUUID != null) {
                     contentValues.put(ModelConst.M_CHECKPOINT_TABLE + ModelConst._UUID, checkpointUUID);
+                } else {
+                    PandoraHelper.showWarningMessage(getActivity(), getString(R.string.invalid_tag));
+                    return;
                 }
             }
             contentValues.put("description", commentInfo.getText().toString());

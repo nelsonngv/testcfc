@@ -157,6 +157,25 @@ public class PBSCheckInController extends ContextWrapper implements PBSIControll
 
             resultBundle.putString(NFC_TEXT, s);
             resultBundle.putString(NFC_TAG_ID, tagID);
+
+            if (bundle.getBoolean("isCheckin", false)) {
+                String selectionArgs[] = {tagID};
+                String projection[] = {ModelConst.NAME_COL, ModelConst.DESC_COL};
+                Cursor cursor = getContentResolver().query(ModelConst.uriCustomBuilder(ModelConst.M_CHECKPOINT_TABLE), projection, "value=?", selectionArgs, null);
+                if (cursor != null && cursor.getCount() != 0) {
+                    cursor.moveToFirst();
+                    for (int x = 0; x < cursor.getColumnNames().length; x++) {
+                        String columnName = cursor.getColumnName(x);
+                        String rowValue = cursor.getString(x);
+                        if (ModelConst.NAME_COL.equalsIgnoreCase(columnName)) {
+                            resultBundle.putString("checkpoint_name", rowValue);
+                        } else if (ModelConst.DESC_COL.equalsIgnoreCase(columnName)) {
+                            resultBundle.putString("checkpoint_desc", rowValue);
+                        }
+                    }
+                }
+                cursor.close();
+            }
         }
         return resultBundle;
     }
