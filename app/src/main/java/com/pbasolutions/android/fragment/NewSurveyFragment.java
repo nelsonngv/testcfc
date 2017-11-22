@@ -64,95 +64,99 @@ public class NewSurveyFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            currPosition = bundle.getInt("pos");
+            try {
+                currPosition = bundle.getInt("pos");
 //            survey = (MSurvey) bundle.getSerializable(PBSSurveyController.ARG_SURVEY);
-            sections = (ArrayList<String>) bundle.getSerializable(PBSSurveyController.ARG_SECTIONS);
-            questions = (ArrayList<MSurvey>) bundle.getSerializable(PBSSurveyController.ARG_QUESTIONS);
+                sections = (ArrayList<String>) bundle.getSerializable(PBSSurveyController.ARG_SECTIONS);
+                questions = (ArrayList<MSurvey>) bundle.getSerializable(PBSSurveyController.ARG_QUESTIONS);
 
-            String sectionName = sections.get(currPosition);
-            if (sectionName == null || sectionName.equals("") || sectionName.equals("null"))
-                section.setVisibility(View.GONE);
-            else section.setText(getString(R.string.label_section) + sectionName + " (" + (currPosition + 1) + "/" + sections.size() + ")");
-            List<SpinnerPair> ratingList = new ArrayList<>();
-            SpinnerPair pair = new SpinnerPair(null, "-- Please rate --");
-            ratingList.add(pair);
-            for (int i = 0; i < 11; i++) {
-                pair = new SpinnerPair();
-                pair.setKey(String.valueOf(i));
-                pair.setValue(String.valueOf(i));
+                String sectionName = sections.get(currPosition);
+                if (sectionName == null || sectionName.equals("") || sectionName.equals("null"))
+                    section.setVisibility(View.GONE);
+                else section.setText(getString(R.string.label_section) + sectionName + " (" + (currPosition + 1) + "/" + sections.size() + ")");
+                List<SpinnerPair> ratingList = new ArrayList<>();
+                SpinnerPair pair = new SpinnerPair(null, "-- Please rate --");
                 ratingList.add(pair);
-            }
-
-            for (int i = 0; i < questions.size(); i++) {
-                MSurvey question = questions.get(i);
-                if (sectionName.equals(question.getSectionname())) {
-                    LinearLayout subLL = new LinearLayout(getActivity(), null, R.style.PTableVirtRow);
-                    TextView tvQuestion = new TextView(getActivity(), null, R.style.TableInfoLabel);
-                    TextView tvQuestionDesc = new TextView(getActivity(), null, R.style.TableValue);
-                    Spinner rating = new Spinner(getActivity());
-                    final EditText etRemarks = new EditText(getActivity());
-
-                    rating.setId(Integer.parseInt(question.getC_SurveyTemplateQuestion_ID() + "1"));
-                    etRemarks.setId(Integer.parseInt(question.getC_SurveyTemplateQuestion_ID() + "2"));
-                    subLL.setOrientation(LinearLayout.VERTICAL);
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    layoutParams.setMargins(0, 50, 0, 50);
-                    subLL.setLayoutParams(layoutParams);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        tvQuestion.setText(Html.fromHtml(question.getQuestion(), Html.FROM_HTML_MODE_COMPACT));
-                        if (question.getQuestionDesc() != null && !question.getQuestionDesc().equals("") && !question.getQuestionDesc().equalsIgnoreCase("null"))
-                            tvQuestionDesc.setText(Html.fromHtml(question.getQuestionDesc(), Html.FROM_HTML_MODE_COMPACT));
-                        else tvQuestionDesc.setVisibility(View.GONE);
-                    } else {
-                        tvQuestion.setText(Html.fromHtml(question.getQuestion()));
-                        if (question.getQuestionDesc() != null && !question.getQuestionDesc().equals("") && !question.getQuestionDesc().equalsIgnoreCase("null"))
-                            tvQuestionDesc.setText(Html.fromHtml(question.getQuestionDesc()));
-                        else tvQuestionDesc.setVisibility(View.GONE);
-                    }
-                    ArrayAdapter adapter = PandoraHelper.addListToSpinner(getActivity(), rating, ratingList);
-                    rating.setTag(question.getC_SurveyTemplateQuestion_UUID());
-                    rating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                            TextView selectedText = (TextView) adapterView.getChildAt(0);
-                            if (selectedText != null && selectedText.getText().equals("-- Please rate --")) {
-                                selectedText.setTextColor(Color.RED);
-                            }
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> adapterView) {
-
-                        }
-                    });
-                    etRemarks.setTag(question.getC_SurveyTemplateQuestion_UUID());
-                    etRemarks.setMinLines(1);
-                    etRemarks.setMaxLines(5);
-                    etRemarks.setFilters(new InputFilter[] {new InputFilter.LengthFilter(2000)});
-                    etRemarks.setVerticalScrollBarEnabled(true);
-                    etRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                    if (question.getAmt() != null && !question.getAmt().equals("")) {
-                        rating.setEnabled(false);
-                        rating.setSelection(((SpinAdapter) adapter).getPosition(question.getAmt()));
-                        etRemarks.setEnabled(false);
-                        etRemarks.setText(question.getRemarks() != null && !question.getRemarks().isEmpty() && !question.getRemarks().equalsIgnoreCase("null") ? PandoraHelper.parseNewLine(question.getRemarks()) : "No remark");
-                    }
-                    else etRemarks.setHint("Remarks");
-                    etRemarks.setOnTouchListener(new View.OnTouchListener() {
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if (etRemarks.getLineCount() > 5)
-                                v.getParent().requestDisallowInterceptTouchEvent(true);
-                            return false;
-                        }
-                    });
-
-                    subLL.addView(tvQuestion);
-                    subLL.addView(tvQuestionDesc);
-                    subLL.addView(rating);
-                    subLL.addView(etRemarks);
-                    mainLL.addView(subLL);
+                for (int i = 0; i < 11; i++) {
+                    pair = new SpinnerPair();
+                    pair.setKey(String.valueOf(i));
+                    pair.setValue(String.valueOf(i));
+                    ratingList.add(pair);
                 }
+
+                for (int i = 0; i < questions.size(); i++) {
+                    MSurvey question = questions.get(i);
+                    if (sectionName.equals(question.getSectionname())) {
+                        LinearLayout subLL = new LinearLayout(getActivity(), null, R.style.PTableVirtRow);
+                        TextView tvQuestion = new TextView(getActivity(), null, R.style.TableInfoLabel);
+                        TextView tvQuestionDesc = new TextView(getActivity(), null, R.style.TableValue);
+                        Spinner rating = new Spinner(getActivity());
+                        final EditText etRemarks = new EditText(getActivity());
+
+                        rating.setId(Integer.parseInt(question.getC_SurveyTemplateQuestion_ID() + "1"));
+                        etRemarks.setId(Integer.parseInt(question.getC_SurveyTemplateQuestion_ID() + "2"));
+                        subLL.setOrientation(LinearLayout.VERTICAL);
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        layoutParams.setMargins(0, 50, 0, 50);
+                        subLL.setLayoutParams(layoutParams);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            tvQuestion.setText(Html.fromHtml(question.getQuestion(), Html.FROM_HTML_MODE_COMPACT));
+                            if (question.getQuestionDesc() != null && !question.getQuestionDesc().equals("") && !question.getQuestionDesc().equalsIgnoreCase("null"))
+                                tvQuestionDesc.setText(Html.fromHtml(question.getQuestionDesc(), Html.FROM_HTML_MODE_COMPACT));
+                            else tvQuestionDesc.setVisibility(View.GONE);
+                        } else {
+                            tvQuestion.setText(Html.fromHtml(question.getQuestion()));
+                            if (question.getQuestionDesc() != null && !question.getQuestionDesc().equals("") && !question.getQuestionDesc().equalsIgnoreCase("null"))
+                                tvQuestionDesc.setText(Html.fromHtml(question.getQuestionDesc()));
+                            else tvQuestionDesc.setVisibility(View.GONE);
+                        }
+                        ArrayAdapter adapter = PandoraHelper.addListToSpinner(getActivity(), rating, ratingList);
+                        rating.setTag(question.getC_SurveyTemplateQuestion_UUID());
+                        rating.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                TextView selectedText = (TextView) adapterView.getChildAt(0);
+                                if (selectedText != null && selectedText.getText().equals("-- Please rate --")) {
+                                    selectedText.setTextColor(Color.RED);
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> adapterView) {
+
+                            }
+                        });
+                        etRemarks.setTag(question.getC_SurveyTemplateQuestion_UUID());
+                        etRemarks.setMinLines(1);
+                        etRemarks.setMaxLines(5);
+                        etRemarks.setFilters(new InputFilter[] {new InputFilter.LengthFilter(2000)});
+                        etRemarks.setVerticalScrollBarEnabled(true);
+                        etRemarks.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_CAP_SENTENCES|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                        if (question.getAmt() != null && !question.getAmt().equals("")) {
+                            rating.setEnabled(false);
+                            rating.setSelection(((SpinAdapter) adapter).getPosition(question.getAmt()));
+                            etRemarks.setEnabled(false);
+                            etRemarks.setText(question.getRemarks() != null && !question.getRemarks().isEmpty() && !question.getRemarks().equalsIgnoreCase("null") ? PandoraHelper.parseNewLine(question.getRemarks()) : "No remark");
+                        }
+                        else etRemarks.setHint("Remarks");
+                        etRemarks.setOnTouchListener(new View.OnTouchListener() {
+                            public boolean onTouch(View v, MotionEvent event) {
+                                if (etRemarks.getLineCount() > 5)
+                                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                                return false;
+                            }
+                        });
+
+                        subLL.addView(tvQuestion);
+                        subLL.addView(tvQuestionDesc);
+                        subLL.addView(rating);
+                        subLL.addView(etRemarks);
+                        mainLL.addView(subLL);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

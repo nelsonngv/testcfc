@@ -543,6 +543,9 @@ public class ProjectTask implements Callable<Bundle>, ITask {
                     cv.put(MProjectTask.PRIORITY_COL, projTask.getSeqNo());
                     cv.put(MProjectTask.NAME_COL, projTask.getName());
                     cv.put(MProjectTask.DESCRIPTION_COL, projTask.getDescription());
+                    cv.put(MProjectTask.EQUIPMENT_COL, projTask.getEquipment());
+                    cv.put(MProjectTask.CONTACT_COL, projTask.getContact());
+                    cv.put(MProjectTask.CONTACTNO_COL, projTask.getContactNo());
                     String isDone = (projTask.getIsDone()) ? "Y" : "N";
                     cv.put(MProjectTask.ISDONE_COL, isDone);
                     if (projTask.getDateAssigned() != null && !projTask.getDateAssigned().isEmpty())

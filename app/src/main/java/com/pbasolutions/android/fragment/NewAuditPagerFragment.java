@@ -29,11 +29,12 @@ import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.control.CustomViewPager;
 import com.pbasolutions.android.controller.PBSSurveyController;
+import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.model.MSurvey;
 
 import java.util.ArrayList;
 
-public class NewAuditPagerFragment extends PBSDetailsFragment {
+public class NewAuditPagerFragment extends PBSDetailsFragment implements PBABackKeyListener {
     /**
      * Class tag name.
      */
@@ -87,6 +88,7 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (CustomViewPager) view.findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
+        mPager.setAllowedSwipeDirection(CustomViewPager.SwipeDirection.none);
     }
 
     @Override
@@ -213,7 +215,7 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
                 PandoraHelper.hideSoftKeyboard(getActivity());
                 ArrayList<View> spinnerList = getAllChildren(mPager, Spinner.class);
                 ArrayList<View> etList = getAllChildren(mPager, EditText.class);
-                ArrayList<MSurvey> answerList = new ArrayList<>();
+                final ArrayList<MSurvey> answerList = new ArrayList<>();
 
                 for (int i = 0; i < spinnerList.size(); i++) {
                     Spinner spinner = (Spinner) spinnerList.get(i);
@@ -233,25 +235,37 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
                     answer.setRemarks(et.getText().toString());
                     answerList.add(answer);
                 }
-                for (int i = 0; i < questions.size(); i++) {
-                    answerList.get(i).setSectionname(questions.get(i).getSectionname());
-                }
 
-                triggeredByButton = true;
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("answers", answerList);
-                bundle.putStringArrayList("sections", sections);
-                bundle.putString(MSurvey.DATETRX_COL, PBSSurveyController.dateTrx);
-                bundle.putString(MSurvey.REMARKS_COL, etAuditRemarks.getText().toString());
-                Fragment fragment = new NewAuditSignFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragment.setArguments(bundle);
-                fragment.setRetainInstance(true);
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_body, fragment);
-                fragmentTransaction.addToBackStack(fragment.getClass().getName());
-                fragmentTransaction.commit();
-                ((PandoraMain)getActivity()).getSupportActionBar().setTitle(audit.getName());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Please click OK to proceed. You will not be able to go back after proceed.")
+                        .setTitle(PandoraConstant.WARNING)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                for (int i = 0; i < questions.size(); i++) {
+                                    answerList.get(i).setSectionname(questions.get(i).getSectionname());
+                                }
+
+                                triggeredByButton = true;
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelableArrayList("answers", answerList);
+                                bundle.putStringArrayList("sections", sections);
+                                bundle.putString(MSurvey.DATETRX_COL, PBSSurveyController.dateTrx);
+                                bundle.putString(MSurvey.REMARKS_COL, etAuditRemarks.getText().toString());
+                                Fragment fragment = new NewAuditSignFragment();
+                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                fragment.setArguments(bundle);
+                                fragment.setRetainInstance(true);
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.container_body, fragment);
+                                fragmentTransaction.addToBackStack(fragment.getClass().getName());
+                                fragmentTransaction.commit();
+                                ((PandoraMain)getActivity()).getSupportActionBar().setTitle(audit.getName());
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .setCancelable(false);
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 break;
             }
             default: break;
@@ -301,7 +315,7 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
             audit = (MSurvey) result.getSerializable(PBSSurveyController.ARG_SURVEY);
             questions = (ArrayList<MSurvey>) result.getSerializable(PBSSurveyController.ARG_QUESTIONS);
             sections = (ArrayList<String>) result.getSerializable(PBSSurveyController.ARG_SECTIONS);
-            if (sections.size() == 0) {
+            if (sections == null || sections.size() == 0) {
                 PandoraHelper.showWarningMessage(getActivity(), "This template does not have any questions.");
                 getActivity().getSupportFragmentManager().popBackStack();
                 return;
@@ -314,9 +328,9 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
 
             if (_UUID == null || _UUID.equals("")) {
                 audit.setName(PBSSurveyController.name);
-                mPager.setAllowedSwipeDirection(CustomViewPager.SwipeDirection.right);
-            } else
-                mPager.setAllowedSwipeDirection(CustomViewPager.SwipeDirection.all);
+//                mPager.setAllowedSwipeDirection(CustomViewPager.SwipeDirection.right);
+            }
+//            else mPager.setAllowedSwipeDirection(CustomViewPager.SwipeDirection.all);
             ((PandoraMain)getActivity()).getSupportActionBar().setTitle(audit.getName());
         }
     }
@@ -373,6 +387,8 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
         prev.getIcon().setAlpha(mPager.getCurrentItem() > 0 ? 255 : 64);
         next.setEnabled(mPager.getCurrentItem() < NUM_PAGES - 1);
         next.getIcon().setAlpha(mPager.getCurrentItem() < NUM_PAGES - 1 ? 255 : 64);
+        complete.setEnabled(mPager.getChildCount() == mPager.getCurrentItem() + 1);
+        complete.getIcon().setAlpha(mPager.getChildCount() == mPager.getCurrentItem() + 1 ? 255 : 64);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
@@ -406,5 +422,10 @@ public class NewAuditPagerFragment extends PBSDetailsFragment {
         public int getCount() {
             return NUM_PAGES;
         }
+    }
+
+    @Override
+    public boolean onBackKeyPressed() {
+        return false;
     }
 }

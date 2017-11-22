@@ -52,7 +52,6 @@ public class PandoraContext extends Application implements Serializable{
     private int C_ProjectLocation_Spinner_Index;
 
     private boolean isInitialSynced = false;
-    private boolean isFirstBatchSynced = false;
     public static RequestQueue queue;
 
     /**
@@ -330,13 +329,5 @@ public class PandoraContext extends Application implements Serializable{
 
     public void setIsInitialSynced(boolean isSyncCompleted) {
         this.isInitialSynced = isSyncCompleted;
-    }
-
-    public boolean isFirstBatchSynced() {
-        return isFirstBatchSynced;
-    }
-
-    public void setIsFirstBatchSynced(boolean isFirstBatchSynced) {
-        this.isFirstBatchSynced = isFirstBatchSynced;
     }
 }

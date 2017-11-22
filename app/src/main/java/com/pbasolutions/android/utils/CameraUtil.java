@@ -74,6 +74,8 @@ public class CameraUtil {
                             baos.writeTo(outputStream);
                         } catch (Exception e) {
                             e.printStackTrace();
+                        } finally {
+                            baos.close();
                         }
 
                         bitmap = resizeImage(mImageView.getMeasuredWidth(),
@@ -91,7 +93,7 @@ public class CameraUtil {
         });
     }
 
-    private static Bitmap resizeImage(int targetW, int targetH, String mCurrentPhotoPath){
+    public static Bitmap resizeImage(int targetW, int targetH, String mCurrentPhotoPath){
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);

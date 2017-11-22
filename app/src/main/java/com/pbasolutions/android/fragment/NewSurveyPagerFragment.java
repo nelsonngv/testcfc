@@ -24,11 +24,12 @@ import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.adapter.SpinnerPair;
 import com.pbasolutions.android.controller.PBSSurveyController;
+import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.model.MSurvey;
 
 import java.util.ArrayList;
 
-public class NewSurveyPagerFragment extends PBSDetailsFragment {
+public class NewSurveyPagerFragment extends PBSDetailsFragment implements PBABackKeyListener {
     /**
      * Class tag name.
      */
@@ -227,7 +228,7 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
             survey = (MSurvey) result.getSerializable(PBSSurveyController.ARG_SURVEY);
             questions = (ArrayList<MSurvey>) result.getSerializable(PBSSurveyController.ARG_QUESTIONS);
             sections = (ArrayList<String>) result.getSerializable(PBSSurveyController.ARG_SECTIONS);
-            if (sections.size() == 0) {
+            if (sections == null || sections.size() == 0) {
                 PandoraHelper.showWarningMessage(getActivity(), "This template does not have any questions.");
                 getActivity().getSupportFragmentManager().popBackStack();
                 return;
@@ -327,5 +328,14 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment {
         public int getCount() {
             return NUM_PAGES;
         }
+    }
+
+    @Override
+    public boolean onBackKeyPressed() {
+        if (mPager.getCurrentItem() > 0) {
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1, true);
+            return false;
+        }
+        else return true;
     }
 }

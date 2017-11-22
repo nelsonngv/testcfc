@@ -197,7 +197,7 @@ public class LoginFragment extends Fragment {
                 if (loginJSON.getSuccess().equals("TRUE")) {
                     // final PandoraContext globalVariable = ((PandoraMain)getActivity())
                     // .getGlobalVariable();
-                    if (context.globalVariable == null)
+                    if (context.getGlobalVariable() == null)
                     {
                         context.setGlobalVariable(new PandoraContext());
                     }

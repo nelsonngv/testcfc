@@ -73,7 +73,7 @@ public class ServerTask extends Task {
         Cursor cursor =
                 cr.query(ModelConst.uriCustomBuilder(ModelConst.PBS_SYNCTABLE_TABLE),
                 projection, selection,
-                        selectionArgs, null);
+                        selectionArgs, "SEQNO ASC");
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             do {

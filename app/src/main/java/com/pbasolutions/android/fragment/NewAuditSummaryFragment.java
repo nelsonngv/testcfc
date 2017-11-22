@@ -23,13 +23,14 @@ import com.pbasolutions.android.PandoraHelper;
 import com.pbasolutions.android.PandoraMain;
 import com.pbasolutions.android.R;
 import com.pbasolutions.android.controller.PBSSurveyController;
+import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.model.MSurvey;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
-public class NewAuditSummaryFragment extends Fragment {
+public class NewAuditSummaryFragment extends Fragment implements PBABackKeyListener {
     /**
      * Class tag name.
      */
@@ -166,5 +167,10 @@ public class NewAuditSummaryFragment extends Fragment {
         fragmentTransaction.replace(R.id.container_body, auditFrag);
         fragmentTransaction.commit();
         ((PandoraMain) getActivity()).getSupportActionBar().setTitle(getActivity().getString(R.string.title_audit));
+    }
+
+    @Override
+    public boolean onBackKeyPressed() {
+        return false;
     }
 }

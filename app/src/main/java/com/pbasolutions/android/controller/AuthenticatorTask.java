@@ -8,6 +8,7 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -30,6 +31,7 @@ import com.pbasolutions.android.account.PBSAccountInfo;
 import com.pbasolutions.android.authentication.PBSIServerAuthenticate;
 import com.pbasolutions.android.authentication.PBSServerAuthenticate;
 import com.pbasolutions.android.database.PBSDBHelper;
+import com.pbasolutions.android.fragment.AccountFragment;
 import com.pbasolutions.android.json.PBSLoginJSON;
 import com.pbasolutions.android.json.PBSProjLocJSON;
 import com.pbasolutions.android.json.PBSRoleJSON;
@@ -385,11 +387,19 @@ public class AuthenticatorTask extends Task {
 //            am.removeAccount(userAccount, null, null);
 
 //            ((PandoraMain) ctx).globalVariable = null;
-            Account userAccount = getAccount(((PandoraMain) ctx).globalVariable.getAd_user_name(), PBSAccountInfo.ACCOUNT_TYPE);
+            Account userAccount = getAccount(((PandoraMain) ctx).getGlobalVariable().getAd_user_name(), PBSAccountInfo.ACCOUNT_TYPE);
             am.removeAccount(userAccount, null, null);
-            ((PandoraMain) ctx).globalVariable.setAd_user_name("");
-            ((PandoraMain) ctx).globalVariable.setAd_user_password("");
-            ((PandoraMain) ctx).globalVariable.setAuth_token("");
+            ((PandoraMain) ctx).setGlobalVariable(null);
+            ((PandoraContext) ctx.getApplicationContext()).setAd_role_spinner_index(0);
+            ((PandoraContext) ctx.getApplicationContext()).setAd_client_spinner_index(0);
+            ((PandoraContext) ctx.getApplicationContext()).setAd_org_spinner_index(0);
+            ((PandoraContext) ctx.getApplicationContext()).setC_ProjectLocation_Spinner_Index(0);
+            ((PandoraContext) ctx.getApplicationContext()).setAd_user_id("");
+            ((PandoraContext) ctx.getApplicationContext()).setAd_user_uuid("");
+            ((PandoraContext) ctx.getApplicationContext()).setAd_user_name("");
+            ((PandoraContext) ctx.getApplicationContext()).setAd_user_password("");
+            ((PandoraContext) ctx.getApplicationContext()).setAuth_token("");
+            ((PandoraContext) ctx.getApplicationContext()).setIsInitialSynced(true);
             PandoraHelper.populateMenuForms(ctx, null);
             output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
             output.putString(PandoraConstant.RESULT, "Successfully logged out");
@@ -487,6 +497,21 @@ public class AuthenticatorTask extends Task {
                             PBSDBHelper.reCreateDatabase(ctx.getApplicationContext());
                             ((PandoraMain) ctx).resetServerData(serverURL);
                             ((PandoraMain) ctx).setGlobalVariable(null);
+                            ((PandoraContext) ctx.getApplicationContext()).setAd_role_spinner_index(0);
+                            ((PandoraContext) ctx.getApplicationContext()).setAd_client_spinner_index(0);
+                            ((PandoraContext) ctx.getApplicationContext()).setAd_org_spinner_index(0);
+                            ((PandoraContext) ctx.getApplicationContext()).setC_ProjectLocation_Spinner_Index(0);
+                            ((PandoraContext) ctx.getApplicationContext()).setAd_user_id("");
+                            ((PandoraContext) ctx.getApplicationContext()).setAd_user_uuid("");
+                            ((PandoraContext) ctx.getApplicationContext()).setAd_user_name("");
+                            ((PandoraContext) ctx.getApplicationContext()).setAd_user_password("");
+                            ((PandoraContext) ctx.getApplicationContext()).setAuth_token("");
+                            ((PandoraContext) PandoraContext.getContext()).setIsInitialSynced(false);
+
+                            Fragment frag = ((PandoraMain) ctx).getCurrentFragment();
+                            if (frag != null && frag instanceof AccountFragment) {
+                                ((AccountFragment) frag).completedInitialSync();
+                            }
                             PandoraHelper.populateMenuForms(ctx, null);
 
                             // remove all accounts
@@ -512,7 +537,28 @@ public class AuthenticatorTask extends Task {
                                 createNewAccount(userName, accType, deviceID, serverURL,
                                         userPass, authType, user.getToken());
                             } else {
-                                ((PandoraMain) ctx).getGlobalVariable().setC_ProjectLocation_Spinner_Index(0);
+                                boolean isInitialsynced = ((PandoraMain) ctx).getGlobalVariable().isInitialSynced();
+                                ((PandoraMain) ctx).setGlobalVariable(null);
+                                ((PandoraContext) ctx.getApplicationContext()).setAd_role_spinner_index(0);
+                                ((PandoraContext) ctx.getApplicationContext()).setAd_client_spinner_index(0);
+                                ((PandoraContext) ctx.getApplicationContext()).setAd_org_spinner_index(0);
+                                ((PandoraContext) ctx.getApplicationContext()).setC_ProjectLocation_Spinner_Index(0);
+                                ((PandoraContext) ctx.getApplicationContext()).setAd_user_id("");
+                                ((PandoraContext) ctx.getApplicationContext()).setAd_user_uuid("");
+                                ((PandoraContext) ctx.getApplicationContext()).setAd_user_name("");
+                                ((PandoraContext) ctx.getApplicationContext()).setAd_user_password("");
+                                ((PandoraContext) ctx.getApplicationContext()).setAuth_token("");
+                                if (isInitialsynced)
+                                    ((PandoraContext) ctx.getApplicationContext()).setIsInitialSynced(true);
+//                                ((PandoraMain) ctx).getGlobalVariable().setAd_role_spinner_index(0);
+//                                ((PandoraMain) ctx).getGlobalVariable().setAd_client_spinner_index(0);
+//                                ((PandoraMain) ctx).getGlobalVariable().setAd_org_spinner_index(0);
+//                                ((PandoraMain) ctx).getGlobalVariable().setC_ProjectLocation_Spinner_Index(0);
+//                                ((PandoraMain) ctx).getGlobalVariable().setAd_user_id("");
+//                                ((PandoraMain) ctx).getGlobalVariable().setAd_user_uuid("");
+//                                ((PandoraMain) ctx).getGlobalVariable().setAd_user_name("");
+//                                ((PandoraMain) ctx).getGlobalVariable().setAd_user_password("");
+//                                ((PandoraMain) ctx).getGlobalVariable().setAuth_token("");
                                 PandoraHelper.populateMenuForms(ctx, null);
                                 createNewAccount(userName, accType, deviceID, serverURL,
                                         userPass, authType, user.getToken());

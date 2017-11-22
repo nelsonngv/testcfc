@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -28,6 +29,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
@@ -45,11 +47,14 @@ import com.pbasolutions.android.model.MAttendanceLog;
 import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.TimeZone;
 
 /**
@@ -61,6 +66,8 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
      */
     private static final String TAG = ATrackScanEmpIDFragment.class.getSimpleName();
     private static final int CANCEL_ID = 1;
+    private static final int CAMERA_ID = 2;
+    private static final int CAMERA_INTENT_ID = 3;
     private Intent nfcIntent = null;
     private NfcAdapter mNfcAdapter;
     private PBSCheckInController checkInController;
@@ -305,12 +312,34 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            picturePath = CameraUtil.getPicPath(context, data);
+            if (requestCode == CAMERA_ID) {
+                picturePath = data.getStringExtra("pic_path");
+            } else if (requestCode == CAMERA_INTENT_ID) {
+                picturePath = CameraUtil.getPicPath(context, data);
+            }
 
             if (picturePath != null) {
                 context.mCurrentPhotoPath = null;
+                Bitmap bitmap = CameraUtil.resizeImage(500, 500, picturePath);
+                if (bitmap != null) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                    File file = new File(picturePath);
+                    try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                        baos.writeTo(outputStream);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            baos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                CameraUtil.galleryAddPic(picturePath, getActivity());
                 cv.put(MAttendanceLog.ATTACHMENT_IMAGE_COL, picturePath);
-                insertAttendance(true);
+//                insertAttendance(true);
             } else {
                 PandoraHelper.showMessage(getActivity(), "Failed to save photo");
             }
@@ -325,18 +354,24 @@ public class ATrackScanEmpIDFragment extends PBSDetailsFragment implements PBABa
         }
 
         try {
-            File f = CameraUtil.setUpPhotoFile(context.mAlbumStorageDirFactory);
-            context.mCurrentPhotoPath = f.getAbsolutePath();
-            CameraUtil.galleryAddPic(context.mCurrentPhotoPath, getActivity());
-            takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", Camera.CameraInfo.CAMERA_FACING_FRONT);
-            takePictureIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
-            takePictureIntent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+            if (!System.getProperty("http.agent", "").contains("MIUI")) {
+                Intent intent = new Intent(getActivity(), CameraActivity.class);
+                intent.putExtra("isFront", true);
+                getActivity().startActivityForResult(intent, CAMERA_ID);
+            } else {
+                File f = CameraUtil.setUpPhotoFile(context.mAlbumStorageDirFactory);
+                context.mCurrentPhotoPath = f.getAbsolutePath();
+                CameraUtil.galleryAddPic(context.mCurrentPhotoPath, getActivity());
+                takePictureIntent.putExtra("android.intent.extras.CAMERA_FACING", Camera.CameraInfo.CAMERA_FACING_FRONT);
+                takePictureIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+                takePictureIntent.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                getActivity().startActivityForResult(takePictureIntent, CAMERA_INTENT_ID);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             context.mCurrentPhotoPath = null;
         }
-        startActivityForResult(takePictureIntent, 0);
         PandoraHelper.showMessage(getActivity(), "Please show your face");
     }
 

@@ -270,7 +270,9 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
     @Override
     public void onBackPressed() {
         Fragment frag = getCurrentFragment();
-        if (frag instanceof PBABackKeyListener) {
+        if (mDrawerLayout.isDrawerVisible(Gravity.LEFT)) {
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+        } else if (frag instanceof PBABackKeyListener) {
             if (((PBABackKeyListener)frag).onBackKeyPressed())
                 super.onBackPressed();
         }
@@ -619,7 +621,6 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
                                 if (logOutResult != null && logOutResult.getString(PandoraConstant.TITLE).equals(PandoraConstant.RESULT)) {
                                     authenticatorController.triggerEvent(PBSAuthenticatorController.CLEAR_AUTH_TOKEN,
                                             inputBundle, null, this);
-//                                    globalVariable = null;
                                     PBSServerConst.cookieStore = null;
                                 }
 
@@ -1297,7 +1298,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
         }.execute(Boolean.valueOf(prevSyncState));
     }
 
-    Fragment getCurrentFragment() {
+    public Fragment getCurrentFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         List<Fragment> fragList = fragmentManager.getFragments();
         for (Fragment frag : fragList) {

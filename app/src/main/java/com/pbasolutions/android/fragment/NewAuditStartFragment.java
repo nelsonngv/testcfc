@@ -194,6 +194,7 @@ public class NewAuditStartFragment extends Fragment {
         add = menu.add(0, START, 1, getString(R.string.label_button_start));
         add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         add.setIcon(R.drawable.ic_done);
+        add.getIcon().setAlpha(255);
     }
 
     @Override

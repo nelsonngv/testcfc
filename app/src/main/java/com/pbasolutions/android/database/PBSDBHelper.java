@@ -28,7 +28,7 @@ public class PBSDBHelper extends SQLiteOpenHelper {
     /**
      * Database version.
      */
-    private static final int DATABASE_VERSION = 26;
+    private static final int DATABASE_VERSION = 27;
     /**
      *
      */
@@ -992,7 +992,8 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                     "ISRETAIN BOOLEAN," +
                     "RETENTIONPERIOD INT," +
                     "AD_TABLE_UUID TEXT," +
-                    "NAME" +
+                    "NAME TEXT," +
+                    "SEQNO INT DEFAULT 0" +
                     ");");
 
             //JOBAPP_SHIFTS_VIEW (USED)
@@ -2919,6 +2920,34 @@ public class PBSDBHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE C_PROJECTTASK ADD EQUIPMENT VARCHAR2(255)");
                 db.execSQL("ALTER TABLE C_PROJECTTASK ADD CONTACT VARCHAR2(100)");
                 db.execSQL("ALTER TABLE C_PROJECTTASK ADD CONTACTNO NUMBER(15, 0)");
+            }
+
+            if (oldVersion < 27) {
+                db.execSQL("PRAGMA writable_schema = true;");
+                db.execSQL("PRAGMA foreign_keys = false;");
+
+                db.execSQL("DROP TABLE IF EXISTS TMP_TABLE;");
+                //PBS_SYNCTABLE
+                db.execSQL("ALTER TABLE PBS_SYNCTABLE RENAME TO TMP_TABLE;");
+                db.execSQL("CREATE TABLE PBS_SYNCTABLE(" +
+                        //STANDARD
+                        "PBS_SYNCTABLE_ID TEXT NOT NULL," +
+                        //PK
+                        "PBS_SYNCTABLE_UUID TEXT PRIMARY KEY NOT NULL," +
+                        //OTHERS
+                        "ISMASTERDATA BOOLEAN," +
+                        "ISRETAIN BOOLEAN," +
+                        "RETENTIONPERIOD INT," +
+                        "AD_TABLE_UUID TEXT," +
+                        "NAME TEXT," +
+                        "SEQNO INT DEFAULT 0" +
+                        ");");
+
+                db.execSQL("INSERT INTO PBS_SYNCTABLE SELECT * FROM TMP_TABLE;");
+                db.execSQL("DROP TABLE TMP_TABLE;");
+
+                db.execSQL("PRAGMA foreign_keys = true;");
+                db.execSQL("PRAGMA writable_schema = false;");
             }
         } catch (SQLException e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE

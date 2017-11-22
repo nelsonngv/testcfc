@@ -24,6 +24,7 @@ import com.pbasolutions.android.R;
 import com.pbasolutions.android.controller.PBSAttendanceController;
 import com.pbasolutions.android.controller.PBSCheckInController;
 import com.pbasolutions.android.controller.PBSSurveyController;
+import com.pbasolutions.android.listener.PBABackKeyListener;
 import com.pbasolutions.android.model.MSurvey;
 import com.pbasolutions.android.model.ModelConst;
 import com.pbasolutions.android.utils.CameraUtil;
@@ -34,7 +35,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
 
-public class NewAuditSignFragment extends Fragment {
+public class NewAuditSignFragment extends Fragment implements PBABackKeyListener {
     /**
      * Class tag name.
      */
@@ -271,5 +272,10 @@ public class NewAuditSignFragment extends Fragment {
 //                }
 //            }.execute(input);
         }
+    }
+
+    @Override
+    public boolean onBackKeyPressed() {
+        return false;
     }
 }

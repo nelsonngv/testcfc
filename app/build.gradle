@@ -22,8 +22,8 @@ android {
         applicationId "com.pbasolutions.android.syncAdapter"
         minSdkVersion 19
         targetSdkVersion 21
-        versionCode 36
-        versionName "2.0.35"
+        versionCode 37
+        versionName "2.0.36"
     }
     buildTypes {
         release {
@@ -50,6 +50,7 @@ android {
 
 repositories {
     mavenCentral()
+    google()
 }
 
 dependencies {
@@ -74,5 +75,7 @@ dependencies {
     //    compile 'com.google.firebase:firebase-core:10.0.1'
     //    compile 'com.google.firebase:firebase-messaging:10.0.1'
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 //apply plugin: 'com.google.gms.google-services'
