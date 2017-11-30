@@ -72,13 +72,20 @@ public class PandoraTask implements Callable<Bundle> {
      */
     public Bundle getProjLoc() {
         String ad_user_id = input.getString(PBSAssetController.ARG_AD_USER_ID);
-        String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
-                ad_user_id, ModelConst.AD_USER_UUID_COL, cr);
+        String projection[] = {ModelConst.C_PROJECTLOCATION_UUID_COL, ModelConst.NAME_COL, ModelConst.C_PROJECTLOCATION_ID_COL};
+        Cursor cursor;
+        if (ad_user_id != null && !ad_user_id.equals("") && !ad_user_id.equalsIgnoreCase("null")) {
+            String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
+                    ad_user_id, ModelConst.AD_USER_UUID_COL, cr);
 
-        String projection [] = {ModelConst.C_PROJECTLOCATION_UUID_COL, ModelConst.NAME_COL, ModelConst.C_PROJECTLOCATION_ID_COL};
-        String selection = ModelConst.ISACTIVE_COL + "=? AND hr_cluster_uuid != 'null' AND hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
-        String selectionArgs [] = {"Y", "Y", ad_user_uuid};
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projection, selection, selectionArgs, ModelConst.NAME_COL + " ASC");
+            String selection = ModelConst.ISACTIVE_COL + "=? AND hr_cluster_uuid != 'null' AND hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? and ad_user_uuid=? group by hr_cluster_uuid)";
+            String selectionArgs[] = {"Y", "Y", ad_user_uuid};
+            cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projection, selection, selectionArgs, ModelConst.NAME_COL + " ASC");
+        } else {
+            String selection = ModelConst.ISACTIVE_COL + "=? AND hr_cluster_uuid != 'null' AND hr_cluster_uuid in (select hr_cluster_uuid from hr_clustermanagement where isactive=? group by hr_cluster_uuid)";
+            String selectionArgs[] = {"Y", "Y"};
+            cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_PROJECT_LOCATION_TABLE), projection, selection, selectionArgs, ModelConst.NAME_COL + " ASC");
+        }
         int numberOfRows = cursor.getCount();
         if (numberOfRows > 0) {
             PBSProjLocJSON[] projLocJSONs = new PBSProjLocJSON[numberOfRows];

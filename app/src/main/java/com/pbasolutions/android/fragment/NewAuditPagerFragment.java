@@ -88,7 +88,6 @@ public class NewAuditPagerFragment extends PBSDetailsFragment implements PBABack
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (CustomViewPager) view.findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getChildFragmentManager());
-        mPager.setAllowedSwipeDirection(CustomViewPager.SwipeDirection.none);
     }
 
     @Override
@@ -311,27 +310,31 @@ public class NewAuditPagerFragment extends PBSDetailsFragment implements PBABack
         @Override
         protected void onPostExecute(Bundle result) {
             super.onPostExecute(result);
-            ((PandoraMain)getActivity()).dismissProgressDialog();
-            audit = (MSurvey) result.getSerializable(PBSSurveyController.ARG_SURVEY);
-            questions = (ArrayList<MSurvey>) result.getSerializable(PBSSurveyController.ARG_QUESTIONS);
-            sections = (ArrayList<String>) result.getSerializable(PBSSurveyController.ARG_SECTIONS);
-            if (sections == null || sections.size() == 0) {
-                PandoraHelper.showWarningMessage(getActivity(), "This template does not have any questions.");
-                getActivity().getSupportFragmentManager().popBackStack();
-                return;
-            }
-            NUM_PAGES = sections.size();
-            if (_UUID != null && !_UUID.equals(""))
-                NUM_PAGES++;
-            mPager.setOffscreenPageLimit(NUM_PAGES);
-            updateMenuItem();
+            try {
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+                audit = (MSurvey) result.getSerializable(PBSSurveyController.ARG_SURVEY);
+                questions = (ArrayList<MSurvey>) result.getSerializable(PBSSurveyController.ARG_QUESTIONS);
+                sections = (ArrayList<String>) result.getSerializable(PBSSurveyController.ARG_SECTIONS);
+                if (sections == null || sections.size() == 0) {
+                    PandoraHelper.showWarningMessage(getActivity(), "This template does not have any questions.");
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    return;
+                }
+                NUM_PAGES = sections.size();
+                if (_UUID != null && !_UUID.equals(""))
+                    NUM_PAGES++;
+                mPager.setOffscreenPageLimit(NUM_PAGES);
+                updateMenuItem();
 
-            if (_UUID == null || _UUID.equals("")) {
-                audit.setName(PBSSurveyController.name);
-//                mPager.setAllowedSwipeDirection(CustomViewPager.SwipeDirection.right);
+                if (_UUID == null || _UUID.equals("")) {
+                    audit.setName(PBSSurveyController.name);
+                    mPager.setAllowedSwipeDirection(CustomViewPager.SwipeDirection.none);
+                }
+                else mPager.setAllowedSwipeDirection(CustomViewPager.SwipeDirection.all);
+                ((PandoraMain)getActivity()).getSupportActionBar().setTitle(audit.getName());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-//            else mPager.setAllowedSwipeDirection(CustomViewPager.SwipeDirection.all);
-            ((PandoraMain)getActivity()).getSupportActionBar().setTitle(audit.getName());
         }
     }
 
@@ -426,6 +429,8 @@ public class NewAuditPagerFragment extends PBSDetailsFragment implements PBABack
 
     @Override
     public boolean onBackKeyPressed() {
-        return false;
+        if (_UUID == null || _UUID.equals(""))
+            return false;
+        else return true;
     }
 }

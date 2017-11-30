@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import com.pbasolutions.android.databinding.TaskListItemBinding;
 import com.pbasolutions.android.model.MProjectTask;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 /**
  * Created by pbadell on 10/13/15.
  */
@@ -16,6 +19,8 @@ public class TaskRVA extends RecyclerView.Adapter<TaskRVA.TaskVH> {
     private Context mContext;
     private ObservableArrayList<MProjectTask> taskList;
     private LayoutInflater inflater;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+    SimpleDateFormat sdf2 = new SimpleDateFormat("EE, dd-MM-yyyy");
 
     public TaskRVA(Context mContext, ObservableArrayList<MProjectTask> taskList) {
         this.mContext = mContext;
@@ -32,6 +37,12 @@ public class TaskRVA extends RecyclerView.Adapter<TaskRVA.TaskVH> {
     @Override
     public void onBindViewHolder(TaskVH holder, int position) {
         MProjectTask task = taskList.get(position);
+        try {
+            task.setDateAssigned(sdf2.format(sdf.parse(task.getDateAssigned())));
+            task.setDueDate(sdf2.format(sdf.parse(task.getDueDate())));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         holder.vBinding.setProjTask(task);
         if (taskList.size() == 1)
             holder.itemView.setPadding(0, 10, 0, 10);

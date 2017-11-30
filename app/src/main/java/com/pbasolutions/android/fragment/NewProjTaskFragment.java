@@ -174,7 +174,7 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         PandoraHelper.setAsterisk(textViewTaskSeqNo);
 
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("EE, dd-MM-yyyy");
         taskDateAssigned.setText(sdf.format(date));
         taskDueDate.setText(sdf.format(date));
     }
@@ -185,11 +185,11 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
             public void onClick(View v) {
                 switch (event) {
                     case EVENT_BACK_DATE: {
-                        PandoraHelper.promptDatePicker((TextView) object, getActivity());
+                        PandoraHelper.promptDatePickerWithDay((TextView) object, getActivity());
                         break;
                     }
                     case EVENT_FUTURE_DATE: {
-                        PandoraHelper.promptFutureDatePicker((TextView) object, getActivity());
+                        PandoraHelper.promptFutureDatePickerWithDay((TextView) object, getActivity());
                         break;
                     }
                     case EVENT_PIC1: {
@@ -351,7 +351,9 @@ public class NewProjTaskFragment extends PBSDetailsFragment implements PBABackKe
         String secAssignedTo  = secAssignToPair.getKey();
         String seqNo  = sequenceNo.getText().toString();
         String dateAssigned  = taskDateAssigned.getText().toString();
+        dateAssigned = dateAssigned.substring(5, dateAssigned.length());
         String dueDate  = taskDueDate.getText().toString();
+        dueDate = dueDate.substring(5, dueDate.length());
         if (locID == null
                 || locID.isEmpty()
                 || name.isEmpty()

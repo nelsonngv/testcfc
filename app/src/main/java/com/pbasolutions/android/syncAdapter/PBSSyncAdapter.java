@@ -236,17 +236,24 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
                         Bundle result = cont.triggerEvent(PandoraController.GET_PROJLOC_EVENT, input, new Bundle(), null);
                         projLoc = (PBSProjLocJSON[]) result.getSerializable(PandoraController.ARG_PROJECT_LOCATION_JSON);
                         if (projLoc == null) {
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(context, "Done syncing but incomplete of data detected. Please contact admin for assistance.", Toast.LENGTH_LONG).show();
-                                }
-                            });
-//                            PandoraMain.instance.runOnUiThread(new Runnable() {
-//                                public void run() {
-//                                    Toast.makeText(context, "Done syncing but incomplete of data detected. Please contact admin for assistance.", Toast.LENGTH_LONG).show();
-//                                }
-//                            });
+                            input = new Bundle();
+                            result = cont.triggerEvent(PandoraController.GET_PROJLOC_EVENT, input, new Bundle(), null);
+                            projLoc = (PBSProjLocJSON[]) result.getSerializable(PandoraController.ARG_PROJECT_LOCATION_JSON);
+                            if (projLoc == null) {
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, "Done syncing but incomplete of data detected. Please contact admin for assistance.", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            } else {
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, "No Project Location available for current user's team. Please contact admin for assistance.", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
                         } else {
                             if (/*!global.isInitialSynced() ||*/ !global.isInitialSynced()) {
 //                                PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);

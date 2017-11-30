@@ -75,14 +75,14 @@ public class NewAuditFragment extends Fragment {
                 List<SpinnerPair> ratingList = new ArrayList<>();
                 SpinnerPair pair = new SpinnerPair(null, "-- Please rate --");
                 ratingList.add(pair);
-                pair = new SpinnerPair("-1", "N/A");
-                ratingList.add(pair);
-                for (int i = 0; i < 11; i++) {
+                for (int i = 10; i > -1; i--) {
                     pair = new SpinnerPair();
                     pair.setKey(String.valueOf(i));
                     pair.setValue(String.valueOf(i));
                     ratingList.add(pair);
                 }
+                pair = new SpinnerPair("-1", "N/A");
+                ratingList.add(pair);
 
                 for (int i = 0; i < questions.size(); i++) {
                     MSurvey question = questions.get(i);

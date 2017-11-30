@@ -47,7 +47,10 @@ import com.pbasolutions.android.model.MProjectTask;
 import com.pbasolutions.android.utils.CameraUtil;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -283,9 +286,13 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         setOnClickListener(pretaskPicture, EVENT_PREPIC);
         setOnClickListener(taskPictures[0], EVENT_PIC1);
 
-        assignToPair = ((SpinAdapter) assignToAdapter).getItem(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
-        int itemLoc = ((SpinAdapter) secAssignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo()));
-        secAssignToPair = ((SpinAdapter) secAssignToAdapter).getItem(itemLoc > 0 ? itemLoc : 0);
+        try {
+            assignToPair = ((SpinAdapter) assignToAdapter).getItem(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
+            int itemLoc = ((SpinAdapter) secAssignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo()));
+            secAssignToPair = ((SpinAdapter) secAssignToAdapter).getItem(itemLoc > 0 ? itemLoc : 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         AdapterView.OnItemSelectedListener assignToItem = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -464,71 +471,78 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
 
     protected void setValues() {
         if (projTask != null) {
-            seqNo.setText(String.valueOf(projTask.getPriority()));
-            taskName.setText(projTask.getName());
-            taskProjLoc.setText(projTask.getProjLocName());
-            taskStatus.setText(projTask.getStatus());
-            taskDesc.setText(PandoraHelper.parseNewLine(projTask.getDescription()));
-            taskEquipment.setText(PandoraHelper.parseNewLine(projTask.getEquipment()));
-            taskContact.setText(projTask.getContact());
-            taskContactNo.setText(projTask.getContactNo());
-            taskDateAssigned.setText(projTask.getDateAssigned());
-            taskDueDate.setText(projTask.getDueDate());
-            taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
-            if (projTask.getSecAssignedTo() != 0)
-                taskSecAssignedTo.setSelection(((SpinAdapter) secAssignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo())));
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat sdf2 = new SimpleDateFormat("EE, dd-MM-yyyy");
 
-            if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1()).exists()) projTask.setATTACHMENT_BEFORETASKPICTURE_1(null);
-            CameraUtil.loadPicture(projTask.getATTACHMENT_BEFORETASKPICTURE_1(), pretaskPicture);
-            taskComments.setText(PandoraHelper.parseNewLine(projTask.getComments()));
+                seqNo.setText(String.valueOf(projTask.getPriority()));
+                taskName.setText(projTask.getName());
+                taskProjLoc.setText(projTask.getProjLocName());
+                taskStatus.setText(projTask.getStatus());
+                taskDesc.setText(PandoraHelper.parseNewLine(projTask.getDescription()));
+                taskEquipment.setText(PandoraHelper.parseNewLine(projTask.getEquipment()));
+                taskContact.setText(projTask.getContact());
+                taskContactNo.setText(projTask.getContactNo());
+                taskDateAssigned.setText(sdf2.format(sdf.parse(projTask.getDateAssigned())));
+                taskDueDate.setText(sdf2.format(sdf.parse(projTask.getDueDate())));
+                taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
+                if (projTask.getSecAssignedTo() != 0)
+                    taskSecAssignedTo.setSelection(((SpinAdapter) secAssignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo())));
 
-            taskDesc.setMaxLines(Integer.MAX_VALUE);
-            taskEquipment.setMaxLines(Integer.MAX_VALUE);
-            taskComments.setMaxLines(Integer.MAX_VALUE);
+                if (projTask.getATTACHMENT_BEFORETASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_BEFORETASKPICTURE_1()).exists()) projTask.setATTACHMENT_BEFORETASKPICTURE_1(null);
+                CameraUtil.loadPicture(projTask.getATTACHMENT_BEFORETASKPICTURE_1(), pretaskPicture);
+                taskComments.setText(PandoraHelper.parseNewLine(projTask.getComments()));
 
-            if (taskContactNo.getText().toString().trim().isEmpty())
-                btnCall.setVisibility(View.GONE);
+                taskDesc.setMaxLines(Integer.MAX_VALUE);
+                taskEquipment.setMaxLines(Integer.MAX_VALUE);
+                taskComments.setMaxLines(Integer.MAX_VALUE);
 
-            picPath[0] = projTask.getATTACHMENT_TASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_1()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_1();
-            picPath[1] = projTask.getATTACHMENT_TASKPICTURE_2() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_2()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_2();
-            picPath[2] = projTask.getATTACHMENT_TASKPICTURE_3() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_3()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_3();
-            picPath[3] = projTask.getATTACHMENT_TASKPICTURE_4() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_4()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_4();
-            picPath[4] = projTask.getATTACHMENT_TASKPICTURE_5() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_5()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_5();
-            picPath[5] = projTask.getATTACHMENT_TASKPICTURE_6() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_6()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_6();
-            picPath[6] = projTask.getATTACHMENT_TASKPICTURE_7() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_7()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_7();
-            picPath[7] = projTask.getATTACHMENT_TASKPICTURE_8() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_8()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_8();
-            picPath[8] = projTask.getATTACHMENT_TASKPICTURE_9() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_9()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_9();
-            picPath[9] = projTask.getATTACHMENT_TASKPICTURE_10() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_10()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_10();
-            picPath[10] = projTask.getATTACHMENT_TASKPICTURE_11() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_11()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_11();
-            picPath[11] = projTask.getATTACHMENT_TASKPICTURE_12() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_12()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_12();
-            picPath[12] = projTask.getATTACHMENT_TASKPICTURE_13() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_13()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_13();
-            picPath[13] = projTask.getATTACHMENT_TASKPICTURE_14() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_14()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_14();
-            picPath[14] = projTask.getATTACHMENT_TASKPICTURE_15() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_15()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_15();
-            picPath[15] = projTask.getATTACHMENT_TASKPICTURE_16() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_16()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_16();
-            picPath[16] = projTask.getATTACHMENT_TASKPICTURE_17() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_17()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_17();
-            picPath[17] = projTask.getATTACHMENT_TASKPICTURE_18() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_18()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_18();
-            picPath[18] = projTask.getATTACHMENT_TASKPICTURE_19() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_19()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_19();
-            picPath[19] = projTask.getATTACHMENT_TASKPICTURE_20() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_20()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_20();
-            picPath[20] = projTask.getATTACHMENT_TASKPICTURE_21() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_21()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_21();
-            picPath[21] = projTask.getATTACHMENT_TASKPICTURE_22() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_22()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_22();
-            picPath[22] = projTask.getATTACHMENT_TASKPICTURE_23() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_23()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_23();
-            picPath[23] = projTask.getATTACHMENT_TASKPICTURE_24() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_24()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_24();
-            picPath[24] = projTask.getATTACHMENT_TASKPICTURE_25() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_25()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_25();
+                if (taskContactNo.getText().toString().trim().isEmpty())
+                    btnCall.setVisibility(View.GONE);
 
-            for (int i = 0; i < picPath.length; i++) {
-                if (picPath[i] == null) break;
+                picPath[0] = projTask.getATTACHMENT_TASKPICTURE_1() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_1()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_1();
+                picPath[1] = projTask.getATTACHMENT_TASKPICTURE_2() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_2()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_2();
+                picPath[2] = projTask.getATTACHMENT_TASKPICTURE_3() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_3()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_3();
+                picPath[3] = projTask.getATTACHMENT_TASKPICTURE_4() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_4()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_4();
+                picPath[4] = projTask.getATTACHMENT_TASKPICTURE_5() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_5()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_5();
+                picPath[5] = projTask.getATTACHMENT_TASKPICTURE_6() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_6()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_6();
+                picPath[6] = projTask.getATTACHMENT_TASKPICTURE_7() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_7()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_7();
+                picPath[7] = projTask.getATTACHMENT_TASKPICTURE_8() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_8()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_8();
+                picPath[8] = projTask.getATTACHMENT_TASKPICTURE_9() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_9()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_9();
+                picPath[9] = projTask.getATTACHMENT_TASKPICTURE_10() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_10()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_10();
+                picPath[10] = projTask.getATTACHMENT_TASKPICTURE_11() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_11()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_11();
+                picPath[11] = projTask.getATTACHMENT_TASKPICTURE_12() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_12()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_12();
+                picPath[12] = projTask.getATTACHMENT_TASKPICTURE_13() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_13()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_13();
+                picPath[13] = projTask.getATTACHMENT_TASKPICTURE_14() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_14()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_14();
+                picPath[14] = projTask.getATTACHMENT_TASKPICTURE_15() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_15()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_15();
+                picPath[15] = projTask.getATTACHMENT_TASKPICTURE_16() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_16()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_16();
+                picPath[16] = projTask.getATTACHMENT_TASKPICTURE_17() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_17()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_17();
+                picPath[17] = projTask.getATTACHMENT_TASKPICTURE_18() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_18()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_18();
+                picPath[18] = projTask.getATTACHMENT_TASKPICTURE_19() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_19()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_19();
+                picPath[19] = projTask.getATTACHMENT_TASKPICTURE_20() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_20()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_20();
+                picPath[20] = projTask.getATTACHMENT_TASKPICTURE_21() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_21()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_21();
+                picPath[21] = projTask.getATTACHMENT_TASKPICTURE_22() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_22()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_22();
+                picPath[22] = projTask.getATTACHMENT_TASKPICTURE_23() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_23()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_23();
+                picPath[23] = projTask.getATTACHMENT_TASKPICTURE_24() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_24()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_24();
+                picPath[24] = projTask.getATTACHMENT_TASKPICTURE_25() != null && !new File(projTask.getATTACHMENT_TASKPICTURE_25()).exists() ? null : projTask.getATTACHMENT_TASKPICTURE_25();
 
-                if (i > 0) addPicField();
-                CameraUtil.loadPicture(picPath[i], taskPictures[i]);
-                CameraUtil.addPathToPic(taskPictures[i], picPath[i]);
-            }
+                for (int i = 0; i < picPath.length; i++) {
+                    if (picPath[i] == null) break;
 
-            if ("N".equalsIgnoreCase(projTask.isDone())) {
-                setHasOptionsMenu(true);
-                getActivity().invalidateOptionsMenu();
-            } else {
-                taskComments.setEnabled(false);
-                tlMorePic.setVisibility(View.GONE);
+                    if (i > 0) addPicField();
+                    CameraUtil.loadPicture(picPath[i], taskPictures[i]);
+                    CameraUtil.addPathToPic(taskPictures[i], picPath[i]);
+                }
+
+                if ("N".equalsIgnoreCase(projTask.isDone())) {
+                    setHasOptionsMenu(true);
+                    getActivity().invalidateOptionsMenu();
+                } else {
+                    taskComments.setEnabled(false);
+                    tlMorePic.setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

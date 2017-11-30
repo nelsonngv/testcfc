@@ -508,9 +508,14 @@ public class AuthenticatorTask extends Task {
                             ((PandoraContext) ctx.getApplicationContext()).setAuth_token("");
                             ((PandoraContext) PandoraContext.getContext()).setIsInitialSynced(false);
 
-                            Fragment frag = ((PandoraMain) ctx).getCurrentFragment();
+                            final Fragment frag = ((PandoraMain) ctx).getCurrentFragment();
                             if (frag != null && frag instanceof AccountFragment) {
-                                ((AccountFragment) frag).completedInitialSync();
+                                ((PandoraMain) ctx).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((AccountFragment) frag).completedInitialSync();
+                                    }
+                                });
                             }
                             PandoraHelper.populateMenuForms(ctx, null);
 

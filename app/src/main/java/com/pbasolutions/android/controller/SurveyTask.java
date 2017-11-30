@@ -67,93 +67,101 @@ public class SurveyTask extends Task {
 
 
     public Bundle getSurveys() {
-        String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
-                ((PandoraMain)ctx).getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
-        String projection[] = {
-                MSurvey.C_SURVEY_UUID_COL,
-                MSurvey.C_PROJECTLOCATION_UUID_COL,
-                MSurvey.NAME_COL,
-                MSurvey.DATEDELIVERY_COL,
-                ModelConst.IS_SYNCED_COL
-        };
-        String selection = ModelConst.ISACTIVE_COL + "=? AND " + ModelConst.CREATEDBY_COL + "=?";
-        String selectionArgs [] = {"Y", ad_user_uuid};
-        String sortOrder = MSurvey.STATUS_COL + " DESC, " + MSurvey.DATEDELIVERY_COL + " DESC";
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_TABLE),
-                projection, selection, selectionArgs, sortOrder);
-        ObservableArrayList<MSurvey> surveysList = new ObservableArrayList();
-        if (cursor != null && cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            do {
-                surveysList.add(populateProjectTask(cursor));
-            } while (cursor.moveToNext());
+        try {
+            String ad_user_uuid = ModelConst.mapUUIDtoColumn(ModelConst.AD_USER_TABLE, ModelConst.AD_USER_ID_COL,
+                    ((PandoraMain)ctx).getGlobalVariable().getAd_user_id(), ModelConst.AD_USER_UUID_COL, cr);
+            String projection[] = {
+                    MSurvey.C_SURVEY_UUID_COL,
+                    MSurvey.C_PROJECTLOCATION_UUID_COL,
+                    MSurvey.NAME_COL,
+                    MSurvey.DATEDELIVERY_COL,
+                    ModelConst.IS_SYNCED_COL
+            };
+            String selection = ModelConst.ISACTIVE_COL + "=? AND " + ModelConst.CREATEDBY_COL + "=?";
+            String selectionArgs [] = {"Y", ad_user_uuid};
+            String sortOrder = MSurvey.STATUS_COL + " DESC, " + MSurvey.DATEDELIVERY_COL + " DESC";
+            Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_TABLE),
+                    projection, selection, selectionArgs, sortOrder);
+            ObservableArrayList<MSurvey> surveysList = new ObservableArrayList();
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                do {
+                    surveysList.add(populateProjectTask(cursor));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            output.putSerializable(PBSSurveyController.ARG_SURVEYS, surveysList);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        cursor.close();
-        output.putSerializable(PBSSurveyController.ARG_SURVEYS, surveysList);
         return output;
     }
 
 
     private Bundle getSurvey() {
-        String templateUUID = "";
-        String[] surveyProjection = {
-                ModelConst.C_SURVEY_TABLE + "." + MSurvey.NAME_COL,
-                ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.C_SURVEYTEMPLATE_UUID_COL,
-                ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.NAME_COL + " AS TemplateName",
-                ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.DESCRIPTION_COL,
-                ModelConst.C_SURVEY_TABLE + "." + MSurvey.REMARKS_COL
-        };
-        String selection = ModelConst.C_SURVEY_TABLE + "." + MSurvey.C_SURVEY_UUID_COL + "=? AND " + ModelConst.C_SURVEY_TABLE + "." + ModelConst.ISACTIVE_COL + "=?";
-        String[] selectionArgs = {input.getString(PBSSurveyController.ARG_SURVEY_UUID), "Y"};
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_JOIN_TEMPLATE_TABLE),
-                surveyProjection, selection, selectionArgs, null);
-        if (cursor != null && cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            templateUUID = cursor.getString(1);
-            output.putSerializable(PBSSurveyController.ARG_SURVEY, populateProjectTask(cursor));
-            cursor.close();
-        }
-        else return output;
+        try {
+            String templateUUID = "";
+            String[] surveyProjection = {
+                    ModelConst.C_SURVEY_TABLE + "." + MSurvey.NAME_COL,
+                    ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.C_SURVEYTEMPLATE_UUID_COL,
+                    ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.NAME_COL + " AS TemplateName",
+                    ModelConst.C_SURVEYTEMPLATE_TABLE + "." + MSurvey.DESCRIPTION_COL,
+                    ModelConst.C_SURVEY_TABLE + "." + MSurvey.REMARKS_COL
+            };
+            String selection = ModelConst.C_SURVEY_TABLE + "." + MSurvey.C_SURVEY_UUID_COL + "=? AND " + ModelConst.C_SURVEY_TABLE + "." + ModelConst.ISACTIVE_COL + "=?";
+            String[] selectionArgs = {input.getString(PBSSurveyController.ARG_SURVEY_UUID), "Y"};
+            Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_JOIN_TEMPLATE_TABLE),
+                    surveyProjection, selection, selectionArgs, null);
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                templateUUID = cursor.getString(1);
+                output.putSerializable(PBSSurveyController.ARG_SURVEY, populateProjectTask(cursor));
+                cursor.close();
+            }
+            else return output;
 
-        String[] sectionProjection = { "DISTINCT " + MSurvey.SECTIONNO_COL, MSurvey.SECTIONNAME_COL };
-        String sectionSelection = MSurvey.C_SURVEYTEMPLATE_UUID_COL + "=?";
-        String[] sectionSelectionArgs = {templateUUID};
-        String sortOrder = MSurvey.SECTIONNO_COL + " ASC, " + MSurvey.SEQNO_COL + " ASC";
-        cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE),
-                sectionProjection, sectionSelection, sectionSelectionArgs, sortOrder);
-        if (cursor != null && cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            ArrayList<String> sections = new ArrayList<>();
-            do {
-                sections.add(cursor.getString(1));
-            } while (cursor.moveToNext());
-            output.putSerializable(PBSSurveyController.ARG_SECTIONS, sections);
-        }
-        if (cursor != null)
-            cursor.close();
+            String[] sectionProjection = { "DISTINCT " + MSurvey.SECTIONNO_COL, MSurvey.SECTIONNAME_COL };
+            String sectionSelection = MSurvey.C_SURVEYTEMPLATE_UUID_COL + "=?";
+            String[] sectionSelectionArgs = {templateUUID};
+            String sortOrder = MSurvey.SECTIONNO_COL + " ASC, " + MSurvey.SEQNO_COL + " ASC";
+            cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE),
+                    sectionProjection, sectionSelection, sectionSelectionArgs, sortOrder);
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                ArrayList<String> sections = new ArrayList<>();
+                do {
+                    sections.add(cursor.getString(1));
+                } while (cursor.moveToNext());
+                output.putSerializable(PBSSurveyController.ARG_SECTIONS, sections);
+            }
+            if (cursor != null)
+                cursor.close();
 
-        String[] questionProjection = {
-                ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.C_SURVEYTEMPLATEQUESTION_UUID_COL,
-                ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.NAME_COL + " AS Question",
-                ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.DESCRIPTION_COL + " AS QuestionDesc",
-                ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SECTIONNO_COL,
-                ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SECTIONNAME_COL,
-                ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.TYPE_COL,
-                ModelConst.C_SURVEYRESPONSE_TABLE + "." + MSurvey.REMARKS_COL,
-                ModelConst.C_SURVEYRESPONSE_TABLE + "." + MSurvey.AMT_COL
-        };
-        sortOrder = ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SECTIONNO_COL + " ASC, " + ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SEQNO_COL + " ASC";
-        cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TABLE),
-                questionProjection, selection, selectionArgs, sortOrder);
-        if (cursor != null && cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            ArrayList<MSurvey> questions = new ArrayList<>();
-            do {
-                questions.add(populateProjectTask(cursor));
-            } while (cursor.moveToNext());
-            output.putSerializable(PBSSurveyController.ARG_QUESTIONS, questions);
+            String[] questionProjection = {
+                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.C_SURVEYTEMPLATEQUESTION_UUID_COL,
+                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.NAME_COL + " AS Question",
+                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.DESCRIPTION_COL + " AS QuestionDesc",
+                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SECTIONNO_COL,
+                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SECTIONNAME_COL,
+                    ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.TYPE_COL,
+                    ModelConst.C_SURVEYRESPONSE_TABLE + "." + MSurvey.REMARKS_COL,
+                    ModelConst.C_SURVEYRESPONSE_TABLE + "." + MSurvey.AMT_COL
+            };
+            sortOrder = ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SECTIONNO_COL + " ASC, " + ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE + "." + MSurvey.SEQNO_COL + " ASC";
+            cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_JOIN_TEMPLATE_JOIN_QUESTION_JOIN_RESPONSE_TABLE),
+                    questionProjection, selection, selectionArgs, sortOrder);
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                ArrayList<MSurvey> questions = new ArrayList<>();
+                do {
+                    questions.add(populateProjectTask(cursor));
+                } while (cursor.moveToNext());
+                output.putSerializable(PBSSurveyController.ARG_QUESTIONS, questions);
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        cursor.close();
         return output;
     }
 
@@ -261,111 +269,123 @@ public class SurveyTask extends Task {
 
 
     private Bundle insertSurvey() {
-        ContentValues[] answerCV = (ContentValues[]) input.getParcelableArray(PBSSurveyController.SURVEY_ANSWERS);
-        ContentValues surveyCV = input.getParcelable(PBSSurveyController.SURVEY_VALUES);
-        Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_TABLE), surveyCV);
-        boolean result = ModelConst.getURIResult(uri);
+        try {
+            ContentValues[] answerCV = (ContentValues[]) input.getParcelableArray(PBSSurveyController.SURVEY_ANSWERS);
+            ContentValues surveyCV = input.getParcelable(PBSSurveyController.SURVEY_VALUES);
+            Uri uri = cr.insert(ModelConst.uriCustomBuilder(ModelConst.C_SURVEY_TABLE), surveyCV);
+            boolean result = ModelConst.getURIResult(uri);
 
-        if (result) {
-            long id = ContentUris.parseId(uri);
-            String surveyuuid = ModelConst.mapUUIDtoColumn(ModelConst.C_SURVEY_TABLE, "rowid", String.valueOf(id), MSurvey.C_SURVEY_UUID_COL, cr);
-            for (int i = 0; i < answerCV.length; i++) {
-                answerCV[i].put(MSurvey.C_SURVEY_UUID_COL, surveyuuid);
+            if (result) {
+                long id = ContentUris.parseId(uri);
+                String surveyuuid = ModelConst.mapUUIDtoColumn(ModelConst.C_SURVEY_TABLE, "rowid", String.valueOf(id), MSurvey.C_SURVEY_UUID_COL, cr);
+                for (int i = 0; i < answerCV.length; i++) {
+                    answerCV[i].put(MSurvey.C_SURVEY_UUID_COL, surveyuuid);
+                }
+                int insertedCount = cr.bulkInsert(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYRESPONSE_TABLE), answerCV);
+                output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+                output.putString(PandoraConstant.RESULT, "Successfully insert new survey.");
+            } else {
+                output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+                output.putString(PandoraConstant.ERROR, "Fail to insert new survey.");
             }
-            int insertedCount = cr.bulkInsert(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYRESPONSE_TABLE), answerCV);
-            output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-            output.putString(PandoraConstant.RESULT, "Successfully insert new survey.");
-        } else {
-            output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
-            output.putString(PandoraConstant.ERROR, "Fail to insert new survey.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return output;
     }
 
     private Bundle getTemplates() {
-        String[] projection = {MSurvey.C_SURVEYTEMPLATE_UUID_COL, MSurvey.NAME_COL};
-        String selection = ModelConst.ISACTIVE_COL + "=?";
-        String selectionArgs [] = {"Y"};
-        //grab the template names from database view.
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATE_TABLE),
-                projection, selection, selectionArgs, null);
+        try {
+            String[] projection = {MSurvey.C_SURVEYTEMPLATE_UUID_COL, MSurvey.NAME_COL};
+            String selection = ModelConst.ISACTIVE_COL + "=?";
+            String selectionArgs [] = {"Y"};
+            //grab the template names from database view.
+            Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATE_TABLE),
+                    projection, selection, selectionArgs, null);
 
-        ArrayList<SpinnerPair> templateList = new ArrayList<>();
-        if (cursor != null && cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            do {
-                SpinnerPair pair = new SpinnerPair();
-                for (int x = 0; x < cursor.getColumnNames().length; x++) {
-                    if (MSurvey.NAME_COL
-                            .equalsIgnoreCase(cursor.getColumnName(x))) {
-                        pair.setValue(cursor.getString(x));
-                    } else if (MSurvey.C_SURVEYTEMPLATE_UUID_COL
-                            .equalsIgnoreCase(cursor.getColumnName(x))) {
-                        pair.setKey(cursor.getString(x));
+            ArrayList<SpinnerPair> templateList = new ArrayList<>();
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                do {
+                    SpinnerPair pair = new SpinnerPair();
+                    for (int x = 0; x < cursor.getColumnNames().length; x++) {
+                        if (MSurvey.NAME_COL
+                                .equalsIgnoreCase(cursor.getColumnName(x))) {
+                            pair.setValue(cursor.getString(x));
+                        } else if (MSurvey.C_SURVEYTEMPLATE_UUID_COL
+                                .equalsIgnoreCase(cursor.getColumnName(x))) {
+                            pair.setKey(cursor.getString(x));
+                        }
                     }
-                }
-                templateList.add(pair);
-            } while (cursor.moveToNext());
+                    templateList.add(pair);
+                } while (cursor.moveToNext());
+            }
+            if (cursor != null)
+                cursor.close();
+            output.putParcelableArrayList(PBSSurveyController.ARG_TEMPLATES, templateList);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (cursor != null)
-            cursor.close();
-        output.putParcelableArrayList(PBSSurveyController.ARG_TEMPLATES, templateList);
         return output;
     }
 
     private Bundle getTemplateQuestions() {
-        String[] templateProjection = {
-                MSurvey.NAME_COL + " AS TemplateName",
-                MSurvey.DESCRIPTION_COL
-        };
-        String selection = MSurvey.C_SURVEYTEMPLATE_UUID_COL + "=? AND " + ModelConst.ISACTIVE_COL + "=?";
-        String[] selectionArgs = {input.getString(PBSSurveyController.ARG_TEMPLATE_UUID), "Y"};
-        Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATE_TABLE),
-                templateProjection, selection, selectionArgs, null);
-        if (cursor != null && cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            output.putSerializable(PBSSurveyController.ARG_SURVEY, populateProjectTask(cursor));
-            cursor.close();
-        }
-        else return output;
+        try {
+            String[] templateProjection = {
+                    MSurvey.NAME_COL + " AS TemplateName",
+                    MSurvey.DESCRIPTION_COL
+            };
+            String selection = MSurvey.C_SURVEYTEMPLATE_UUID_COL + "=? AND " + ModelConst.ISACTIVE_COL + "=?";
+            String[] selectionArgs = {input.getString(PBSSurveyController.ARG_TEMPLATE_UUID), "Y"};
+            Cursor cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATE_TABLE),
+                    templateProjection, selection, selectionArgs, null);
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                output.putSerializable(PBSSurveyController.ARG_SURVEY, populateProjectTask(cursor));
+                cursor.close();
+            }
+            else return output;
 
-        String[] sectionProjection = { "DISTINCT " + MSurvey.SECTIONNO_COL, MSurvey.SECTIONNAME_COL };
-        String sortOrder = MSurvey.SECTIONNO_COL + " ASC, " + MSurvey.SEQNO_COL + " ASC";
-        cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE),
-                sectionProjection, selection, selectionArgs, sortOrder);
-        if (cursor != null && cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            ArrayList<String> sections = new ArrayList<>();
-            do {
-                sections.add(cursor.getString(1));
-            } while (cursor.moveToNext());
-            output.putSerializable(PBSSurveyController.ARG_SECTIONS, sections);
-        }
-        if (cursor != null)
-            cursor.close();
+            String[] sectionProjection = { "DISTINCT " + MSurvey.SECTIONNO_COL, MSurvey.SECTIONNAME_COL };
+            String sortOrder = MSurvey.SECTIONNO_COL + " ASC, " + MSurvey.SEQNO_COL + " ASC";
+            cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE),
+                    sectionProjection, selection, selectionArgs, sortOrder);
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                ArrayList<String> sections = new ArrayList<>();
+                do {
+                    sections.add(cursor.getString(1));
+                } while (cursor.moveToNext());
+                output.putSerializable(PBSSurveyController.ARG_SECTIONS, sections);
+            }
+            if (cursor != null)
+                cursor.close();
 
-        String[] questionProjection = {
-                MSurvey.C_SURVEYTEMPLATEQUESTION_UUID_COL,
-                MSurvey.NAME_COL + " AS Question",
-                MSurvey.DESCRIPTION_COL + " AS QuestionDesc",
-                MSurvey.SECTIONNO_COL,
-                MSurvey.SECTIONNAME_COL,
-                MSurvey.TYPE_COL
-        };
-        //grab the template questions from database view.
-        sortOrder = MSurvey.SECTIONNO_COL + " ASC, " + MSurvey.C_SURVEYTEMPLATEQUESTION_ID_COL + " ASC";
-        cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE),
-                questionProjection, selection, selectionArgs, sortOrder);
-        if (cursor != null && cursor.getCount() != 0) {
-            cursor.moveToFirst();
-            ArrayList<MSurvey> questions = new ArrayList<>();
-            do {
-                questions.add(populateProjectTask(cursor));
-            } while (cursor.moveToNext());
-            output.putSerializable(PBSSurveyController.ARG_QUESTIONS, questions);
+            String[] questionProjection = {
+                    MSurvey.C_SURVEYTEMPLATEQUESTION_UUID_COL,
+                    MSurvey.NAME_COL + " AS Question",
+                    MSurvey.DESCRIPTION_COL + " AS QuestionDesc",
+                    MSurvey.SECTIONNO_COL,
+                    MSurvey.SECTIONNAME_COL,
+                    MSurvey.TYPE_COL
+            };
+            //grab the template questions from database view.
+            sortOrder = MSurvey.SECTIONNO_COL + " ASC, " + MSurvey.C_SURVEYTEMPLATEQUESTION_ID_COL + " ASC";
+            cursor = cr.query(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYTEMPLATEQUESTION_TABLE),
+                    questionProjection, selection, selectionArgs, sortOrder);
+            if (cursor != null && cursor.getCount() != 0) {
+                cursor.moveToFirst();
+                ArrayList<MSurvey> questions = new ArrayList<>();
+                do {
+                    questions.add(populateProjectTask(cursor));
+                } while (cursor.moveToNext());
+                output.putSerializable(PBSSurveyController.ARG_QUESTIONS, questions);
+            }
+            if (cursor != null)
+                cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (cursor != null)
-            cursor.close();
         return output;
     }
 

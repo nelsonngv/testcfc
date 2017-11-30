@@ -73,6 +73,8 @@ import com.pbasolutions.android.model.ModelConst;
 import org.json.JSONArray;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,6 +82,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -351,6 +354,60 @@ public class PandoraHelper  {
                                           int monthOfYear, int dayOfMonth) {
                         String timeStr = String.format("%02d-%02d-%04d", dayOfMonth, monthOfYear + 1, year);
                         date.setText(timeStr);
+
+                    }
+                }, mYear, mMonth, mDay);
+        if (hasMinDate) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, cal.getMinimum(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, cal.getMinimum(Calendar.MINUTE));
+            cal.set(Calendar.SECOND, cal.getMinimum(Calendar.SECOND));
+            cal.set(Calendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
+            dpd.getDatePicker().setMinDate(cal.getTimeInMillis());
+        }
+        if (hasMaxDate) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.HOUR_OF_DAY, cal.getMaximum(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, cal.getMaximum(Calendar.MINUTE));
+            cal.set(Calendar.SECOND, cal.getMaximum(Calendar.SECOND));
+            cal.set(Calendar.MILLISECOND, cal.getMaximum(Calendar.MILLISECOND));
+            dpd.getDatePicker().setMaxDate(cal.getTimeInMillis());
+        }
+        dpd.show();
+    }
+    public static void promptDatePickerWithDay(final TextView date, Activity activity) {
+        promptDatePickerWithDay(date, activity, false, true);
+    }
+    public static void promptFutureDatePickerWithDay(final TextView date, Activity activity) {
+        promptDatePickerWithDay(date, activity, true, false);
+    }
+    public static void promptDatePickerWithDay(final TextView date, Activity activity, boolean hasMinDate, boolean hasMaxDate) {
+        final Calendar c = Calendar.getInstance();
+        final SimpleDateFormat sdf = new SimpleDateFormat("EE, dd-MM-yyyy");
+        if (date != null && date.getText() != null && !date.getText().toString().isEmpty()) {
+            try {
+                c.setTime(sdf.parse(date.getText().toString()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        int  mYear = c.get(Calendar.YEAR);
+        int  mMonth = c.get(Calendar.MONTH);
+        int  mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dpd = new DatePickerDialog(activity,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        try {
+                            SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+                            Date date2 = sdf2.parse(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                            date.setText(sdf.format(date2));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 }, mYear, mMonth, mDay);

@@ -224,24 +224,28 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment implements PBABac
         @Override
         protected void onPostExecute(Bundle result) {
             super.onPostExecute(result);
-            ((PandoraMain)getActivity()).dismissProgressDialog();
-            survey = (MSurvey) result.getSerializable(PBSSurveyController.ARG_SURVEY);
-            questions = (ArrayList<MSurvey>) result.getSerializable(PBSSurveyController.ARG_QUESTIONS);
-            sections = (ArrayList<String>) result.getSerializable(PBSSurveyController.ARG_SECTIONS);
-            if (sections == null || sections.size() == 0) {
-                PandoraHelper.showWarningMessage(getActivity(), "This template does not have any questions.");
-                getActivity().getSupportFragmentManager().popBackStack();
-                return;
-            }
-            NUM_PAGES = sections.size();
-            if (_UUID != null && !_UUID.equals(""))
-                NUM_PAGES++;
-            mPager.setOffscreenPageLimit(NUM_PAGES);
-            updateMenuItem();
+            try {
+                ((PandoraMain)getActivity()).dismissProgressDialog();
+                survey = (MSurvey) result.getSerializable(PBSSurveyController.ARG_SURVEY);
+                questions = (ArrayList<MSurvey>) result.getSerializable(PBSSurveyController.ARG_QUESTIONS);
+                sections = (ArrayList<String>) result.getSerializable(PBSSurveyController.ARG_SECTIONS);
+                if (sections == null || sections.size() == 0) {
+                    PandoraHelper.showWarningMessage(getActivity(), "This template does not have any questions.");
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    return;
+                }
+                NUM_PAGES = sections.size();
+                if (_UUID != null && !_UUID.equals(""))
+                    NUM_PAGES++;
+                mPager.setOffscreenPageLimit(NUM_PAGES);
+                updateMenuItem();
 
-            if (_UUID == null || _UUID.equals(""))
-                survey.setName(PBSSurveyController.name);
-            ((PandoraMain)getActivity()).getSupportActionBar().setTitle(survey.getName());
+                if (_UUID == null || _UUID.equals(""))
+                    survey.setName(PBSSurveyController.name);
+                ((PandoraMain)getActivity()).getSupportActionBar().setTitle(survey.getName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -332,9 +336,11 @@ public class NewSurveyPagerFragment extends PBSDetailsFragment implements PBABac
 
     @Override
     public boolean onBackKeyPressed() {
-        if (mPager.getCurrentItem() > 0) {
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1, true);
-            return false;
+        if (_UUID == null || _UUID.equals("")) {
+            if (mPager.getCurrentItem() > 0) {
+                mPager.setCurrentItem(mPager.getCurrentItem() - 1, true);
+                return false;
+            } else return true;
         }
         else return true;
     }
