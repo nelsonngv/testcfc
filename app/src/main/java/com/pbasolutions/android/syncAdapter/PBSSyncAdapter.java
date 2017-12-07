@@ -49,7 +49,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String SYNCIDENTIFIER = "syncIdentifier";
     private final AccountManager accountManager;
     private Context context;
-    private int syncIdentifier;
+    private String syncIdentifier;
     private Handler handler;
     private SharedPreferences prefs;
 
@@ -64,7 +64,13 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
         this.context = context;
         handler = new Handler(Looper.getMainLooper());
         prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
-        syncIdentifier = prefs.getInt(SYNCIDENTIFIER, 0);
+        try {
+            syncIdentifier = prefs.getString(SYNCIDENTIFIER, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            prefs.edit().remove(SYNCIDENTIFIER).commit();
+            syncIdentifier = prefs.getString(SYNCIDENTIFIER, "");
+        }
     }
 
     /**
@@ -125,15 +131,15 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
             }
             String userName = account.name;
 
-            if (syncIdentifier == 0) {
+            if (syncIdentifier.isEmpty()) {
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("ddHHmmss");
-                syncIdentifier = Integer.parseInt(sdf.format(date));
+                syncIdentifier = sdf.format(date)/*.replaceFirst("^0+(?!$)", "")*/;
             }
 
             boolean isAuthSuccess = false;
             Bundle inputAuth = new Bundle();
-            inputAuth.putInt(PBSServerConst.IDENTIFIER, syncIdentifier);
+            inputAuth.putString(PBSServerConst.IDENTIFIER, syncIdentifier);
             inputAuth.putString(PBSAuthenticatorController.USER_NAME_ARG, userName);
             inputAuth.putString(PBSAuthenticatorController.AUTH_TOKEN_ARG, authToken);
             inputAuth.putString(PBSAuthenticatorController.SERVER_URL_ARG, serverURL);
@@ -259,12 +265,12 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
 //                                PandoraMain.instance.updateInitialSyncState(isSyncCompleted && projLoc != null);
                                 getContext().getContentResolver().notifyChange(Uri.parse("http://" + BuildConfig.APPLICATION_ID + ".syncNotify"), null, false);
                             }
-                            syncIdentifier = 0;
+                            syncIdentifier = "";
                             global.setProjLocJSON(projLoc);
                         }
                     } else {
                         if (syncCount != -1) {
-                            syncIdentifier = 0;
+                            syncIdentifier = "";
                             extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
                             extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
                             ContentResolver.requestSync(account, authority, extras);
@@ -313,7 +319,7 @@ public class PBSSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
             syncResult.stats.numAuthExceptions++;
         } finally {
-            prefs.edit().putInt(SYNCIDENTIFIER, syncIdentifier).apply();
+            prefs.edit().putString(SYNCIDENTIFIER, syncIdentifier).apply();
         }
     }
 }

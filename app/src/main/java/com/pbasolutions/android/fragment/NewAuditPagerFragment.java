@@ -390,8 +390,8 @@ public class NewAuditPagerFragment extends PBSDetailsFragment implements PBABack
         prev.getIcon().setAlpha(mPager.getCurrentItem() > 0 ? 255 : 64);
         next.setEnabled(mPager.getCurrentItem() < NUM_PAGES - 1);
         next.getIcon().setAlpha(mPager.getCurrentItem() < NUM_PAGES - 1 ? 255 : 64);
-        complete.setEnabled(mPager.getChildCount() == mPager.getCurrentItem() + 1);
-        complete.getIcon().setAlpha(mPager.getChildCount() == mPager.getCurrentItem() + 1 ? 255 : 64);
+        complete.setEnabled(NUM_PAGES == mPager.getCurrentItem() + 1);
+        complete.getIcon().setAlpha(NUM_PAGES == mPager.getCurrentItem() + 1 ? 255 : 64);
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

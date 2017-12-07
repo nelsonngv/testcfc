@@ -15,9 +15,9 @@ public interface PBSIServerAccessor {
      * a User object with stored of username, password and authToken.
      * @return  PBSResultJSON result of updating tables to server.
      **/
-    public Bundle updateTables(final PBSTableJSON updateJSON, final String username, final String authToken, final String serverURL) throws Exception;
+    public Bundle updateTables(final PBSTableJSON updateJSON, final String username, final String authToken, final String serverURL, String updateIdentifier) throws Exception;
 
-    public PBSSyncJSON syncTables(final String username, String authToken, final String serverURL, int syncIdentifier);
+    public PBSSyncJSON syncTables(final String username, String authToken, final String serverURL, String syncIdentifier);
 
     public PBSJson getUnsyncCount(final String serverURL);
 }

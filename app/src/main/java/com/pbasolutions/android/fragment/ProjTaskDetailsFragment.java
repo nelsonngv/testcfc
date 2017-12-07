@@ -485,7 +485,8 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
                 taskContactNo.setText(projTask.getContactNo());
                 taskDateAssigned.setText(sdf2.format(sdf.parse(projTask.getDateAssigned())));
                 taskDueDate.setText(sdf2.format(sdf.parse(projTask.getDueDate())));
-                taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
+                if (projTask.getAssignedTo() != 0)
+                    taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(String.valueOf(projTask.getAssignedTo())));
                 if (projTask.getSecAssignedTo() != 0)
                     taskSecAssignedTo.setSelection(((SpinAdapter) secAssignToAdapter).getPosition(String.valueOf(projTask.getSecAssignedTo())));
 

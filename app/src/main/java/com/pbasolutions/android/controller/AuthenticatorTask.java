@@ -503,9 +503,9 @@ public class AuthenticatorTask extends Task {
                             ((PandoraContext) ctx.getApplicationContext()).setC_ProjectLocation_Spinner_Index(0);
                             ((PandoraContext) ctx.getApplicationContext()).setAd_user_id("");
                             ((PandoraContext) ctx.getApplicationContext()).setAd_user_uuid("");
-                            ((PandoraContext) ctx.getApplicationContext()).setAd_user_name("");
-                            ((PandoraContext) ctx.getApplicationContext()).setAd_user_password("");
-                            ((PandoraContext) ctx.getApplicationContext()).setAuth_token("");
+                            ((PandoraContext) ctx.getApplicationContext()).setAd_user_name(userName);
+                            ((PandoraContext) ctx.getApplicationContext()).setAd_user_password(userPass);
+                            ((PandoraContext) ctx.getApplicationContext()).setAuth_token(user.getToken());
                             ((PandoraContext) PandoraContext.getContext()).setIsInitialSynced(false);
 
                             final Fragment frag = ((PandoraMain) ctx).getCurrentFragment();

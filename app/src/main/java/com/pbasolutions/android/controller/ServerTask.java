@@ -2,11 +2,14 @@ package com.pbasolutions.android.controller;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
 
+import com.pbasolutions.android.BuildConfig;
 import com.pbasolutions.android.PBSServerConst;
 import com.pbasolutions.android.PandoraConstant;
 import com.pbasolutions.android.PandoraHelper;
@@ -20,6 +23,7 @@ import com.pbasolutions.android.syncAdapter.PBSServerAccessor;
 import com.pbasolutions.android.utils.CameraUtil;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,11 +34,22 @@ import java.util.List;
 public class ServerTask extends Task {
 
     private static final String TAG = "ServerTask";
+    private static final String UPDATEIDENTIFIER = "updateIdentifier";
 
     private ContentResolver cr;
+    private SharedPreferences prefs;
+    private String updateIdentifier;
 
-    public ServerTask(ContentResolver cr) {
+    public ServerTask(Context context, ContentResolver cr) {
         this.cr = cr;
+        prefs = context.getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        try {
+            updateIdentifier = prefs.getString(UPDATEIDENTIFIER, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            prefs.edit().remove(UPDATEIDENTIFIER).commit();
+            updateIdentifier = prefs.getString(UPDATEIDENTIFIER, "");
+        }
     }
 
     /**
@@ -156,6 +171,11 @@ public class ServerTask extends Task {
                     if (tableCursor.getCount() > 0) {
                         for (tableCursor.moveToFirst(); !tableCursor.isAfterLast();
                              tableCursor.moveToNext()) {
+
+                            if (!output.isEmpty() && !output.getBoolean(PandoraConstant.RESULT))
+                                if (!tableCursor.isFirst())
+                                    tableCursor.moveToPrevious();
+
                             // check if contains parent & update parent.
                             if (isContainsParentTable(tableCursor, tableName)) {
                                 output = updateParentTable(tableCursor, tableName,
@@ -185,7 +205,7 @@ public class ServerTask extends Task {
                     input.getString(PBSAuthenticatorController.USER_NAME_ARG),
                     input.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
                     input.getString(PBSAuthenticatorController.SERVER_URL_ARG),
-                    input.getInt(PBSServerConst.IDENTIFIER));
+                    input.getString(PBSServerConst.IDENTIFIER));
             int syncedCount = 0;
             if (syncJSON != null) {
                 if (syncJSON.getNew() != null) {
@@ -464,37 +484,55 @@ public class ServerTask extends Task {
                     columns.add(new PBSColumnsJSON(tableCursor.getColumnName(x), value));
                 }
             }
+
+            if (updateIdentifier.isEmpty()) {
+                Date date = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("ddHHmmssSSS");
+                updateIdentifier = sdf.format(date).replaceFirst("^0+(?!$)", "");
+            }
+
+            PBSColumnsJSON[] array = columns.toArray(new PBSColumnsJSON[columns.size()]);
+            data.setColumns(array);
+            PBSIServerAccessor serverAccessor = new PBSServerAccessor();
+            resultBundle = serverAccessor.updateTables(data,
+                    inputBundle.getString(PBSAuthenticatorController.USER_PASS_ARG),
+                    inputBundle.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
+                    inputBundle.getString(PBSAuthenticatorController.SERVER_URL_ARG),
+                    updateIdentifier);
+//            resultBundle = updateResult(data, resultBundle, contentResolver, tableName,
+//                    uuid, inputBundle.getString(PBSAuthenticatorController.USER_PASS_ARG),
+//                    inputBundle.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
+//                    inputBundle.getString(PBSAuthenticatorController.SERVER_URL_ARG),
+//                    updateIdentifier);
+
+            if (resultBundle.getBoolean(PandoraConstant.RESULT)) {
+                updateIdentifier = "";
+//                String tableNames[] = ModelConst.localUpdateIDTables;
+//                for (int i = 0; i < tableNames.length; i++) {
+//                    if (tableName.equals(tableNames[i])) {
+                        String ID = resultBundle.getString("ID", null);
+                        ContentValues cv = new ContentValues();
+                        cv.put(tableName + ModelConst._ID, ID);
+                        cv.put(ModelConst.IS_SYNCED_COL, "Y");
+                        String selection = tableName + ModelConst._UUID;
+                        String[] arg = {uuid};
+                        ModelConst.updateTableRow(cr, tableName, cv, selection, arg);
+
+                        if (tableName.equals(ModelConst.C_SURVEY_TABLE)) {
+                            File sign = new File(attachment);
+                            if (sign.exists()) sign.delete();
+                        }
+//                        break;
+//                    }
+//                }
+            }
         } catch (Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
             e.printStackTrace();
+        } finally {
+            prefs.edit().putString(UPDATEIDENTIFIER, updateIdentifier).apply();
         }
-        PBSColumnsJSON[] array = columns.toArray(new PBSColumnsJSON[columns.size()]);
-        data.setColumns(array);
-        Bundle bundle = updateResult(data, resultBundle, contentResolver, tableName,
-                uuid, inputBundle.getString(PBSAuthenticatorController.USER_PASS_ARG),
-                inputBundle.getString(PBSAuthenticatorController.AUTH_TOKEN_ARG),
-                inputBundle.getString(PBSAuthenticatorController.SERVER_URL_ARG));
-
-        if (bundle.getBoolean(PandoraConstant.RESULT)) {
-            String tableNames[] = ModelConst.localUpdateIDTables;
-            for (int i = 0; i < tableNames.length; i++) {
-                if (tableName.equals(tableNames[i])) {
-                    String ID = bundle.getString("ID", null);
-                    ContentValues cv = new ContentValues();
-                    cv.put(tableName + ModelConst._ID, ID);
-                    String selection = tableName + ModelConst._UUID;
-                    String[] arg = {uuid};
-                    ModelConst.updateTableRow(cr, tableName, cv, selection, arg);
-
-                    if (tableName.equals(ModelConst.C_SURVEY_TABLE)) {
-                        File sign = new File(attachment);
-                        if (sign.exists()) sign.delete();
-                    }
-                    break;
-                }
-            }
-        }
-        return bundle;
+        return resultBundle;
     }
 
 
@@ -509,12 +547,12 @@ public class ServerTask extends Task {
      * @return
      */
     private Bundle updateResult(PBSTableJSON tableData, Bundle resultBundle,
-                                ContentResolver contentResolver
-            , String tableName, String tableUUID, String username, String authToken, String server) {
+                                ContentResolver contentResolver, String tableName, String tableUUID,
+                                String username, String authToken, String server, String updateIdentifier) {
 
         try {
             PBSIServerAccessor serverAccessor = new PBSServerAccessor();
-            resultBundle = serverAccessor.updateTables(tableData, username, authToken, server);
+            resultBundle = serverAccessor.updateTables(tableData, username, authToken, server, updateIdentifier);
             if (!resultBundle.getBoolean(PandoraConstant.RESULT)) {
 //                resultBundle.putString("Result" + tableData.getTableName(), tableData.getTableName());
 //                resultBundle.putBoolean(PandoraConstant.RESULT, false);

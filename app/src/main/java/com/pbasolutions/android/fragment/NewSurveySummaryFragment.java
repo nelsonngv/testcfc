@@ -67,8 +67,9 @@ public class NewSurveySummaryFragment extends Fragment {
         if (bundle != null) {
             isViewing = bundle.getBoolean("isViewing", false);
             survey = bundle.getParcelable("survey");
-            answerList = bundle.getParcelableArrayList("answers");
-            sectionList = bundle.getStringArrayList("sections");
+            answerList = bundle.getParcelableArrayList("answers") == null ? new ArrayList() : bundle.getParcelableArrayList("answers");
+            sectionList = bundle.getStringArrayList("sections") == null ? new ArrayList() : bundle.getStringArrayList("sections");
+
             ArrayList<Pair> ratings = new ArrayList<>();
             int totalRating = 0;
             for (int i = 0; i < sectionList.size(); i++) {

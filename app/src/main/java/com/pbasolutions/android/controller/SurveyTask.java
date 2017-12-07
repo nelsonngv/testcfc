@@ -75,7 +75,8 @@ public class SurveyTask extends Task {
                     MSurvey.C_PROJECTLOCATION_UUID_COL,
                     MSurvey.NAME_COL,
                     MSurvey.DATEDELIVERY_COL,
-                    ModelConst.IS_SYNCED_COL
+                    "(select count(*) from c_surveyresponse b where b.c_survey_uuid = c_survey.c_survey_uuid and b.issynced='Y') as numOfSynced",
+                    "(select count(*) from c_surveyresponse b where b.c_survey_uuid = c_survey.c_survey_uuid) as totalToSync"
             };
             String selection = ModelConst.ISACTIVE_COL + "=? AND " + ModelConst.CREATEDBY_COL + "=?";
             String selectionArgs [] = {"Y", ad_user_uuid};
@@ -259,6 +260,12 @@ public class SurveyTask extends Task {
                 } else if (MSurvey.AMT_COL
                         .equalsIgnoreCase(columnName)) {
                     survey.setAmt(rowValue);
+                } else if ("numOfSynced"
+                        .equalsIgnoreCase(columnName)) {
+                    survey.setNumOfSynced(Integer.valueOf(rowValue));
+                } else if ("totalToSync"
+                        .equalsIgnoreCase(columnName)) {
+                    survey.setTotalToSync(Integer.valueOf(rowValue));
                 }
             }
         } catch (Exception e) {
@@ -282,8 +289,13 @@ public class SurveyTask extends Task {
                     answerCV[i].put(MSurvey.C_SURVEY_UUID_COL, surveyuuid);
                 }
                 int insertedCount = cr.bulkInsert(ModelConst.uriCustomBuilder(ModelConst.C_SURVEYRESPONSE_TABLE), answerCV);
-                output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
-                output.putString(PandoraConstant.RESULT, "Successfully insert new survey.");
+                if (answerCV.length == insertedCount) {
+                    output.putString(PandoraConstant.TITLE, PandoraConstant.RESULT);
+                    output.putString(PandoraConstant.RESULT, "Successfully insert new survey.");
+                } else {
+                    output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
+                    output.putString(PandoraConstant.ERROR, "Fail to insert new survey responses.");
+                }
             } else {
                 output.putString(PandoraConstant.TITLE, PandoraConstant.ERROR);
                 output.putString(PandoraConstant.ERROR, "Fail to insert new survey.");

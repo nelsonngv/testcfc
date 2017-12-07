@@ -24,7 +24,7 @@ public class PBSServerAccessor extends PBSServer implements PBSIServerAccessor {
      * @return Result of updating table to server.
      */
     @Override
-    public Bundle updateTables(PBSTableJSON jsonUpdate, String username, String authToken, String serverURL) throws Exception {
+    public Bundle updateTables(PBSTableJSON jsonUpdate, String username, String authToken, String serverURL, String updateIdentifier) throws Exception {
 
         Gson gson = new Gson();
 
@@ -36,6 +36,8 @@ public class PBSServerAccessor extends PBSServer implements PBSIServerAccessor {
         String query = null;
         try {
             query = String.format("%s=%s", PBSServerConst.ACTION, URLEncoder.encode(PBSServerConst.ACTION_UPDATE, "UTF-8"));
+//            query += PBSServerConst.AND +
+//                    String.format("%s=%s", PBSServerConst.IDENTIFIER, updateIdentifier);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -46,7 +48,7 @@ public class PBSServerAccessor extends PBSServer implements PBSIServerAccessor {
         String responseString =  postServer(url,json);
         resultJSON = new Gson().fromJson(responseString,  PBSResultJSON.class);
 
-        if (resultJSON.getSuccess() != null) {
+        if (resultJSON != null && resultJSON.getSuccess() != null) {
             if (resultJSON.getSuccess().equals("TRUE")) {
                 returnBundle.putBoolean("RESULT", true);
                 returnBundle.putString("ID", resultJSON.getID());
@@ -65,7 +67,7 @@ public class PBSServerAccessor extends PBSServer implements PBSIServerAccessor {
     }
 
     @Override
-    public PBSSyncJSON syncTables(final String username, final String authToken, final String serverURL, int syncIdentifier) {
+    public PBSSyncJSON syncTables(final String username, final String authToken, final String serverURL, String syncIdentifier) {
         String url = getURL(serverURL, PBSServerConst.PATH, PBSServerConst.SYNC_JSP);
         String query = null;
         try {

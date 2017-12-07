@@ -32,6 +32,12 @@ public class SurveyRVA extends RecyclerView.Adapter<SurveyRVA.SurveyVH> {
     @Override
     public void onBindViewHolder(SurveyVH holder, int position) {
         MSurvey survey = surveyList.get(position);
+        int numOfSynced = survey.getNumOfSynced();
+        int totalToSync = survey.getTotalToSync();
+        if (numOfSynced == totalToSync)
+            survey.setStatus("Synced");
+        else survey.setStatus("Pending to sync (" + numOfSynced + "/" + totalToSync + ")");
+
         holder.vBinding.setSurvey(survey);
         if (surveyList.size() == 1)
             holder.itemView.setPadding(0, 10, 0, 10);

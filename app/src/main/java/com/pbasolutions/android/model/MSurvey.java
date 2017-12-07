@@ -72,6 +72,8 @@ public class MSurvey extends PBSJson implements Parcelable {
     private String remarks;
     private String amt;
     private int statusColor;
+    private int numOfSynced;
+    private int totalToSync;
 
     public MSurvey() {
 
@@ -417,5 +419,21 @@ public class MSurvey extends PBSJson implements Parcelable {
 
     public void setQuestionDesc(String questiondesc) {
         this.questiondesc = questiondesc;
+    }
+
+    public int getNumOfSynced() {
+        return numOfSynced;
+    }
+
+    public void setNumOfSynced(int numOfSynced) {
+        this.numOfSynced = numOfSynced;
+    }
+
+    public int getTotalToSync() {
+        return totalToSync;
+    }
+
+    public void setTotalToSync(int totalToSync) {
+        this.totalToSync = totalToSync;
     }
 }

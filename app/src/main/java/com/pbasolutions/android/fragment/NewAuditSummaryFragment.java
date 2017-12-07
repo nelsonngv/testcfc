@@ -63,8 +63,9 @@ public class NewAuditSummaryFragment extends Fragment implements PBABackKeyListe
         bundle = getArguments();
         if (bundle != null) {
             isViewing = bundle.getBoolean("isViewing", false);
-            answerList = bundle.getParcelableArrayList("answers");
-            sectionList = bundle.getStringArrayList("sections");
+            answerList = bundle.getParcelableArrayList("answers") == null ? new ArrayList() : bundle.getParcelableArrayList("answers");
+            sectionList = bundle.getStringArrayList("sections") == null ? new ArrayList() : bundle.getStringArrayList("sections");
+
             ArrayList<Pair> ratings = new ArrayList<>();
             int totalCount = 0, totalRating = 0;
             for (int i = 0; i < sectionList.size(); i++) {

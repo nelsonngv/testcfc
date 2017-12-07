@@ -34,6 +34,6 @@ public class PBSServerController extends PBSController {
      */
     public PBSServerController(Context base) {
         super(base);
-        task = new ServerTask(getContentResolver());
+        task = new ServerTask(base, getContentResolver());
     }
 }
