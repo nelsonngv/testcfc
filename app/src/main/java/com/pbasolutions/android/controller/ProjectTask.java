@@ -887,25 +887,33 @@ public class ProjectTask implements Callable<Bundle>, ITask {
                 } else if (MProjectTask.DUEDATE_COL
                         .equalsIgnoreCase(columnName)) {
                     if (rowValue != null) {
-                        Date date;
-                        try {
-                            date = df.parse(rowValue);
-                        } catch (Exception e) {
-                            date = df2.parse(rowValue);
+                        if (rowValue.length() == 10)
+                            projTask.setDueDate(rowValue);
+                        else {
+                            Date date;
+                            try {
+                                date = df.parse(rowValue);
+                            } catch (Exception e2) {
+                                date = df2.parse(rowValue);
+                            }
+                            projTask.setDueDate(sdf.format(date));
                         }
-                        projTask.setDueDate(sdf.format(date));
                     } else
                         projTask.setDueDate(rowValue);
                 } else if (MProjectTask.DATEASSIGNED_COL
                         .equalsIgnoreCase(columnName)) {
                     if (rowValue != null) {
-                        Date date;
-                        try {
-                            date = df.parse(rowValue);
-                        } catch (Exception e) {
-                            date = df2.parse(rowValue);
+                        if (rowValue.length() == 10)
+                            projTask.setDateAssigned(rowValue);
+                        else {
+                            Date date;
+                            try {
+                                date = df.parse(rowValue);
+                            } catch (Exception e2) {
+                                date = df2.parse(rowValue);
+                            }
+                            projTask.setDateAssigned(sdf.format(date));
                         }
-                        projTask.setDateAssigned(sdf.format(date));
                     } else
                         projTask.setDateAssigned(rowValue);
                 }

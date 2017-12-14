@@ -296,12 +296,16 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         AdapterView.OnItemSelectedListener assignToItem = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                assignToPair = (SpinnerPair) parent.getItemAtPosition(position);
-                secAssignToList.clear();
-                secAssignToList.addAll(oriList);
-                secAssignToList.remove(assignToPair);
-                secAssignToAdapter.notifyDataSetChanged();
-                taskSecAssignedTo.setSelection(((SpinAdapter) secAssignToAdapter).getPosition(secAssignToPair.getKey()));
+                try {
+                    assignToPair = (SpinnerPair) parent.getItemAtPosition(position);
+                    secAssignToList.clear();
+                    secAssignToList.addAll(oriList);
+                    secAssignToList.remove(assignToPair);
+                    secAssignToAdapter.notifyDataSetChanged();
+                    taskSecAssignedTo.setSelection(((SpinAdapter) secAssignToAdapter).getPosition(secAssignToPair.getKey()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -314,12 +318,16 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         AdapterView.OnItemSelectedListener secAssignToItem = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                secAssignToPair = (SpinnerPair) parent.getItemAtPosition(position);
-                assignToList.clear();
-                assignToList.addAll(oriList);
-                assignToList.remove(secAssignToPair);
-                assignToAdapter.notifyDataSetChanged();
-                taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(assignToPair.getKey()));
+                try {
+                    secAssignToPair = (SpinnerPair) parent.getItemAtPosition(position);
+                    assignToList.clear();
+                    assignToList.addAll(oriList);
+                    assignToList.remove(secAssignToPair);
+                    assignToAdapter.notifyDataSetChanged();
+                    taskAssignedTo.setSelection(((SpinAdapter) assignToAdapter).getPosition(assignToPair.getKey()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -384,7 +392,7 @@ public class ProjTaskDetailsFragment extends PBSDetailsFragment implements PBABa
         boolean hasChanged = !taskComments.getText().toString().isEmpty();
         hasChanged |= !(taskPictures[0].getTag(R.string.tag_imageview_path) == null || ((String)taskPictures[0].getTag(R.string.tag_imageview_path)).isEmpty());
 
-        if (discard.isVisible()) {
+        if (discard != null && discard.isVisible()) {
             if (taskDesc.getText().toString().equals(projTask.getDescription() == null ? "" : PandoraHelper.parseNewLine(projTask.getDescription()))
                     && taskEquipment.getText().toString().equals(projTask.getEquipment() == null ? "" : PandoraHelper.parseNewLine(projTask.getEquipment()))
                     && taskContact.getText().toString().equals(projTask.getContact() == null ? "" : projTask.getContact())

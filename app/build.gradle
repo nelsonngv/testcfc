@@ -22,8 +22,8 @@ android {
         applicationId "com.pbasolutions.android.syncAdapter"
         minSdkVersion 19
         targetSdkVersion 21
-        versionCode 39
-        versionName "2.0.38"
+        versionCode 40
+        versionName "2.0.39"
     }
     buildTypes {
         release {

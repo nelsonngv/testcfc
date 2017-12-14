@@ -36,8 +36,8 @@ public class PBSServerAccessor extends PBSServer implements PBSIServerAccessor {
         String query = null;
         try {
             query = String.format("%s=%s", PBSServerConst.ACTION, URLEncoder.encode(PBSServerConst.ACTION_UPDATE, "UTF-8"));
-//            query += PBSServerConst.AND +
-//                    String.format("%s=%s", PBSServerConst.IDENTIFIER, updateIdentifier);
+            query += PBSServerConst.AND +
+                    String.format("%s=%s", PBSServerConst.IDENTIFIER, updateIdentifier);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
