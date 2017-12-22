@@ -55,55 +55,58 @@ public class PBSServer {
      */
     protected PBSJson callServer(final String url, final String classname) {
         try {
-            // HttpClient.set
-            HttpGet httpGet = new HttpGet(url);
-            // Create local HTTP context
-            HttpContext localContext = new BasicHttpContext();
-            // Bind custom cookie store to the local context
-            localContext.setAttribute(ClientContext.COOKIE_STORE, PBSServerConst.cookieStore);
-            String responseString = "";
-            Class cls = Class.forName(classname);
-            final HttpParams httpParams = new BasicHttpParams();
-            //set time out to 30 seconds. any attempt to request on server >30 sec will timed out.
-            HttpConnectionParams.setConnectionTimeout(httpParams, 30000);
-            DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
-            HttpResponse response = httpClient.execute(httpGet, localContext);
-            responseString = EntityUtils.toString(response.getEntity());
-            return (PBSJson) new Gson().fromJson(responseString, cls);
+            if (url.startsWith("http://")) {
+                // HttpClient.set
+                HttpGet httpGet = new HttpGet(url);
+                // Create local HTTP context
+                HttpContext localContext = new BasicHttpContext();
+                // Bind custom cookie store to the local context
+                localContext.setAttribute(ClientContext.COOKIE_STORE, PBSServerConst.cookieStore);
+                String responseString = "";
+                Class cls = Class.forName(classname);
+                final HttpParams httpParams = new BasicHttpParams();
+                //set time out to 30 seconds. any attempt to request on server >30 sec will timed out.
+                HttpConnectionParams.setConnectionTimeout(httpParams, 30000);
+                DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
+                HttpResponse response = httpClient.execute(httpGet, localContext);
+                responseString = EntityUtils.toString(response.getEntity());
+                return (PBSJson) new Gson().fromJson(responseString, cls);
+            }
+            else {
+                PBSHttpsTrustManager.allowAllSSL();
+                Class cls = Class.forName(classname);
+                RequestFuture<String> future = RequestFuture.newFuture();
+                StringRequest stringReq = new StringRequest(Request.Method.POST, url, future, future) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put(ClientContext.COOKIE_STORE, PBSServerConst.cookieStore.toString());
+                        return headers;
+                    }
+                };
+                stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-//            PBSHttpsTrustManager.allowAllSSL();
-//            Class cls = Class.forName(classname);
-//            RequestFuture<String> future = RequestFuture.newFuture();
-//            StringRequest stringReq = new StringRequest(Request.Method.POST, url, future, future) {
-//                @Override
-//                public Map<String, String> getHeaders() throws AuthFailureError {
-//                    Map<String, String> headers = new HashMap<>();
-//                    headers.put(ClientContext.COOKIE_STORE, PBSServerConst.cookieStore.toString());
-//                    return headers;
-//                }
-//            };
-//            stringReq.setRetryPolicy(new DefaultRetryPolicy(0, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//
-//            // Adding string request to request queue
-//            AppSingleton appSingleton = AppSingleton.getInstance(PandoraMain.instance.getApplicationContext());
-//            appSingleton.getRequestQueue().add(stringReq);
-//            try {
-//                String response = null;
-//                while (response == null) {
-//                    try {
-//                        response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 30 seconds
-//                    } catch (InterruptedException e) {
-//                        // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
-//                        Thread.currentThread().interrupt();
-//                    }
-//                }
-//                return (PBSJson) new Gson().fromJson(response.toString(), cls);
-//
-//            } catch (ExecutionException e) {
-//                VolleyLog.d(TAG, "Error: " + e.getMessage());
-//            } catch (TimeoutException e) {
-//                VolleyLog.d(TAG, "Error: " + e.getMessage());
-//            }
+                // Adding string request to request queue
+                AppSingleton appSingleton = AppSingleton.getInstance(PandoraMain.instance.getApplicationContext());
+                appSingleton.getRequestQueue().add(stringReq);
+                try {
+                    String response = null;
+                    while (response == null) {
+                        try {
+                            response = future.get(30, TimeUnit.SECONDS); // Block thread, waiting for response, timeout after 30 seconds
+                        } catch (InterruptedException e) {
+                            // Continue waiting for response (unless you specifically intend to use the interrupt to cancel your request)
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                    return (PBSJson) new Gson().fromJson(response.toString(), cls);
+
+                } catch (ExecutionException e) {
+                    VolleyLog.d(TAG, "Error: " + e.getMessage());
+                } catch (TimeoutException e) {
+                    VolleyLog.d(TAG, "Error: " + e.getMessage());
+                }
+            }
         } catch (Exception e) {
             Log.e(TAG, PandoraConstant.ERROR + PandoraConstant.SPACE + e.getMessage());
         }
