@@ -1091,7 +1091,7 @@ public class PandoraMain extends AppCompatActivity implements FragmentDrawer.Fra
 
         return null;
     }
-
+    // enable https login
     public void checkLogin(final boolean isLoop) {
         if(getGlobalVariable() != null) {
             new AsyncTask<Void, Void, Bundle>() {
