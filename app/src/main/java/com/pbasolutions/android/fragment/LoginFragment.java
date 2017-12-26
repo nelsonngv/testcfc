@@ -118,7 +118,7 @@ public class LoginFragment extends Fragment {
         }
 
         // complement server URL
-        if (!serverURL.startsWith("http://"))
+        if (!serverURL.startsWith("http"))
             serverURL = "http://" + serverURL;
 
         final Bundle bundle = new Bundle();
